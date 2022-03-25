@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>compileBitcode</key>
+	<true/>
+	<key>destination</key>
+	<string>export</string>
+	<key>method</key>
+	<string>app-store</string>
+	<key>provisioningProfiles</key>
+	<dict>
+		<key>com.strikeprotocols.mobile-demo-2</key>
+		<string>Strike Mobile Demo 2 AppStore</string>
+		<key>com.strikeprotocols.mobile</key>
+		<string>Strike Mobile Production AppStore</string>
+		<key>com.strikeprotocols.mobile-dev</key>
+		<string>Strike Mobile Dev AppStore</string>
+		<key>com.strikeprotocols.mobile-demo</key>
+		<string>Strike Mobile Demo AppStore</string>
+	</dict>
+	<key>signingCertificate</key>
+	<string>F6DC0A7D9968855EB1F63009CF60FC5CFF5E48E5</string>
+	<key>signingStyle</key>
+	<string>manual</string>
+	<key>stripSwiftSymbols</key>
+	<false/>
+	<key>teamID</key>
+	<string>VN5U64MGYX</string>
+	<key>thinning</key>
+	<string>&lt;none&gt;</string>
+</dict>
+</plist>
