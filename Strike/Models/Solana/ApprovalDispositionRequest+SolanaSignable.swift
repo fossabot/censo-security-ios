@@ -8,8 +8,6 @@
 import Foundation
 import CryptoKit
 
-let SYSVAR_CLOCK_PUBKEY = try! PublicKey(string: "SysvarC1ock11111111111111111111111111111111")
-
 extension StrikeApi.ApprovalDispositionRequest: SolanaSignable {
     var opIndex: UInt8 {
         return 9
@@ -25,6 +23,8 @@ extension StrikeApi.ApprovalDispositionRequest: SolanaSignable {
             return 3
         case .signersUpdate:
             return 5
+        case .multisigOpInitiation:
+            return 0
         case .unknown:
             return 0
         }
@@ -63,7 +63,7 @@ extension StrikeApi.ApprovalDispositionRequest: SolanaSignable {
                     signingData.walletAddress.base58Bytes +
                     request.account.identifier.sha256HashBytes +
                     request.destination.address.base58Bytes +
-                    request.symbolAndAmountInfo.fundementalAmount.bytes +
+                    request.symbolAndAmountInfo.fundamentalAmount.bytes +
                     request.symbolAndAmountInfo.symbolInfo.tokenMintAddress.base58Bytes
                 )
             case .conversionRequest(let request):
@@ -72,7 +72,7 @@ extension StrikeApi.ApprovalDispositionRequest: SolanaSignable {
                     signingData.walletAddress.base58Bytes +
                     request.account.identifier.sha256HashBytes +
                     request.destination.address.base58Bytes +
-                    request.symbolAndAmountInfo.fundementalAmount.bytes +
+                    request.symbolAndAmountInfo.fundamentalAmount.bytes +
                     request.symbolAndAmountInfo.symbolInfo.tokenMintAddress.base58Bytes
                 )
             case .signersUpdate(let request):
@@ -82,6 +82,8 @@ extension StrikeApi.ApprovalDispositionRequest: SolanaSignable {
                     [request.slotUpdateType.toSolanaProgramValue()] +
                     request.signer.combinedBytes
                 )
+            case .multisigOpInitiation:
+                throw SolanaError.invalidRequest(reason: "Invalid request for Approval")
             case .unknown:
                 throw SolanaError.invalidRequest(reason: "Unknown Approval")
             }
@@ -99,6 +101,8 @@ extension StrikeApi.ApprovalDispositionRequest: SolanaSignable {
                 return request.signingData
             case .signersUpdate(let request):
                 return request.signingData
+            case .multisigOpInitiation:
+                throw SolanaError.invalidRequest(reason: "Invalid request for Approval")
             case .unknown:
                 throw SolanaError.invalidRequest(reason: "Unknown Approval")
             }
@@ -117,16 +121,10 @@ extension StrikeApi.ApprovalDispositionRequest: SolanaSignable {
     }
 
     func signableData(approverPublicKey: String) throws -> Data {
-        let message = try Transaction.Message(
-            accountKeys: [
-                Account.Meta(publicKey: PublicKey(string: signingData.feePayer), isSigner: true, isWritable: true),
-                Account.Meta(publicKey: PublicKey(string: approverPublicKey), isSigner: true, isWritable: false),
-                Account.Meta(publicKey: PublicKey(string: signingData.multisigOpAccountAddress), isSigner: false, isWritable: true),
-                Account.Meta(publicKey: SYSVAR_CLOCK_PUBKEY, isSigner: false, isWritable: false),
-                Account.Meta(publicKey: PublicKey(string: signingData.walletProgramId), isSigner: false, isWritable: false)
-            ],
+        return try Transaction.compileMessage(
+            feePayer: try PublicKey(string: signingData.feePayer),
             recentBlockhash: blockhash.value,
-            programInstructions: [
+            instructions: [
                 TransactionInstruction(
                     keys: [
                         Account.Meta(publicKey: try PublicKey(string: signingData.multisigOpAccountAddress), isSigner: false, isWritable: true),
@@ -137,9 +135,7 @@ extension StrikeApi.ApprovalDispositionRequest: SolanaSignable {
                     data: [UInt8](transactionInstructionData)
                 )
             ]
-        )
-
-        return try message.serialize()
+        ).serialize()
     }
 }
 
@@ -148,7 +144,7 @@ extension SymbolAndAmountInfo {
         case invalidDecimal
     }
 
-    var fundementalAmount: UInt64 {
+    var fundamentalAmount: UInt64 {
         get throws {
             guard let decimal = Decimal(string: amount) else { throw AmountError.invalidDecimal }
 
@@ -193,7 +189,17 @@ extension UInt64 {
     }
 }
 
+extension UInt32 {
+    
+    var bytes: [UInt8] {
+        var littleEndian = self.littleEndian
+        return withUnsafeBytes(of: &littleEndian) { Array($0) }
+    }
+}
+
 enum SolanaError: Error, Equatable {
     case other(String)
     case invalidRequest(reason: String? = nil)
+    case notFoundProgramAddress
+    case invalidPublicKey
 }

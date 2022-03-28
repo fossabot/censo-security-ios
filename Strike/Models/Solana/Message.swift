@@ -7,6 +7,94 @@
 import Foundation
 
 struct Transaction {
+    
+    
+    static func compileMessage(feePayer: PublicKey, recentBlockhash: String, instructions: [TransactionInstruction]) throws -> Message {
+        // verify instructions
+        guard instructions.count > 0 else {
+            throw SolanaError.other("No instructions provided")
+        }
+        
+        // programIds & accountMetas
+        var programIds = [PublicKey]()
+        var accountMetas = [Account.Meta]()
+        
+        for instruction in instructions {
+            accountMetas.append(contentsOf: instruction.keys)
+            if !programIds.contains(instruction.programId) {
+                programIds.append(instruction.programId)
+            }
+        }
+        
+        for programId in programIds {
+            accountMetas.append(
+                .init(publicKey: programId, isSigner: false, isWritable: false)
+            )
+        }
+        
+        // sort accountMetas, first by signer, then by writable
+        accountMetas.sort { (x, y) -> Bool in
+            if x.isSigner != y.isSigner {return x.isSigner}
+            if x.isWritable != y.isWritable {return x.isWritable}
+            return false
+        }
+        
+        // filterOut duplicate account metas, keeps writable one
+        accountMetas = accountMetas.reduce([Account.Meta](), {result, accountMeta in
+            var uniqueMetas = result
+            if let index = uniqueMetas.firstIndex(where: {$0.publicKey == accountMeta.publicKey}) {
+                // if accountMeta exists
+                uniqueMetas[index].isWritable = uniqueMetas[index].isWritable || accountMeta.isWritable
+            } else {
+                uniqueMetas.append(accountMeta)
+            }
+            return uniqueMetas
+        })
+        
+        // move fee payer to front
+        accountMetas.removeAll(where: {$0.publicKey == feePayer})
+        accountMetas.insert(
+            Account.Meta(publicKey: feePayer, isSigner: true, isWritable: true),
+            at: 0
+        )
+        
+        // header
+        var header = Message.Header()
+        
+        var signedKeys = [Account.Meta]()
+        var unsignedKeys = [Account.Meta]()
+        
+        for accountMeta in accountMetas {
+            // signed keys
+            if accountMeta.isSigner {
+                signedKeys.append(accountMeta)
+                header.numRequiredSignatures += 1
+                
+                if !accountMeta.isWritable {
+                    header.numReadonlySignedAccounts += 1
+                }
+            }
+            
+            // unsigned keys
+            else {
+                unsignedKeys.append(accountMeta)
+                
+                if !accountMeta.isWritable {
+                    header.numReadonlyUnsignedAccounts += 1
+                }
+            }
+        }
+        
+        accountMetas = signedKeys + unsignedKeys
+        
+        return Message(
+            accountKeys: accountMetas,
+            recentBlockhash: recentBlockhash,
+            programInstructions: instructions
+        )
+    }
+    
+    
     struct Message {
         // MARK: - Constants
         private static let RECENT_BLOCK_HASH_LENGTH = 32

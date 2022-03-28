@@ -98,6 +98,11 @@
 		40CB67D725C1B75A00DB15D6 /* StrikeTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40CB67D625C1B75A00DB15D6 /* StrikeTheme.swift */; };
 		40CB67F925C3195D00DB15D6 /* Mock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40CB67F825C3195D00DB15D6 /* Mock.swift */; };
 		40F907A625DDC31B00B107B0 /* StrikeApi+Mock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40F907A525DDC31B00B107B0 /* StrikeApi+Mock.swift */; };
+		6C0E3EED27EE5AFE002FEE7C /* InitiationRequest+SolanaSignable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C0E3EEC27EE5AFE002FEE7C /* InitiationRequest+SolanaSignable.swift */; };
+		6C0E3EF227EE5E29002FEE7C /* NaclLowLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C0E3EF127EE5E29002FEE7C /* NaclLowLevel.swift */; };
+		6C0E3EF727EE6367002FEE7C /* SMP Bignum Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C0E3EF627EE6367002FEE7C /* SMP Bignum Extensions.swift */; };
+		6C0E3EF927EE64BA002FEE7C /* SMP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C0E3EF827EE64BA002FEE7C /* SMP.swift */; };
+		6C0E3EFB27F09D2A002FEE7C /* StrikeTestHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C0E3EFA27F09D2A002FEE7C /* StrikeTestHelper.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -207,6 +212,11 @@
 		40CB67F825C3195D00DB15D6 /* Mock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mock.swift; sourceTree = "<group>"; };
 		40EBD48F25CB324B00756065 /* Strike.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Strike.entitlements; sourceTree = "<group>"; };
 		40F907A525DDC31B00B107B0 /* StrikeApi+Mock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StrikeApi+Mock.swift"; sourceTree = "<group>"; };
+		6C0E3EEC27EE5AFE002FEE7C /* InitiationRequest+SolanaSignable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "InitiationRequest+SolanaSignable.swift"; sourceTree = "<group>"; };
+		6C0E3EF127EE5E29002FEE7C /* NaclLowLevel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NaclLowLevel.swift; sourceTree = "<group>"; };
+		6C0E3EF627EE6367002FEE7C /* SMP Bignum Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SMP Bignum Extensions.swift"; sourceTree = "<group>"; };
+		6C0E3EF827EE64BA002FEE7C /* SMP.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SMP.swift; sourceTree = "<group>"; };
+		6C0E3EFA27F09D2A002FEE7C /* StrikeTestHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrikeTestHelper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -249,6 +259,7 @@
 				3D1C761A27D8503B0016BB32 /* TransactionInstruction.swift */,
 				3D1C761F27D871D80016BB32 /* Message.swift */,
 				3D1C762327DA861F0016BB32 /* ApprovalDispositionRequest+SolanaSignable.swift */,
+				6C0E3EEC27EE5AFE002FEE7C /* InitiationRequest+SolanaSignable.swift */,
 			);
 			path = Solana;
 			sourceTree = "<group>";
@@ -484,6 +495,7 @@
 			children = (
 				40328E212593ED9D00F2EE41 /* StrikeTests.swift */,
 				40328E232593ED9D00F2EE41 /* Info.plist */,
+				6C0E3EFA27F09D2A002FEE7C /* StrikeTestHelper.swift */,
 			);
 			path = StrikeTests;
 			sourceTree = "<group>";
@@ -512,6 +524,9 @@
 				3DC7A73B27CE749E00A2BBA7 /* Keychain.swift */,
 				3D1C762127DA850A0016BB32 /* Base58.swift */,
 				3DB9960027EE1A1B005655F0 /* Data+Extensions.swift */,
+				6C0E3EF127EE5E29002FEE7C /* NaclLowLevel.swift */,
+				6C0E3EF627EE6367002FEE7C /* SMP Bignum Extensions.swift */,
+				6C0E3EF827EE64BA002FEE7C /* SMP.swift */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -694,6 +709,7 @@
 				3DC2F3FF25F896C40061BB3A /* RemoteResult.swift in Sources */,
 				3DBF9DC526E0020300D7683E /* ApprovalRequestItem.swift in Sources */,
 				3DB995F627EB71EE005655F0 /* SignerUpdateRow.swift in Sources */,
+				6C0E3EED27EE5AFE002FEE7C /* InitiationRequest+SolanaSignable.swift in Sources */,
 				3DDAF32F2639F7010015B54B /* RefreshScrollView.swift in Sources */,
 				3DB7F9BE26D6C10400A49B4E /* ConversionDetail.swift in Sources */,
 				3DAA26F0262F5147000F453D /* PrimaryButtonStyle.swift in Sources */,
@@ -701,6 +717,7 @@
 				40BCB0B1261B963100CF58A8 /* OktaError+LocalizedError.swift in Sources */,
 				40A9AF0E25DF5F0E004320EF /* ComposeMail.swift in Sources */,
 				3D3D6CEC2616432000FEEE0B /* RecoverPasswordView.swift in Sources */,
+				6C0E3EF227EE5E29002FEE7C /* NaclLowLevel.swift in Sources */,
 				3D3D6D54261B95B100FEEE0B /* ApprovalRequestsView.swift in Sources */,
 				40BCB0AD261B8B8700CF58A8 /* MFARequiredView.swift in Sources */,
 				3DD9568725EF561F003F9ECF /* Moya+StrikeClient.swift in Sources */,
@@ -731,7 +748,9 @@
 				40CB67AD25C1076300DB15D6 /* Configuration.swift in Sources */,
 				3D1C761B27D8503B0016BB32 /* TransactionInstruction.swift in Sources */,
 				40A9AEF825DF2E29004320EF /* AccountDetail.swift in Sources */,
+				6C0E3EF727EE6367002FEE7C /* SMP Bignum Extensions.swift in Sources */,
 				4006422F259A422400A8D8D3 /* StrikeApi.swift in Sources */,
+				6C0E3EF927EE64BA002FEE7C /* SMP.swift in Sources */,
 				3DC7A73C27CE749F00A2BBA7 /* Keychain.swift in Sources */,
 				3D633E162748656500BACCCE /* BiometryCheck.swift in Sources */,
 				3D11A60727581510008C03B1 /* CameraAccessRequired.swift in Sources */,
@@ -748,6 +767,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				40328E222593ED9D00F2EE41 /* StrikeTests.swift in Sources */,
+				6C0E3EFB27F09D2A002FEE7C /* StrikeTestHelper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

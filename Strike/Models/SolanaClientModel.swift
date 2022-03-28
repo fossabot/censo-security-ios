@@ -121,12 +121,13 @@ struct WalletApprovalRequest: Codable, Equatable {
     }
 }
 
-enum SolanaApprovalRequestType: Codable, Equatable {
+indirect enum SolanaApprovalRequestType: Codable, Equatable {
 
     case withdrawalRequest(WithdrawalRequest)
     case conversionRequest(ConversionRequest)
     case signersUpdate(SignersUpdate)
     case balanceAccountCreation(BalanceAccountCreation)
+    case multisigOpInitiation(MultisigOpInitiation)
     case unknown
 
     enum DetailsCodingKeys: String, CodingKey {
@@ -145,6 +146,8 @@ enum SolanaApprovalRequestType: Codable, Equatable {
             self = .signersUpdate(try SignersUpdate(from: decoder))
         case "BalanceAccountCreation":
             self = .balanceAccountCreation(try BalanceAccountCreation(from: decoder))
+        case "MultisigOpInitiation":
+            self = .multisigOpInitiation(try MultisigOpInitiation(from: decoder))
         default:
             self = .unknown
         }
@@ -165,6 +168,9 @@ enum SolanaApprovalRequestType: Codable, Equatable {
         case .balanceAccountCreation(let balanceAccountCreation):
             try container.encode("BalanceAccountCreation", forKey: .type)
             try balanceAccountCreation.encode(to: encoder)
+        case .multisigOpInitiation(let multisigOpInitiation):
+            try container.encode("MultisigOpInitiation", forKey: .type)
+            try multisigOpInitiation.encode(to: encoder)
         case .unknown:
             try container.encode("Unknown", forKey: .type)
         }
@@ -252,6 +258,18 @@ struct BalanceAccountCreation: Codable, Equatable  {
     var addressBookSlot: UInt8
     var signingData: SolanaSigningData
 }
+
+struct MultisigAccountCreationInfo: Codable, Equatable  {
+    var accountSize: UInt64
+    var minBalanceForRentExemption: UInt64
+}
+
+struct MultisigOpInitiation: Codable, Equatable  {
+    let details: SolanaApprovalRequestType
+    let opAccountCreationInfo: MultisigAccountCreationInfo
+    let dataAccountCreationInfo: MultisigAccountCreationInfo?
+}
+
 
 protocol SolanaSignable {
     func signableData(approverPublicKey: String) throws -> Data

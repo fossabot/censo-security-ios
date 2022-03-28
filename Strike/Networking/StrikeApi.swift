@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import CryptoKit
 
 import Moya
 
@@ -206,6 +207,38 @@ extension StrikeApi {
 
             let signature = try Keychain.signature(for: self, email: email)
             try container.encode(signature, forKey: .signature)
+        }
+    }
+    
+    struct SignatureInfo: Codable {
+        let publicKey: String
+        let signature: String
+    }
+    
+    struct InitiationRequest: Encodable {
+        let disposition: ApprovalDisposition
+        let request: MultisigOpInitiation
+        let blockhash: Blockhash
+        let email: String
+        let opAccountPrivateKey: Curve25519.Signing.PrivateKey
+
+        enum CodingKeys: String, CodingKey {
+            case initiatorSignature
+            case approvalDisposition
+            case recentBlockhash
+            case opAccountSignatureInfo
+        }
+
+        func encode(to encoder: Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encode(blockhash.value, forKey: .recentBlockhash)
+            try container.encode(disposition.rawValue, forKey: .approvalDisposition)
+
+            let initiatorSignature = try Keychain.signature(for: self, email: email)
+            try container.encode(initiatorSignature, forKey: .initiatorSignature)
+            let opAccountSignatureInfo = SignatureInfo(publicKey: try self.opAccountPublicKey.base58EncodedString,
+                                                       signature: try Keychain.signatureForKey(for: self, privateKey: try self.opAccountPrivateKey))
+            try container.encode(opAccountSignatureInfo, forKey: .opAccountSignatureInfo)
         }
     }
 }

@@ -166,6 +166,8 @@ extension SolanaApprovalRequestType {
             return "Balance Account Creation"
         case .balanceAccountCreation:
             return "Stake Account Creation"
+        case .multisigOpInitiation(let multisigOpInitiation):
+            return multisigOpInitiation.details.titleDescription
         }
         
     }
@@ -184,6 +186,8 @@ extension SolanaApprovalRequestType {
             return "the addition of `\(signersUpdate.signer.value.name)`"
         case .balanceAccountCreation(let balanceAccountCreation):
             return "an account creation of \(balanceAccountCreation.accountInfo.name)"
+        case .multisigOpInitiation(let multisigOpInitiation):
+            return multisigOpInitiation.details.summaryDescription
         }
     }
 
@@ -199,6 +203,8 @@ extension SolanaApprovalRequestType {
             return Image(systemName: "iphone")
         case .balanceAccountCreation:
             return Image("policy")
+        case .multisigOpInitiation(let multisigOpInitiation):
+            return multisigOpInitiation.details.icon
         }
     }
 }
