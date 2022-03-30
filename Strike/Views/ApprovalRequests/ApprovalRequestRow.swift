@@ -7,7 +7,7 @@
 
 import Foundation
 import SwiftUI
-
+import CryptoKit
 import Combine
 
 struct ApprovalRequestRow<Row, Detail>: View where Row : View, Detail: View {
@@ -107,14 +107,30 @@ struct ApprovalRequestRow<Row, Detail>: View where Row : View, Detail: View {
         isLoading = true
 
         strikeApi.provider.requestWithRecentBlockhash { blockhash in
-            .registerApprovalDisposition(
-                StrikeApi.ApprovalDispositionRequest(
-                    disposition: .Approve,
-                    request: request,
-                    blockhash: blockhash,
-                    email: user.loginName
+            switch request.details {
+            case .approval(let requestType):
+                return .registerApprovalDisposition(
+                    StrikeApi.ApprovalDispositionRequest(
+                        disposition: .Approve,
+                        requestID: request.id,
+                        requestType: requestType,
+                        blockhash: blockhash,
+                        email: user.loginName
+                    )
                 )
-            )
+            case .multisigOpInitiation(let initiation, let requestType):
+                return .initiateRequest(
+                    StrikeApi.InitiationRequest(
+                        disposition: .Approve,
+                        requestID: request.id,
+                        initiation: initiation,
+                        requestType: requestType,
+                        blockhash: blockhash,
+                        email: user.loginName,
+                        opAccountPrivateKey: Curve25519.Signing.PrivateKey()
+                    )
+                )
+            }
         } completion: { result in
             isLoading = false
 
@@ -166,10 +182,7 @@ extension SolanaApprovalRequestType {
             return "Balance Account Creation"
         case .balanceAccountCreation:
             return "Stake Account Creation"
-        case .multisigOpInitiation(let multisigOpInitiation):
-            return multisigOpInitiation.details.titleDescription
         }
-        
     }
 
     var summaryDescription: String {
@@ -186,8 +199,6 @@ extension SolanaApprovalRequestType {
             return "the addition of `\(signersUpdate.signer.value.name)`"
         case .balanceAccountCreation(let balanceAccountCreation):
             return "an account creation of \(balanceAccountCreation.accountInfo.name)"
-        case .multisigOpInitiation(let multisigOpInitiation):
-            return multisigOpInitiation.details.summaryDescription
         }
     }
 
@@ -203,8 +214,6 @@ extension SolanaApprovalRequestType {
             return Image(systemName: "iphone")
         case .balanceAccountCreation:
             return Image("policy")
-        case .multisigOpInitiation(let multisigOpInitiation):
-            return multisigOpInitiation.details.icon
         }
     }
 }

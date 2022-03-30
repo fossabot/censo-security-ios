@@ -168,11 +168,16 @@ extension Keychain {
         return signature.base64EncodedString()
     }
     
-    static func signatureForKey(for signable: SolanaSignable, privateKey: Curve25519.Signing.PrivateKey) throws -> String {
+    static func signatureForKey(for signable: SolanaSignable, ephemeralPrivateKey: Curve25519.Signing.PrivateKey, email: String) throws -> String {
+        guard let privateKeyData = load(account: email, service: privateKeyService) else {
+            throw KeyError.noPrivateKey
+        }
+
+        let privateKey = try Curve25519.Signing.PrivateKey(rawRepresentation: privateKeyData)
         let publicKeyData = privateKey.publicKey.rawRepresentation
         let encodedPublicKey = Base58.encode(publicKeyData.bytes)
         let signData = try signable.signableData(approverPublicKey: encodedPublicKey)
-        let signature = try privateKey.signature(for: signData)
+        let signature = try ephemeralPrivateKey.signature(for: signData)
 
         return signature.base64EncodedString()
     }

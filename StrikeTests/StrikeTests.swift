@@ -12,9 +12,11 @@ import CryptoKit
 class StrikeTests: XCTestCase {
     
     func testSignersUpdateSerializedOp() throws {
+        let request: WalletApprovalRequest = getSignersUpdateRequest()
         let approvalRequest = StrikeApi.ApprovalDispositionRequest(
             disposition: .Approve,
-            request: getSignersUpdateRequest(),
+            requestID: request.id,
+            requestType: request.requestType,
             blockhash: getRecentBlockhash("123455"),
             email: "dont care"
         )
@@ -25,9 +27,11 @@ class StrikeTests: XCTestCase {
     }
     
     func testSignersUpdateApprovalDisposition() throws {
+        let request: WalletApprovalRequest = getWalletApprovalRequest(getSignersUpdateRequest())
         let approvalRequest = StrikeApi.ApprovalDispositionRequest(
             disposition: .Approve,
-            request: getWalletApprovalRequest(getSignersUpdateRequest()),
+            requestID: request.id,
+            requestType: request.requestType,
             blockhash: getRecentBlockhash("DumeKnMBQxYVeXNuhc9paKn9hMooPpbJ6KCMA49UDSQn"),
             email: "dont care"
         )
@@ -38,17 +42,21 @@ class StrikeTests: XCTestCase {
     }
     
     func testSignersUpdateInitiationRequest() throws {
+        let initiation = MultisigOpInitiation(
+            opAccountCreationInfo: MultisigAccountCreationInfo(
+                accountSize: 848,
+                minBalanceForRentExemption: 6792960
+            ),
+            dataAccountCreationInfo: nil
+        )
+        let requestType: SolanaApprovalRequestType = getSignersUpdateRequest()
+        let request = getWalletInitiationRequest(requestType, initiation: initiation)
         let pk = try Curve25519.Signing.PrivateKey.init(rawRepresentation: "c177b7a6f4f0d315802948cc872dbf813a165b193a1df16abcb3aef98d15b0f4".data(using: .hexadecimal)!)
         let initiationRequest = StrikeApi.InitiationRequest(
             disposition: .Approve,
-            request: MultisigOpInitiation(
-                details: getSignersUpdateRequest(),
-                opAccountCreationInfo: MultisigAccountCreationInfo(
-                    accountSize: 848,
-                    minBalanceForRentExemption: 6792960
-                ),
-                dataAccountCreationInfo: nil
-            ),
+            requestID: request.id,
+            initiation: initiation,
+            requestType: requestType,
             blockhash: getRecentBlockhash("J3u7zr89XajLDc7KN97dkwBeaBEwrM9ksHzd2MnkfnGX"),
             email: "dont care",
             opAccountPrivateKey: pk
@@ -61,9 +69,11 @@ class StrikeTests: XCTestCase {
     }
     
     func testBalanceAccountCreationSerializedOp() throws {
+        let request = getWalletApprovalRequest(getBalanceAccountCreationRequest())
         let approvalRequest = StrikeApi.ApprovalDispositionRequest(
             disposition: .Approve,
-            request: getWalletApprovalRequest(getBalanceAccountCreationRequest()),
+            requestID: request.id,
+            requestType: request.requestType,
             blockhash: getRecentBlockhash("123455"),
             email: "dont care"
         )
@@ -74,9 +84,11 @@ class StrikeTests: XCTestCase {
     }
     
     func testBalanceAccountCreationApprovalDisposition() throws {
+        let request = getWalletApprovalRequest(getBalanceAccountCreationRequest())
         let approvalRequest = StrikeApi.ApprovalDispositionRequest(
             disposition: .Approve,
-            request: getWalletApprovalRequest(getBalanceAccountCreationRequest()),
+            requestID: request.id,
+            requestType: request.requestType,
             blockhash: getRecentBlockhash("DumeKnMBQxYVeXNuhc9paKn9hMooPpbJ6KCMA49UDSQn"),
             email: "dont care"
         )
@@ -87,17 +99,21 @@ class StrikeTests: XCTestCase {
     }
     
     func testBalanceAccountCreationInitiationRequest() throws {
+        let initiation = MultisigOpInitiation(
+            opAccountCreationInfo: MultisigAccountCreationInfo(
+                accountSize: 848,
+                minBalanceForRentExemption: 6792960
+            ),
+            dataAccountCreationInfo: nil
+        )
+        let requestType: SolanaApprovalRequestType = getBalanceAccountCreationRequest()
+        let request = getWalletInitiationRequest(requestType, initiation: initiation)
         let pk = try Curve25519.Signing.PrivateKey.init(rawRepresentation: "fc57704ac1985d1ceb68880b8431d5dd6027771c9b4d65ea5724585694a85b01".data(using: .hexadecimal)!)
         let initiationRequest = StrikeApi.InitiationRequest(
             disposition: .Approve,
-            request: MultisigOpInitiation(
-                details: getBalanceAccountCreationRequest(),
-                opAccountCreationInfo: MultisigAccountCreationInfo(
-                    accountSize: 848,
-                    minBalanceForRentExemption: 6792960
-                ),
-                dataAccountCreationInfo: nil
-            ),
+            requestID: request.id,
+            initiation: initiation,
+            requestType: requestType,
             blockhash: getRecentBlockhash("9ZcVaD3iwrTCcEUU8RDWSNFhJfhqXDRhWgahgU2QrDqG"),
             email: "dont care",
             opAccountPrivateKey: pk
@@ -110,9 +126,11 @@ class StrikeTests: XCTestCase {
     }
     
     func testSolWithdrawalRequestApprovalDisposition() throws {
+        let request = getWalletApprovalRequest(getSolWithdrawalRequest())
         let approvalRequest = StrikeApi.ApprovalDispositionRequest(
             disposition: .Approve,
-            request: getWalletApprovalRequest(getSolWithdrawalRequest()),
+            requestID: request.id,
+            requestType: request.requestType,
             blockhash: getRecentBlockhash("EdsedMi4Stt2fztX1bDwHKB4HKn563UCSs1pBJECH98x"),
             email: "dont care"
         )
@@ -123,17 +141,21 @@ class StrikeTests: XCTestCase {
     }
     
     func testSolWithdrawalRequestInitiationRequest() throws {
+        let initiation = MultisigOpInitiation(
+            opAccountCreationInfo: MultisigAccountCreationInfo(
+                accountSize: 848,
+                minBalanceForRentExemption: 6792960
+            ),
+            dataAccountCreationInfo: nil
+        )
+        let requestType: SolanaApprovalRequestType = getSolWithdrawalRequest()
+        let request = getWalletInitiationRequest(requestType, initiation: initiation)
         let pk = try Curve25519.Signing.PrivateKey.init(rawRepresentation: "5758390b320bb83aca5a56addabbd72e86aee98f2ef75ce886bcca1ec54a8622".data(using: .hexadecimal)!)
         let initiationRequest = StrikeApi.InitiationRequest(
             disposition: .Approve,
-            request: MultisigOpInitiation(
-                details: getSolWithdrawalRequest(),
-                opAccountCreationInfo: MultisigAccountCreationInfo(
-                    accountSize: 848,
-                    minBalanceForRentExemption: 6792960
-                ),
-                dataAccountCreationInfo: nil
-            ),
+            requestID: request.id,
+            initiation: initiation,
+            requestType: requestType,
             blockhash: getRecentBlockhash("GwH732RyF7V5vXFuCXsoU5ijurTdCtm9qAMZ6WJWeVvN"),
             email: "dont care",
             opAccountPrivateKey: pk
@@ -146,9 +168,11 @@ class StrikeTests: XCTestCase {
     }
     
     func testSplWithdrawalRequestApprovalDisposition() throws {
+        let request = getWalletApprovalRequest(getSplWithdrawalRequest())
         let approvalRequest = StrikeApi.ApprovalDispositionRequest(
             disposition: .Approve,
-            request: getWalletApprovalRequest(getSplWithdrawalRequest()),
+            requestID: request.id,
+            requestType: request.requestType,
             blockhash: getRecentBlockhash("8AJmcSXpfahcEfbL9cUq271oYvNVUNfs2gprAMaNB4Hr"),
             email: "dont care"
         )
@@ -159,17 +183,21 @@ class StrikeTests: XCTestCase {
     }
     
     func testSplWithdrawalRequestInitiationRequest() throws {
+        let initiation = MultisigOpInitiation(
+            opAccountCreationInfo: MultisigAccountCreationInfo(
+                accountSize: 848,
+                minBalanceForRentExemption: 6792960
+            ),
+            dataAccountCreationInfo: nil
+        )
+        let requestType: SolanaApprovalRequestType = getSplWithdrawalRequest()
+        let request = getWalletInitiationRequest(requestType, initiation: initiation)
         let pk = try Curve25519.Signing.PrivateKey.init(rawRepresentation: "ed942553764e7e8fdb90e812e0a40943434ead335f727eeb4eef05c7fb5ce870".data(using: .hexadecimal)!)
         let initiationRequest = StrikeApi.InitiationRequest(
             disposition: .Approve,
-            request: MultisigOpInitiation(
-                details: getSplWithdrawalRequest(),
-                opAccountCreationInfo: MultisigAccountCreationInfo(
-                    accountSize: 848,
-                    minBalanceForRentExemption: 6792960
-                ),
-                dataAccountCreationInfo: nil
-            ),
+            requestID: request.id,
+            initiation: initiation,
+            requestType: requestType,
             blockhash: getRecentBlockhash("8AJmcSXpfahcEfbL9cUq271oYvNVUNfs2gprAMaNB4Hr"),
             email: "dont care",
             opAccountPrivateKey: pk
@@ -182,9 +210,11 @@ class StrikeTests: XCTestCase {
     }
 
     func testUSDCconversionRequestApprovalDisposition() throws {
+        let request = getWalletApprovalRequest(getConversionRequest())
         let approvalRequest = StrikeApi.ApprovalDispositionRequest(
             disposition: .Approve,
-            request: getWalletApprovalRequest(getConversionRequest()),
+            requestID: request.id,
+            requestType: request.requestType,
             blockhash: getRecentBlockhash("4fkgvna8G3TPwHiBeWG6Hx6aTHx3qthuBAyBxVeYLD5P"),
             email: "dont care"
         )
@@ -195,17 +225,21 @@ class StrikeTests: XCTestCase {
     }
     
     func testUSDCconversionRequestInitiationRequest() throws {
+        let initiation = MultisigOpInitiation(
+            opAccountCreationInfo: MultisigAccountCreationInfo(
+                accountSize: 848,
+                minBalanceForRentExemption: 6792960
+            ),
+            dataAccountCreationInfo: nil
+        )
+        let requestType: SolanaApprovalRequestType = getConversionRequest()
+        let request = getWalletInitiationRequest(requestType, initiation: initiation)
         let pk = try Curve25519.Signing.PrivateKey.init(rawRepresentation: "5f27be66e3eb697a4274f9359c87f9069762a5e2cb7a63a622e923bd6119b963".data(using: .hexadecimal)!)
         let initiationRequest = StrikeApi.InitiationRequest(
             disposition: .Approve,
-            request: MultisigOpInitiation(
-                details: getConversionRequest(),
-                opAccountCreationInfo: MultisigAccountCreationInfo(
-                    accountSize: 848,
-                    minBalanceForRentExemption: 6792960
-                ),
-                dataAccountCreationInfo: nil
-            ),
+            requestID: request.id,
+            initiation: initiation,
+            requestType: requestType,
             blockhash: getRecentBlockhash("4fkgvna8G3TPwHiBeWG6Hx6aTHx3qthuBAyBxVeYLD5P"),
             email: "dont care",
             opAccountPrivateKey: pk
