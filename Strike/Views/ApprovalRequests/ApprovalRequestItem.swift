@@ -44,8 +44,6 @@ struct ApprovalRequestItem: View {
             } detail: {
                 AccountCreationDetails(request: request, accountCreation: accountCreation)
             }
-        case .multisigOpInitiation(let multisigOpInitiation):
-            UnknownRequestRow(request: request, timerPublisher: timerPublisher)
         }
     }
 }

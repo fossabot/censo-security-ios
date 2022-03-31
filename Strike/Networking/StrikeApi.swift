@@ -20,6 +20,7 @@ struct StrikeApi {
         case walletApprovals
         case registerApprovalDisposition(ApprovalDispositionRequest)
         case recentBlockHash
+        case initiateRequest(InitiationRequest)
 
         case registerPushToken(String, deviceIdentifier: String)
         case unregisterPushToken(deviceIdentifier: String)
@@ -190,7 +191,8 @@ extension StrikeApi {
 
     struct ApprovalDispositionRequest: Encodable {
         let disposition: ApprovalDisposition
-        let request: WalletApprovalRequest
+        let requestID: String
+        let requestType: SolanaApprovalRequestType
         let blockhash: Blockhash
         let email: String
 
@@ -217,7 +219,9 @@ extension StrikeApi {
     
     struct InitiationRequest: Encodable {
         let disposition: ApprovalDisposition
-        let request: MultisigOpInitiation
+        let requestID: String
+        let initiation: MultisigOpInitiation
+        let requestType: SolanaApprovalRequestType
         let blockhash: Blockhash
         let email: String
         let opAccountPrivateKey: Curve25519.Signing.PrivateKey
@@ -227,6 +231,7 @@ extension StrikeApi {
             case approvalDisposition
             case recentBlockhash
             case opAccountSignatureInfo
+            case supplyInstructionInitiatorSignatures
         }
 
         func encode(to encoder: Encoder) throws {
@@ -237,8 +242,9 @@ extension StrikeApi {
             let initiatorSignature = try Keychain.signature(for: self, email: email)
             try container.encode(initiatorSignature, forKey: .initiatorSignature)
             let opAccountSignatureInfo = SignatureInfo(publicKey: try self.opAccountPublicKey.base58EncodedString,
-                                                       signature: try Keychain.signatureForKey(for: self, privateKey: try self.opAccountPrivateKey))
+                                                       signature: try Keychain.signatureForKey(for: self, ephemeralPrivateKey: self.opAccountPrivateKey, email: email))
             try container.encode(opAccountSignatureInfo, forKey: .opAccountSignatureInfo)
+            try container.encode([String](), forKey: .supplyInstructionInitiatorSignatures)
         }
     }
 }
@@ -299,9 +305,11 @@ extension StrikeApi.Target: Moya.TargetType {
         case .connectDApp:
             return "v1/wallet-connect"
         case .registerApprovalDisposition(let request):
-            return "v1/wallet-approvals/\(request.request.id)/dispositions"
+            return "v1/wallet-approvals/\(request.requestID)/dispositions"
         case .recentBlockHash:
             return ""
+        case .initiateRequest(let request):
+            return "v1/wallet-approvals/\(request.requestID)/initiations"
         }
     }
     
@@ -314,7 +322,8 @@ extension StrikeApi.Target: Moya.TargetType {
         case .connectDApp,
              .addWalletSigner,
              .recentBlockHash,
-             .registerApprovalDisposition:
+             .registerApprovalDisposition,
+             .initiateRequest:
             return .post
         case .registerPushToken:
             return .post
@@ -355,6 +364,8 @@ extension StrikeApi.Target: Moya.TargetType {
             return .requestJSONEncodable(request)
         case .recentBlockHash:
             return .requestJSONEncodable(StrikeApi.RecentBlockhashRequest())
+        case .initiateRequest(let request):
+            return .requestJSONEncodable(request)
         }
     }
     

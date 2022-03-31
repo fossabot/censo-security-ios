@@ -11,7 +11,7 @@ import CryptoKit
 extension StrikeApi.InitiationRequest: SolanaSignable {
 
     var opCode: UInt8 {
-        switch request.details {
+        switch requestType {
         case .balanceAccountCreation:
             return 3
         case .withdrawalRequest:
@@ -63,8 +63,8 @@ extension StrikeApi.InitiationRequest: SolanaSignable {
         get throws {
             try Data(
                 UInt32(0).bytes +
-                request.opAccountCreationInfo.minBalanceForRentExemption.bytes +
-                request.opAccountCreationInfo.accountSize.bytes +
+                initiation.opAccountCreationInfo.minBalanceForRentExemption.bytes +
+                initiation.opAccountCreationInfo.accountSize.bytes +
                 signingData.walletProgramId.base58Bytes
             )
         }
@@ -73,7 +73,7 @@ extension StrikeApi.InitiationRequest: SolanaSignable {
 
     var instructionData: Data {
         get throws {
-            switch request.details {
+            switch requestType {
             case .balanceAccountCreation(let request):
                 return try Data(
                     [opCode] +
@@ -116,7 +116,7 @@ extension StrikeApi.InitiationRequest: SolanaSignable {
 
     var signingData: SolanaSigningData {
         get throws {
-            switch request.details {
+            switch requestType {
             case .balanceAccountCreation(let request):
                 return request.signingData
             case .withdrawalRequest(let request):
@@ -132,7 +132,7 @@ extension StrikeApi.InitiationRequest: SolanaSignable {
     }
     
     func instructionAccountMeta(approverPublicKey: PublicKey) throws -> [Account.Meta] {
-        switch request.details {
+        switch requestType {
         case .withdrawalRequest(let request):
             return try getTransferAndConversionAccounts(
                 sourceAddress: request.account.address!,

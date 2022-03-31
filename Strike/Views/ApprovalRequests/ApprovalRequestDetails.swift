@@ -7,9 +7,8 @@
 
 import Foundation
 import SwiftUI
-
+import CryptoKit
 import Combine
-import Moya
 
 struct ApprovalRequestDetails<Content>: View where Content : View {
     @Environment(\.strikeApi) var strikeApi
@@ -38,7 +37,7 @@ struct ApprovalRequestDetails<Content>: View where Content : View {
                     Button {
                         alert = .ignoreConfirmation
                     } label: {
-                        Text("Deny")
+                        Text(request.details.ignoreCaption.capitalized)
                             .loadingIndicator(when: action == .ignoring)
                     }
                     .buttonStyle(DestructiveButtonStyle())
@@ -69,7 +68,7 @@ struct ApprovalRequestDetails<Content>: View where Content : View {
             case .ignoreConfirmation:
                 return Alert(
                     title: Text("Are you sure?"),
-                    message: Text("You are about to deny \(request.requestType.summaryDescription)"),
+                    message: Text("You are about to \(request.details.ignoreCaption) \(request.requestType.summaryDescription)"),
                     primaryButton: Alert.Button.default(Text("Confirm"), action: ignore),
                     secondaryButton: Alert.Button.cancel(Text("Cancel"))
                 )
@@ -86,7 +85,7 @@ struct ApprovalRequestDetails<Content>: View where Content : View {
         case BiometryError.required:
             return "Please enable biometry in settings to continue"
         default:
-            return "Unable to deny request. Please try again"
+            return "Unable to \(request.details.ignoreCaption) request. Please try again"
         }
     }
 
@@ -103,14 +102,30 @@ struct ApprovalRequestDetails<Content>: View where Content : View {
         action = .approving
 
         strikeApi.provider.requestWithRecentBlockhash { blockhash in
-            .registerApprovalDisposition(
-                StrikeApi.ApprovalDispositionRequest(
-                    disposition: .Approve,
-                    request: request,
-                    blockhash: blockhash,
-                    email: user.loginName
+            switch request.details {
+            case .approval(let requestType):
+                return .registerApprovalDisposition(
+                    StrikeApi.ApprovalDispositionRequest(
+                        disposition: .Approve,
+                        requestID: request.id,
+                        requestType: requestType,
+                        blockhash: blockhash,
+                        email: user.loginName
+                    )
                 )
-            )
+            case .multisigOpInitiation(let initiation, let requestType):
+                return .initiateRequest(
+                    StrikeApi.InitiationRequest(
+                        disposition: .Approve,
+                        requestID: request.id,
+                        initiation: initiation,
+                        requestType: requestType,
+                        blockhash: blockhash,
+                        email: user.loginName,
+                        opAccountPrivateKey: Curve25519.Signing.PrivateKey()
+                    )
+                )
+            }
         } completion: { result in
             action = .none
 
@@ -128,14 +143,30 @@ struct ApprovalRequestDetails<Content>: View where Content : View {
         action = .ignoring
 
         strikeApi.provider.requestWithRecentBlockhash { blockhash in
-            .registerApprovalDisposition(
-                StrikeApi.ApprovalDispositionRequest(
-                    disposition: .Deny,
-                    request: request,
-                    blockhash: blockhash,
-                    email: user.loginName
+            switch request.details {
+            case .approval(let requestType):
+                return .registerApprovalDisposition(
+                    StrikeApi.ApprovalDispositionRequest(
+                        disposition: .Deny,
+                        requestID: request.id,
+                        requestType: requestType,
+                        blockhash: blockhash,
+                        email: user.loginName
+                    )
                 )
-            )
+            case .multisigOpInitiation(let initiation, let requestType):
+                return .initiateRequest(
+                    StrikeApi.InitiationRequest(
+                        disposition: .Deny,
+                        requestID: request.id,
+                        initiation: initiation,
+                        requestType: requestType,
+                        blockhash: blockhash,
+                        email: user.loginName,
+                        opAccountPrivateKey: Curve25519.Signing.PrivateKey()
+                    )
+                )
+            }
         } completion: { result in
             action = .none
 
@@ -175,6 +206,17 @@ extension ApprovalRequestDetails {
                  .approveError(let error):
                 return error.localizedDescription
             }
+        }
+    }
+}
+
+extension SolanaApprovalRequestDetails {
+    var ignoreCaption: String {
+        switch self {
+        case .multisigOpInitiation:
+            return "cancel"
+        case .approval:
+            return "deny"
         }
     }
 }

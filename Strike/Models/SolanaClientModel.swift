@@ -69,65 +69,25 @@ struct WalletApprovalRequest: Codable, Equatable {
     let numberOfDispositionsRequired: Int
     let numberOfApprovalsReceived: Int
     let numberOfDeniesReceived: Int
-    let requestType: SolanaApprovalRequestType
+    let details: SolanaApprovalRequestDetails
+}
 
-    private enum CodingKeys: String, CodingKey {
-        case id,
-             walletType,
-             submitterName,
-             submitterEmail,
-             submitDate,
-             approvalTimeoutInSeconds,
-             numberOfDispositionsRequired,
-             numberOfApprovalsReceived,
-             numberOfDeniesReceived,
-             requestType = "details"
-    }
-
-    init(id: String,
-                walletType: WalletType,
-                submitterName: String,
-                submitterEmail: String,
-                submitDate: Date,
-                approvalTimeoutInSeconds: Int,
-                numberOfDispositionsRequired: Int,
-                numberOfApprovalsReceived: Int,
-                numberOfDeniesReceived: Int,
-                requestType: SolanaApprovalRequestType) {
-        self.id = id
-        self.walletType = walletType
-        self.submitterName = submitterName
-        self.submitterEmail = submitterEmail
-        self.submitDate = submitDate
-        self.approvalTimeoutInSeconds = approvalTimeoutInSeconds
-        self.numberOfDispositionsRequired = numberOfDispositionsRequired
-        self.numberOfApprovalsReceived = numberOfApprovalsReceived
-        self.numberOfDeniesReceived = numberOfDeniesReceived
-        self.requestType = requestType
-    }
-
-    init(from decoder: Decoder) throws {
-        let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.id = try container.decode(String.self, forKey: .id)
-        self.walletType = try container.decode(WalletType.self, forKey: .walletType)
-        self.submitterName = try container.decode(String.self, forKey: .submitterName)
-        self.submitterEmail = try container.decode(String.self, forKey: .submitterEmail)
-        self.submitDate = try container.decode(Date.self, forKey: .submitDate)
-        self.approvalTimeoutInSeconds = try container.decode(Int.self, forKey: .approvalTimeoutInSeconds)
-        self.numberOfDispositionsRequired = try container.decode(Int.self, forKey: .numberOfDispositionsRequired)
-        self.numberOfApprovalsReceived = try container.decode(Int.self, forKey: .numberOfApprovalsReceived)
-        self.numberOfDeniesReceived = try container.decode(Int.self, forKey: .numberOfDeniesReceived)
-        self.requestType = try container.decodeIfPresent(SolanaApprovalRequestType.self, forKey: .requestType) ?? .unknown
+extension WalletApprovalRequest {
+    var requestType: SolanaApprovalRequestType {
+        switch details {
+        case .multisigOpInitiation(_, let requestType):
+            return requestType
+        case .approval(let requestType):
+            return requestType
+        }
     }
 }
 
-indirect enum SolanaApprovalRequestType: Codable, Equatable {
-
+enum SolanaApprovalRequestType: Codable, Equatable {
     case withdrawalRequest(WithdrawalRequest)
     case conversionRequest(ConversionRequest)
     case signersUpdate(SignersUpdate)
     case balanceAccountCreation(BalanceAccountCreation)
-    case multisigOpInitiation(MultisigOpInitiation)
     case unknown
 
     enum DetailsCodingKeys: String, CodingKey {
@@ -146,8 +106,6 @@ indirect enum SolanaApprovalRequestType: Codable, Equatable {
             self = .signersUpdate(try SignersUpdate(from: decoder))
         case "BalanceAccountCreation":
             self = .balanceAccountCreation(try BalanceAccountCreation(from: decoder))
-        case "MultisigOpInitiation":
-            self = .multisigOpInitiation(try MultisigOpInitiation(from: decoder))
         default:
             self = .unknown
         }
@@ -168,11 +126,44 @@ indirect enum SolanaApprovalRequestType: Codable, Equatable {
         case .balanceAccountCreation(let balanceAccountCreation):
             try container.encode("BalanceAccountCreation", forKey: .type)
             try balanceAccountCreation.encode(to: encoder)
-        case .multisigOpInitiation(let multisigOpInitiation):
-            try container.encode("MultisigOpInitiation", forKey: .type)
-            try multisigOpInitiation.encode(to: encoder)
         case .unknown:
             try container.encode("Unknown", forKey: .type)
+        }
+    }
+}
+
+enum SolanaApprovalRequestDetails: Codable, Equatable {
+    case approval(SolanaApprovalRequestType)
+    case multisigOpInitiation(MultisigOpInitiation, requestType: SolanaApprovalRequestType)
+
+    enum DetailsCodingKeys: String, CodingKey {
+        case type
+        case details
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: DetailsCodingKeys.self)
+        let type = try container.decode(String.self, forKey: .type)
+
+        switch type {
+        case "MultisigOpInitiation":
+            let requestType = try container.decode(SolanaApprovalRequestType.self, forKey: .details)
+            let initiation = try MultisigOpInitiation(from: decoder)
+            self = .multisigOpInitiation(initiation, requestType: requestType)
+        default:
+            self = .approval(try SolanaApprovalRequestType(from: decoder))
+        }
+    }
+
+    func encode(to encoder: Encoder) throws {
+        switch self {
+        case .multisigOpInitiation(let multisigOpInitiation, let request):
+            var container = encoder.container(keyedBy: DetailsCodingKeys.self)
+            try container.encode("MultisigOpInitiation", forKey: .type)
+            try container.encode(request, forKey: .details)
+            try multisigOpInitiation.encode(to: encoder)
+        case .approval(let request):
+            try request.encode(to: encoder)
         }
     }
 }
@@ -264,12 +255,10 @@ struct MultisigAccountCreationInfo: Codable, Equatable  {
     var minBalanceForRentExemption: UInt64
 }
 
-struct MultisigOpInitiation: Codable, Equatable  {
-    let details: SolanaApprovalRequestType
+struct MultisigOpInitiation: Codable, Equatable {
     let opAccountCreationInfo: MultisigAccountCreationInfo
     let dataAccountCreationInfo: MultisigAccountCreationInfo?
 }
-
 
 protocol SolanaSignable {
     func signableData(approverPublicKey: String) throws -> Data
@@ -288,7 +277,7 @@ extension WalletApprovalRequest {
             numberOfDispositionsRequired: 3,
             numberOfApprovalsReceived: 1,
             numberOfDeniesReceived: 1,
-            requestType: .withdrawalRequest(.sample)
+            details: .approval(.withdrawalRequest(.sample))
         )
     }
 
@@ -303,7 +292,7 @@ extension WalletApprovalRequest {
             numberOfDispositionsRequired: 3,
             numberOfApprovalsReceived: 1,
             numberOfDeniesReceived: 1,
-            requestType: .conversionRequest(.sample)
+            details: .approval(.conversionRequest(.sample))
         )
     }
 }

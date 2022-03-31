@@ -195,7 +195,22 @@ extension StrikeTests {
             numberOfDispositionsRequired: 1,
             numberOfApprovalsReceived: 1,
             numberOfDeniesReceived: 1,
-            requestType: requestType
+            details: .approval(requestType)
+        )
+    }
+
+    func getWalletInitiationRequest(_ requestType: SolanaApprovalRequestType, initiation: MultisigOpInitiation) -> WalletApprovalRequest {
+        return WalletApprovalRequest(
+            id: "1",
+            walletType: WalletType.Solana,
+            submitterName: "",
+            submitterEmail: "",
+            submitDate: Date(),
+            approvalTimeoutInSeconds: 1000,
+            numberOfDispositionsRequired: 1,
+            numberOfApprovalsReceived: 1,
+            numberOfDeniesReceived: 1,
+            details: .multisigOpInitiation(initiation, requestType: requestType)
         )
     }
     

@@ -14,7 +14,7 @@ extension StrikeApi.ApprovalDispositionRequest: SolanaSignable {
     }
 
     var opCode: UInt8 {
-        switch request.requestType {
+        switch requestType {
         case .balanceAccountCreation:
             return 1
         case .withdrawalRequest:
@@ -23,8 +23,6 @@ extension StrikeApi.ApprovalDispositionRequest: SolanaSignable {
             return 3
         case .signersUpdate:
             return 5
-        case .multisigOpInitiation:
-            return 0
         case .unknown:
             return 0
         }
@@ -41,7 +39,7 @@ extension StrikeApi.ApprovalDispositionRequest: SolanaSignable {
 
     var opHashData: Data {
         get throws {
-            switch request.requestType {
+            switch requestType {
             case .balanceAccountCreation(let request):
                 return try Data(
                     [opCode] +
@@ -82,8 +80,6 @@ extension StrikeApi.ApprovalDispositionRequest: SolanaSignable {
                     [request.slotUpdateType.toSolanaProgramValue()] +
                     request.signer.combinedBytes
                 )
-            case .multisigOpInitiation:
-                throw SolanaError.invalidRequest(reason: "Invalid request for Approval")
             case .unknown:
                 throw SolanaError.invalidRequest(reason: "Unknown Approval")
             }
@@ -92,7 +88,7 @@ extension StrikeApi.ApprovalDispositionRequest: SolanaSignable {
 
     var signingData: SolanaSigningData {
         get throws {
-            switch request.requestType {
+            switch requestType {
             case .balanceAccountCreation(let request):
                 return request.signingData
             case .withdrawalRequest(let request):
@@ -101,8 +97,6 @@ extension StrikeApi.ApprovalDispositionRequest: SolanaSignable {
                 return request.signingData
             case .signersUpdate(let request):
                 return request.signingData
-            case .multisigOpInitiation:
-                throw SolanaError.invalidRequest(reason: "Invalid request for Approval")
             case .unknown:
                 throw SolanaError.invalidRequest(reason: "Unknown Approval")
             }
