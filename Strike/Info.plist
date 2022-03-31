@@ -33,10 +33,6 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>Configuration</key>
 	<dict>
-		<key>SOLANA_COMMITMENT</key>
-		<string>$(SOLANA_COMMITMENT)</string>
-		<key>SOLANA_RPC_URL</key>
-		<string>$(SOLANA_RPC_URL)</string>
 		<key>API_BASE_URL</key>
 		<string>$(API_BASE_URL)</string>
 		<key>GK8_PUBLIC_KEY</key>
@@ -60,6 +56,10 @@
 		<string>$(RAYGUN_API_KEY)</string>
 		<key>RAYGUN_ENABLED</key>
 		<string>$(RAYGUN_ENABLED)</string>
+		<key>SOLANA_COMMITMENT</key>
+		<string>$(SOLANA_COMMITMENT)</string>
+		<key>SOLANA_RPC_URL</key>
+		<string>$(SOLANA_RPC_URL)</string>
 	</dict>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
