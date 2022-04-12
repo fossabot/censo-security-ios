@@ -18,10 +18,26 @@ extension StrikeApi.InitiationRequest: SolanaSignable, SolanaSignableSupplyInstr
             return 7
         case .conversionRequest:
             return 7
+        case .wrapConversionRequest:
+            return 10
         case .signersUpdate:
             return 12
+        case .walletConfigPolicyUpdate:
+            return 14
         case .dAppTransactionRequest:
             return 16
+        case .balanceAccountSettingsUpdate:
+            return 18
+        case .dAppBookUpdate:
+            return 20
+        case .addressBookUpdate:
+            return 22
+        case .balanceAccountNameUpdate:
+            return 24
+        case .balanceAccountPolicyUpdate:
+            return 26
+        case .splTokenAccountCreation:
+            return 29
         default:
             return 0
         }
@@ -121,16 +137,7 @@ extension StrikeApi.InitiationRequest: SolanaSignable, SolanaSignableSupplyInstr
             case .balanceAccountCreation(let request):
                 return Data(
                     [opCode] +
-                    request.accountInfo.identifier.sha256HashBytes +
-                    [request.accountSlot] +
-                    request.accountInfo.name.sha256HashBytes +
-                    [request.approvalsRequired] +
-                    request.approvalTimeout.convertToSeconds.bytes +
-                    ([UInt8(request.approvers.count)] as [UInt8]) +
-                    (request.approvers.flatMap(\.combinedBytes) as [UInt8]) +
-                    ([request.whitelistEnabled.toSolanaProgramValue()] as [UInt8]) +
-                    ([request.dappsEnabled.toSolanaProgramValue()] as [UInt8]) +
-                    ([request.addressBookSlot] as [UInt8])
+                    request.combinedBytes
                 )
             case .withdrawalRequest(let request):
                 return try Data(
@@ -146,6 +153,13 @@ extension StrikeApi.InitiationRequest: SolanaSignable, SolanaSignableSupplyInstr
                     request.symbolAndAmountInfo.fundamentalAmount.bytes +
                     request.destination.name.sha256HashBytes
                 )
+            case .wrapConversionRequest(let request):
+                return try Data(
+                    [opCode] +
+                    request.account.identifier.sha256HashBytes +
+                    request.symbolAndAmountInfo.fundamentalAmount.bytes +
+                    ([UInt8(request.symbolAndAmountInfo.symbolInfo.symbol == "SOL" ? 0 : 1)] as [UInt8])
+                )
             case .signersUpdate(let request):
                 return Data(
                     [opCode] +
@@ -159,6 +173,41 @@ extension StrikeApi.InitiationRequest: SolanaSignable, SolanaSignableSupplyInstr
                     request.dAppInfo.address.base58Bytes +
                     request.dAppInfo.name.sha256HashBytes +
                     ([UInt8(request.instructions.map { $0.instructions.count }.reduce(0, +))])
+                )
+            case .balanceAccountNameUpdate(let request):
+                return Data(
+                    [opCode] +
+                    request.combinedBytes
+                )
+            case .balanceAccountSettingsUpdate(let request):
+                return Data(
+                    [opCode] +
+                    request.combinedBytes
+                )
+            case .balanceAccountPolicyUpdate(let request):
+                return Data(
+                    [opCode] +
+                    request.combinedBytes
+                )
+            case .walletConfigPolicyUpdate(let request):
+                return Data(
+                    [opCode] +
+                    request.policyChanges.combinedBytes
+                )
+            case .addressBookUpdate(let request):
+                return Data(
+                    [opCode] +
+                    request.combinedBytes
+                )
+            case .dAppBookUpdate(let request):
+                return Data(
+                    [opCode] +
+                    request.combinedBytes
+                )
+            case .splTokenAccountCreation(let request):
+                return Data(
+                    [opCode] +
+                    request.combinedBytes
                 )
             default:
                 throw SolanaError.invalidRequest(reason: "Unknown Approval")
@@ -186,9 +235,25 @@ extension StrikeApi.InitiationRequest: SolanaSignable, SolanaSignableSupplyInstr
                 return request.signingData
             case .conversionRequest(let request):
                 return request.signingData
+            case .wrapConversionRequest(let request):
+                return request.signingData
             case .signersUpdate(let request):
                 return request.signingData
             case .dAppTransactionRequest(let request):
+                return request.signingData
+            case .balanceAccountNameUpdate(let request):
+                return request.signingData
+            case .balanceAccountPolicyUpdate(let request):
+                return request.signingData
+            case .balanceAccountSettingsUpdate(let request):
+                return request.signingData
+            case .addressBookUpdate(let request):
+                return request.signingData
+            case .dAppBookUpdate(let request):
+                return request.signingData
+            case .walletConfigPolicyUpdate(let request):
+                return request.signingData
+            case .splTokenAccountCreation(let request):
                 return request.signingData
             default:
                 throw SolanaError.invalidRequest(reason: "Unknown Initiation")
@@ -212,6 +277,23 @@ extension StrikeApi.InitiationRequest: SolanaSignable, SolanaSignableSupplyInstr
                 tokenMintAddress: request.symbolAndAmountInfo.symbolInfo.tokenMintAddress,
                 approverPublicKey: approverPublicKey
             )
+        case .wrapConversionRequest(let request):
+            let sourcePublicKey = try PublicKey(string: request.account.address)
+            let sourceTokenPublicKey = try PublicKey.associatedTokenAddress(walletAddress: sourcePublicKey,
+                                                                          tokenMintAddress: WRAPPED_SOL_MINT).get()
+            return [
+                Account.Meta(publicKey: try opAccountPublicKey, isSigner: false, isWritable: true),
+                Account.Meta(publicKey: try PublicKey(string: signingData.walletAddress), isSigner: false, isWritable: false),
+                Account.Meta(publicKey: sourcePublicKey, isSigner: false, isWritable: true),
+                Account.Meta(publicKey: sourceTokenPublicKey, isSigner: false, isWritable: true),
+                Account.Meta(publicKey: WRAPPED_SOL_MINT, isSigner: false, isWritable: false),
+                Account.Meta(publicKey: approverPublicKey, isSigner: true, isWritable: false),
+                Account.Meta(publicKey: SYSVAR_CLOCK_PUBKEY, isSigner: false, isWritable: false),
+                Account.Meta(publicKey: SYS_PROGRAM_ID, isSigner: false, isWritable: false),
+                Account.Meta(publicKey: TOKEN_PROGRAM_ID, isSigner: false, isWritable: false),
+                Account.Meta(publicKey: SYSVAR_RENT_PUBKEY, isSigner: false, isWritable: false),
+                Account.Meta(publicKey: ASSOCIATED_TOKEN_PROGRAM_ID, isSigner: false, isWritable: false)
+            ]
         case .dAppTransactionRequest:
             return [
                 Account.Meta(publicKey: try opAccountPublicKey, isSigner: false, isWritable: true),
@@ -220,10 +302,34 @@ extension StrikeApi.InitiationRequest: SolanaSignable, SolanaSignableSupplyInstr
                 Account.Meta(publicKey: approverPublicKey, isSigner: true, isWritable: false),
                 Account.Meta(publicKey: SYSVAR_CLOCK_PUBKEY, isSigner: false, isWritable: false)
             ]
-        default:
-            return [
+        case .splTokenAccountCreation(let request):
+            let tokenMintPublicKey = try PublicKey(string: request.tokenSymbolInfo.tokenMintAddress)
+            var accounts = [
                 Account.Meta(publicKey: try opAccountPublicKey, isSigner: false, isWritable: true),
                 Account.Meta(publicKey: try PublicKey(string: signingData.walletAddress), isSigner: false, isWritable: false),
+                Account.Meta(publicKey: approverPublicKey, isSigner: true, isWritable: false),
+                Account.Meta(publicKey: tokenMintPublicKey, isSigner: false, isWritable: false),
+                Account.Meta(publicKey: SYSVAR_CLOCK_PUBKEY, isSigner: false, isWritable: false)
+            ]
+            for balanceAccount in request.balanceAccounts {
+                let balanceAccountTokenAddress = try PublicKey.associatedTokenAddress(walletAddress: try PublicKey(string: balanceAccount.address),
+                                                                                      tokenMintAddress: tokenMintPublicKey).get()
+                accounts.append(Account.Meta(publicKey: balanceAccountTokenAddress, isSigner: false, isWritable: false))
+            }
+            return accounts;
+        default:
+            var walletAccountWritable = false
+            switch requestType {
+            case .walletConfigPolicyUpdate:
+                walletAccountWritable = true
+            case .balanceAccountPolicyUpdate:
+                walletAccountWritable = true
+            default:
+                walletAccountWritable = false
+            }
+            return [
+                Account.Meta(publicKey: try opAccountPublicKey, isSigner: false, isWritable: true),
+                Account.Meta(publicKey: try PublicKey(string: signingData.walletAddress), isSigner: false, isWritable: walletAccountWritable),
                 Account.Meta(publicKey: approverPublicKey, isSigner: true, isWritable: false),
                 Account.Meta(publicKey: SYSVAR_CLOCK_PUBKEY, isSigner: false, isWritable: false)
             ]

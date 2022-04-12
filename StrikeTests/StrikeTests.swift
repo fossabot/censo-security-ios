@@ -216,7 +216,7 @@ class StrikeTests: XCTestCase {
         )
     }
     
-    func testUSDCconversionRequestInitiationRequest() throws {
+    func testUSDCConversionRequestInitiationRequest() throws {
         let initiation = MultisigOpInitiation(
             opAccountCreationInfo: getOpAccountCreationInfo(),
             dataAccountCreationInfo: nil
@@ -238,6 +238,56 @@ class StrikeTests: XCTestCase {
         XCTAssertEqual(
             try initiationRequest.signableData(approverPublicKey: "6bpAbKqWrtXBtdnWqA8YSybGTeyD91u9MNzQuP7641MH").toHexString(),
             "0301090ed2c2e3ac53223ce6b5a6e04fe0f98071cf10a62646b6c1c100f9829afcced04e17ce130f4d1b123ff7f5f840aee4e9fa5665106de0cf2d1245c2b60f6ade6e245335831f99da167bf80d87be098dbaafc9309035be4aedd53460c3571c05b6a0d1e5bffc491a1b7890805d162a2cf8f0a2facae1df8579eddfed575e44f958108e829493f87ba7dc9497154a2cf8e656ee9979277f9ac88b5570775e7cb447d11bbc7e99fc43d0c442a698780fa1c7e4bcfbe5f100df263390ef0ab695e1b85aa1a993efade361c637af59e4d387db1aec381df43083f38e789f4bd57280889906a7d51718c774c928566398691d5eb68b5eb8a39b4b6d5c73555b21000000008ac94d970e27bc29711d382b1d5fac3fe82f590485b065e57fcc6e83424110cd000000000000000000000000000000000000000000000000000000000000000006ddf6e1d765a193d9cbe146ceeb79ac1cb485ed5f5b37913a8cf5857eff00a906a7d517192c5c51218cc94c3d4af17f58daee089ba1fd44e3dbd98a000000008c97258f4e2489f1bb3d1029148e0d830b5a1399daff1084048e7bd8dbe9f859a78bdd1907176367f56f7fab4bee90dabaa7372794fb0403f75f2a9658099847368087b86f466669f67bd484fc7ff4e7efe78ddff6e3f6abb399becabd8603360209020001340000000000a76700000000005003000000000000a78bdd1907176367f56f7fab4bee90dabaa7372794fb0403f75f2a96580998470d0d010503060207080400090a0b0c4907138543b25e89429dae0ec18a0fa198dc5006898f91b3b99d80a58d65bcdff9d00065cd1d00000000455c311d68d6d25a36bb09d58c4f62e6e637031c29b7fd3bd205b658500739cf"
+        )
+    }
+    
+    func testWrapConversionRequestInitiationRequest() throws {
+        let initiation = MultisigOpInitiation(
+            opAccountCreationInfo: getOpAccountCreationInfo(),
+            dataAccountCreationInfo: nil
+        )
+        let requestType: SolanaApprovalRequestType = getWrapConversionRequest()
+        let request = getWalletInitiationRequest(requestType, initiation: initiation)
+        let pk = try Curve25519.Signing.PrivateKey.init(rawRepresentation: "46b397c81d81f9c745bb61baf28337888907696c5e653a08a98b5ecbcc1c82c8".data(using: .hexadecimal)!)
+        let initiationRequest = StrikeApi.InitiationRequest(
+            disposition: .Approve,
+            requestID: request.id,
+            initiation: initiation,
+            requestType: requestType,
+            blockhash: getRecentBlockhash("3YPf6YcEVffsNo7eeo2YAQBhmZVUqNvRo5huz22H4tqY"),
+            email: "dont care",
+            opAccountPrivateKey: pk,
+            dataAccountPrivateKey: nil
+        )
+        
+        XCTAssertEqual(
+            try initiationRequest.signableData(approverPublicKey: "mPAWwEkDygfLX7A8Tzox6wyZRBrEudpRN2frKRXtLoX").toHexString(),
+            "0301080dd5259a75898e5c16f1b0675c496a9f8ee74dd7687f234ba93c0ff09dfee8af342a6b6e29ec48d15d528b864b1d58f441b263ed5f24db504928f6090efc8cb41d0b5e9dd920eed912053e5333449d7a92d82d80ebea0f12829aa36e93559b000e9b0ed81b27ca1d63c6a994c30755027b44c213a3a5948040c8d4e1703ed539fb5abb3bbf8838f5129b8032b1f4ffac9f4043ef034e9d9dab4d32f25055c7496fca16efb68a8429558cd821a7c0942d5960f0b2c5b7f3a54caf6920e4555ac75c069b8857feab8184fb687f634618c035dac439dc1aeb3b5598a0f0000000000106a7d51718c774c928566398691d5eb68b5eb8a39b4b6d5c73555b2100000000000000000000000000000000000000000000000000000000000000000000000006ddf6e1d765a193d9cbe146ceeb79ac1cb485ed5f5b37913a8cf5857eff00a906a7d517192c5c51218cc94c3d4af17f58daee089ba1fd44e3dbd98a000000008c97258f4e2489f1bb3d1029148e0d830b5a1399daff1084048e7bd8dbe9f859bad1dda43bb63a1a1841895eae8fc1398f8e943ccf637d87c6f25aa82b25067d25c1ff40d356e53b6d109057a197cad545e2e9e29a79491ac0eb43f251c31f030208020001340000000000a76700000000005003000000000000bad1dda43bb63a1a1841895eae8fc1398f8e943ccf637d87c6f25aa82b25067d0c0b0105030406020708090a0b2a0ac344bc80949c53bf0f257f570c1beea68dbc9563a595d46d5c9a7367bd12a5cc0065cd1d0000000000"
+        )
+    }
+    
+    func testUnwrapConversionRequestInitiationRequest() throws {
+        let initiation = MultisigOpInitiation(
+            opAccountCreationInfo: getOpAccountCreationInfo(),
+            dataAccountCreationInfo: nil
+        )
+        let requestType: SolanaApprovalRequestType = getUnwrapConversionRequest()
+        let request = getWalletInitiationRequest(requestType, initiation: initiation)
+        let pk = try Curve25519.Signing.PrivateKey.init(rawRepresentation: "4cdbc626f9cb68219d52d49d80041ab0b3b130d1880323a763b3eed8d4f8ff0f".data(using: .hexadecimal)!)
+        let initiationRequest = StrikeApi.InitiationRequest(
+            disposition: .Approve,
+            requestID: request.id,
+            initiation: initiation,
+            requestType: requestType,
+            blockhash: getRecentBlockhash("HGiNAhtgRePu3yoRfFGqYsJCBNr6aR3bhwuqwKKvjBC5"),
+            email: "dont care",
+            opAccountPrivateKey: pk,
+            dataAccountPrivateKey: nil
+        )
+        
+        XCTAssertEqual(
+            try initiationRequest.signableData(approverPublicKey: "mPAWwEkDygfLX7A8Tzox6wyZRBrEudpRN2frKRXtLoX").toHexString(),
+            "0301080dd5259a75898e5c16f1b0675c496a9f8ee74dd7687f234ba93c0ff09dfee8af34e9afcff207f5614ebfa3a3522dfdaac0bc90d89768e6ee6b0a700d41dada06180b5e9dd920eed912053e5333449d7a92d82d80ebea0f12829aa36e93559b000e9b0ed81b27ca1d63c6a994c30755027b44c213a3a5948040c8d4e1703ed539fb5abb3bbf8838f5129b8032b1f4ffac9f4043ef034e9d9dab4d32f25055c7496fca16efb68a8429558cd821a7c0942d5960f0b2c5b7f3a54caf6920e4555ac75c069b8857feab8184fb687f634618c035dac439dc1aeb3b5598a0f0000000000106a7d51718c774c928566398691d5eb68b5eb8a39b4b6d5c73555b2100000000000000000000000000000000000000000000000000000000000000000000000006ddf6e1d765a193d9cbe146ceeb79ac1cb485ed5f5b37913a8cf5857eff00a906a7d517192c5c51218cc94c3d4af17f58daee089ba1fd44e3dbd98a000000008c97258f4e2489f1bb3d1029148e0d830b5a1399daff1084048e7bd8dbe9f859bad1dda43bb63a1a1841895eae8fc1398f8e943ccf637d87c6f25aa82b25067df1c179763a9f9e0947da940adb8c19fe6adbd5224dd281193948061cbac2818a0208020001340000000000a76700000000005003000000000000bad1dda43bb63a1a1841895eae8fc1398f8e943ccf637d87c6f25aa82b25067d0c0b0105030406020708090a0b2a0ac344bc80949c53bf0f257f570c1beea68dbc9563a595d46d5c9a7367bd12a5cc00a3e1110000000001"
         )
     }
     
@@ -274,6 +324,408 @@ class StrikeTests: XCTestCase {
         XCTAssertEqual(
             signableInstructions[0].toHexString(),
             "0201010569ab8cb05413af9614f898a1f1fdfbc07e7ad5eb2eb1d0f1c49f448bd179c7156faf19e34b077fa6fc0aa169772175f79e48702c0e16b08386ab4417fdda690f22e751350f46e9e376632755acf9e726dd509d1727eb393633f2a55fef09d8c63bf5de3a06b66133071d3e95c0089cecb839508044a870e532f0d455cd085a4ee48fb9a24efc096601390bd1e6520fe5fc7334261760edd323ee24bfb2bebaeaf03b741fa589f8d771794b55f708641c8f3804528d3f75d8d824e0734c2f94fb01040302030193021c0001008c97258f4e2489f1bb3d1029148e0d830b5a1399daff1084048e7bd8dbe9f8590700033b917baa190d282c5d8558f14b3fb88767b12c9d44af0c255fc22788a7b6cea90110e1b08cab22278dcde5c7cc8817ba98806a9c6fc6676c0a155e2badda54373e033b917baa190d282c5d8558f14b3fb88767b12c9d44af0c255fc22788a7b6cea900e80ec9d9255634baed16a97a0a5f3e306a4201610e3822ae823060f5dc440fde0000000000000000000000000000000000000000000000000000000000000000000006ddf6e1d765a193d9cbe146ceeb79ac1cb485ed5f5b37913a8cf5857eff00a90006a7d517192c5c51218cc94c3d4af17f58daee089ba1fd44e3dbd98a000000000400010203ac"
+        )
+    }
+    
+    func testAddDAppBookEntryApprovalRequest() throws {
+        let request = getWalletApprovalRequest(getAddDAppBookEntry())
+        let approvalRequest = StrikeApi.ApprovalDispositionRequest(
+            disposition: .Approve,
+            requestID: request.id,
+            requestType: request.requestType,
+            blockhash: getRecentBlockhash("HQMSirmFbK8Xj4MyoGojSb7TGKXMgSBEX39ReMBYeKdN"),
+            email: "dont care"
+        )
+        XCTAssertEqual(
+            try approvalRequest.signableData(approverPublicKey: "ErWAApTUwunKAobwFrVe2fTwtqdsQecQqWKSQJzysg4z").toHexString(),
+            "02010205d5259a75898e5c16f1b0675c496a9f8ee74dd7687f234ba93c0ff09dfee8af34cdd65bdd5302de9e0457368e03c37dcd1e9029c3ab0facdcfc5889a81d0cf613f9437a782883b62d38738b3da7fada188510e6d57d1e09bdbde19cf7ed16e60206a7d51718c774c928566398691d5eb68b5eb8a39b4b6d5c73555b21000000002345d893870173ce1252d056dbc6c8bf6bb01f157832734623958d6249e63b5cf3b67706912f5eb25524a3aa127ebd6254ec0e940d3d07e693bf585735d27b3d0104030201032209018d6b5e5ef60fb6e4f56efd65c050a066d2195a8c3ec205bfd21116e175126792"
+        )
+    }
+    
+    func testAddDAppBookEntryInitiationRequest() throws {
+        let initiation = MultisigOpInitiation(
+            opAccountCreationInfo: getOpAccountCreationInfo(),
+            dataAccountCreationInfo: nil
+        )
+        let requestType: SolanaApprovalRequestType = getAddDAppBookEntry()
+        let request = getWalletInitiationRequest(requestType, initiation: initiation)
+        let pk = try Curve25519.Signing.PrivateKey.init(rawRepresentation: "72ff8f7fb4a441c93d4003e2bf67dd367e3293311c4f9433c422a2fbf305c477".data(using: .hexadecimal)!)
+        let initiationRequest = StrikeApi.InitiationRequest(
+            disposition: .Approve,
+            requestID: request.id,
+            initiation: initiation,
+            requestType: requestType,
+            blockhash: getRecentBlockhash("9rPXx8wSWt6SZUyEHTZTCmJxKf7EdqDJYHCmcUfGvDCx"),
+            email: "dont care",
+            opAccountPrivateKey: pk,
+            dataAccountPrivateKey: nil
+        )
+        
+        XCTAssertEqual(
+            try initiationRequest.signableData(approverPublicKey: "BEzpSizrNZpCeLWTk23nozu4T4wEzxoDJGoUUYBBhVbE").toHexString(),
+            "03010407d5259a75898e5c16f1b0675c496a9f8ee74dd7687f234ba93c0ff09dfee8af34f9437a782883b62d38738b3da7fada188510e6d57d1e09bdbde19cf7ed16e602982acb779028b0afdd5da5a26d78e1b82804ae449ce2fd2767d15f4325a7f111064fd89d243e47f6bd6ea9c7462d7ca1d504c02bf67d2b6738f892897ecaeab206a7d51718c774c928566398691d5eb68b5eb8a39b4b6d5c73555b210000000000000000000000000000000000000000000000000000000000000000000000002345d893870173ce1252d056dbc6c8bf6bb01f157832734623958d6249e63b5c83846f14fd6dccfe09a66897fedd27ea00e440ba619bc36e28ec856920cb6e9d0205020001340000000000a767000000000050030000000000002345d893870173ce1252d056dbc6c8bf6bb01f157832734623958d6249e63b5c06040103020444140100e4523ff383e6bb5f73d3745e3554f53a56c61ba17c7bc49e481a9d01a96fdbd6a9037bac86a669c3470c8da04dcec8f3a3ec671cd157264078954f38c387efb000"
+        )
+    }
+    
+    func testRemoveDAppBookEntryApprovalRequest() throws {
+        let request = getWalletApprovalRequest(getRemoveDAppBookEntry())
+        let approvalRequest = StrikeApi.ApprovalDispositionRequest(
+            disposition: .Approve,
+            requestID: request.id,
+            requestType: request.requestType,
+            blockhash: getRecentBlockhash("76VdskQyW28LuJJoJ7SQHAyYhMBSgkrGbouPudFfioN8"),
+            email: "dont care"
+        )
+        XCTAssertEqual(
+            try approvalRequest.signableData(approverPublicKey: "ErWAApTUwunKAobwFrVe2fTwtqdsQecQqWKSQJzysg4z").toHexString(),
+            "02010205d5259a75898e5c16f1b0675c496a9f8ee74dd7687f234ba93c0ff09dfee8af34cdd65bdd5302de9e0457368e03c37dcd1e9029c3ab0facdcfc5889a81d0cf61379dac0b298597dcbf810eb17709c9a75e1f4e569efe90f323c91c4ef084882c206a7d51718c774c928566398691d5eb68b5eb8a39b4b6d5c73555b21000000002345d893870173ce1252d056dbc6c8bf6bb01f157832734623958d6249e63b5c5a8e6778354218717f3793abf1852fffef24fd1229d7f64f3a6d1f71fe3d49c9010403020103220901b5b1693386fac4e14cbba717c482605fedd188df4188ef1f9f0046c94ab5b729"
+        )
+    }
+    
+    func testRemoveDAppBookEntryInitiationRequest() throws {
+        let initiation = MultisigOpInitiation(
+            opAccountCreationInfo: getOpAccountCreationInfo(),
+            dataAccountCreationInfo: nil
+        )
+        let requestType: SolanaApprovalRequestType = getRemoveDAppBookEntry()
+        let request = getWalletInitiationRequest(requestType, initiation: initiation)
+        let pk = try Curve25519.Signing.PrivateKey.init(rawRepresentation: "1d3462075eae5a46257981c00c20982dd27a88b70a88ff95455dad6bc88859aa".data(using: .hexadecimal)!)
+        let initiationRequest = StrikeApi.InitiationRequest(
+            disposition: .Approve,
+            requestID: request.id,
+            initiation: initiation,
+            requestType: requestType,
+            blockhash: getRecentBlockhash("8vU5xsx8gzbpoZVdy7bZrEh5ZAq9mFZN1YQhfr7342rZ"),
+            email: "dont care",
+            opAccountPrivateKey: pk,
+            dataAccountPrivateKey: nil
+        )
+        
+        XCTAssertEqual(
+            try initiationRequest.signableData(approverPublicKey: "BEzpSizrNZpCeLWTk23nozu4T4wEzxoDJGoUUYBBhVbE").toHexString(),
+            "03010407d5259a75898e5c16f1b0675c496a9f8ee74dd7687f234ba93c0ff09dfee8af3479dac0b298597dcbf810eb17709c9a75e1f4e569efe90f323c91c4ef084882c2982acb779028b0afdd5da5a26d78e1b82804ae449ce2fd2767d15f4325a7f111064fd89d243e47f6bd6ea9c7462d7ca1d504c02bf67d2b6738f892897ecaeab206a7d51718c774c928566398691d5eb68b5eb8a39b4b6d5c73555b210000000000000000000000000000000000000000000000000000000000000000000000002345d893870173ce1252d056dbc6c8bf6bb01f157832734623958d6249e63b5c75b43795726f2b3bbafcbd59cd9824ef543135097b4d9b55d51eed274e2f0df60205020001340000000000a767000000000050030000000000002345d893870173ce1252d056dbc6c8bf6bb01f157832734623958d6249e63b5c0604010302044414000100e4523ff383e6bb5f73d3745e3554f53a56c61ba17c7bc49e481a9d01a96fdbd6a9037bac86a669c3470c8da04dcec8f3a3ec671cd157264078954f38c387efb0"
+        )
+    }
+    
+    func testAddAddressBookEntryInitiationRequest() throws {
+        let initiation = MultisigOpInitiation(
+            opAccountCreationInfo: getOpAccountCreationInfo(),
+            dataAccountCreationInfo: nil
+        )
+        let requestType: SolanaApprovalRequestType = getAddAddressBookEntry()
+        let request = getWalletInitiationRequest(requestType, initiation: initiation)
+        let pk = try Curve25519.Signing.PrivateKey.init(rawRepresentation: "584bd0f067048bf9cfafb61fd95324add9c32b507096029a9c2bbe41f37dc15f".data(using: .hexadecimal)!)
+        let initiationRequest = StrikeApi.InitiationRequest(
+            disposition: .Approve,
+            requestID: request.id,
+            initiation: initiation,
+            requestType: requestType,
+            blockhash: getRecentBlockhash("2k2h349Dv1g94CmArR4mtA1PDzbqK66ePVXrViJUYesz"),
+            email: "dont care",
+            opAccountPrivateKey: pk,
+            dataAccountPrivateKey: nil
+        )
+        
+        XCTAssertEqual(
+            try initiationRequest.signableData(approverPublicKey: "Bg38YKHxGQrVRMB254yCKgVjtRapi68H4SD1RCiwWo7b").toHexString(),
+            "03010407d5259a75898e5c16f1b0675c496a9f8ee74dd7687f234ba93c0ff09dfee8af346a09fad4652960dff9ac2bfe72f66fa35828c2bfa1eb58d981f5bd4d6e6368969e94ede101ab5be0734b6500e0fc10b51ca23e89e67391657197fd7b2529c13e3468bd8cddd071cd3bb0a3c50c4b5cab7dfe4ae3328081889ebabd48d8b7c9c006a7d51718c774c928566398691d5eb68b5eb8a39b4b6d5c73555b2100000000000000000000000000000000000000000000000000000000000000000000000064424795ac2edb4b21b281bd120d0ababb12d4ae690773f41f5f61027a7add9f19e192a9fb5dd780345fb1767bebdf6d96b2e5b9ca671f0c6b1cfecf390a00290205020001340000000000a7670000000000500300000000000064424795ac2edb4b21b281bd120d0ababb12d4ae690773f41f5f61027a7add9f06040103020445160101b2d8f074dd1e2bd86969cafa743e1fa4142c2a653c753c3ffe8e423c253f4f24cd62deaa07b0058a44cc8ec7b3a5fc67156a8b6d82bb4223b58d554a624256be0000"
+        )
+    }
+    
+    func testAddAddressBookEntryApprovalRequest() throws {
+        let request = getWalletApprovalRequest(getAddAddressBookEntry())
+        let approvalRequest = StrikeApi.ApprovalDispositionRequest(
+            disposition: .Approve,
+            requestID: request.id,
+            requestType: request.requestType,
+            blockhash: getRecentBlockhash("CQnSFRqhv5L7aERLDL4umuuK4uxt35kPiPE4aGEzeE4Q"),
+            email: "dont care"
+        )
+        XCTAssertEqual(
+            try approvalRequest.signableData(approverPublicKey: "GYFxPGjuBXYKg1S91zgpVZCLP4guLGRho27bTAkAzjVL").toHexString(),
+            "02010205d5259a75898e5c16f1b0675c496a9f8ee74dd7687f234ba93c0ff09dfee8af34e6e137f1b3e582e55db0f594a6cb6f05d5a08fc71d7413042921bf24f72e73eb6a09fad4652960dff9ac2bfe72f66fa35828c2bfa1eb58d981f5bd4d6e63689606a7d51718c774c928566398691d5eb68b5eb8a39b4b6d5c73555b210000000064424795ac2edb4b21b281bd120d0ababb12d4ae690773f41f5f61027a7add9fa98849e71b8b58b54fd82d1c7aeab5909ec262b36caf49fe1f7bbd0f1ef52251010403020103220901f4165fbb207f95f5e37dc69454109fcfa88d75fe31b6444723b898c8d117ffb9"
+        )
+    }
+    
+    func testWhitelistAddressBookEntryInitiationRequest() throws {
+        let initiation = MultisigOpInitiation(
+            opAccountCreationInfo: getOpAccountCreationInfo(),
+            dataAccountCreationInfo: nil
+        )
+        let requestType: SolanaApprovalRequestType = getAddressBookWhitelistUpdate()
+        let request = getWalletInitiationRequest(requestType, initiation: initiation)
+        let pk = try Curve25519.Signing.PrivateKey.init(rawRepresentation: "0b54157b978b3fb33a1baf99bc18bcac0eb2ace03fb1fe4fa8ee1a03151459d6".data(using: .hexadecimal)!)
+        let initiationRequest = StrikeApi.InitiationRequest(
+            disposition: .Approve,
+            requestID: request.id,
+            initiation: initiation,
+            requestType: requestType,
+            blockhash: getRecentBlockhash("5NLw4Q2cSbJruSap1wB8bwKgE1BehhAhuFJxZpKLLoh9"),
+            email: "dont care",
+            opAccountPrivateKey: pk,
+            dataAccountPrivateKey: nil
+        )
+        
+        XCTAssertEqual(
+            try initiationRequest.signableData(approverPublicKey: "Bg38YKHxGQrVRMB254yCKgVjtRapi68H4SD1RCiwWo7b").toHexString(),
+            "03010407d5259a75898e5c16f1b0675c496a9f8ee74dd7687f234ba93c0ff09dfee8af3487a7481044ee570421adbd55b3b4d959b20e74fa0bd065f7d74fd72c2b1875699e94ede101ab5be0734b6500e0fc10b51ca23e89e67391657197fd7b2529c13e3468bd8cddd071cd3bb0a3c50c4b5cab7dfe4ae3328081889ebabd48d8b7c9c006a7d51718c774c928566398691d5eb68b5eb8a39b4b6d5c73555b2100000000000000000000000000000000000000000000000000000000000000000000000064424795ac2edb4b21b281bd120d0ababb12d4ae690773f41f5f61027a7add9f40e67b5fc931c2068538c4e3a8c11d86accdfb5e19f4fac708298bae899bd2b80205020001340000000000a7670000000000500300000000000064424795ac2edb4b21b281bd120d0ababb12d4ae690773f41f5f61027a7add9f06040103020467160000013c69f1851b7318b7f14f04992a80df6054b8bc4f325f24bce0d378d770e870c40101b2d8f074dd1e2bd86969cafa743e1fa4142c2a653c753c3ffe8e423c253f4f24cd62deaa07b0058a44cc8ec7b3a5fc67156a8b6d82bb4223b58d554a624256be00"
+        )
+    }
+    
+    func testWhitelistAddressBookEntryApprovalRequest() throws {
+        let request = getWalletApprovalRequest(getAddressBookWhitelistUpdate())
+        let approvalRequest = StrikeApi.ApprovalDispositionRequest(
+            disposition: .Approve,
+            requestID: request.id,
+            requestType: request.requestType,
+            blockhash: getRecentBlockhash("AyQ8biRdSG1koAMyRVBQGp3NG6NGZtNZMUAxcEpydqFP"),
+            email: "dont care"
+        )
+        XCTAssertEqual(
+            try approvalRequest.signableData(approverPublicKey: "GYFxPGjuBXYKg1S91zgpVZCLP4guLGRho27bTAkAzjVL").toHexString(),
+            "02010205d5259a75898e5c16f1b0675c496a9f8ee74dd7687f234ba93c0ff09dfee8af34e6e137f1b3e582e55db0f594a6cb6f05d5a08fc71d7413042921bf24f72e73eb87a7481044ee570421adbd55b3b4d959b20e74fa0bd065f7d74fd72c2b18756906a7d51718c774c928566398691d5eb68b5eb8a39b4b6d5c73555b210000000064424795ac2edb4b21b281bd120d0ababb12d4ae690773f41f5f61027a7add9f942bdca9735da4d8b2c4272d049163e892b255517e410249cf592e737f67c9420104030201032209019c4072ce0c1eb0bcdbd363de6e32fa3510e1b98a9493809711cdaecdd01d37a9"
+        )
+    }
+    
+    func testRemoveWhitelistAddressBookEntryInitiationRequest() throws {
+        let initiation = MultisigOpInitiation(
+            opAccountCreationInfo: getOpAccountCreationInfo(),
+            dataAccountCreationInfo: nil
+        )
+        let requestType: SolanaApprovalRequestType = getAddressBookWhitelistRemove()
+        let request = getWalletInitiationRequest(requestType, initiation: initiation)
+        let pk = try Curve25519.Signing.PrivateKey.init(rawRepresentation: "4f4649c4dd936a7161d63376ba2d2e6372aee4ef8a9a234f01cd0954b628dce2".data(using: .hexadecimal)!)
+        let initiationRequest = StrikeApi.InitiationRequest(
+            disposition: .Approve,
+            requestID: request.id,
+            initiation: initiation,
+            requestType: requestType,
+            blockhash: getRecentBlockhash("4NgwRtPcqw6qc1DxXqBEbUFDKaCoM8H7VsFaTp3qRXfy"),
+            email: "dont care",
+            opAccountPrivateKey: pk,
+            dataAccountPrivateKey: nil
+        )
+        
+        XCTAssertEqual(
+            try initiationRequest.signableData(approverPublicKey: "Bg38YKHxGQrVRMB254yCKgVjtRapi68H4SD1RCiwWo7b").toHexString(),
+            "03010407d5259a75898e5c16f1b0675c496a9f8ee74dd7687f234ba93c0ff09dfee8af34ecd4aa14aa2e8b20411a9c971b70a6d2606f87438168b85eb977f7f1b59688719e94ede101ab5be0734b6500e0fc10b51ca23e89e67391657197fd7b2529c13e3468bd8cddd071cd3bb0a3c50c4b5cab7dfe4ae3328081889ebabd48d8b7c9c006a7d51718c774c928566398691d5eb68b5eb8a39b4b6d5c73555b2100000000000000000000000000000000000000000000000000000000000000000000000064424795ac2edb4b21b281bd120d0ababb12d4ae690773f41f5f61027a7add9f32216a9291060d94a64913610f243e2f5b3836e8b5c386b1f1c04b2e9c5830cc0205020001340000000000a7670000000000500300000000000064424795ac2edb4b21b281bd120d0ababb12d4ae690773f41f5f61027a7add9f06040103020467160000013c69f1851b7318b7f14f04992a80df6054b8bc4f325f24bce0d378d770e870c4000101b2d8f074dd1e2bd86969cafa743e1fa4142c2a653c753c3ffe8e423c253f4f24cd62deaa07b0058a44cc8ec7b3a5fc67156a8b6d82bb4223b58d554a624256be"
+        )
+    }
+    
+    func testRemoveWhitelistAddressBookEntryApprovalRequest() throws {
+        let request = getWalletApprovalRequest(getAddressBookWhitelistRemove())
+        let approvalRequest = StrikeApi.ApprovalDispositionRequest(
+            disposition: .Approve,
+            requestID: request.id,
+            requestType: request.requestType,
+            blockhash: getRecentBlockhash("3YjjuHiU3g7p12BFGPvAw4aCKj7JfbecDvtTX8Fjfxne"),
+            email: "dont care"
+        )
+        XCTAssertEqual(
+            try approvalRequest.signableData(approverPublicKey: "GYFxPGjuBXYKg1S91zgpVZCLP4guLGRho27bTAkAzjVL").toHexString(),
+            "02010205d5259a75898e5c16f1b0675c496a9f8ee74dd7687f234ba93c0ff09dfee8af34e6e137f1b3e582e55db0f594a6cb6f05d5a08fc71d7413042921bf24f72e73ebecd4aa14aa2e8b20411a9c971b70a6d2606f87438168b85eb977f7f1b596887106a7d51718c774c928566398691d5eb68b5eb8a39b4b6d5c73555b210000000064424795ac2edb4b21b281bd120d0ababb12d4ae690773f41f5f61027a7add9f25d8b470c6eef99858d0821f01f94f9cb255626f08743557ec4e1c2b2a3fa5230104030201032209013fce038435fef269f2a63f20554c472fd8ae4d1cfe2ad77d36660ea3a9948c4e"
+        )
+    }
+    
+    func testWalletConfigPolicyUpdateApprovalRequest() throws {
+        let request = getWalletApprovalRequest(getWalletConfigPolicyUpdate())
+        let approvalRequest = StrikeApi.ApprovalDispositionRequest(
+            disposition: .Approve,
+            requestID: request.id,
+            requestType: request.requestType,
+            blockhash: getRecentBlockhash("7pTNK6y6qEDZj5joHpCEvXQ6eL7xeJmuj6Xxm6ZM9ouB"),
+            email: "dont care"
+        )
+        XCTAssertEqual(
+            try approvalRequest.signableData(approverPublicKey: "GYFxPGjuBXYKg1S91zgpVZCLP4guLGRho27bTAkAzjVL").toHexString(),
+            "02010205d5259a75898e5c16f1b0675c496a9f8ee74dd7687f234ba93c0ff09dfee8af34e6e137f1b3e582e55db0f594a6cb6f05d5a08fc71d7413042921bf24f72e73eb31cab2db85988f02cdaf0fdee819c128cf99f61da76db2bb52e41df99cecec9506a7d51718c774c928566398691d5eb68b5eb8a39b4b6d5c73555b210000000064424795ac2edb4b21b281bd120d0ababb12d4ae690773f41f5f61027a7add9f654e3bbd34210a73431d2dfddb73a1c1377545c89a8b3a7ca0b471661c8ca70a010403020103220901c7a6b13f401fccb54168d1a0970a9fe18b179b43f0884f1d455943d660811e56"
+        )
+    }
+    
+    func testWalletConfigPolicyUpdateInitiationRequest() throws {
+        let initiation = MultisigOpInitiation(
+            opAccountCreationInfo: getOpAccountCreationInfo(),
+            dataAccountCreationInfo: nil
+        )
+        let requestType: SolanaApprovalRequestType = getWalletConfigPolicyUpdate()
+        let request = getWalletInitiationRequest(requestType, initiation: initiation)
+
+        let pk = try Curve25519.Signing.PrivateKey.init(rawRepresentation: "ba79cd832d94634cd7a9095dd0ec2a802c53d7fe865c79f81599f2b59e8df8c6".data(using: .hexadecimal)!)
+        let initiationRequest = StrikeApi.InitiationRequest(
+            disposition: .Approve,
+            requestID: request.id,
+            initiation: initiation,
+            requestType: requestType,
+            blockhash: getRecentBlockhash("GR5h66Q1LBvD6snaM1kQrNBBFR1h3bEniYKWLCjkCVsR"),
+            email: "dont care",
+            opAccountPrivateKey: pk,
+            dataAccountPrivateKey: nil
+        )
+        
+        XCTAssertEqual(
+            try initiationRequest.signableData(approverPublicKey: "Bg38YKHxGQrVRMB254yCKgVjtRapi68H4SD1RCiwWo7b").toHexString(),
+            "03010307d5259a75898e5c16f1b0675c496a9f8ee74dd7687f234ba93c0ff09dfee8af3431cab2db85988f02cdaf0fdee819c128cf99f61da76db2bb52e41df99cecec959e94ede101ab5be0734b6500e0fc10b51ca23e89e67391657197fd7b2529c13e3468bd8cddd071cd3bb0a3c50c4b5cab7dfe4ae3328081889ebabd48d8b7c9c006a7d51718c774c928566398691d5eb68b5eb8a39b4b6d5c73555b2100000000000000000000000000000000000000000000000000000000000000000000000064424795ac2edb4b21b281bd120d0ababb12d4ae690773f41f5f61027a7add9fe50a8c31ce120417a6af1dd5e65a4e896f71a1dce03a8a52dddf1bc423f1ea440205020001340000000000a7670000000000500300000000000064424795ac2edb4b21b281bd120d0ababb12d4ae690773f41f5f61027a7add9f0604010302042f0e010300000000000000000001027bb36fc2ac6bacbbba6e60de5c59ab7fa18f5fb45a5100311706d02017aa8f0000"
+        )
+    }
+    
+    func testBalanceAccountSettingsUpdateApprovalRequest() throws {
+        let request = getWalletApprovalRequest(getBalanceAccountSettingsUpdate())
+        let approvalRequest = StrikeApi.ApprovalDispositionRequest(
+            disposition: .Approve,
+            requestID: request.id,
+            requestType: request.requestType,
+            blockhash: getRecentBlockhash("5QJJ2uizSGqFZLA6oo6zmp1aMfmkjeXki1LLKsyWs6yV"),
+            email: "dont care"
+        )
+        XCTAssertEqual(
+            try approvalRequest.signableData(approverPublicKey: "GYFxPGjuBXYKg1S91zgpVZCLP4guLGRho27bTAkAzjVL").toHexString(),
+            "02010205d5259a75898e5c16f1b0675c496a9f8ee74dd7687f234ba93c0ff09dfee8af34e6e137f1b3e582e55db0f594a6cb6f05d5a08fc71d7413042921bf24f72e73ebe40128881204af69745129ee3357a788ce003ce6171a9e92a011afc775b8ce6006a7d51718c774c928566398691d5eb68b5eb8a39b4b6d5c73555b210000000064424795ac2edb4b21b281bd120d0ababb12d4ae690773f41f5f61027a7add9f4166a90b6675c56cf09852855a8eab13521f8473f3b720f3149e6c2c5edc0ea00104030201032209011df7ee9884d25dddac4fa0b133456174394207dba45a16fbd963f07c8c5447f4"
+        )
+    }
+    
+    func testBalanceAccountSettingsUpdateUpdateInitiationRequest() throws {
+        let initiation = MultisigOpInitiation(
+            opAccountCreationInfo: getOpAccountCreationInfo(),
+            dataAccountCreationInfo: nil
+        )
+        let requestType: SolanaApprovalRequestType = getBalanceAccountSettingsUpdate()
+        let request = getWalletInitiationRequest(requestType, initiation: initiation)
+        let pk = try Curve25519.Signing.PrivateKey.init(rawRepresentation: "43ae13e0827d8034dbb880c3210ab7f7b7c49c5d2b3120933c184c8942110ed0".data(using: .hexadecimal)!)
+        let initiationRequest = StrikeApi.InitiationRequest(
+            disposition: .Approve,
+            requestID: request.id,
+            initiation: initiation,
+            requestType: requestType,
+            blockhash: getRecentBlockhash("EoUoU5nnW4dxZzRi1oqXy9xtt63n4b14B2w2EpBnzbVW"),
+            email: "dont care",
+            opAccountPrivateKey: pk,
+            dataAccountPrivateKey: nil
+        )
+        
+        XCTAssertEqual(
+            try initiationRequest.signableData(approverPublicKey: "Bg38YKHxGQrVRMB254yCKgVjtRapi68H4SD1RCiwWo7b").toHexString(),
+            "03010407d5259a75898e5c16f1b0675c496a9f8ee74dd7687f234ba93c0ff09dfee8af34e40128881204af69745129ee3357a788ce003ce6171a9e92a011afc775b8ce609e94ede101ab5be0734b6500e0fc10b51ca23e89e67391657197fd7b2529c13e3468bd8cddd071cd3bb0a3c50c4b5cab7dfe4ae3328081889ebabd48d8b7c9c006a7d51718c774c928566398691d5eb68b5eb8a39b4b6d5c73555b2100000000000000000000000000000000000000000000000000000000000000000000000064424795ac2edb4b21b281bd120d0ababb12d4ae690773f41f5f61027a7add9fcd1015062914321b0bbfc892cc4612963106435c54d4bbe1abb5cc8949b16b750205020001340000000000a7670000000000500300000000000064424795ac2edb4b21b281bd120d0ababb12d4ae690773f41f5f61027a7add9f06040103020425123c69f1851b7318b7f14f04992a80df6054b8bc4f325f24bce0d378d770e870c401010000"
+        )
+    }
+    
+    func testBalanceAccountPolicyUpdateApprovalRequest() throws {
+        let request = getWalletApprovalRequest(getBalanceAccountPolicyUpdate())
+        let approvalRequest = StrikeApi.ApprovalDispositionRequest(
+            disposition: .Approve,
+            requestID: request.id,
+            requestType: request.requestType,
+            blockhash: getRecentBlockhash("FnkMGFjqJLXCBwHewMv1ZhDoyhLMDgyByzcqesxSsmE"),
+            email: "dont care"
+        )
+        XCTAssertEqual(
+            try approvalRequest.signableData(approverPublicKey: "GYFxPGjuBXYKg1S91zgpVZCLP4guLGRho27bTAkAzjVL").toHexString(),
+            "02010205d5259a75898e5c16f1b0675c496a9f8ee74dd7687f234ba93c0ff09dfee8af34e6e137f1b3e582e55db0f594a6cb6f05d5a08fc71d7413042921bf24f72e73ebe7b32e6d93f1c1f4dbb3409025e13c12a5435a91acd65bae3a898d0c89f086e606a7d51718c774c928566398691d5eb68b5eb8a39b4b6d5c73555b210000000064424795ac2edb4b21b281bd120d0ababb12d4ae690773f41f5f61027a7add9f03c9dbab26829d45371555ee003b4b4cc72678302ec48ff1c37cfde891c7ace5010403020103220901dbecd0c2412e3797ecd7a8492839fb564996be5f1007aaf00aff2a89ab768260"
+        )
+    }
+    
+    func testBalanceAccountPolicyUpdateInitiationRequest() throws {
+        let initiation = MultisigOpInitiation(
+            opAccountCreationInfo: getOpAccountCreationInfo(),
+            dataAccountCreationInfo: nil
+        )
+        let requestType: SolanaApprovalRequestType = getBalanceAccountPolicyUpdate()
+        let request = getWalletInitiationRequest(requestType, initiation: initiation)
+
+        let pk = try Curve25519.Signing.PrivateKey.init(rawRepresentation: "b27a30c398bad586458534848ecc77d20582780c505d79f1872d98ffe5209691".data(using: .hexadecimal)!)
+        let initiationRequest = StrikeApi.InitiationRequest(
+            disposition: .Approve,
+            requestID: request.id,
+            initiation: initiation,
+            requestType: requestType,
+            blockhash: getRecentBlockhash("26YtehjR685j9947VENmwR3p1vicKhzMontW2gfqLesR"),
+            email: "dont care",
+            opAccountPrivateKey: pk,
+            dataAccountPrivateKey: nil
+        )
+        
+        XCTAssertEqual(
+            try initiationRequest.signableData(approverPublicKey: "Bg38YKHxGQrVRMB254yCKgVjtRapi68H4SD1RCiwWo7b").toHexString(),
+            "03010307d5259a75898e5c16f1b0675c496a9f8ee74dd7687f234ba93c0ff09dfee8af34e7b32e6d93f1c1f4dbb3409025e13c12a5435a91acd65bae3a898d0c89f086e69e94ede101ab5be0734b6500e0fc10b51ca23e89e67391657197fd7b2529c13e3468bd8cddd071cd3bb0a3c50c4b5cab7dfe4ae3328081889ebabd48d8b7c9c006a7d51718c774c928566398691d5eb68b5eb8a39b4b6d5c73555b2100000000000000000000000000000000000000000000000000000000000000000000000064424795ac2edb4b21b281bd120d0ababb12d4ae690773f41f5f61027a7add9f1047a6526e389a5abc3c6cc3e328afea2c53b24d8d598c786f28bc67e474d8980205020001340000000000a7670000000000500300000000000064424795ac2edb4b21b281bd120d0ababb12d4ae690773f41f5f61027a7add9f0604010302044f1a3c69f1851b7318b7f14f04992a80df6054b8bc4f325f24bce0d378d770e870c401020000000000000000000101e6e137f1b3e582e55db0f594a6cb6f05d5a08fc71d7413042921bf24f72e73eb00"
+        )
+    }
+    
+    func testBalanceAccountNameUpdateApprovalRequest() throws {
+        let request = getWalletApprovalRequest(getBalanceAccountNameUpdate())
+        let approvalRequest = StrikeApi.ApprovalDispositionRequest(
+            disposition: .Approve,
+            requestID: request.id,
+            requestType: request.requestType,
+            blockhash: getRecentBlockhash("Dx6qrNbS1xovmV9SfyjqQD77JBYv8yPyPjR7837fvuC8"),
+            email: "dont care"
+        )
+        XCTAssertEqual(
+            try approvalRequest.signableData(approverPublicKey: "GYFxPGjuBXYKg1S91zgpVZCLP4guLGRho27bTAkAzjVL").toHexString(),
+            "02010205d5259a75898e5c16f1b0675c496a9f8ee74dd7687f234ba93c0ff09dfee8af34e6e137f1b3e582e55db0f594a6cb6f05d5a08fc71d7413042921bf24f72e73eb5c5c48251d37fc912ce1ac482a5b79e5f904d3202d47287f39edf2e1b6bb241006a7d51718c774c928566398691d5eb68b5eb8a39b4b6d5c73555b210000000064424795ac2edb4b21b281bd120d0ababb12d4ae690773f41f5f61027a7add9fc069cb21b4742b9d9525d977328dbc26c920364dc56d70bb6abd30f5c7ddae3d0104030201032209010c2b34abcc84e4ae92d3120231ba6a13303976d34e1e8951565dbe2700ca6538"
+        )
+    }
+    
+    func testBalanceAccountNameUpdateInitiationRequest() throws {
+        let initiation = MultisigOpInitiation(
+            opAccountCreationInfo: getOpAccountCreationInfo(),
+            dataAccountCreationInfo: nil
+        )
+        let requestType: SolanaApprovalRequestType = getBalanceAccountNameUpdate()
+        let request = getWalletInitiationRequest(requestType, initiation: initiation)
+        let pk = try Curve25519.Signing.PrivateKey.init(rawRepresentation: "7707e53ddb688826e19d5d1d651450222c3d6cf73680fd331430278bba237328".data(using: .hexadecimal)!)
+        let initiationRequest = StrikeApi.InitiationRequest(
+            disposition: .Approve,
+            requestID: request.id,
+            initiation: initiation,
+            requestType: requestType,
+            blockhash: getRecentBlockhash("9krPSEV48dRoKQuJU4j7FxkU3UoJ77oSrMAsyk6B1fCQ"),
+            email: "dont care",
+            opAccountPrivateKey: pk,
+            dataAccountPrivateKey: nil
+        )
+        
+        XCTAssertEqual(
+            try initiationRequest.signableData(approverPublicKey: "Bg38YKHxGQrVRMB254yCKgVjtRapi68H4SD1RCiwWo7b").toHexString(),
+            "03010407d5259a75898e5c16f1b0675c496a9f8ee74dd7687f234ba93c0ff09dfee8af345c5c48251d37fc912ce1ac482a5b79e5f904d3202d47287f39edf2e1b6bb24109e94ede101ab5be0734b6500e0fc10b51ca23e89e67391657197fd7b2529c13e3468bd8cddd071cd3bb0a3c50c4b5cab7dfe4ae3328081889ebabd48d8b7c9c006a7d51718c774c928566398691d5eb68b5eb8a39b4b6d5c73555b2100000000000000000000000000000000000000000000000000000000000000000000000064424795ac2edb4b21b281bd120d0ababb12d4ae690773f41f5f61027a7add9f82194fe24537fa0ff325cbdd0c0f78b5905cc792dc8fb546d77798d6a77a816d0205020001340000000000a7670000000000500300000000000064424795ac2edb4b21b281bd120d0ababb12d4ae690773f41f5f61027a7add9f06040103020441183c69f1851b7318b7f14f04992a80df6054b8bc4f325f24bce0d378d770e870c44e637072f628e09a14c28a2559381705b1674b55541eb62eb6db926704666ac5"
+        )
+    }
+    
+    func testSPLTokenAccountCreationInitiationRequest() throws {
+        let initiation = MultisigOpInitiation(
+            opAccountCreationInfo: getOpAccountCreationInfo(),
+            dataAccountCreationInfo: nil
+        )
+        let requestType: SolanaApprovalRequestType = getSPLTokenAccountCreation()
+        let request = getWalletInitiationRequest(requestType, initiation: initiation)
+        let pk = try Curve25519.Signing.PrivateKey.init(rawRepresentation: "affd2d3a1283a92c72347c5075126b7868a9bc17b32dbb06eaf90ec8fdb51f3e".data(using: .hexadecimal)!)
+        let initiationRequest = StrikeApi.InitiationRequest(
+            disposition: .Approve,
+            requestID: request.id,
+            initiation: initiation,
+            requestType: requestType,
+            blockhash: getRecentBlockhash("FMLrVDN8DQcpmSSK3kE8BfFaaxRiWHtHtiEBRkpjFddD"),
+            email: "dont care",
+            opAccountPrivateKey: pk,
+            dataAccountPrivateKey: nil
+        )
+        
+        XCTAssertEqual(
+            try initiationRequest.signableData(approverPublicKey: "CXCdHsyMVVKEQbRorowkBBnRtmC7QSAmg4QFqQJAMt85").toHexString(),
+            "03010609d5259a75898e5c16f1b0675c496a9f8ee74dd7687f234ba93c0ff09dfee8af344b6a3d93450d66eb4dc907e6f3c8f478feb3c8afd69ea70a6f73eb771d87cb14ab2d202d4ab70a619c12c35cd765878d7711743f57c555940b27087173491fd6687ead1fdbf865a46fc37cbdfbc2fa26b99494d07735fffceb691ef2f4d090fb069b8857feab8184fb687f634618c035dac439dc1aeb3b5598a0f0000000000106a7d51718c774c928566398691d5eb68b5eb8a39b4b6d5c73555b21000000008269b01bf858c755348eccb7fd606a006e63d0cd6c0eb0b1a88694fbd26ffae0000000000000000000000000000000000000000000000000000000000000000005415f4b0cb8304a7975aa7869199943d71dafffc5b9d93f9d7b796f4618bf50d539ae667f9041f13c6ffbbb4957e2d60e66d47144518c3f24efd6e7c40b4d340207020001340000000000a7670000000000500300000000000005415f4b0cb8304a7975aa7869199943d71dafffc5b9d93f9d7b796f4618bf500806010302040506621d794b77f810f9c71db95d8fd3a9adc5805b501983c8e0b50ee675c3dc13eca3f601794b77f810f9c71db95d8fd3a9adc5805b501983c8e0b50ee675c3dc13eca3f6069b8857feab8184fb687f634618c035dac439dc1aeb3b5598a0f00000000001"
+        )
+    }
+    
+    func testSPLTokenAccountCreationApprovalRequest() throws {
+        let request = getWalletApprovalRequest(getSPLTokenAccountCreation())
+        let approvalRequest = StrikeApi.ApprovalDispositionRequest(
+            disposition: .Approve,
+            requestID: request.id,
+            requestType: request.requestType,
+            blockhash: getRecentBlockhash("Dx6qrNbS1xovmV9SfyjqQD77JBYv8yPyPjR7837fvuC8"),
+            email: "dont care"
+        )
+        XCTAssertEqual(
+            try approvalRequest.signableData(approverPublicKey: "GYFxPGjuBXYKg1S91zgpVZCLP4guLGRho27bTAkAzjVL").toHexString(),
+            "02010205d5259a75898e5c16f1b0675c496a9f8ee74dd7687f234ba93c0ff09dfee8af34e6e137f1b3e582e55db0f594a6cb6f05d5a08fc71d7413042921bf24f72e73ebe7b32e6d93f1c1f4dbb3409025e13c12a5435a91acd65bae3a898d0c89f086e606a7d51718c774c928566398691d5eb68b5eb8a39b4b6d5c73555b210000000005415f4b0cb8304a7975aa7869199943d71dafffc5b9d93f9d7b796f4618bf50c069cb21b4742b9d9525d977328dbc26c920364dc56d70bb6abd30f5c7ddae3d010403020103220901a15ac12f9dcfdaeea5d80de21a6e3195288f17d4a57f9835151301ed7061a545"
         )
     }
 

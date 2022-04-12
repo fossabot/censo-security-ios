@@ -177,12 +177,28 @@ extension SolanaApprovalRequestType {
             return "Unknown"
         case .conversionRequest:
             return "Conversion"
+        case .wrapConversionRequest:
+            return "Conversion"
         case .signersUpdate:
             return "Signers Update"
         case .balanceAccountCreation(let accountCreation) where accountCreation.accountInfo.accountType == .BalanceAccount:
             return "Balance Account Creation"
         case .balanceAccountCreation:
             return "Stake Account Creation"
+        case .balanceAccountNameUpdate:
+            return "Balance Account Name Update"
+        case .balanceAccountPolicyUpdate:
+            return "Balance Account Policy Update"
+        case .balanceAccountSettingsUpdate:
+            return "Balance Account Settings Update"
+        case .addressBookUpdate:
+            return "Address Book Update"
+        case .dAppBookUpdate:
+            return "dApp Book Update"
+        case .walletConfigPolicyUpdate:
+            return "Wallet Config Policy Update"
+        case .splTokenAccountCreation:
+            return "SPL Token Account Creation"
         case .dAppTransactionRequest:
             return "dApp Transaction"
         }
@@ -202,6 +218,22 @@ extension SolanaApprovalRequestType {
             return "the addition of `\(signersUpdate.signer.value.name)`"
         case .balanceAccountCreation(let balanceAccountCreation):
             return "an account creation of \(balanceAccountCreation.accountInfo.name)"
+        case .balanceAccountNameUpdate(let balanceAccountNameUpdate):
+            return "account name change to \(balanceAccountNameUpdate.newAccountName)"
+        case .balanceAccountPolicyUpdate(let balanceAccountPolicyUpdate):
+            return "policy update for \(balanceAccountPolicyUpdate.accountInfo.name)"
+        case .balanceAccountSettingsUpdate(let balanceAccountSettingsUpdate):
+            return "settings update for \(balanceAccountSettingsUpdate.accountInfo.name)"
+        case .addressBookUpdate:
+            return "address book update"
+        case .dAppBookUpdate:
+            return "dApp book update"
+        case .walletConfigPolicyUpdate:
+            return "wallet config policy update"
+        case .splTokenAccountCreation(let splTokenAccountCreation):
+            return "SPL token account creation for \(splTokenAccountCreation.tokenSymbolInfo.symbolDescription)"
+        case .wrapConversionRequest(let wrapConversion):
+            return "a conversion of \(wrapConversion.symbolAndAmountInfo.formattedAmount) \(wrapConversion.symbolAndAmountInfo.symbolInfo.symbol) to \(wrapConversion.destinationSymbolInfo.symbol)"
         case .dAppTransactionRequest(let dAppTransactionRequest):
             return "a dApp transaction with \(dAppTransactionRequest.dAppInfo.name)"
         }
@@ -215,9 +247,25 @@ extension SolanaApprovalRequestType {
             return Image(systemName: "questionmark.circle")
         case .conversionRequest:
             return Image("conversion")
+        case .wrapConversionRequest:
+            return Image("conversion")
         case .signersUpdate:
             return Image(systemName: "iphone")
         case .balanceAccountCreation:
+            return Image("policy")
+        case .balanceAccountNameUpdate:
+            return Image("policy")
+        case .balanceAccountPolicyUpdate:
+            return Image("policy")
+        case .balanceAccountSettingsUpdate:
+            return Image("policy")
+        case .addressBookUpdate:
+            return Image("policy")
+        case .dAppBookUpdate:
+            return Image("policy")
+        case .walletConfigPolicyUpdate:
+            return Image("policy")
+        case .splTokenAccountCreation:
             return Image("policy")
         case .dAppTransactionRequest:
             return Image("conversion")
