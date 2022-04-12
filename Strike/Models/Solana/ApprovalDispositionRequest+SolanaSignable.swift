@@ -21,8 +21,24 @@ extension StrikeApi.ApprovalDispositionRequest: SolanaSignable {
             return 3
         case .conversionRequest:
             return 3
+        case .wrapConversionRequest:
+            return 4
         case .signersUpdate:
             return 5
+        case .walletConfigPolicyUpdate:
+            return 6
+        case .balanceAccountSettingsUpdate:
+            return 8
+        case .dAppBookUpdate:
+            return 9
+        case .addressBookUpdate:
+            return 10
+        case .balanceAccountNameUpdate:
+            return 11
+        case .balanceAccountPolicyUpdate:
+            return 12
+        case .splTokenAccountCreation:
+            return 13
         case .dAppTransactionRequest:
             return 0
         case .unknown:
@@ -46,16 +62,49 @@ extension StrikeApi.ApprovalDispositionRequest: SolanaSignable {
                 return try Data(
                     [opCode] +
                     signingData.walletAddress.base58Bytes +
-                    request.accountInfo.identifier.sha256HashBytes +
-                    [request.accountSlot] +
-                    request.accountInfo.name.sha256HashBytes +
-                    [request.approvalsRequired] +
-                    request.approvalTimeout.convertToSeconds.bytes +
-                    ([UInt8(request.approvers.count)] as [UInt8]) +
-                    (request.approvers.flatMap(\.combinedBytes) as [UInt8]) +
-                    ([request.whitelistEnabled.toSolanaProgramValue()] as [UInt8]) +
-                    ([request.dappsEnabled.toSolanaProgramValue()] as [UInt8]) +
-                    ([request.addressBookSlot] as [UInt8])
+                    request.combinedBytes
+                )
+            case .balanceAccountNameUpdate(let request):
+                return try Data(
+                    [opCode] +
+                    signingData.walletAddress.base58Bytes +
+                    request.combinedBytes
+                )
+            case .balanceAccountSettingsUpdate(let request):
+                return try Data(
+                    [opCode] +
+                    signingData.walletAddress.base58Bytes +
+                    request.combinedBytes
+                )
+            case .balanceAccountPolicyUpdate(let request):
+                return try Data(
+                    [opCode] +
+                    signingData.walletAddress.base58Bytes +
+                    request.combinedBytes
+                )
+            case .walletConfigPolicyUpdate(let request):
+                return try Data(
+                    [opCode] +
+                    signingData.walletAddress.base58Bytes +
+                    request.policyChanges.combinedBytes
+                )
+            case .addressBookUpdate(let request):
+                return try Data(
+                    [opCode] +
+                    signingData.walletAddress.base58Bytes +
+                    request.combinedBytes
+                )
+            case .dAppBookUpdate(let request):
+                return try Data(
+                    [opCode] +
+                    signingData.walletAddress.base58Bytes +
+                    request.combinedBytes
+                )
+            case .splTokenAccountCreation(let request):
+                return try Data(
+                    [opCode] +
+                    signingData.walletAddress.base58Bytes +
+                    request.combinedBytes
                 )
             case .withdrawalRequest(let request):
                 return try Data(
@@ -74,6 +123,14 @@ extension StrikeApi.ApprovalDispositionRequest: SolanaSignable {
                     request.destination.address.base58Bytes +
                     request.symbolAndAmountInfo.fundamentalAmount.bytes +
                     request.symbolAndAmountInfo.symbolInfo.tokenMintAddress.base58Bytes
+                )
+            case .wrapConversionRequest(let request):
+                return try Data(
+                    [opCode] +
+                    signingData.walletAddress.base58Bytes +
+                    request.account.identifier.sha256HashBytes +
+                    request.symbolAndAmountInfo.fundamentalAmount.bytes +
+                    ([UInt8(request.symbolAndAmountInfo.symbolInfo.symbol == "SOL" ? 0 : 1)] as [UInt8])
                 )
             case .signersUpdate(let request):
                 return try Data(
@@ -95,9 +152,25 @@ extension StrikeApi.ApprovalDispositionRequest: SolanaSignable {
             switch requestType {
             case .balanceAccountCreation(let request):
                 return request.signingData
+            case .balanceAccountNameUpdate(let request):
+                return request.signingData
+            case .balanceAccountPolicyUpdate(let request):
+                return request.signingData
+            case .balanceAccountSettingsUpdate(let request):
+                return request.signingData
+            case .addressBookUpdate(let request):
+                return request.signingData
+            case .dAppBookUpdate(let request):
+                return request.signingData
+            case .walletConfigPolicyUpdate(let request):
+                return request.signingData
+            case .splTokenAccountCreation(let request):
+                return request.signingData
             case .withdrawalRequest(let request):
                 return request.signingData
             case .conversionRequest(let request):
+                return request.signingData
+            case .wrapConversionRequest(let request):
                 return request.signingData
             case .signersUpdate(let request):
                 return request.signingData
@@ -166,6 +239,46 @@ extension SlotSignerInfo {
     }
 }
 
+extension SlotDAppInfo {
+    var combinedBytes: [UInt8] {
+        return [slotId] + value.address.base58Bytes + value.name.sha256HashBytes
+    }
+}
+
+extension SlotDestinationInfo {
+    var combinedBytes: [UInt8] {
+        return [slotId] + value.address.base58Bytes + value.name.sha256HashBytes
+    }
+}
+
+
+extension ApprovalPolicyUpdate {
+    var combinedBytes: [UInt8] {
+        return [UInt8](Data(
+            ([UInt8(approvalsRequired != nil ? 1 : 0)] as [UInt8]) +
+            [approvalsRequired != nil ? approvalsRequired! : UInt8(0)] +
+            ([UInt8(approvalTimeout != nil ? 1 : 0)] as [UInt8]) +
+            (approvalTimeout != nil ? approvalTimeout!.convertToSeconds : UInt64(0)).bytes +
+            ([UInt8(approversToAdd.count)] as [UInt8]) +
+            (approversToAdd.flatMap(\.combinedBytes) as [UInt8]) +
+            ([UInt8(approversToRemove.count)] as [UInt8]) +
+            (approversToRemove.flatMap(\.combinedBytes) as [UInt8])
+        ))
+    }
+}
+
+extension WhitelistUpdate {
+    var combinedBytes: [UInt8] {
+        return [UInt8](Data(
+            account.identifier.sha256HashBytes +
+            ([UInt8(destinationsToAdd.count)] as [UInt8]) +
+            (destinationsToAdd.flatMap(\.combinedBytes) as [UInt8]) +
+            ([UInt8(destinationsToRemove.count)] as [UInt8]) +
+            (destinationsToRemove.flatMap(\.combinedBytes) as [UInt8])
+        ))
+    }
+}
+
 extension String {
     var base58Bytes: [UInt8] {
         Base58.decode(self)
@@ -211,3 +324,87 @@ enum SolanaError: Error, Equatable {
     case notFoundProgramAddress
     case invalidPublicKey
 }
+
+extension AddressBookUpdate {
+    var combinedBytes: [UInt8] {
+        return [UInt8](Data(
+            ([UInt8(entriesToAdd.count)] as [UInt8]) +
+            (entriesToAdd.flatMap(\.combinedBytes) as [UInt8]) +
+            ([UInt8(entriesToRemove.count)] as [UInt8]) +
+            (entriesToRemove.flatMap(\.combinedBytes) as [UInt8]) +
+            ([UInt8(whitelistUpdates.count)] as [UInt8]) +
+            (whitelistUpdates.flatMap(\.combinedBytes) as [UInt8])
+        ))
+    }
+}
+
+extension DAppBookUpdate {
+    var combinedBytes: [UInt8] {
+        return [UInt8](Data(
+            ([UInt8(entriesToAdd.count)] as [UInt8]) +
+            (entriesToAdd.flatMap(\.combinedBytes) as [UInt8]) +
+            ([UInt8(entriesToRemove.count)] as [UInt8]) +
+            (entriesToRemove.flatMap(\.combinedBytes) as [UInt8])
+        ))
+    }
+}
+
+extension BalanceAccountCreation {
+    var combinedBytes: [UInt8] {
+        return [UInt8](Data(
+            accountInfo.identifier.sha256HashBytes +
+            [accountSlot] +
+            accountInfo.name.sha256HashBytes +
+            [approvalsRequired] +
+            approvalTimeout.convertToSeconds.bytes +
+            ([UInt8(approvers.count)] as [UInt8]) +
+            (approvers.flatMap(\.combinedBytes) as [UInt8]) +
+            ([whitelistEnabled.toSolanaProgramValue()] as [UInt8]) +
+            ([dappsEnabled.toSolanaProgramValue()] as [UInt8]) +
+            ([addressBookSlot] as [UInt8])
+        ))
+    }
+}
+
+extension BalanceAccountNameUpdate {
+    var combinedBytes: [UInt8] {
+        return [UInt8](Data(
+            accountInfo.identifier.sha256HashBytes +
+            newAccountName.sha256HashBytes
+        ))
+    }
+}
+
+extension BalanceAccountPolicyUpdate {
+    var combinedBytes: [UInt8] {
+        return [UInt8](Data(
+            accountInfo.identifier.sha256HashBytes +
+            policyChanges.combinedBytes
+        ))
+    }
+}
+
+extension BalanceAccountSettingsUpdate {
+    var combinedBytes: [UInt8] {
+        return [UInt8](Data(
+            accountInfo.identifier.sha256HashBytes +
+            ([UInt8(whitelistEnabled != nil ? 1 : 0)] as [UInt8]) +
+            ([whitelistEnabled != nil ? whitelistEnabled!.toSolanaProgramValue() : UInt8(0)] as [UInt8]) +
+            ([UInt8(dappsEnabled != nil ? 1 : 0)] as [UInt8]) +
+            ([dappsEnabled != nil ? dappsEnabled!.toSolanaProgramValue() : UInt8(0)] as [UInt8])
+        ))
+    }
+}
+
+extension SPLTokenAccountCreation {
+    var combinedBytes: [UInt8] {
+        return [UInt8](Data(
+            payerBalanceAccount.identifier.sha256HashBytes +
+            ([UInt8(balanceAccounts.count)] as [UInt8]) +
+            (balanceAccounts.flatMap({$0.identifier.sha256HashBytes}) as [UInt8]) +
+            tokenSymbolInfo.tokenMintAddress.base58Bytes
+        ))
+    }
+}
+
+

@@ -44,7 +44,23 @@ struct ApprovalRequestItem: View {
             } detail: {
                 AccountCreationDetails(request: request, accountCreation: accountCreation)
             }
+        case .balanceAccountNameUpdate(let balanceAccountNameUpdate):
+            UnknownRequestRow(request: request, timerPublisher: timerPublisher)
+        case .balanceAccountPolicyUpdate(let balanceAccountPolicyUpdate):
+            UnknownRequestRow(request: request, timerPublisher: timerPublisher)
+        case .balanceAccountSettingsUpdate(let balanceAccountSettingsUpdate):
+            UnknownRequestRow(request: request, timerPublisher: timerPublisher)
+        case .addressBookUpdate(let addressBookUpdate):
+            UnknownRequestRow(request: request, timerPublisher: timerPublisher)
+        case .dAppBookUpdate(let dAppBookUpdate):
+            UnknownRequestRow(request: request, timerPublisher: timerPublisher)
+        case .walletConfigPolicyUpdate(let walletConfigPolicyUpdate):
+            UnknownRequestRow(request: request, timerPublisher: timerPublisher)
+        case .splTokenAccountCreation(let splTokenAccountCreation):
+            UnknownRequestRow(request: request, timerPublisher: timerPublisher)
         case .dAppTransactionRequest(let dAppTransactionRequest):
+            UnknownRequestRow(request: request, timerPublisher: timerPublisher)
+        case .wrapConversionRequest(let wrapConversionRequest):
             UnknownRequestRow(request: request, timerPublisher: timerPublisher)
         }
     }

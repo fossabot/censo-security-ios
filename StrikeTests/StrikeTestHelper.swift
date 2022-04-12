@@ -184,6 +184,300 @@ extension StrikeTests {
         )
     }
     
+    func getWrapConversionRequest() -> SolanaApprovalRequestType {
+        return .wrapConversionRequest(
+            WrapConversionRequest(
+                account: AccountInfo(
+                    name: "Account 1",
+                    identifier: "82666cf4-3f31-4504-a1a2-5df9b35ba5b3",
+                    accountType: AccountType.BalanceAccount,
+                    address: "BSHKeDQL8NKBSmbX2M4svSqGL57qFhe7qvw72hpvgnZY"
+                ),
+                symbolAndAmountInfo: SymbolAndAmountInfo(
+                    symbolInfo: SymbolInfo(
+                        symbol: "SOL",
+                        symbolDescription: "Solana",
+                        tokenMintAddress: "11111111111111111111111111111111"
+                    ),
+                    amount: "0.500000000",
+                    usdEquivalent: "44.39"
+                ),
+                destinationSymbolInfo: SymbolInfo(
+                    symbol: "wSOL",
+                    symbolDescription: "Wrapped SOL",
+                    tokenMintAddress: "11111111111111111111111111111111"
+                ),
+                signingData: SolanaSigningData(
+                    feePayer: "FM36ah2bH8nQWJNPCRzu7R69gE5o6UhujqJFtDpWN5as",
+                    walletProgramId: "DaGSQwGd1GZnscN2Mu5d1CPYqYXAQMV29Q4Zk9yDhZLp",
+                    multisigOpAccountAddress: "11111111111111111111111111111111",
+                    walletAddress: "Ebse7xEiKuhe3bWY6dXiWB8QS4QDhr8fRBgH4tUKR2Ys"
+                )
+            )
+        )
+    }
+    
+    func getUnwrapConversionRequest() -> SolanaApprovalRequestType {
+        return .wrapConversionRequest(
+            WrapConversionRequest(
+                account: AccountInfo(
+                    name: "Account 1",
+                    identifier: "82666cf4-3f31-4504-a1a2-5df9b35ba5b3",
+                    accountType: AccountType.BalanceAccount,
+                    address: "BSHKeDQL8NKBSmbX2M4svSqGL57qFhe7qvw72hpvgnZY"
+                ),
+                symbolAndAmountInfo: SymbolAndAmountInfo(
+                    symbolInfo: SymbolInfo(
+                        symbol: "wSOL",
+                        symbolDescription: "Wrapped SOL",
+                        tokenMintAddress: "11111111111111111111111111111111"
+                    ),
+                    amount: "0.300000000",
+                    usdEquivalent: "26.63"
+                ),
+                destinationSymbolInfo: SymbolInfo(
+                    symbol: "SOL",
+                    symbolDescription: "Solana",
+                    tokenMintAddress: "11111111111111111111111111111111"
+                ),
+                signingData: SolanaSigningData(
+                    feePayer: "FM36ah2bH8nQWJNPCRzu7R69gE5o6UhujqJFtDpWN5as",
+                    walletProgramId: "DaGSQwGd1GZnscN2Mu5d1CPYqYXAQMV29Q4Zk9yDhZLp",
+                    multisigOpAccountAddress: "11111111111111111111111111111111",
+                    walletAddress: "Ebse7xEiKuhe3bWY6dXiWB8QS4QDhr8fRBgH4tUKR2Ys"
+                )
+            )
+        )
+    }
+    
+    func getAddAddressBookEntry() -> SolanaApprovalRequestType {
+        return .addressBookUpdate(
+            AddressBookUpdate(
+                entriesToAdd: [
+                    SlotDestinationInfo(
+                        slotId: 1,
+                        value: DestinationAddress(name: "My External Sol address", subName: nil, address: "D39S5c5LoHekToAvMtTbs4w48sdE2EkhxjBXYc1FbVyM", tag: nil)
+                    )
+                ],
+                entriesToRemove: [],
+                whitelistUpdates: [],
+                signingData: SolanaSigningData(
+                    feePayer: "FM36ah2bH8nQWJNPCRzu7R69gE5o6UhujqJFtDpWN5as",
+                    walletProgramId: "7kNPVcK2cpyaZsLsqmhZbjcbt433vYUckH1PM5gZeJ1L",
+                    multisigOpAccountAddress: "88w3SoFCcZ31QzRgeBzoWLXmiLiP13MD5svTQ7a5zxmT",
+                    walletAddress: "4XaqL4MtTUDrncTGBqvTC9ketf8WVqrUocDkYhKAnDju"
+                ))
+        )
+
+    }
+    
+    func getAddressBookWhitelistUpdate() -> SolanaApprovalRequestType {
+        return .addressBookUpdate(
+            AddressBookUpdate(
+                entriesToAdd: [],
+                entriesToRemove: [],
+                whitelistUpdates: [ WhitelistUpdate(
+                    account: AccountInfo(
+                        name: "Account 1",
+                        identifier: "b645a5d9-227f-4a9f-9331-52af64bf1989",
+                        accountType: AccountType.BalanceAccount,
+                        address: "F8MQFSzgGtddamGjNNoFuUfrZNZkV84icnXwyMVo7Aa3"
+                    ),
+                    destinationsToAdd: [SlotDestinationInfo(
+                        slotId: 1,
+                        value: DestinationAddress(name: "My External Sol address", subName: nil, address: "D39S5c5LoHekToAvMtTbs4w48sdE2EkhxjBXYc1FbVyM", tag: nil)
+                    )],
+                    destinationsToRemove: [])
+                ],
+                signingData: SolanaSigningData(
+                    feePayer: "FM36ah2bH8nQWJNPCRzu7R69gE5o6UhujqJFtDpWN5as",
+                    walletProgramId: "7kNPVcK2cpyaZsLsqmhZbjcbt433vYUckH1PM5gZeJ1L",
+                    multisigOpAccountAddress: "A8Xz4WjqD2kZf4KWHVVeNHsG45eZQiX9mhDXFHb6FAFz",
+                    walletAddress: "4XaqL4MtTUDrncTGBqvTC9ketf8WVqrUocDkYhKAnDju"
+                ))
+        )
+    }
+    
+    func getAddressBookWhitelistRemove() -> SolanaApprovalRequestType {
+        return .addressBookUpdate(
+            AddressBookUpdate(
+                entriesToAdd: [],
+                entriesToRemove: [],
+                whitelistUpdates: [ WhitelistUpdate(
+                    account: AccountInfo(
+                        name: "Account 1",
+                        identifier: "b645a5d9-227f-4a9f-9331-52af64bf1989",
+                        accountType: AccountType.BalanceAccount,
+                        address: "F8MQFSzgGtddamGjNNoFuUfrZNZkV84icnXwyMVo7Aa3"
+                    ),
+                    destinationsToAdd: [],
+                    destinationsToRemove: [SlotDestinationInfo(
+                        slotId: 1,
+                        value: DestinationAddress(name: "My External Sol address", subName: nil, address: "D39S5c5LoHekToAvMtTbs4w48sdE2EkhxjBXYc1FbVyM", tag: nil)
+                    )])
+                ],
+                signingData: SolanaSigningData(
+                    feePayer: "FM36ah2bH8nQWJNPCRzu7R69gE5o6UhujqJFtDpWN5as",
+                    walletProgramId: "7kNPVcK2cpyaZsLsqmhZbjcbt433vYUckH1PM5gZeJ1L",
+                    multisigOpAccountAddress: "GwVJHtrjxVQ5sjLrqvfxQV6J5FfqRpnGvFMeP9TZmFZS",
+                    walletAddress: "4XaqL4MtTUDrncTGBqvTC9ketf8WVqrUocDkYhKAnDju"
+                ))
+        )
+    }
+    
+    func getAddDAppBookEntry() -> SolanaApprovalRequestType {
+        return .dAppBookUpdate(
+            DAppBookUpdate(
+                entriesToAdd: [
+                    SlotDAppInfo(
+                        slotId: 0,
+                        value: SolanaDApp(address: "GNGhSWWVNhXAy4fQgfAoQejJpGAxVaE4bdJjdb6iXRjK", name: "DApp", logo: "icon")
+                    )
+                ],
+                entriesToRemove: [],
+                signingData: SolanaSigningData(
+                    feePayer: "FM36ah2bH8nQWJNPCRzu7R69gE5o6UhujqJFtDpWN5as",
+                    walletProgramId: "3Nh3QsaXKbTbLM1BLsD4dhT4zeHTPaVbZX3eN3Yg1G2w",
+                    multisigOpAccountAddress: "Hn2CJuYyyB2H3wwmdHPy1Aun2Jkye3MCSVajzUvw55A9",
+                    walletAddress: "Re4dLGch8a1G98PeRtpHa5ApS6Gnik444CqB5BQ8rY1"
+                ))
+        )
+    }
+    
+    func getBalanceAccountSettingsUpdate() -> SolanaApprovalRequestType {
+        return .balanceAccountSettingsUpdate(
+            BalanceAccountSettingsUpdate(
+                accountInfo: AccountInfo(
+                    name: "Account 1",
+                    identifier: "b645a5d9-227f-4a9f-9331-52af64bf1989",
+                    accountType: AccountType.BalanceAccount,
+                    address: "DcvZ2k6ygvvu2Z5ihrSxRZL7bHJ38gPRgpCie8GzztTP"
+                ),
+                whitelistEnabled: BooleanSetting.On,
+                dappsEnabled: nil,
+                signingData: SolanaSigningData(
+                    feePayer: "FM36ah2bH8nQWJNPCRzu7R69gE5o6UhujqJFtDpWN5as",
+                    walletProgramId: "7kNPVcK2cpyaZsLsqmhZbjcbt433vYUckH1PM5gZeJ1L",
+                    multisigOpAccountAddress: "GM2yp6wzBijkziNSDAXoDsuJ2e76VTLgqTfikh5r9BfD",
+                    walletAddress: "4XaqL4MtTUDrncTGBqvTC9ketf8WVqrUocDkYhKAnDju"
+                ))
+        )
+    }
+    
+    func getRemoveDAppBookEntry() -> SolanaApprovalRequestType {
+        return .dAppBookUpdate(
+            DAppBookUpdate(
+                entriesToAdd: [],
+                entriesToRemove: [
+                    SlotDAppInfo(
+                        slotId: 0,
+                        value: SolanaDApp(address: "GNGhSWWVNhXAy4fQgfAoQejJpGAxVaE4bdJjdb6iXRjK", name: "DApp", logo: "icon")
+                    )
+                ],
+                signingData: SolanaSigningData(
+                    feePayer: "FM36ah2bH8nQWJNPCRzu7R69gE5o6UhujqJFtDpWN5as",
+                    walletProgramId: "3Nh3QsaXKbTbLM1BLsD4dhT4zeHTPaVbZX3eN3Yg1G2w",
+                    multisigOpAccountAddress: "9CfoFci2agjCJ7bWqfgKEFSAc5zB6UR63MrK61nRaJzm",
+                    walletAddress: "Re4dLGch8a1G98PeRtpHa5ApS6Gnik444CqB5BQ8rY1"
+                ))
+        )
+    }
+    
+    func getWalletConfigPolicyUpdate() -> SolanaApprovalRequestType {
+        return .walletConfigPolicyUpdate(
+            WalletConfigPolicyUpdate(
+                policyChanges: ApprovalPolicyUpdate(
+                    approvalsRequired: 3,
+                    approvalTimeout: nil,
+                    approversToAdd: [SlotSignerInfo(
+                        slotId: 2,
+                        value: SignerInfo(publicKey: "9KsqoaRA68zJj4AMkYU5RyUbqaGNJ61XjrYUCqzG6vpF", name: "User 3", email: "user3@org1")
+                    )],
+                    approversToRemove: []),
+                signingData: SolanaSigningData(
+                    feePayer: "FM36ah2bH8nQWJNPCRzu7R69gE5o6UhujqJFtDpWN5as",
+                    walletProgramId: "7kNPVcK2cpyaZsLsqmhZbjcbt433vYUckH1PM5gZeJ1L",
+                    multisigOpAccountAddress: "4MNFCtngd12Dxh28KPXBkVyBKv77cvAk3x6JqQaDAgGk",
+                    walletAddress: "4XaqL4MtTUDrncTGBqvTC9ketf8WVqrUocDkYhKAnDju"
+                ))
+        )
+    }
+    
+    func getBalanceAccountPolicyUpdate() -> SolanaApprovalRequestType {
+        return .balanceAccountPolicyUpdate(
+            BalanceAccountPolicyUpdate(
+                accountInfo: AccountInfo(
+                    name: "Account 1",
+                    identifier: "b645a5d9-227f-4a9f-9331-52af64bf1989",
+                    accountType: AccountType.BalanceAccount,
+                    address: "DcvZ2k6ygvvu2Z5ihrSxRZL7bHJ38gPRgpCie8GzztTP"
+                ),
+                policyChanges: ApprovalPolicyUpdate(
+                    approvalsRequired: 2,
+                    approvalTimeout: nil,
+                    approversToAdd: [SlotSignerInfo(
+                        slotId: 1,
+                        value: SignerInfo(publicKey: "GYFxPGjuBXYKg1S91zgpVZCLP4guLGRho27bTAkAzjVL", name: "User 2", email: "user2@org1")
+                    )],
+                    approversToRemove: []),
+                signingData: SolanaSigningData(
+                    feePayer: "FM36ah2bH8nQWJNPCRzu7R69gE5o6UhujqJFtDpWN5as",
+                    walletProgramId: "7kNPVcK2cpyaZsLsqmhZbjcbt433vYUckH1PM5gZeJ1L",
+                    multisigOpAccountAddress: "GbTeXoA4KJX19YbpWQQvUi1Xx8bbadKiTRBqhmADxdNV",
+                    walletAddress: "4XaqL4MtTUDrncTGBqvTC9ketf8WVqrUocDkYhKAnDju"
+                ))
+        )
+    }
+    
+    func getBalanceAccountNameUpdate() -> SolanaApprovalRequestType {
+        return .balanceAccountNameUpdate(
+            BalanceAccountNameUpdate(
+                accountInfo: AccountInfo(
+                    name: "Account 1",
+                    identifier: "b645a5d9-227f-4a9f-9331-52af64bf1989",
+                    accountType: AccountType.BalanceAccount,
+                    address: "DcvZ2k6ygvvu2Z5ihrSxRZL7bHJ38gPRgpCie8GzztTP"
+                ),
+                newAccountName: "New Name",
+                signingData: SolanaSigningData(
+                    feePayer: "FM36ah2bH8nQWJNPCRzu7R69gE5o6UhujqJFtDpWN5as",
+                    walletProgramId: "7kNPVcK2cpyaZsLsqmhZbjcbt433vYUckH1PM5gZeJ1L",
+                    multisigOpAccountAddress: "7DY87mHHiSSyxFBbhCYbTpQE5M4Jk9Z9hymJ7UzL3sPm",
+                    walletAddress: "4XaqL4MtTUDrncTGBqvTC9ketf8WVqrUocDkYhKAnDju"
+                ))
+        )
+    }
+    
+    func getSPLTokenAccountCreation() -> SolanaApprovalRequestType {
+        return .splTokenAccountCreation(
+            SPLTokenAccountCreation(
+                payerBalanceAccount: AccountInfo(
+                    name: "Account 1",
+                    identifier: "80f3c1de-947d-402d-b34f-899286410b57",
+                    accountType: AccountType.BalanceAccount,
+                    address: "C4xpbnRNRZr4amKCZaTfguHT72BqvqZ6p9kUnaGVxidi"
+                ),
+                balanceAccounts: [AccountInfo(
+                    name: "Account 1",
+                    identifier: "80f3c1de-947d-402d-b34f-899286410b57",
+                    accountType: AccountType.BalanceAccount,
+                    address: "C4xpbnRNRZr4amKCZaTfguHT72BqvqZ6p9kUnaGVxidi"
+                )],
+                tokenSymbolInfo: SymbolInfo(
+                    symbol: "wSOL",
+                    symbolDescription: "Wrapped SOL",
+                    tokenMintAddress: "So11111111111111111111111111111111111111112"
+                ),
+                signingData: SolanaSigningData(
+                    feePayer: "FM36ah2bH8nQWJNPCRzu7R69gE5o6UhujqJFtDpWN5as",
+                    walletProgramId: "MWrXxAri5BsKYKQAtpxobpzB1aLFxr5s41cZXQsQqTM",
+                    multisigOpAccountAddress: "GbTeXoA4KJX19YbpWQQvUi1Xx8bbadKiTRBqhmADxdNV",
+                    walletAddress: "82uS9y7joYne1CFqRgqvd5WBWU7uRgoa8BoDA9cvcVuU"
+                )
+            )
+        )
+    }
+    
     func getDAppTransactionRequest() -> SolanaApprovalRequestType {
         return .dAppTransactionRequest(
             DAppTransactionRequest(

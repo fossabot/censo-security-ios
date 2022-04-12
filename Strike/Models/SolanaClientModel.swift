@@ -86,8 +86,16 @@ extension WalletApprovalRequest {
 enum SolanaApprovalRequestType: Codable, Equatable {
     case withdrawalRequest(WithdrawalRequest)
     case conversionRequest(ConversionRequest)
+    case wrapConversionRequest(WrapConversionRequest)
     case signersUpdate(SignersUpdate)
     case balanceAccountCreation(BalanceAccountCreation)
+    case balanceAccountNameUpdate(BalanceAccountNameUpdate)
+    case balanceAccountPolicyUpdate(BalanceAccountPolicyUpdate)
+    case balanceAccountSettingsUpdate(BalanceAccountSettingsUpdate)
+    case addressBookUpdate(AddressBookUpdate)
+    case dAppBookUpdate(DAppBookUpdate)
+    case walletConfigPolicyUpdate(WalletConfigPolicyUpdate)
+    case splTokenAccountCreation(SPLTokenAccountCreation)
     case dAppTransactionRequest(DAppTransactionRequest)
     case unknown
 
@@ -103,10 +111,26 @@ enum SolanaApprovalRequestType: Codable, Equatable {
             self = .withdrawalRequest(try WithdrawalRequest(from: decoder))
         case "ConversionRequest":
             self = .conversionRequest(try ConversionRequest(from: decoder))
+        case "WrapConversionRequest":
+            self = .wrapConversionRequest(try WrapConversionRequest(from: decoder))
         case "SignersUpdate":
             self = .signersUpdate(try SignersUpdate(from: decoder))
         case "BalanceAccountCreation":
             self = .balanceAccountCreation(try BalanceAccountCreation(from: decoder))
+        case "BalanceAccountNameUpdate":
+            self = .balanceAccountNameUpdate(try BalanceAccountNameUpdate(from: decoder))
+        case "BalanceAccountPolicyUpdate":
+            self = .balanceAccountPolicyUpdate(try BalanceAccountPolicyUpdate(from: decoder))
+        case "BalanceAccountSettingsUpdate":
+            self = .balanceAccountSettingsUpdate(try BalanceAccountSettingsUpdate(from: decoder))
+        case "AddressBookUpdate":
+            self = .addressBookUpdate(try AddressBookUpdate(from: decoder))
+        case "DAppBookUpdate":
+            self = .dAppBookUpdate(try DAppBookUpdate(from: decoder))
+        case "WalletConfigPolicyUpdate":
+            self = .walletConfigPolicyUpdate(try WalletConfigPolicyUpdate(from: decoder))
+        case "SPLTokenAccountCreation":
+            self = .splTokenAccountCreation(try SPLTokenAccountCreation(from: decoder))
         case "DAppTransactionRequest":
             self = .dAppTransactionRequest(try DAppTransactionRequest(from: decoder))
         default:
@@ -123,12 +147,36 @@ enum SolanaApprovalRequestType: Codable, Equatable {
         case .conversionRequest(let conversionRequest):
             try container.encode("ConversionRequest", forKey: .type)
             try conversionRequest.encode(to: encoder)
+        case .wrapConversionRequest(let wrapConversionRequest):
+            try container.encode("WrapConversionRequest", forKey: .type)
+            try wrapConversionRequest.encode(to: encoder)
         case .signersUpdate(let signersUpdate):
             try container.encode("SignersUpdate", forKey: .type)
             try signersUpdate.encode(to: encoder)
         case .balanceAccountCreation(let balanceAccountCreation):
             try container.encode("BalanceAccountCreation", forKey: .type)
             try balanceAccountCreation.encode(to: encoder)
+        case .balanceAccountNameUpdate(let balanceAccountNameUpdate):
+            try container.encode("BalanceAccountNameUpdate", forKey: .type)
+            try balanceAccountNameUpdate.encode(to: encoder)
+        case .balanceAccountPolicyUpdate(let balanceAccountPolicyUpdate):
+            try container.encode("BalanceAccountPolicyUpdate", forKey: .type)
+            try balanceAccountPolicyUpdate.encode(to: encoder)
+        case .balanceAccountSettingsUpdate(let balanceAccountSettingsUpdate):
+            try container.encode("BalanceAccountSettingsUpdate", forKey: .type)
+            try balanceAccountSettingsUpdate.encode(to: encoder)
+        case .addressBookUpdate(let addressBookUpdate):
+            try container.encode("AddressBookUpdate", forKey: .type)
+            try addressBookUpdate.encode(to: encoder)
+        case .dAppBookUpdate(let dAppBookUpdate):
+            try container.encode("DAppBookUpdate", forKey: .type)
+            try dAppBookUpdate.encode(to: encoder)
+        case .walletConfigPolicyUpdate(let walletConfigPolicyUpdate):
+            try container.encode("WalletConfigPolicyUpdate", forKey: .type)
+            try walletConfigPolicyUpdate.encode(to: encoder)
+        case .splTokenAccountCreation(let splTokenAccountCreation):
+            try container.encode("SPLTokenAccountCreation", forKey: .type)
+            try splTokenAccountCreation.encode(to: encoder)
         case .dAppTransactionRequest(let dAppTransactionRequest):
             try container.encode("DAppTransactionRequest", forKey: .type)
             try dAppTransactionRequest.encode(to: encoder)
@@ -229,6 +277,29 @@ struct SlotSignerInfo: Codable, Equatable {
     let value: SignerInfo
 }
 
+struct SlotDestinationInfo: Codable, Equatable {
+    let slotId: UInt8
+    let value: DestinationAddress
+}
+
+struct SlotDAppInfo: Codable, Equatable {
+    let slotId: UInt8
+    let value: SolanaDApp
+}
+
+struct ApprovalPolicyUpdate: Codable, Equatable {
+    let approvalsRequired: UInt8?
+    let approvalTimeout: UInt64?
+    let approversToAdd: [SlotSignerInfo]
+    let approversToRemove: [SlotSignerInfo]
+}
+
+struct WhitelistUpdate: Codable, Equatable {
+    let account: AccountInfo
+    let destinationsToAdd: [SlotDestinationInfo]
+    let destinationsToRemove: [SlotDestinationInfo]
+}
+
 struct WithdrawalRequest: Codable, Equatable  {
     var account: AccountInfo
     var symbolAndAmountInfo: SymbolAndAmountInfo
@@ -240,6 +311,13 @@ struct ConversionRequest: Codable, Equatable {
     var account: AccountInfo
     var symbolAndAmountInfo: SymbolAndAmountInfo
     var destination: DestinationAddress
+    var destinationSymbolInfo: SymbolInfo
+    var signingData: SolanaSigningData
+}
+
+struct WrapConversionRequest: Codable, Equatable {
+    var account: AccountInfo
+    var symbolAndAmountInfo: SymbolAndAmountInfo
     var destinationSymbolInfo: SymbolInfo
     var signingData: SolanaSigningData
 }
@@ -284,6 +362,50 @@ struct BalanceAccountCreation: Codable, Equatable  {
     var whitelistEnabled: BooleanSetting
     var dappsEnabled: BooleanSetting
     var addressBookSlot: UInt8
+    var signingData: SolanaSigningData
+}
+
+struct BalanceAccountNameUpdate: Codable, Equatable  {
+    var accountInfo: AccountInfo
+    var newAccountName: String
+    var signingData: SolanaSigningData
+}
+
+struct BalanceAccountPolicyUpdate: Codable, Equatable  {
+    var accountInfo: AccountInfo
+    var policyChanges: ApprovalPolicyUpdate
+    var signingData: SolanaSigningData
+}
+
+struct BalanceAccountSettingsUpdate: Codable, Equatable  {
+    var accountInfo: AccountInfo
+    var whitelistEnabled: BooleanSetting?
+    var dappsEnabled: BooleanSetting?
+    var signingData: SolanaSigningData
+}
+
+struct AddressBookUpdate: Codable, Equatable  {
+    var entriesToAdd: [SlotDestinationInfo]
+    var entriesToRemove: [SlotDestinationInfo]
+    var whitelistUpdates: [WhitelistUpdate]
+    var signingData: SolanaSigningData
+}
+
+struct DAppBookUpdate: Codable, Equatable  {
+    var entriesToAdd: [SlotDAppInfo]
+    var entriesToRemove: [SlotDAppInfo]
+    var signingData: SolanaSigningData
+}
+
+struct WalletConfigPolicyUpdate: Codable, Equatable  {
+    var policyChanges: ApprovalPolicyUpdate
+    var signingData: SolanaSigningData
+}
+
+struct SPLTokenAccountCreation: Codable, Equatable  {
+    var payerBalanceAccount: AccountInfo
+    var balanceAccounts: [AccountInfo]
+    var tokenSymbolInfo: SymbolInfo
     var signingData: SolanaSigningData
 }
 
