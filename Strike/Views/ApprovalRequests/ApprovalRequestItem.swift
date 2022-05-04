@@ -87,7 +87,7 @@ struct ApprovalRequestItem: View {
             ApprovalRequestRow(user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
                 SPLTokenAccountCreationRow(creation: splTokenAccountCreation)
             } detail: {
-                SPLTokenAccountCreationDetails(request: request, creation: splTokenAccountCreation)
+                SPLTokenAccountCreationDetails(request: request, creation: splTokenAccountCreation, user: user)
             }
         case .wrapConversionRequest(let wrapConversionRequest):
             UnknownRequestRow(request: request, timerPublisher: timerPublisher)
