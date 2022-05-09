@@ -173,7 +173,7 @@ struct ApprovalRequestDetails<Content>: View where Content : View {
             case .approval(let requestType):
                 return .registerApprovalDisposition(
                     StrikeApi.ApprovalDispositionRequest(
-                        disposition: .Approve,
+                        disposition: .Deny,
                         requestID: request.id,
                         requestType: requestType,
                         nonces: nonces,
@@ -183,7 +183,7 @@ struct ApprovalRequestDetails<Content>: View where Content : View {
             case .multisigOpInitiation(let initiation, let requestType):
                 return .initiateRequest(
                     StrikeApi.InitiationRequest(
-                        disposition: .Approve,
+                        disposition: .Deny,
                         requestID: request.id,
                         initiation: initiation,
                         requestType: requestType,
