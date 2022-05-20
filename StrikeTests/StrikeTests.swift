@@ -44,7 +44,8 @@ class StrikeTests: XCTestCase {
     func testSignersUpdateInitiationRequest() throws {
         let initiation = MultisigOpInitiation(
             opAccountCreationInfo: getOpAccountCreationInfo(),
-            dataAccountCreationInfo: nil
+            dataAccountCreationInfo: nil,
+            initiatorIsApprover: true
         )
         let requestType: SolanaApprovalRequestType = getSignersUpdateRequest(nonceAccountAddresses: ["5Fx8Nk98DbUcNUe4izqJkcYwfaMGmKRbXi1A7fVPfzj7"])
         let request = getWalletInitiationRequest(requestType, initiation: initiation)
@@ -84,7 +85,8 @@ class StrikeTests: XCTestCase {
     func testBalanceAccountCreationInitiationRequest() throws {
         let initiation = MultisigOpInitiation(
             opAccountCreationInfo: getOpAccountCreationInfo(),
-            dataAccountCreationInfo: nil
+            dataAccountCreationInfo: nil,
+            initiatorIsApprover: true
         )
         let requestType: SolanaApprovalRequestType = getBalanceAccountCreationRequest(nonceAccountAddresses: ["AaFj4THN8CJmDPyJjPuDpsfC5FZys2Wmczust5UfmqeN"])
         let request = getWalletInitiationRequest(requestType, initiation: initiation)
@@ -124,7 +126,8 @@ class StrikeTests: XCTestCase {
     func testSolWithdrawalRequestInitiationRequest() throws {
         let initiation = MultisigOpInitiation(
             opAccountCreationInfo: getOpAccountCreationInfo(),
-            dataAccountCreationInfo: nil
+            dataAccountCreationInfo: nil,
+            initiatorIsApprover: true
         )
         let requestType: SolanaApprovalRequestType = getSolWithdrawalRequest(nonceAccountAddresses: ["9NDFtaczqouZ9SGTfd489EfN3KvMQgrAjpuu4QEr9Kys"])
         let request = getWalletInitiationRequest(requestType, initiation: initiation)
@@ -164,7 +167,8 @@ class StrikeTests: XCTestCase {
     func testSplWithdrawalRequestInitiationRequest() throws {
         let initiation = MultisigOpInitiation(
             opAccountCreationInfo: getOpAccountCreationInfo(),
-            dataAccountCreationInfo: nil
+            dataAccountCreationInfo: nil,
+            initiatorIsApprover: true
         )
         let requestType: SolanaApprovalRequestType = getSplWithdrawalRequest(nonceAccountAddresses: ["6UcFAr9rqGfFEtLxnYdW6QjeRor3aej5akLpYpXUkPWX"])
         let request = getWalletInitiationRequest(requestType, initiation: initiation)
@@ -204,7 +208,8 @@ class StrikeTests: XCTestCase {
     func testUSDCConversionRequestInitiationRequest() throws {
         let initiation = MultisigOpInitiation(
             opAccountCreationInfo: getOpAccountCreationInfo(),
-            dataAccountCreationInfo: nil
+            dataAccountCreationInfo: nil,
+            initiatorIsApprover: true
         )
         let requestType: SolanaApprovalRequestType = getConversionRequest(nonceAccountAddresses: ["6UcFAr9rqGfFEtLxnYdW6QjeRor3aej5akLpYpXUkPWX"])
         let request = getWalletInitiationRequest(requestType, initiation: initiation)
@@ -229,7 +234,8 @@ class StrikeTests: XCTestCase {
     func testWrapConversionRequestInitiationRequest() throws {
         let initiation = MultisigOpInitiation(
             opAccountCreationInfo: getOpAccountCreationInfo(),
-            dataAccountCreationInfo: nil
+            dataAccountCreationInfo: nil,
+            initiatorIsApprover: true
         )
         let requestType: SolanaApprovalRequestType = getWrapConversionRequest(nonceAccountAddresses: ["6UcFAr9rqGfFEtLxnYdW6QjeRor3aej5akLpYpXUkPWX"])
         let request = getWalletInitiationRequest(requestType, initiation: initiation)
@@ -254,7 +260,8 @@ class StrikeTests: XCTestCase {
     func testUnwrapConversionRequestInitiationRequest() throws {
         let initiation = MultisigOpInitiation(
             opAccountCreationInfo: getOpAccountCreationInfo(),
-            dataAccountCreationInfo: nil
+            dataAccountCreationInfo: nil,
+            initiatorIsApprover: true
         )
         let requestType: SolanaApprovalRequestType = getUnwrapConversionRequest(nonceAccountAddresses: ["6UcFAr9rqGfFEtLxnYdW6QjeRor3aej5akLpYpXUkPWX"])
         let request = getWalletInitiationRequest(requestType, initiation: initiation)
@@ -285,7 +292,8 @@ class StrikeTests: XCTestCase {
             dataAccountCreationInfo: MultisigAccountCreationInfo(
                 accountSize: 2696,
                 minBalanceForRentExemption: 19655040
-            )
+            ),
+            initiatorIsApprover: true
         )
 
         let nonceAccountAddresses = ["CeQNynfs9Mx1MGTeGQaDZDZnCiUWTkUsUyYf4qT51Cek", "HSwjDt3MYHutJcXtryaQEG3SBfRktqkuoU8cVyWoRE7P"]
@@ -337,7 +345,8 @@ class StrikeTests: XCTestCase {
     func testAddDAppBookEntryInitiationRequest() throws {
         let initiation = MultisigOpInitiation(
             opAccountCreationInfo: getOpAccountCreationInfo(),
-            dataAccountCreationInfo: nil
+            dataAccountCreationInfo: nil,
+            initiatorIsApprover: true
         )
         let requestType: SolanaApprovalRequestType = getAddDAppBookEntry(nonceAccountAddresses: ["AaFj4THN8CJmDPyJjPuDpsfC5FZys2Wmczust5UfmqeN"])
         let request = getWalletInitiationRequest(requestType, initiation: initiation)
@@ -377,7 +386,8 @@ class StrikeTests: XCTestCase {
     func testRemoveDAppBookEntryInitiationRequest() throws {
         let initiation = MultisigOpInitiation(
             opAccountCreationInfo: getOpAccountCreationInfo(),
-            dataAccountCreationInfo: nil
+            dataAccountCreationInfo: nil,
+            initiatorIsApprover: true
         )
         let requestType: SolanaApprovalRequestType = getRemoveDAppBookEntry(nonceAccountAddresses: ["AaFj4THN8CJmDPyJjPuDpsfC5FZys2Wmczust5UfmqeN"])
         let request = getWalletInitiationRequest(requestType, initiation: initiation)
@@ -402,8 +412,9 @@ class StrikeTests: XCTestCase {
     func testAddAddressBookEntryInitiationRequest() throws {
         let initiation = MultisigOpInitiation(
             opAccountCreationInfo: getOpAccountCreationInfo(),
-            dataAccountCreationInfo: nil
-        )
+            dataAccountCreationInfo: nil,
+            initiatorIsApprover: true
+       )
         let requestType: SolanaApprovalRequestType = getAddAddressBookEntry(nonceAccountAddresses: ["AFpfUonk56y9aZdjnbs1N2VUsUrtPQfVgFncAMyTReeH"])
         let request = getWalletInitiationRequest(requestType, initiation: initiation)
         let pk = try Curve25519.Signing.PrivateKey.init(rawRepresentation: "d593c3bc464cf65719a8881ef79c66d8a4684870ccdbf314f012ff8ed879295a".data(using: .hexadecimal)!)
@@ -457,7 +468,8 @@ class StrikeTests: XCTestCase {
     func testWalletConfigPolicyUpdateInitiationRequest() throws {
         let initiation = MultisigOpInitiation(
             opAccountCreationInfo: getOpAccountCreationInfo(),
-            dataAccountCreationInfo: nil
+            dataAccountCreationInfo: nil,
+            initiatorIsApprover: true
         )
         let requestType: SolanaApprovalRequestType = getWalletConfigPolicyUpdate(nonceAccountAddresses: ["AaFj4THN8CJmDPyJjPuDpsfC5FZys2Wmczust5UfmqeN"])
         let request = getWalletInitiationRequest(requestType, initiation: initiation)
@@ -497,7 +509,8 @@ class StrikeTests: XCTestCase {
     func testBalanceAccountSettingsUpdateUpdateInitiationRequest() throws {
         let initiation = MultisigOpInitiation(
             opAccountCreationInfo: getOpAccountCreationInfo(),
-            dataAccountCreationInfo: nil
+            dataAccountCreationInfo: nil,
+            initiatorIsApprover: true
         )
         let requestType: SolanaApprovalRequestType = getBalanceAccountSettingsUpdate(nonceAccountAddresses: ["AaFj4THN8CJmDPyJjPuDpsfC5FZys2Wmczust5UfmqeN"])
         let request = getWalletInitiationRequest(requestType, initiation: initiation)
@@ -537,7 +550,8 @@ class StrikeTests: XCTestCase {
     func testBalanceAccountPolicyUpdateInitiationRequest() throws {
         let initiation = MultisigOpInitiation(
             opAccountCreationInfo: getOpAccountCreationInfo(),
-            dataAccountCreationInfo: nil
+            dataAccountCreationInfo: nil,
+            initiatorIsApprover: true
         )
         let requestType: SolanaApprovalRequestType = getBalanceAccountPolicyUpdate(nonceAccountAddresses: ["5Fx8Nk98DbUcNUe4izqJkcYwfaMGmKRbXi1A7fVPfzj7"])
         let request = getWalletInitiationRequest(requestType, initiation: initiation)
@@ -577,7 +591,8 @@ class StrikeTests: XCTestCase {
     func testBalanceAccountAddressWhitelistUpdateInitiationRequest() throws {
         let initiation = MultisigOpInitiation(
             opAccountCreationInfo: getOpAccountCreationInfo(),
-            dataAccountCreationInfo: nil
+            dataAccountCreationInfo: nil,
+            initiatorIsApprover: true
         )
         let requestType: SolanaApprovalRequestType = getBalanceAccountAddressWhitelistUpdate(nonceAccountAddresses: ["9LGMMPep1WKdiNNwicDvx8JiwgtBKPWhidaSv3rVUNz"])
         let request = getWalletInitiationRequest(requestType, initiation: initiation)
@@ -617,7 +632,8 @@ class StrikeTests: XCTestCase {
     func testBalanceAccountNameUpdateInitiationRequest() throws {
         let initiation = MultisigOpInitiation(
             opAccountCreationInfo: getOpAccountCreationInfo(),
-            dataAccountCreationInfo: nil
+            dataAccountCreationInfo: nil,
+            initiatorIsApprover: true
         )
         let requestType: SolanaApprovalRequestType = getBalanceAccountNameUpdate(nonceAccountAddresses: ["AaFj4THN8CJmDPyJjPuDpsfC5FZys2Wmczust5UfmqeN"])
         let request = getWalletInitiationRequest(requestType, initiation: initiation)
@@ -642,7 +658,8 @@ class StrikeTests: XCTestCase {
     func testSPLTokenAccountCreationInitiationRequest() throws {
         let initiation = MultisigOpInitiation(
             opAccountCreationInfo: getOpAccountCreationInfo(),
-            dataAccountCreationInfo: nil
+            dataAccountCreationInfo: nil,
+            initiatorIsApprover: true
         )
         let requestType: SolanaApprovalRequestType = getSPLTokenAccountCreation(nonceAccountAddresses: ["AaFj4THN8CJmDPyJjPuDpsfC5FZys2Wmczust5UfmqeN"])
         let request = getWalletInitiationRequest(requestType, initiation: initiation)
