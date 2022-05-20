@@ -539,6 +539,7 @@ struct MultisigAccountCreationInfo: Codable, Equatable  {
 struct MultisigOpInitiation: Codable, Equatable {
     let opAccountCreationInfo: MultisigAccountCreationInfo
     let dataAccountCreationInfo: MultisigAccountCreationInfo?
+    let initiatorIsApprover: Bool
 }
 
 protocol SolanaSignable {

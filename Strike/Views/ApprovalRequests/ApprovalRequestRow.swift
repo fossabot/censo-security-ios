@@ -57,7 +57,7 @@ struct ApprovalRequestRow<Row, Detail>: View where Row : View, Detail: View {
                         alert = .confirmation
                     }
                 } label: {
-                    Text("Approve")
+                    Text(request.details.approveButtonCaption)
                         .bold()
                         .loadingIndicator(when: isLoading)
                         .foregroundColor(Color.Strike.green)

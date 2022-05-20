@@ -68,7 +68,7 @@ struct ApprovalRequestDetails<Content>: View where Content : View {
                             alert = .approveConfirmation
                         }
                     } label: {
-                        Text("Approve")
+                        Text(request.details.approveButtonCaption)
                             .loadingIndicator(when: action == .approving)
                     }
                     .buttonStyle(PrimaryButtonStyle())
@@ -254,6 +254,17 @@ extension SolanaApprovalRequestDetails {
             return "cancel"
         case .approval:
             return "deny"
+        }
+    }
+}
+
+extension SolanaApprovalRequestDetails {
+    var approveButtonCaption: String {
+        switch self {
+        case .multisigOpInitiation(let initiation, _) where !initiation.initiatorIsApprover:
+            return "Initiate"
+        default:
+            return "Approve"
         }
     }
 }
