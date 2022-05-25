@@ -27,7 +27,8 @@ extension StrikeTests {
                     walletProgramId: "8pPAcjFSByreFRnRm5YyAdBP2LfiNnWBtBzHtRDcJpUA",
                     multisigOpAccountAddress: "SLnWXM1QTraLWFhCm7JxDZk11PBE5Gu524ASzAC6YjW",
                     walletAddress: "ECzeaMTMBXYXXfVM53n5iPepf8749QUqEzjW8jxefGhh",
-                    nonceAccountAddresses: nonceAccountAddresses
+                    nonceAccountAddresses: nonceAccountAddresses,
+                    initiator: "3wKxhgiogoCaA2uxPYeH7cy3cG4hxRPogrPmDPLS54iZ"
                 )
         ))
     }
@@ -45,7 +46,8 @@ extension StrikeTests {
                     walletProgramId: "JAbzU4jwUMn92xhZcAX4M6JANEigzVMKKJqy6pA1cNBT",
                     multisigOpAccountAddress: "Hx9JnkPHioA9eu92y7jho1TxNaBCHYbw8zaSxvkGXSdD",
                     walletAddress: "FWhBukWcdXaMqZhJMvAAEH6PH81nV6JSpBEmwdvWgUjW",
-                    nonceAccountAddresses: nonceAccountAddresses))
+                    nonceAccountAddresses: nonceAccountAddresses,
+                    initiator: "3wKxhgiogoCaA2uxPYeH7cy3cG4hxRPogrPmDPLS54iZ"))
                 )
         )
     }
@@ -56,7 +58,7 @@ extension StrikeTests {
                 accountSlot: 0,
                 accountInfo: AccountInfo(
                     name: "Account 1",
-                    identifier: "1ac4a7fc-d2f8-4c32-8707-7496ee958933",
+                    identifier: "c6055be1-a895-45a6-b0f3-fce261760b89",
                     accountType: AccountType.BalanceAccount,
                     address: nil
                 ),
@@ -64,33 +66,35 @@ extension StrikeTests {
                     approvalsRequired: 1,
                     approvalTimeout: 3600000,
                     approvers: [SlotSignerInfo(slotId: 0, value: SignerInfo(
-                        publicKey: "4q8ApWsB3rSW2HPFwc1aWmGgcBMfj7tSKBbb5sBGAB6h",
+                        publicKey: "3wKxhgiogoCaA2uxPYeH7cy3cG4hxRPogrPmDPLS54iZ",
                         name: "User 1",
                         email: "authorized1@org1"
                     ))]
                 ),
                 whitelistEnabled: BooleanSetting.Off,
                 dappsEnabled: BooleanSetting.Off,
-                addressBookSlot: 0,
+                addressBookSlot: 1,
                 signingData: SolanaSigningData(
-                    feePayer: "FM36ah2bH8nQWJNPCRzu7R69gE5o6UhujqJFtDpWN5as",
-                    walletProgramId: "8pPAcjFSByreFRnRm5YyAdBP2LfiNnWBtBzHtRDcJpUA",
-                    multisigOpAccountAddress: "HypFjU4nfRYwdnNQTyJw8TFxYekptWTQNrTcW7ofMZxu",
-                    walletAddress: "ECzeaMTMBXYXXfVM53n5iPepf8749QUqEzjW8jxefGhh",
-                    nonceAccountAddresses: nonceAccountAddresses
+                    feePayer: "87VXbkJsqdDvXYfDBtS4kW4TcFor7ogofZXbXjT7t7AU",
+                    walletProgramId: "db4pdTHvA3XLBgKfwKzdx8DcNpHuWWn63t6u8kbYiuS",
+                    multisigOpAccountAddress: "2DBQ368KgyPkmqd6fKsQpmpMhBTDTuW6wWESbxDs5otz",
+                    walletAddress: "JCd6uutAtgsbxDfM54ss4TyeG6kakvSfdxJwjBTjkPLh",
+                    nonceAccountAddresses: nonceAccountAddresses,
+                    initiator: "3wKxhgiogoCaA2uxPYeH7cy3cG4hxRPogrPmDPLS54iZ"
                 )
             )
         )
     }
     
+ 
     func getSolWithdrawalRequest(nonceAccountAddresses: [String]) -> SolanaApprovalRequestType {
         return .withdrawalRequest(
             WithdrawalRequest(
                 account: AccountInfo(
                     name: "Account 1",
-                    identifier: "9f3093c7-5b77-4ce4-b718-d47030bfdf3f",
+                    identifier: "c6055be1-a895-45a6-b0f3-fce261760b89",
                     accountType: AccountType.BalanceAccount,
-                    address: "2AhhYePazh7dekyu9Ug8Vfp7weVCs3UgefLKq2pwpMzo"
+                    address: "oRYGxVHXEqpLaH9QWxX8yRMzLsmPRXyfNmop2QrPQKY"
                 ),
                 symbolAndAmountInfo: SymbolAndAmountInfo(
                     symbolInfo: SymbolInfo(
@@ -98,21 +102,22 @@ extension StrikeTests {
                         symbolDescription: "Solana",
                         tokenMintAddress: "11111111111111111111111111111111"
                     ),
-                    amount: "0.200000000",
+                    amount: "0.500000000",
                     usdEquivalent: "17.75"
                 ),
                 destination: DestinationAddress(
                     name: "My External Sol address",
                     subName: nil,
-                    address: "AzntcKp4TjdgRakBBorz6Tp2kC4PQg4gkDgrr9khCETU",
+                    address: "2DQz5vWgs1PKxPDd9YaYKoemgFriRJqoFRniAQ7Wtuva",
                     tag: nil
                 ),
                 signingData: SolanaSigningData(
-                    feePayer: "FM36ah2bH8nQWJNPCRzu7R69gE5o6UhujqJFtDpWN5as",
-                    walletProgramId: "AG23jVQ5EftDonUwCMhgXtr4jQAPdhAtPFw4y84CMeuj",
+                    feePayer: "87VXbkJsqdDvXYfDBtS4kW4TcFor7ogofZXbXjT7t7AU",
+                    walletProgramId: "db4pdTHvA3XLBgKfwKzdx8DcNpHuWWn63t6u8kbYiuS",
                     multisigOpAccountAddress: "9NDFtaczqouZ9SGTfd489EfN3KvMQgrAjpuu4QEr9Kys",
-                    walletAddress: "CV3Xhgcs48U5o6CnabtjngKbR7H5dxpzJxpfZqBeEMfV",
-                    nonceAccountAddresses: nonceAccountAddresses
+                    walletAddress: "JCd6uutAtgsbxDfM54ss4TyeG6kakvSfdxJwjBTjkPLh",
+                    nonceAccountAddresses: nonceAccountAddresses,
+                    initiator: "3wKxhgiogoCaA2uxPYeH7cy3cG4hxRPogrPmDPLS54iZ"
                 )
             )
         )
@@ -148,7 +153,8 @@ extension StrikeTests {
                     walletProgramId: "zeZ7E8F6UaNYy3ry3Mt6MGUSr679oTKV8tzXVe5B4bP",
                     multisigOpAccountAddress: "6UcFAr9rqGfFEtLxnYdW6QjeRor3aej5akLpYpXUkPWX",
                     walletAddress: "7fvoSJ6iNAyTFvBDuAWuciXWYiyUBtJfCUswZF3YGbUN",
-                    nonceAccountAddresses: nonceAccountAddresses
+                    nonceAccountAddresses: nonceAccountAddresses,
+                    initiator: "3wKxhgiogoCaA2uxPYeH7cy3cG4hxRPogrPmDPLS54iZ"
                 )
             )
         )
@@ -189,7 +195,8 @@ extension StrikeTests {
                     walletProgramId: "CH2nLW24j2Wd1geFGSKkJmbAz1KLhACR9RRD1wHgCH74",
                     multisigOpAccountAddress: "11111111111111111111111111111111",
                     walletAddress: "2sGiNkpwYod6c1Wcd6H1ycd85KwykMfb8ZCt7t3XEp4h",
-                    nonceAccountAddresses: nonceAccountAddresses
+                    nonceAccountAddresses: nonceAccountAddresses,
+                    initiator: "3wKxhgiogoCaA2uxPYeH7cy3cG4hxRPogrPmDPLS54iZ"
                 )
             )
         )
@@ -223,7 +230,8 @@ extension StrikeTests {
                     walletProgramId: "DaGSQwGd1GZnscN2Mu5d1CPYqYXAQMV29Q4Zk9yDhZLp",
                     multisigOpAccountAddress: "11111111111111111111111111111111",
                     walletAddress: "Ebse7xEiKuhe3bWY6dXiWB8QS4QDhr8fRBgH4tUKR2Ys",
-                    nonceAccountAddresses: nonceAccountAddresses
+                    nonceAccountAddresses: nonceAccountAddresses,
+                    initiator: "3wKxhgiogoCaA2uxPYeH7cy3cG4hxRPogrPmDPLS54iZ"
                 )
             )
         )
@@ -257,7 +265,8 @@ extension StrikeTests {
                     walletProgramId: "DaGSQwGd1GZnscN2Mu5d1CPYqYXAQMV29Q4Zk9yDhZLp",
                     multisigOpAccountAddress: "11111111111111111111111111111111",
                     walletAddress: "Ebse7xEiKuhe3bWY6dXiWB8QS4QDhr8fRBgH4tUKR2Ys",
-                    nonceAccountAddresses: nonceAccountAddresses
+                    nonceAccountAddresses: nonceAccountAddresses,
+                    initiator: "3wKxhgiogoCaA2uxPYeH7cy3cG4hxRPogrPmDPLS54iZ"
                 )
             )
         )
@@ -268,15 +277,16 @@ extension StrikeTests {
             AddressBookUpdate(
                 change: .add,
                 entry: SlotDestinationInfo(
-                    slotId: 1,
-                    value: DestinationAddress(name: "My External Sol address 1", subName: nil, address: "6RsFJRJb2RxZG7kKFbnnKdei4bUmC51wBbEpZtm9AuzV", tag: nil)
+                    slotId: 0,
+                    value: DestinationAddress(name: "My External Sol address", subName: nil, address: "2DQz5vWgs1PKxPDd9YaYKoemgFriRJqoFRniAQ7Wtuva", tag: nil)
                 ),
                 signingData: SolanaSigningData(
-                    feePayer: "FM36ah2bH8nQWJNPCRzu7R69gE5o6UhujqJFtDpWN5as",
-                    walletProgramId: "A2iHua5UQd6RWb6C3ZctQcfVZDoeG5pUvBtRQfWSxSqb",
-                    multisigOpAccountAddress: "2Qr2bq8KpyAho1rSnE7TUwXgHW3UpM7KwYEijF11JF2d",
-                    walletAddress: "FpyUo7gVxzB3mPVSkcHNdzdo1T6tNHvkzUvFajw2PwkG",
-                    nonceAccountAddresses: nonceAccountAddresses
+                    feePayer: "87VXbkJsqdDvXYfDBtS4kW4TcFor7ogofZXbXjT7t7AU",
+                    walletProgramId: "db4pdTHvA3XLBgKfwKzdx8DcNpHuWWn63t6u8kbYiuS",
+                    multisigOpAccountAddress: "Dpt714om7J3B3f1ygptgoEnFvHo3aiXjeLPP7TqjHJhq",
+                    walletAddress: "JCd6uutAtgsbxDfM54ss4TyeG6kakvSfdxJwjBTjkPLh",
+                    nonceAccountAddresses: nonceAccountAddresses,
+                    initiator: "3wKxhgiogoCaA2uxPYeH7cy3cG4hxRPogrPmDPLS54iZ"
                 ))
         )
     }
@@ -296,7 +306,8 @@ extension StrikeTests {
                     walletProgramId: "3Nh3QsaXKbTbLM1BLsD4dhT4zeHTPaVbZX3eN3Yg1G2w",
                     multisigOpAccountAddress: "Hn2CJuYyyB2H3wwmdHPy1Aun2Jkye3MCSVajzUvw55A9",
                     walletAddress: "Re4dLGch8a1G98PeRtpHa5ApS6Gnik444CqB5BQ8rY1",
-                    nonceAccountAddresses: nonceAccountAddresses
+                    nonceAccountAddresses: nonceAccountAddresses,
+                    initiator: "3wKxhgiogoCaA2uxPYeH7cy3cG4hxRPogrPmDPLS54iZ"
                 ))
         )
     }
@@ -306,17 +317,18 @@ extension StrikeTests {
             BalanceAccountSettingsUpdate(
                 account: AccountInfo(
                     name: "Account 1",
-                    identifier: "b645a5d9-227f-4a9f-9331-52af64bf1989",
+                    identifier: "c6055be1-a895-45a6-b0f3-fce261760b89",
                     accountType: AccountType.BalanceAccount,
-                    address: "DcvZ2k6ygvvu2Z5ihrSxRZL7bHJ38gPRgpCie8GzztTP"
+                    address: "oRYGxVHXEqpLaH9QWxX8yRMzLsmPRXyfNmop2QrPQKY"
                 ),
                 change: .whitelistEnabled(true),
                 signingData: SolanaSigningData(
-                    feePayer: "FM36ah2bH8nQWJNPCRzu7R69gE5o6UhujqJFtDpWN5as",
-                    walletProgramId: "7kNPVcK2cpyaZsLsqmhZbjcbt433vYUckH1PM5gZeJ1L",
-                    multisigOpAccountAddress: "GM2yp6wzBijkziNSDAXoDsuJ2e76VTLgqTfikh5r9BfD",
-                    walletAddress: "4XaqL4MtTUDrncTGBqvTC9ketf8WVqrUocDkYhKAnDju",
-                    nonceAccountAddresses: nonceAccountAddresses
+                    feePayer: "87VXbkJsqdDvXYfDBtS4kW4TcFor7ogofZXbXjT7t7AU",
+                    walletProgramId: "db4pdTHvA3XLBgKfwKzdx8DcNpHuWWn63t6u8kbYiuS",
+                    multisigOpAccountAddress: "Dp4oaRWRtBxQdf5Lg2zti3TCjsUsxv4rUBgtf2HSQnVb",
+                    walletAddress: "JCd6uutAtgsbxDfM54ss4TyeG6kakvSfdxJwjBTjkPLh",
+                    nonceAccountAddresses: nonceAccountAddresses,
+                    initiator: "3wKxhgiogoCaA2uxPYeH7cy3cG4hxRPogrPmDPLS54iZ"
                 ))
         )
     }
@@ -336,7 +348,8 @@ extension StrikeTests {
                     walletProgramId: "3Nh3QsaXKbTbLM1BLsD4dhT4zeHTPaVbZX3eN3Yg1G2w",
                     multisigOpAccountAddress: "9CfoFci2agjCJ7bWqfgKEFSAc5zB6UR63MrK61nRaJzm",
                     walletAddress: "Re4dLGch8a1G98PeRtpHa5ApS6Gnik444CqB5BQ8rY1",
-                    nonceAccountAddresses: nonceAccountAddresses
+                    nonceAccountAddresses: nonceAccountAddresses,
+                    initiator: "3wKxhgiogoCaA2uxPYeH7cy3cG4hxRPogrPmDPLS54iZ"
                 ))
         )
     }
@@ -345,28 +358,25 @@ extension StrikeTests {
         return .walletConfigPolicyUpdate(
             WalletConfigPolicyUpdate(
                 approvalPolicy: ApprovalPolicy(
-                    approvalsRequired: 3,
+                    approvalsRequired: 2,
                     approvalTimeout: 18000000,
                     approvers: [
                         SlotSignerInfo(
                             slotId: 0,
-                            value: SignerInfo(publicKey: "5zpDzYujD8xnZ5B9m93qHCGMSeLDb7eAKCo4kWha7knV", name: "User 1", email: "authorized1@org1")
+                            value: SignerInfo(publicKey: "3wKxhgiogoCaA2uxPYeH7cy3cG4hxRPogrPmDPLS54iZ", name: "User 1", email: "authorized1@org1")
                         ),
                         SlotSignerInfo(
                             slotId: 1,
-                            value: SignerInfo(publicKey: "3tSshpPL1WyNR7qDfxPffinndQmgfvTGoZc3PgL65Z9o", name: "User 2", email: "user2@org1")
-                        ),
-                        SlotSignerInfo(
-                            slotId: 2,
-                            value: SignerInfo(publicKey: "5rt9dFozMbpPf2mMgiMuu2f4CxQa3pWS1Exo9wHPbwJK", name: "User 3", email: "user3@org1")
+                            value: SignerInfo(publicKey: "7AH35qStXtrUgRkmqDmhjufNHjF74R1A9cCKT3C3HaAR", name: "User 2", email: "user2@org1")
                         )
                     ]),
                 signingData: SolanaSigningData(
-                    feePayer: "FM36ah2bH8nQWJNPCRzu7R69gE5o6UhujqJFtDpWN5as",
-                    walletProgramId: "5kx1BNgMpBbEfrrzfqZrmW8xfqpdbC8b34TkwGbXg42r",
+                    feePayer: "87VXbkJsqdDvXYfDBtS4kW4TcFor7ogofZXbXjT7t7AU",
+                    walletProgramId: "db4pdTHvA3XLBgKfwKzdx8DcNpHuWWn63t6u8kbYiuS",
                     multisigOpAccountAddress: "F6iUTdJDE4vnTgBanCtBgtoNHag57Uaut82xATGVVps3",
-                    walletAddress: "hBVqSAZ3Z7dSrWXoQdKJGttgHVrWa3qzdeHpiX6WKk3",
-                    nonceAccountAddresses: nonceAccountAddresses
+                    walletAddress: "JCd6uutAtgsbxDfM54ss4TyeG6kakvSfdxJwjBTjkPLh",
+                    nonceAccountAddresses: nonceAccountAddresses,
+                    initiator: "3wKxhgiogoCaA2uxPYeH7cy3cG4hxRPogrPmDPLS54iZ"
                 ))
         )
     }
@@ -399,7 +409,8 @@ extension StrikeTests {
                     walletProgramId: "8pPAcjFSByreFRnRm5YyAdBP2LfiNnWBtBzHtRDcJpUA",
                     multisigOpAccountAddress: "DbdTEwihgEYJYAgXBKEqQGknGyHsRnxE5coeZaVS4T9y",
                     walletAddress: "ECzeaMTMBXYXXfVM53n5iPepf8749QUqEzjW8jxefGhh",
-                    nonceAccountAddresses: nonceAccountAddresses
+                    nonceAccountAddresses: nonceAccountAddresses,
+                    initiator: "3wKxhgiogoCaA2uxPYeH7cy3cG4hxRPogrPmDPLS54iZ"
                 ))
         )
     }
@@ -419,7 +430,8 @@ extension StrikeTests {
                     walletProgramId: "7kNPVcK2cpyaZsLsqmhZbjcbt433vYUckH1PM5gZeJ1L",
                     multisigOpAccountAddress: "7DY87mHHiSSyxFBbhCYbTpQE5M4Jk9Z9hymJ7UzL3sPm",
                     walletAddress: "4XaqL4MtTUDrncTGBqvTC9ketf8WVqrUocDkYhKAnDju",
-                    nonceAccountAddresses: nonceAccountAddresses
+                    nonceAccountAddresses: nonceAccountAddresses,
+                    initiator: "3wKxhgiogoCaA2uxPYeH7cy3cG4hxRPogrPmDPLS54iZ"
                 ))
         )
     }
@@ -448,7 +460,8 @@ extension StrikeTests {
                     walletProgramId: "9LM4sYmMHk1VDcFpA8ezPeL8GtEVR5T51Qxcksrf4VX2",
                     multisigOpAccountAddress: "71S5qEAD3DMn7QY9fdb2uR1TV7kiAfcAqNHfQfyFUSME",
                     walletAddress: "AoEAvW2TvZYmy2WbmqN4nXdJT8o21RbJP6xNK2yR4of",
-                    nonceAccountAddresses: nonceAccountAddresses
+                    nonceAccountAddresses: nonceAccountAddresses,
+                    initiator: "3wKxhgiogoCaA2uxPYeH7cy3cG4hxRPogrPmDPLS54iZ"
                 ))
         )
     }
@@ -478,7 +491,8 @@ extension StrikeTests {
                     walletProgramId: "8pPAcjFSByreFRnRm5YyAdBP2LfiNnWBtBzHtRDcJpUA",
                     multisigOpAccountAddress: "SLnWXM1QTraLWFhCm7JxDZk11PBE5Gu524ASzAC6YjW",
                     walletAddress: "ECzeaMTMBXYXXfVM53n5iPepf8749QUqEzjW8jxefGhh",
-                    nonceAccountAddresses: nonceAccountAddresses
+                    nonceAccountAddresses: nonceAccountAddresses,
+                    initiator: "3wKxhgiogoCaA2uxPYeH7cy3cG4hxRPogrPmDPLS54iZ"
                 ))
         )
     }
@@ -523,7 +537,8 @@ extension StrikeTests {
                     walletProgramId: "DafeuJ6v1Mv1cvEVU6EnH2uomCP8nvj9EbKHgXGxGChy",
                     multisigOpAccountAddress: "11111111111111111111111111111111",
                     walletAddress: "6Vie7d1hd84JnQVAyZW5V5EkTfVTF1Gap2a5mtwMqobF",
-                    nonceAccountAddresses: nonceAccountAddresses
+                    nonceAccountAddresses: nonceAccountAddresses,
+                    initiator: "3wKxhgiogoCaA2uxPYeH7cy3cG4hxRPogrPmDPLS54iZ"
                 )
             )
         )
@@ -566,8 +581,8 @@ extension StrikeTests {
     
     func getOpAccountCreationInfo() -> MultisigAccountCreationInfo {
         return MultisigAccountCreationInfo(
-            accountSize: 848,
-            minBalanceForRentExemption: 6792960
+            accountSize: 952,
+            minBalanceForRentExemption: 7516800
         )
     }
 }

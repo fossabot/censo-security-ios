@@ -135,15 +135,19 @@ extension StrikeApi.InitiationRequest: SolanaSignable {
 
     var instructionData: Data {
         get throws {
+            let commonBytes = try signingData.commonInitiationBytes
+            
             switch requestType {
             case .balanceAccountCreation(let request):
                 return Data(
                     [opCode] +
+                    commonBytes +
                     request.combinedBytes
                 )
             case .withdrawalRequest(let request):
                 return try Data(
                     [opCode] +
+                    commonBytes +
                     request.account.identifier.sha256HashBytes +
                     request.symbolAndAmountInfo.fundamentalAmount.bytes +
                     request.destination.name.sha256HashBytes
@@ -151,6 +155,7 @@ extension StrikeApi.InitiationRequest: SolanaSignable {
             case .conversionRequest(let request):
                 return try Data(
                     [opCode] +
+                    commonBytes +
                     request.account.identifier.sha256HashBytes +
                     request.symbolAndAmountInfo.fundamentalAmount.bytes +
                     request.destination.name.sha256HashBytes
@@ -158,6 +163,7 @@ extension StrikeApi.InitiationRequest: SolanaSignable {
             case .wrapConversionRequest(let request):
                 return try Data(
                     [opCode] +
+                    commonBytes +
                     request.account.identifier.sha256HashBytes +
                     request.symbolAndAmountInfo.fundamentalAmount.bytes +
                     ([UInt8(request.symbolAndAmountInfo.symbolInfo.symbol == "SOL" ? 0 : 1)] as [UInt8])
@@ -165,12 +171,14 @@ extension StrikeApi.InitiationRequest: SolanaSignable {
             case .signersUpdate(let request):
                 return Data(
                     [opCode] +
+                    commonBytes +
                     [request.slotUpdateType.toSolanaProgramValue()] +
                     request.signer.combinedBytes
                 )
             case .dAppTransactionRequest(let request):
                 return Data(
                     [opCode] +
+                    commonBytes +
                     request.account.identifier.sha256HashBytes +
                     request.dappInfo.address.base58Bytes +
                     request.dappInfo.name.sha256HashBytes +
@@ -179,41 +187,49 @@ extension StrikeApi.InitiationRequest: SolanaSignable {
             case .balanceAccountNameUpdate(let request):
                 return Data(
                     [opCode] +
+                    commonBytes +
                     request.combinedBytes
                 )
             case .balanceAccountSettingsUpdate(let request):
                 return Data(
                     [opCode] +
+                    commonBytes +
                     request.combinedBytes
                 )
             case .balanceAccountPolicyUpdate(let request):
                 return Data(
                     [opCode] +
+                    commonBytes +
                     request.combinedBytes
                 )
             case .balanceAccountAddressWhitelistUpdate(let request):
                 return Data(
                     [opCode] +
+                    commonBytes +
                     request.combinedBytes
                 )
             case .walletConfigPolicyUpdate(let request):
                 return Data(
                     [opCode] +
+                    commonBytes +
                     request.approvalPolicy.combinedBytes
                 )
             case .addressBookUpdate(let request):
                 return Data(
                     [opCode] +
+                    commonBytes +
                     request.combinedBytes
                 )
             case .dAppBookUpdate(let request):
                 return Data(
                     [opCode] +
+                    commonBytes +
                     request.combinedBytes
                 )
             case .splTokenAccountCreation(let request):
                 return Data(
                     [opCode] +
+                    commonBytes +
                     request.combinedBytes
                 )
             default:
@@ -243,6 +259,7 @@ extension StrikeApi.InitiationRequest: SolanaSignable {
             }
         }
     }
+    
 
     var signingData: SolanaSigningData {
         get throws {
@@ -309,6 +326,7 @@ extension StrikeApi.InitiationRequest: SolanaSignable {
                 Account.Meta(publicKey: WRAPPED_SOL_MINT, isSigner: false, isWritable: false),
                 Account.Meta(publicKey: approverPublicKey, isSigner: true, isWritable: false),
                 Account.Meta(publicKey: SYSVAR_CLOCK_PUBKEY, isSigner: false, isWritable: false),
+                Account.Meta(publicKey: try PublicKey(string: signingData.feePayer), isSigner: true, isWritable: false),
                 Account.Meta(publicKey: SYS_PROGRAM_ID, isSigner: false, isWritable: false),
                 Account.Meta(publicKey: TOKEN_PROGRAM_ID, isSigner: false, isWritable: false),
                 Account.Meta(publicKey: SYSVAR_RENT_PUBKEY, isSigner: false, isWritable: false),
@@ -320,7 +338,8 @@ extension StrikeApi.InitiationRequest: SolanaSignable {
                 Account.Meta(publicKey: try dataAccountPublicKey, isSigner: false, isWritable: true),
                 Account.Meta(publicKey: try PublicKey(string: signingData.walletAddress), isSigner: false, isWritable: false),
                 Account.Meta(publicKey: approverPublicKey, isSigner: true, isWritable: false),
-                Account.Meta(publicKey: SYSVAR_CLOCK_PUBKEY, isSigner: false, isWritable: false)
+                Account.Meta(publicKey: SYSVAR_CLOCK_PUBKEY, isSigner: false, isWritable: false),
+                Account.Meta(publicKey: try PublicKey(string: signingData.feePayer), isSigner: true, isWritable: false)
             ]
         case .splTokenAccountCreation(let request):
             let tokenMintPublicKey = try PublicKey(string: request.tokenSymbolInfo.tokenMintAddress)
@@ -329,7 +348,8 @@ extension StrikeApi.InitiationRequest: SolanaSignable {
                 Account.Meta(publicKey: try PublicKey(string: signingData.walletAddress), isSigner: false, isWritable: false),
                 Account.Meta(publicKey: approverPublicKey, isSigner: true, isWritable: false),
                 Account.Meta(publicKey: tokenMintPublicKey, isSigner: false, isWritable: false),
-                Account.Meta(publicKey: SYSVAR_CLOCK_PUBKEY, isSigner: false, isWritable: false)
+                Account.Meta(publicKey: SYSVAR_CLOCK_PUBKEY, isSigner: false, isWritable: false),
+                Account.Meta(publicKey: try PublicKey(string: signingData.feePayer), isSigner: true, isWritable: false)
             ]
             for balanceAccount in request.balanceAccounts {
                 let balanceAccountTokenAddress = try PublicKey.associatedTokenAddress(walletAddress: try PublicKey(string: balanceAccount.address),
@@ -338,20 +358,12 @@ extension StrikeApi.InitiationRequest: SolanaSignable {
             }
             return accounts;
         default:
-            var walletAccountWritable = false
-            switch requestType {
-            case .walletConfigPolicyUpdate:
-                walletAccountWritable = true
-            case .balanceAccountPolicyUpdate:
-                walletAccountWritable = true
-            default:
-                walletAccountWritable = false
-            }
             return [
                 Account.Meta(publicKey: try opAccountPublicKey, isSigner: false, isWritable: true),
-                Account.Meta(publicKey: try PublicKey(string: signingData.walletAddress), isSigner: false, isWritable: walletAccountWritable),
+                Account.Meta(publicKey: try PublicKey(string: signingData.walletAddress), isSigner: false, isWritable: false),
                 Account.Meta(publicKey: approverPublicKey, isSigner: true, isWritable: false),
-                Account.Meta(publicKey: SYSVAR_CLOCK_PUBKEY, isSigner: false, isWritable: false)
+                Account.Meta(publicKey: SYSVAR_CLOCK_PUBKEY, isSigner: false, isWritable: false),
+                Account.Meta(publicKey: try PublicKey(string: signingData.feePayer), isSigner: true, isWritable: false)
             ]
         }
     }
@@ -372,9 +384,9 @@ extension StrikeApi.InitiationRequest: SolanaSignable {
             Account.Meta(publicKey: destinationPublicKey, isSigner: false, isWritable: false),
             Account.Meta(publicKey: approverPublicKey, isSigner: true, isWritable: false),
             Account.Meta(publicKey: SYSVAR_CLOCK_PUBKEY, isSigner: false, isWritable: false),
+            Account.Meta(publicKey: try PublicKey(string: signingData.feePayer), isSigner: true, isWritable: true),
             Account.Meta(publicKey: tokenMintPublicKey, isSigner: false, isWritable: false),
             Account.Meta(publicKey: destinationTokenAddress, isSigner: false, isWritable: true),
-            Account.Meta(publicKey: try PublicKey(string: signingData.feePayer), isSigner: true, isWritable: true),
             Account.Meta(publicKey: SYS_PROGRAM_ID, isSigner: false, isWritable: false),
             Account.Meta(publicKey: TOKEN_PROGRAM_ID, isSigner: false, isWritable: false),
             Account.Meta(publicKey: SYSVAR_RENT_PUBKEY, isSigner: false, isWritable: false),
@@ -494,6 +506,15 @@ extension TransactionInstruction {
             programId: SYS_PROGRAM_ID,
             data: UInt32(4).bytes
         )
+    }
+}
+
+extension SolanaSigningData {
+    var commonInitiationBytes: [UInt8] {
+        return
+            UInt64(0).bytes +
+            ([UInt8(0)] as [UInt8]) +
+            ([UInt8](Data(count: 32)))
     }
 }
 
