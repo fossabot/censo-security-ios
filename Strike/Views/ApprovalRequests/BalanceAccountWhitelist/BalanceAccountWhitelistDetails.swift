@@ -37,7 +37,7 @@ struct BalanceAccountWhitelistDetails: View {
                 FactsSection(title: "Whitelisted Addresses") {
                     if update.destinations.count > 0 {
                         for destination in update.destinations.sorted(by: { $0.destinationName < $1.destinationName }) {
-                            Fact(destination.value.name, destination.value.address.masked())
+                            Fact(destination.destinationName, destination.value.address.masked())
                         }
                     } else {
                         Fact("No whitelisted addresses", "")
