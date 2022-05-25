@@ -33,7 +33,7 @@ struct AccountCreationDetails: View {
 
                 FactsSection(title: "Wallet Approvers") {
                     if accountCreation.approvalPolicy.approvers.count > 0 {
-                        for approver in accountCreation.approvalPolicy.approvers {
+                        for approver in accountCreation.approvalPolicy.approvers.sorted(by: { $0.value.name < $1.value.name }) {
                             Fact(approver.value.name, approver.value.email)
                         }
                     } else {

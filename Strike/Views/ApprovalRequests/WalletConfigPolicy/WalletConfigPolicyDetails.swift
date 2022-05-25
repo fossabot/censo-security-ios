@@ -29,7 +29,7 @@ struct WalletConfigPolicyDetails: View {
             VStack(spacing: 20) {
                 FactsSection(title: "Vault Approvers") {
                     if update.approvalPolicy.approvers.count > 0 {
-                        for approver in update.approvalPolicy.approvers {
+                        for approver in update.approvalPolicy.approvers.sorted(by: { $0.value.name < $1.value.name }) {
                             Fact(approver.value.name, approver.value.email)
                         }
                     } else {
