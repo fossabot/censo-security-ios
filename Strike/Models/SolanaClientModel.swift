@@ -663,7 +663,7 @@ extension SolanaSigningData {
             multisigOpAccountAddress: "multisigAddress",
             walletAddress: "walletAddress",
             nonceAccountAddresses: ["nonceAccountAddress"],
-            initiator: ""
+            initiator: "initiatorAddress"
         )
     }
 }
