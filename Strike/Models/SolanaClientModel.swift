@@ -271,6 +271,7 @@ struct SolanaSigningData: Codable, Equatable {
     let multisigOpAccountAddress: String
     let walletAddress: String
     let nonceAccountAddresses: [String]
+    let initiator: String
 }
 
 struct SignerInfo: Codable, Equatable {
@@ -661,7 +662,8 @@ extension SolanaSigningData {
             walletProgramId: "walletPrgramId",
             multisigOpAccountAddress: "multisigAddress",
             walletAddress: "walletAddress",
-            nonceAccountAddresses: ["nonceAccountAddress"]
+            nonceAccountAddresses: ["nonceAccountAddress"],
+            initiator: "initiatorAddress"
         )
     }
 }

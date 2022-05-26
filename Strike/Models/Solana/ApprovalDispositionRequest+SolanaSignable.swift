@@ -57,64 +57,77 @@ extension StrikeApi.ApprovalDispositionRequest: SolanaSignable {
 
     var opHashData: Data {
         get throws {
+            let commonBytes: [UInt8] = try signingData.commonOpHashBytes
             switch requestType {
             case .balanceAccountCreation(let request):
                 return try Data(
                     [opCode] +
+                    commonBytes +
                     signingData.walletAddress.base58Bytes +
                     request.combinedBytes
                 )
             case .balanceAccountNameUpdate(let request):
                 return try Data(
                     [opCode] +
+                    commonBytes +
                     signingData.walletAddress.base58Bytes +
                     request.combinedBytes
                 )
             case .balanceAccountSettingsUpdate(let request):
                 return try Data(
                     [opCode] +
+                    commonBytes +
                     signingData.walletAddress.base58Bytes +
                     request.combinedBytes
                 )
             case .balanceAccountPolicyUpdate(let request):
                 return try Data(
                     [opCode] +
+                    commonBytes +
                     signingData.walletAddress.base58Bytes +
                     request.combinedBytes
                 )
             case .balanceAccountAddressWhitelistUpdate(let request):
                 return try Data(
                     [opCode] +
+                    commonBytes +
                     signingData.walletAddress.base58Bytes +
                     request.combinedBytes
                 )
             case .walletConfigPolicyUpdate(let request):
                 return try Data(
                     [opCode] +
+                    commonBytes +
                     signingData.walletAddress.base58Bytes +
                     request.approvalPolicy.combinedBytes
                 )
             case .addressBookUpdate(let request):
                 return try Data(
                     [opCode] +
+                    commonBytes +
                     signingData.walletAddress.base58Bytes +
                     request.combinedBytes
                 )
             case .dAppBookUpdate(let request):
                 return try Data(
                     [opCode] +
+                    commonBytes +
                     signingData.walletAddress.base58Bytes +
                     request.combinedBytes
                 )
             case .splTokenAccountCreation(let request):
                 return try Data(
                     [opCode] +
+                    commonBytes +
                     signingData.walletAddress.base58Bytes +
                     request.combinedBytes
                 )
             case .withdrawalRequest(let request):
-                return try Data(
+                return try
+                Data(
                     [opCode] +
+                    commonBytes) +
+                Data(
                     signingData.walletAddress.base58Bytes +
                     request.account.identifier.sha256HashBytes +
                     request.destination.address.base58Bytes +
@@ -122,8 +135,11 @@ extension StrikeApi.ApprovalDispositionRequest: SolanaSignable {
                     request.symbolAndAmountInfo.symbolInfo.tokenMintAddress.base58Bytes
                 )
             case .conversionRequest(let request):
-                return try Data(
+                return try
+                Data(
                     [opCode] +
+                    commonBytes) +
+                Data(
                     signingData.walletAddress.base58Bytes +
                     request.account.identifier.sha256HashBytes +
                     request.destination.address.base58Bytes +
@@ -133,6 +149,7 @@ extension StrikeApi.ApprovalDispositionRequest: SolanaSignable {
             case .wrapConversionRequest(let request):
                 return try Data(
                     [opCode] +
+                    commonBytes +
                     signingData.walletAddress.base58Bytes +
                     request.account.identifier.sha256HashBytes +
                     request.symbolAndAmountInfo.fundamentalAmount.bytes +
@@ -141,6 +158,7 @@ extension StrikeApi.ApprovalDispositionRequest: SolanaSignable {
             case .signersUpdate(let request):
                 return try Data(
                     [opCode] +
+                    commonBytes +
                     signingData.walletAddress.base58Bytes +
                     [request.slotUpdateType.toSolanaProgramValue()] +
                     request.signer.combinedBytes
@@ -453,6 +471,16 @@ extension SPLTokenAccountCreation {
             ([UInt8(balanceAccounts.count)] as [UInt8]) +
             (balanceAccounts.flatMap({$0.identifier.sha256HashBytes}) as [UInt8]) +
             tokenSymbolInfo.tokenMintAddress.base58Bytes
+    }
+}
+
+extension SolanaSigningData {
+    var commonOpHashBytes: [UInt8] {
+        return
+            initiator.base58Bytes +
+            feePayer.base58Bytes +
+            UInt64(0).bytes +
+            [UInt8](Data(count: 32))
     }
 }
 
