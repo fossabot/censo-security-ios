@@ -10,11 +10,12 @@ import SwiftUI
 
 
 struct ConversionRow: View {
+    var requestType: SolanaApprovalRequestType
     var conversion: ConversionRequest
 
     var body: some View {
         VStack {
-            Text("Convert \(conversion.symbolAndAmountInfo.formattedAmount) \(conversion.symbolAndAmountInfo.symbolInfo.symbol)")
+            Text(requestType.header)
                 .font(.title2)
                 .bold()
                 .lineLimit(1)
@@ -55,7 +56,7 @@ struct ConversionRow: View {
 #if DEBUG
 struct ConversionRow_Previews: PreviewProvider {
     static var previews: some View {
-        ConversionRow(conversion: .sample)
+        ConversionRow(requestType: .conversionRequest(.sample), conversion: .sample)
     }
 }
 #endif
