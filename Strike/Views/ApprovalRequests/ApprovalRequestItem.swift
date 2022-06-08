@@ -29,7 +29,7 @@ struct ApprovalRequestItem: View {
             }
         case .conversionRequest(let conversion):
             ApprovalRequestRow(user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
-                ConversionRow(conversion: conversion)
+                ConversionRow(requestType: request.requestType, conversion: conversion)
             } detail: {
                 ConversionDetails(request: request, conversion: conversion)
             }
@@ -90,7 +90,11 @@ struct ApprovalRequestItem: View {
                 SPLTokenAccountCreationDetails(request: request, creation: splTokenAccountCreation, user: user)
             }
         case .wrapConversionRequest(let wrapConversionRequest):
-            UnknownRequestRow(request: request, timerPublisher: timerPublisher)
+            ApprovalRequestRow(user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
+                WrapConversionRow(requestType: request.requestType, conversion: wrapConversionRequest)
+            } detail: {
+                WrapConversionDetail(request: request, conversion: wrapConversionRequest)
+            }
         case .balanceAccountAddressWhitelistUpdate(let balanceAccountAddressWhitelistUpdate):
             ApprovalRequestRow(user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
                 BalanceAccountWhitelistRow(requestType: request.requestType, update: balanceAccountAddressWhitelistUpdate)
