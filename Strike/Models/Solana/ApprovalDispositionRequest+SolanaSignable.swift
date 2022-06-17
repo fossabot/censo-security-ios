@@ -439,7 +439,7 @@ extension DAppTransactionRequest {
         return
             account.identifier.sha256HashBytes +
             dappInfo.combinedBytes +
-            UInt16(instructions.count).bytes
+            UInt16(instructions.map { $0.instructions.count }.reduce(0, +)).bytes
     }
 }
 
