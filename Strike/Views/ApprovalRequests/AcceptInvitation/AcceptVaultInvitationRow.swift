@@ -22,7 +22,7 @@ struct AcceptVaultInvitationRow: View {
                 .padding(EdgeInsets(top: 16, leading: 20, bottom: 0, trailing: 20))
 
             Text(acceptVaultInvitation.vaultName)
-                .font(.caption)
+                .font(.title3)
                 .foregroundColor(Color.white.opacity(0.5))
                 .padding(EdgeInsets(top: 2, leading: 20, bottom: 20, trailing: 20))
         }
