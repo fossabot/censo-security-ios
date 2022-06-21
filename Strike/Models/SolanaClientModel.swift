@@ -99,6 +99,7 @@ enum SolanaApprovalRequestType: Codable, Equatable {
     case splTokenAccountCreation(SPLTokenAccountCreation)
     case dAppTransactionRequest(DAppTransactionRequest)
     case loginApproval(LoginApproval)
+    case acceptVaultInvitation(AcceptVaultInvitation)
     case unknown
 
     enum DetailsCodingKeys: String, CodingKey {
@@ -139,6 +140,8 @@ enum SolanaApprovalRequestType: Codable, Equatable {
             self = .dAppTransactionRequest(try DAppTransactionRequest(from: decoder))
         case "LoginApproval":
             self = .loginApproval(try LoginApproval(from: decoder))
+        case "AcceptVaultInvitation":
+            self = .acceptVaultInvitation(try AcceptVaultInvitation(from: decoder))
         default:
             self = .unknown
         }
@@ -192,6 +195,9 @@ enum SolanaApprovalRequestType: Codable, Equatable {
         case .loginApproval(let loginApproval):
             try container.encode("LoginApproval", forKey: .type)
             try loginApproval.encode(to: encoder)
+        case .acceptVaultInvitation(let acceptVaultInvitation):
+            try container.encode("AcceptVaultInvitation", forKey: .type)
+            try acceptVaultInvitation.encode(to: encoder)
         case .unknown:
             try container.encode("Unknown", forKey: .type)
         }
@@ -553,6 +559,11 @@ struct LoginApproval: Codable, Equatable  {
     var name: String
 }
 
+struct AcceptVaultInvitation: Codable, Equatable  {
+    var vaultGuid: String
+    var vaultName: String
+}
+
 extension SolanaApprovalRequestDetails {
     var nonceAccountAddresses: [String] {
         switch self {
@@ -596,6 +607,7 @@ extension SolanaApprovalRequestType {
         case .wrapConversionRequest(let request):
             return request.signingData.nonceAccountAddresses
         case .loginApproval,
+             .acceptVaultInvitation,
              .unknown:
             return []
         }
