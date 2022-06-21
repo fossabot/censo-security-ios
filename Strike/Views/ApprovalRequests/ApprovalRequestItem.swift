@@ -107,6 +107,12 @@ struct ApprovalRequestItem: View {
             } detail: {
                 LoginDetails(requestType: request.requestType, login: login)
             }
+        case .acceptVaultInvitation(let acceptVaultInvitation):
+            ApprovalRequestRow(user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
+                AcceptVaultInvitationRow(requestType: request.requestType, acceptVaultInvitation: acceptVaultInvitation)
+            } detail: {
+                AcceptVaultInvitationDetails(requestType: request.requestType, acceptVaultInvitation: acceptVaultInvitation)
+            }
         }
     }
 }

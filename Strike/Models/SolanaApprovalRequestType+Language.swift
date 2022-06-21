@@ -55,6 +55,8 @@ extension SolanaApprovalRequestType {
             return "Execute dApp Transaction"
         case .loginApproval:
             return "Log In"
+        case .acceptVaultInvitation:
+            return "Accept Vault Invitation"
         }
     }
 
@@ -97,7 +99,8 @@ extension SolanaApprovalRequestType {
              .balanceAccountCreation,
              .addressBookUpdate,
              .walletConfigPolicyUpdate,
-             .dAppBookUpdate:
+             .dAppBookUpdate,
+             .acceptVaultInvitation:
             return "Vault Change"
         case .loginApproval:
             return "Authentication"
@@ -140,6 +143,8 @@ extension SolanaApprovalRequestType {
             return Image("conversion")
         case .loginApproval:
             return Image("person.crop.circle.badge.questionmark")
+        case .acceptVaultInvitation:
+            return Image(systemName: "iphone")
         }
     }
 }

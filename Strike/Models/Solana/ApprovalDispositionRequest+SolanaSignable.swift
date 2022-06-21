@@ -43,7 +43,7 @@ extension StrikeApi.ApprovalDispositionRequest: SolanaSignable {
             return 13
         case .balanceAccountAddressWhitelistUpdate:
             return 14
-        case .loginApproval, .unknown:
+        case .loginApproval, .acceptVaultInvitation, .unknown:
             return 0
         }
     }
@@ -174,14 +174,14 @@ extension StrikeApi.ApprovalDispositionRequest: SolanaSignable {
                 ).sha256HashBytes
                 for instructionBatch in request.instructions {
                     for instruction in instructionBatch.instructions {
-                        hashBytes = try Data(
+                        hashBytes = Data(
                             hashBytes +
                             instruction.combinedBytes
                         ).sha256HashBytes
                     }
                 }
                 return Data(hashBytes)
-            case .loginApproval:
+            case .loginApproval, .acceptVaultInvitation:
                 throw SolanaError.invalidRequest(reason: "Invalid request for Approval")
             case .unknown:
                 throw SolanaError.invalidRequest(reason: "Unknown Approval")
@@ -220,7 +220,7 @@ extension StrikeApi.ApprovalDispositionRequest: SolanaSignable {
                 return request.signingData
             case .dAppTransactionRequest(let request):
                 return request.signingData
-            case .loginApproval:
+            case .loginApproval, .acceptVaultInvitation:
                 throw SolanaError.invalidRequest(reason: "Invalid request for Approval")
             case .unknown:
                 throw SolanaError.invalidRequest(reason: "Unknown Approval")
@@ -246,6 +246,8 @@ extension StrikeApi.ApprovalDispositionRequest: SolanaSignable {
 
     func signableData(approverPublicKey: String) throws -> Data {
         switch requestType {
+        case .acceptVaultInvitation(let request):
+            return request.vaultName.data(using: .utf8)!
         case .loginApproval(let request):
             return request.jwtToken.data(using: .utf8)!
         default:

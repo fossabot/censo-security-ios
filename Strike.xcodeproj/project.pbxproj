@@ -128,6 +128,8 @@
 		6C74FA0228525AC3005C8DE1 /* test-data.json in Resources */ = {isa = PBXBuildFile; fileRef = 6C74FA0128525AC3005C8DE1 /* test-data.json */; };
 		6C74FA0428526282005C8DE1 /* Bip44.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C74FA0328526282005C8DE1 /* Bip44.swift */; };
 		6C74FA07285AAD5F005C8DE1 /* BIP39 in Frameworks */ = {isa = PBXBuildFile; productRef = 6C74FA06285AAD5F005C8DE1 /* BIP39 */; };
+		6C74FA0A2861FE68005C8DE1 /* AcceptVaultInvitationRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C74FA092861FE68005C8DE1 /* AcceptVaultInvitationRow.swift */; };
+		6C74FA0C28620130005C8DE1 /* AcceptVaultInvitationDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C74FA0B28620130005C8DE1 /* AcceptVaultInvitationDetails.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -266,6 +268,8 @@
 		6C1E8C98285118F900F7C337 /* BipTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BipTests.swift; sourceTree = "<group>"; };
 		6C74FA0128525AC3005C8DE1 /* test-data.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "test-data.json"; sourceTree = "<group>"; };
 		6C74FA0328526282005C8DE1 /* Bip44.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bip44.swift; sourceTree = "<group>"; };
+		6C74FA092861FE68005C8DE1 /* AcceptVaultInvitationRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcceptVaultInvitationRow.swift; sourceTree = "<group>"; };
+		6C74FA0B28620130005C8DE1 /* AcceptVaultInvitationDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcceptVaultInvitationDetails.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -469,6 +473,7 @@
 		3D3D6D52261B959300FEEE0B /* ApprovalRequests */ = {
 			isa = PBXGroup;
 			children = (
+				6C74FA082861FE29005C8DE1 /* AcceptInvitation */,
 				3D3D6D53261B95B100FEEE0B /* ApprovalRequestsView.swift */,
 				3DC36BB4262B4E8C005DB1A7 /* ApprovalRequestsList.swift */,
 				3DBF9DC426E0020300D7683E /* ApprovalRequestItem.swift */,
@@ -694,6 +699,15 @@
 			name = Mock;
 			sourceTree = "<group>";
 		};
+		6C74FA082861FE29005C8DE1 /* AcceptInvitation */ = {
+			isa = PBXGroup;
+			children = (
+				6C74FA092861FE68005C8DE1 /* AcceptVaultInvitationRow.swift */,
+				6C74FA0B28620130005C8DE1 /* AcceptVaultInvitationDetails.swift */,
+			);
+			path = AcceptInvitation;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -890,6 +904,7 @@
 				3D11521328217709007CD43D /* AddressBookUpdateDetails.swift in Sources */,
 				3D3D6CEC2616432000FEEE0B /* RecoverPasswordView.swift in Sources */,
 				6C0E3EF227EE5E29002FEE7C /* NaclLowLevel.swift in Sources */,
+				6C74FA0A2861FE68005C8DE1 /* AcceptVaultInvitationRow.swift in Sources */,
 				3D3D6D54261B95B100FEEE0B /* ApprovalRequestsView.swift in Sources */,
 				40BCB0AD261B8B8700CF58A8 /* MFARequiredView.swift in Sources */,
 				3DD9568725EF561F003F9ECF /* Moya+StrikeClient.swift in Sources */,
@@ -934,6 +949,7 @@
 				3D11A60727581510008C03B1 /* CameraAccessRequired.swift in Sources */,
 				3D3D6D162616449C00FEEE0B /* HelpView.swift in Sources */,
 				3D115211282176FD007CD43D /* AddressBookUpdateRow.swift in Sources */,
+				6C74FA0C28620130005C8DE1 /* AcceptVaultInvitationDetails.swift in Sources */,
 				3D3D6CEB2616432000FEEE0B /* RecoverPasswordChallengeView.swift in Sources */,
 				3DC2F42D25FAAFD00061BB3A /* MoyaLoader.swift in Sources */,
 				3D61A0FC2655B4FF00AD1EE7 /* SignedInNavigationView.swift in Sources */,
@@ -1074,7 +1090,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = VN5U64MGYX;
 				INFOPLIST_FILE = StrikeTests/Info.plist;
@@ -1200,7 +1216,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = VN5U64MGYX;
 				INFOPLIST_FILE = StrikeTests/Info.plist;
@@ -1330,7 +1346,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = VN5U64MGYX;
 				INFOPLIST_FILE = StrikeTests/Info.plist;
@@ -1454,7 +1470,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = VN5U64MGYX;
 				INFOPLIST_FILE = StrikeTests/Info.plist;
@@ -1584,7 +1600,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = VN5U64MGYX;
 				INFOPLIST_FILE = StrikeTests/Info.plist;
@@ -1708,7 +1724,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = VN5U64MGYX;
 				INFOPLIST_FILE = StrikeTests/Info.plist;
@@ -1843,7 +1859,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = VN5U64MGYX;
 				INFOPLIST_FILE = StrikeTests/Info.plist;
@@ -1968,7 +1984,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = VN5U64MGYX;
 				INFOPLIST_FILE = StrikeTests/Info.plist;
@@ -2203,7 +2219,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = VN5U64MGYX;
 				INFOPLIST_FILE = StrikeTests/Info.plist;
@@ -2229,7 +2245,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_IDENTITY = "Apple Development";
-				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = VN5U64MGYX;
 				INFOPLIST_FILE = StrikeTests/Info.plist;
