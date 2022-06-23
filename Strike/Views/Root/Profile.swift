@@ -24,8 +24,12 @@ struct Profile: View {
                 List {
                     if let user = user {
                         Section {
-                            ProfileItem(title: "User") {
+                            ProfileItem(title: "Email") {
                                 Text(user.loginName)
+                            }
+                            
+                            ProfileItem(title: "Name") {
+                                Text(user.fullName)
                             }
                         }
                     }
@@ -36,15 +40,19 @@ struct Profile: View {
                                 .font(.subheadline.bold())
 
                             Text("To help protect your account's security a Strike Protocols Support representative will never call you to request any confidential information in regards to your account (such as password etc.). If you receive a call from anyone claiming to represent Strike Protocols that seems suspicious, please hang up and contact us immediately.")
+
+                            Spacer()
+
+                            Button("Get Help", action: contactSupport)
+                                .buttonStyle(PlainButtonStyle())
+                                .foregroundColor(Color.Strike.purple)
+                                .font(.headline.bold())
                         }
                         .frame(maxWidth: .infinity)
                         .foregroundColor(Color.white)
                         .padding([.top, .bottom])
                         .multilineTextAlignment(.center)
-                    ) {
-                        Button("Get Help", action: contactSupport)
-                            .foregroundColor(Color.Strike.purple)
-                    }
+                    ) {}
                 }
 
                 Spacer()
@@ -67,7 +75,7 @@ struct Profile: View {
             .font(.body)
             .background(Color.Strike.primaryBackground.ignoresSafeArea())
             .listStyle(GroupedListStyle())
-            .navigationTitle(Text("Profile"))
+            .navigationTitle(Text("User"))
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(trailing: Button("Done", action: {
                 presentationMode.wrappedValue.dismiss()
