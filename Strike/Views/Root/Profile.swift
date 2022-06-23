@@ -24,12 +24,12 @@ struct Profile: View {
                 List {
                     if let user = user {
                         Section {
-                            ProfileItem(title: "Account") {
+                            ProfileItem(title: "Email") {
                                 Text(user.loginName)
                             }
-
-                            ProfileItem(title: "Organization") {
-                                Text(user.organization.name)
+                            
+                            ProfileItem(title: "Name") {
+                                Text(user.fullName)
                             }
                         }
                     }
@@ -39,18 +39,20 @@ struct Profile: View {
                             Text("SECURITY NOTICE:")
                                 .font(.subheadline.bold())
 
-                            Text("To help protect your account's security a Strike Protocols Support representative will never call you to request any confidential information in regards to your account (such as password, verification codes etc.). If you receive a call from anyone claiming to represent Strike Protocols that seems suspicious, please hang up and contact us immediately.")
+                            Text("To help protect your account's security a Strike Protocols Support representative will never call you to request any confidential information in regards to your account (such as password etc.). If you receive a call from anyone claiming to represent Strike Protocols that seems suspicious, please hang up and contact us immediately.")
+
+                            Spacer()
+
+                            Button("Get Help", action: contactSupport)
+                                .buttonStyle(PlainButtonStyle())
+                                .foregroundColor(Color.Strike.purple)
+                                .font(.headline.bold())
                         }
                         .frame(maxWidth: .infinity)
                         .foregroundColor(Color.white)
                         .padding([.top, .bottom])
                         .multilineTextAlignment(.center)
-                    ) {
-                        ProfileItem(title: "Contact Support") {
-                            Button("(856) 644-2217", action: contactSupport)
-                                .foregroundColor(Color.Strike.purple)
-                        }
-                    }
+                    ) {}
                 }
 
                 Spacer()
@@ -73,7 +75,7 @@ struct Profile: View {
             .font(.body)
             .background(Color.Strike.primaryBackground.ignoresSafeArea())
             .listStyle(GroupedListStyle())
-            .navigationTitle(Text("Account"))
+            .navigationTitle(Text("User"))
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(trailing: Button("Done", action: {
                 presentationMode.wrappedValue.dismiss()
@@ -93,8 +95,8 @@ struct Profile: View {
     }
 
     private func contactSupport() {
-        if let telURL = URL(string: "tel:+1-856-644-2217"), UIApplication.shared.canOpenURL(telURL) {
-            UIApplication.shared.open(telURL)
+        if let helpUrl = URL(string: "https://help.strikeprotocols.com"), UIApplication.shared.canOpenURL(helpUrl) {
+            UIApplication.shared.open(helpUrl)
         }
     }
 }
