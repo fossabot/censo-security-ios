@@ -732,7 +732,7 @@ class StrikeTests: XCTestCase {
     }
     
     func testAcceptVaultInvitation() throws {
-        let approvalData = "{\"id\": \"422e3504-4eea-493a-a0dd-64a001115540\", \"walletType\": \"Solana\", \"submitDate\": \"2022-06-21T14:20:38.145+00:00\", \"submitterName\": \"User 1\", \"submitterEmail\": \"authorized1@org1\", \"approvalTimeoutInSeconds\": 9223372036854775807, \"numberOfDispositionsRequired\": 1, \"numberOfApprovalsReceived\": 0, \"numberOfDeniesReceived\": 0, \"programVersion\": null, \"details\": {\"type\": \"AcceptVaultInvitation\", \"vaultGuid\": \"58e03f93-b9bc-4f22-b485-8e7a0abd8440\", \"vaultName\": \"Test Organization 1\"}, \"vaultName\": \"Test Organization 1\"}\n"
+        let approvalData = "{\"id\": \"422e3504-4eea-493a-a0dd-64a001115540\", \"walletType\": \"Solana\", \"submitDate\": \"2022-06-21T14:20:38.145+00:00\", \"submitterName\": \"User 1\", \"submitterEmail\": \"authorized1@org1\", \"numberOfDispositionsRequired\": 1, \"numberOfApprovalsReceived\": 0, \"numberOfDeniesReceived\": 0, \"programVersion\": null, \"details\": {\"type\": \"AcceptVaultInvitation\", \"vaultGuid\": \"58e03f93-b9bc-4f22-b485-8e7a0abd8440\", \"vaultName\": \"Test Organization 1\"}, \"vaultName\": \"Test Organization 1\"}\n"
 
         let request: WalletApprovalRequest = Mock.decodeJsonType(data: approvalData.data(using: .utf8)!)
         let approvalDispositionRequest = StrikeApi.ApprovalDispositionRequest(
@@ -743,7 +743,7 @@ class StrikeTests: XCTestCase {
             email: "dont care"
         )
         switch request.requestType {
-        case .acceptVaultInvitation(let request):
+        case .acceptVaultInvitation:
             XCTAssertEqual(
                 String(decoding: try approvalDispositionRequest.signableData(approverPublicKey: "GYFxPGjuBXYKg1S91zgpVZCLP4guLGRho27bTAkAzjVL"), as: UTF8.self),
                 "Test Organization 1"

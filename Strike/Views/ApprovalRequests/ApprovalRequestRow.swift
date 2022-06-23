@@ -37,9 +37,11 @@ struct ApprovalRequestRow<Row, Detail>: View where Row : View, Detail: View {
                     .font(.subheadline)
                     .foregroundColor(Color.white)
                 Spacer()
-                Countdown(date: request.expireDate, timerPublisher: timerPublisher)
-                    .font(.subheadline)
-                    .foregroundColor(Color.white.opacity(0.5))
+                if let expireDate = request.expireDate {
+                    Countdown(date: expireDate, timerPublisher: timerPublisher)
+                        .font(.subheadline)
+                        .foregroundColor(Color.white.opacity(0.5))
+                }
             }
             .padding(EdgeInsets(top: 5, leading: 10, bottom: 5, trailing: 10))
             .background(Color.Strike.thirdBackground /**/)
@@ -170,8 +172,8 @@ extension ApprovalRequestRow {
 }
 
 extension WalletApprovalRequest {
-    var expireDate: Date {
-        submitDate.addingTimeInterval(TimeInterval(approvalTimeoutInSeconds))
+    var expireDate: Date? {
+        approvalTimeoutInSeconds != nil ? submitDate.addingTimeInterval(TimeInterval(approvalTimeoutInSeconds!)) : nil
     }
 }
 

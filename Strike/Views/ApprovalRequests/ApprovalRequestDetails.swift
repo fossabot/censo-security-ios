@@ -58,11 +58,13 @@ struct ApprovalRequestDetails<Content>: View where Content : View {
                         Fact("Approvals Received", "\(request.numberOfApprovalsReceived) of \(request.numberOfDispositionsRequired)")
 
                         Fact("Denials Received", "\(request.numberOfDeniesReceived) of \(request.numberOfDispositionsRequired)")
-
-                        if request.expireDate <= Date() {
-                            Fact("Expired", "")
-                        } else {
-                            Fact("Expires In", formattedCountdown)
+                        
+                        if let expireDate = request.expireDate {
+                            if expireDate <= Date() {
+                                Fact("Expired", "")
+                            } else {
+                                Fact("Expires In", formattedCountdown)
+                            }
                         }
                     }
                     .onReceive(timerPublisher) { _ in
@@ -161,7 +163,9 @@ struct ApprovalRequestDetails<Content>: View where Content : View {
     }
 
     private func updateTimeRemaining() {
-        timeRemaining = Calendar.current.dateComponents([.hour, .minute, .second], from: Date(), to: request.expireDate)
+        if let expireDate = request.expireDate {
+            timeRemaining = Calendar.current.dateComponents([.hour, .minute, .second], from: Date(), to: expireDate)
+        }
     }
 
     private var formattedCountdown: String {

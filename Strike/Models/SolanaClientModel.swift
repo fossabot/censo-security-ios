@@ -65,7 +65,7 @@ struct WalletApprovalRequest: Codable, Equatable {
     let submitterName: String
     let submitterEmail: String
     let submitDate: Date
-    let approvalTimeoutInSeconds: Int
+    let approvalTimeoutInSeconds: Int?
     let numberOfDispositionsRequired: Int
     let numberOfApprovalsReceived: Int
     let numberOfDeniesReceived: Int
