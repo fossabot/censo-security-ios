@@ -97,6 +97,28 @@ extension PublicKey {
         ).map { $0.0 }
     }
 
+    public static func temporaryUnwrappingAccount(
+        walletGuidHash: Data,
+        multisigOpAddress: PublicKey,
+        walletProgramId: PublicKey
+    ) -> Result<PublicKey, Error> {
+        return findProgramAddress(
+            seeds: [walletGuidHash, multisigOpAddress.data],
+            programId: walletProgramId
+        ).map { $0.0 }
+    }
+
+    
+    public static func balanceAccount(
+        walletGuidHash: Data,
+        feeAccountGuidHash: Data,
+        walletProgramId: PublicKey
+    ) -> Result<PublicKey, Error> {
+        return findProgramAddress(
+            seeds: [walletGuidHash, feeAccountGuidHash],
+            programId: walletProgramId
+        ).map { $0.0 }
+    }
     // MARK: - Helpers
     private static func findProgramAddress(
         seeds: [Data],

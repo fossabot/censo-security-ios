@@ -308,7 +308,7 @@ extension StrikeApi.InitiationRequest: SolanaSignable {
             let sourcePublicKey = try PublicKey(string: request.account.address)
             let sourceTokenPublicKey = try PublicKey.associatedTokenAddress(walletAddress: sourcePublicKey,
                                                                           tokenMintAddress: WRAPPED_SOL_MINT).get()
-            return [
+            var accounts = [
                 Account.Meta(publicKey: try opAccountPublicKey, isSigner: false, isWritable: true),
                 Account.Meta(publicKey: try PublicKey(string: signingData.walletAddress), isSigner: false, isWritable: false),
                 Account.Meta(publicKey: sourcePublicKey, isSigner: false, isWritable: true),
@@ -316,12 +316,56 @@ extension StrikeApi.InitiationRequest: SolanaSignable {
                 Account.Meta(publicKey: WRAPPED_SOL_MINT, isSigner: false, isWritable: false),
                 Account.Meta(publicKey: approverPublicKey, isSigner: true, isWritable: false),
                 Account.Meta(publicKey: SYSVAR_CLOCK_PUBKEY, isSigner: false, isWritable: false),
-                Account.Meta(publicKey: try PublicKey(string: signingData.feePayer), isSigner: true, isWritable: false),
+                Account.Meta(publicKey: try PublicKey(string: signingData.feePayer), isSigner: true, isWritable: false)
+            ]
+            
+            if request.destinationSymbolInfo.symbol == "SOL" {
+                let walletGuidHash: Data?
+                do {
+                    walletGuidHash = try Data(base64Encoded: signingData.walletGuidHash)
+                } catch {
+                    walletGuidHash = Data(count: 32)
+                }
+                accounts.append(Account.Meta(
+                    publicKey: try PublicKey.temporaryUnwrappingAccount(
+                        walletGuidHash: walletGuidHash!,
+                        multisigOpAddress: try opAccountPublicKey,
+                        walletProgramId: try PublicKey(string: signingData.walletProgramId)).get(),
+                    isSigner: false,
+                    isWritable: true
+                ))
+            }
+    
+            accounts = accounts + [
                 Account.Meta(publicKey: SYS_PROGRAM_ID, isSigner: false, isWritable: false),
                 Account.Meta(publicKey: TOKEN_PROGRAM_ID, isSigner: false, isWritable: false),
                 Account.Meta(publicKey: SYSVAR_RENT_PUBKEY, isSigner: false, isWritable: false),
                 Account.Meta(publicKey: ASSOCIATED_TOKEN_PROGRAM_ID, isSigner: false, isWritable: false)
             ]
+            
+            if request.signingData.strikeFeeAmount > 0 {
+                let feeAccountGuidHash: Data?
+                do {
+                    feeAccountGuidHash = try Data(base64Encoded: signingData.feeAccountGuidHash)
+                } catch {
+                    feeAccountGuidHash = Data(count: 32)
+                }
+                let walletGuidHash: Data?
+                do {
+                    walletGuidHash = try Data(base64Encoded: signingData.walletGuidHash)
+                } catch {
+                    walletGuidHash = Data(count: 32)
+                }
+                accounts.append(
+                    Account.Meta(
+                        publicKey: try PublicKey.balanceAccount(
+                            walletGuidHash: walletGuidHash!,
+                            feeAccountGuidHash: feeAccountGuidHash!,
+                            walletProgramId: try PublicKey(string: signingData.walletProgramId)).get(),
+                        isSigner: false,
+                        isWritable: true))
+            }
+            return accounts
         case .dAppTransactionRequest:
             return [
                 Account.Meta(publicKey: try opAccountPublicKey, isSigner: false, isWritable: true),
@@ -485,10 +529,14 @@ extension TransactionInstruction {
 
 extension SolanaSigningData {
     var commonInitiationBytes: [UInt8] {
+        guard let b64DecodedData = Data(base64Encoded: feeAccountGuidHash) else {
+            return []
+        }
+        let isEmpty = b64DecodedData.allSatisfy { $0 == 0 }
         return
-            UInt64(0).bytes +
-            ([UInt8(0)] as [UInt8]) +
-            ([UInt8](Data(count: 32)))
+            strikeFeeAmount.bytes +
+            ([UInt8(isEmpty ? 0 : 1)] as [UInt8]) +
+            ([UInt8](b64DecodedData))
     }
 }
 
