@@ -58,6 +58,7 @@ struct Transaction {
             at: 0
         )
         
+
         // header
         var header = Message.Header()
         
@@ -86,7 +87,7 @@ struct Transaction {
         }
         
         accountMetas = signedKeys + unsignedKeys
-        
+
         return Message(
             accountKeys: accountMetas,
             recentBlockhash: recentBlockhash,

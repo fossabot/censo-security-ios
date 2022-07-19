@@ -13,7 +13,6 @@ import CryptoKit
 
 extension StrikeTests {
     
-    
     func getSignersUpdateRequest(nonceAccountAddresses: [String]) ->  SolanaApprovalRequestType {
         return .signersUpdate(SignersUpdate(
                 slotUpdateType: SlotUpdateType.Clear,
@@ -29,28 +28,38 @@ extension StrikeTests {
                     walletAddress: "ECzeaMTMBXYXXfVM53n5iPepf8749QUqEzjW8jxefGhh",
                     nonceAccountAddresses: nonceAccountAddresses,
                     nonceAccountAddressesSlot: 2256,
-                    initiator: "3wKxhgiogoCaA2uxPYeH7cy3cG4hxRPogrPmDPLS54iZ"
+                    initiator: "3wKxhgiogoCaA2uxPYeH7cy3cG4hxRPogrPmDPLS54iZ",
+                    strikeFeeAmount: 0,
+                    feeAccountGuidHash: Data(count: 32).base64EncodedString(),
+                    walletGuidHash: Data(count: 32).base64EncodedString()
                 )
         ))
     }
             
     func getSignersUpdateWalletRequest(nonceAccountAddresses: [String]) ->  WalletApprovalRequest {
-        return getWalletApprovalRequest(.signersUpdate(SignersUpdate(
-                slotUpdateType: SlotUpdateType.SetIfEmpty,
-                signer: SlotSignerInfo(slotId: 1,
-                                       value: SignerInfo(
-                                        publicKey: "6E5S1pMfe7DfBwYp2KmmYvTup2hduP385dhhoexX8i9",
-                                        name: "User 2",
-                                        email: "user2@org1")),
-                signingData: SolanaSigningData(
-                    feePayer: "8UT5JS7vVcGLBHQe19Q5EK6aFA2CYnFG8a5C4dkrTL2B",
-                    walletProgramId: "JAbzU4jwUMn92xhZcAX4M6JANEigzVMKKJqy6pA1cNBT",
-                    multisigOpAccountAddress: "Hx9JnkPHioA9eu92y7jho1TxNaBCHYbw8zaSxvkGXSdD",
-                    walletAddress: "FWhBukWcdXaMqZhJMvAAEH6PH81nV6JSpBEmwdvWgUjW",
-                    nonceAccountAddresses: nonceAccountAddresses,
-                    nonceAccountAddressesSlot: 2256,
-                    initiator: "3wKxhgiogoCaA2uxPYeH7cy3cG4hxRPogrPmDPLS54iZ"))
+        return getWalletApprovalRequest(
+            .signersUpdate(
+                SignersUpdate(
+                    slotUpdateType: SlotUpdateType.SetIfEmpty,
+                    signer: SlotSignerInfo(slotId: 1,
+                                           value: SignerInfo(
+                                            publicKey: "6E5S1pMfe7DfBwYp2KmmYvTup2hduP385dhhoexX8i9",
+                                            name: "User 2",
+                                            email: "user2@org1")),
+                    signingData: SolanaSigningData(
+                        feePayer: "8UT5JS7vVcGLBHQe19Q5EK6aFA2CYnFG8a5C4dkrTL2B",
+                        walletProgramId: "JAbzU4jwUMn92xhZcAX4M6JANEigzVMKKJqy6pA1cNBT",
+                        multisigOpAccountAddress: "Hx9JnkPHioA9eu92y7jho1TxNaBCHYbw8zaSxvkGXSdD",
+                        walletAddress: "FWhBukWcdXaMqZhJMvAAEH6PH81nV6JSpBEmwdvWgUjW",
+                        nonceAccountAddresses: nonceAccountAddresses,
+                        nonceAccountAddressesSlot: 2256,
+                        initiator: "3wKxhgiogoCaA2uxPYeH7cy3cG4hxRPogrPmDPLS54iZ",
+                        strikeFeeAmount: 0,
+                        feeAccountGuidHash: Data(count: 32).base64EncodedString(),
+                        walletGuidHash: Data(count: 32).base64EncodedString()
+                    )
                 )
+            )
         )
     }
         
@@ -83,7 +92,10 @@ extension StrikeTests {
                     walletAddress: "JCd6uutAtgsbxDfM54ss4TyeG6kakvSfdxJwjBTjkPLh",
                     nonceAccountAddresses: nonceAccountAddresses,
                     nonceAccountAddressesSlot: 2256,
-                    initiator: "3wKxhgiogoCaA2uxPYeH7cy3cG4hxRPogrPmDPLS54iZ"
+                    initiator: "3wKxhgiogoCaA2uxPYeH7cy3cG4hxRPogrPmDPLS54iZ",
+                    strikeFeeAmount: 0,
+                    feeAccountGuidHash: Data(count: 32).base64EncodedString(),
+                    walletGuidHash: Data(count: 32).base64EncodedString()
                 )
             )
         )
@@ -123,7 +135,10 @@ extension StrikeTests {
                     walletAddress: "JCd6uutAtgsbxDfM54ss4TyeG6kakvSfdxJwjBTjkPLh",
                     nonceAccountAddresses: nonceAccountAddresses,
                     nonceAccountAddressesSlot: 2256,
-                    initiator: "3wKxhgiogoCaA2uxPYeH7cy3cG4hxRPogrPmDPLS54iZ"
+                    initiator: "3wKxhgiogoCaA2uxPYeH7cy3cG4hxRPogrPmDPLS54iZ",
+                    strikeFeeAmount: 0,
+                    feeAccountGuidHash: Data(count: 32).base64EncodedString(),
+                    walletGuidHash: Data(count: 32).base64EncodedString()
                 )
             )
         )
@@ -163,7 +178,10 @@ extension StrikeTests {
                     walletAddress: "7fvoSJ6iNAyTFvBDuAWuciXWYiyUBtJfCUswZF3YGbUN",
                     nonceAccountAddresses: nonceAccountAddresses,
                     nonceAccountAddressesSlot: 2256,
-                    initiator: "3wKxhgiogoCaA2uxPYeH7cy3cG4hxRPogrPmDPLS54iZ"
+                    initiator: "3wKxhgiogoCaA2uxPYeH7cy3cG4hxRPogrPmDPLS54iZ",
+                    strikeFeeAmount: 0,
+                    feeAccountGuidHash: Data(count: 32).base64EncodedString(),
+                    walletGuidHash: Data(count: 32).base64EncodedString()
                 )
             )
         )
@@ -210,7 +228,10 @@ extension StrikeTests {
                     walletAddress: "2sGiNkpwYod6c1Wcd6H1ycd85KwykMfb8ZCt7t3XEp4h",
                     nonceAccountAddresses: nonceAccountAddresses,
                     nonceAccountAddressesSlot: 2256,
-                    initiator: "3wKxhgiogoCaA2uxPYeH7cy3cG4hxRPogrPmDPLS54iZ"
+                    initiator: "3wKxhgiogoCaA2uxPYeH7cy3cG4hxRPogrPmDPLS54iZ",
+                    strikeFeeAmount: 0,
+                    feeAccountGuidHash: Data(count: 32).base64EncodedString(),
+                    walletGuidHash: Data(count: 32).base64EncodedString()
                 )
             )
         )
@@ -221,9 +242,9 @@ extension StrikeTests {
             WrapConversionRequest(
                 account: AccountInfo(
                     name: "Account 1",
-                    identifier: "82666cf4-3f31-4504-a1a2-5df9b35ba5b3",
+                    identifier: "707399af-d2e7-4668-805f-bb5b970d8a9b",
                     accountType: AccountType.BalanceAccount,
-                    address: "BSHKeDQL8NKBSmbX2M4svSqGL57qFhe7qvw72hpvgnZY"
+                    address: "GQcSdA3q2Wokxc7V9UschxddDanMnLzhqq9Aji21hovQ"
                 ),
                 symbolAndAmountInfo: SymbolAndAmountInfo(
                     symbolInfo: SymbolInfo(
@@ -244,13 +265,16 @@ extension StrikeTests {
                     nftMetadata: nil
                 ),
                 signingData: SolanaSigningData(
-                    feePayer: "FM36ah2bH8nQWJNPCRzu7R69gE5o6UhujqJFtDpWN5as",
-                    walletProgramId: "DaGSQwGd1GZnscN2Mu5d1CPYqYXAQMV29Q4Zk9yDhZLp",
+                    feePayer: "87VXbkJsqdDvXYfDBtS4kW4TcFor7ogofZXbXjT7t7AU",
+                    walletProgramId: "8UBQs57hD4ZRJ4gdAmPDTk9EJZAN56sRtoZzWAo2jWpj",
                     multisigOpAccountAddress: "11111111111111111111111111111111",
-                    walletAddress: "Ebse7xEiKuhe3bWY6dXiWB8QS4QDhr8fRBgH4tUKR2Ys",
+                    walletAddress: "4mDU4xbVcgiQx1VB45PAFXisNiNkFAhmp4s2aGL8DvA8",
                     nonceAccountAddresses: nonceAccountAddresses,
                     nonceAccountAddressesSlot: 2256,
-                    initiator: "3wKxhgiogoCaA2uxPYeH7cy3cG4hxRPogrPmDPLS54iZ"
+                    initiator: "ECiEjQXPJ792V4Vrs7gozNrGVVshtxN9o9q9RDTqPSeK",
+                    strikeFeeAmount: 0,
+                    feeAccountGuidHash: "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=",
+                    walletGuidHash: "oiAuZm28uacpX+tnS+Ntx8Kve3X9ELCJsXYFHEhFdDM="
                 )
             )
         )
@@ -261,9 +285,9 @@ extension StrikeTests {
             WrapConversionRequest(
                 account: AccountInfo(
                     name: "Account 1",
-                    identifier: "82666cf4-3f31-4504-a1a2-5df9b35ba5b3",
+                    identifier: "c2a6711d-8430-429f-816a-876eb62dd19e",
                     accountType: AccountType.BalanceAccount,
-                    address: "BSHKeDQL8NKBSmbX2M4svSqGL57qFhe7qvw72hpvgnZY"
+                    address: "7dMB51drmhKy9qQ8GjFPsaRDnadGCvn4iLWedqajbmUg"
                 ),
                 symbolAndAmountInfo: SymbolAndAmountInfo(
                     symbolInfo: SymbolInfo(
@@ -284,13 +308,16 @@ extension StrikeTests {
                     nftMetadata: nil
                 ),
                 signingData: SolanaSigningData(
-                    feePayer: "FM36ah2bH8nQWJNPCRzu7R69gE5o6UhujqJFtDpWN5as",
-                    walletProgramId: "DaGSQwGd1GZnscN2Mu5d1CPYqYXAQMV29Q4Zk9yDhZLp",
+                    feePayer: "87VXbkJsqdDvXYfDBtS4kW4TcFor7ogofZXbXjT7t7AU",
+                    walletProgramId: "8S1mgAomg5mcJ6rC38xHMMJyFKTHxQc2dHgNrmQKzAz",
                     multisigOpAccountAddress: "11111111111111111111111111111111",
-                    walletAddress: "Ebse7xEiKuhe3bWY6dXiWB8QS4QDhr8fRBgH4tUKR2Ys",
+                    walletAddress: "HZmqaRJWQxB6B4DXCBmY5W8xjL2Wn5Q6rGHtajxUDbra",
                     nonceAccountAddresses: nonceAccountAddresses,
                     nonceAccountAddressesSlot: 2256,
-                    initiator: "3wKxhgiogoCaA2uxPYeH7cy3cG4hxRPogrPmDPLS54iZ"
+                    initiator: "3S3WAHv5h7gyEVTPQRuz6sf8poKM439zr14pHF43MtLK",
+                    strikeFeeAmount: 2039280,
+                    feeAccountGuidHash: "Oe1VO8ObkbQ2jHnzOD6tIGQNkX/sExJpdGOksGK47VU=",
+                    walletGuidHash: "/Fz5hXppVfCrsvkgU8zXy5e3IO99xOmbQJuF7DUkHfw="
                 )
             )
         )
@@ -311,7 +338,10 @@ extension StrikeTests {
                     walletAddress: "JCd6uutAtgsbxDfM54ss4TyeG6kakvSfdxJwjBTjkPLh",
                     nonceAccountAddresses: nonceAccountAddresses,
                     nonceAccountAddressesSlot: 2256,
-                    initiator: "3wKxhgiogoCaA2uxPYeH7cy3cG4hxRPogrPmDPLS54iZ"
+                    initiator: "3wKxhgiogoCaA2uxPYeH7cy3cG4hxRPogrPmDPLS54iZ",
+                    strikeFeeAmount: 0,
+                    feeAccountGuidHash: Data(count: 32).base64EncodedString(),
+                    walletGuidHash: Data(count: 32).base64EncodedString()
                 ))
         )
     }
@@ -333,7 +363,10 @@ extension StrikeTests {
                     walletAddress: "Re4dLGch8a1G98PeRtpHa5ApS6Gnik444CqB5BQ8rY1",
                     nonceAccountAddresses: nonceAccountAddresses,
                     nonceAccountAddressesSlot: 2256,
-                    initiator: "3wKxhgiogoCaA2uxPYeH7cy3cG4hxRPogrPmDPLS54iZ"
+                    initiator: "3wKxhgiogoCaA2uxPYeH7cy3cG4hxRPogrPmDPLS54iZ",
+                    strikeFeeAmount: 0,
+                    feeAccountGuidHash: Data(count: 32).base64EncodedString(),
+                    walletGuidHash: Data(count: 32).base64EncodedString()
                 ))
         )
     }
@@ -355,7 +388,10 @@ extension StrikeTests {
                     walletAddress: "JCd6uutAtgsbxDfM54ss4TyeG6kakvSfdxJwjBTjkPLh",
                     nonceAccountAddresses: nonceAccountAddresses,
                     nonceAccountAddressesSlot: 2256,
-                    initiator: "3wKxhgiogoCaA2uxPYeH7cy3cG4hxRPogrPmDPLS54iZ"
+                    initiator: "3wKxhgiogoCaA2uxPYeH7cy3cG4hxRPogrPmDPLS54iZ",
+                    strikeFeeAmount: 0,
+                    feeAccountGuidHash: Data(count: 32).base64EncodedString(),
+                    walletGuidHash: Data(count: 32).base64EncodedString()
                 ))
         )
     }
@@ -377,7 +413,10 @@ extension StrikeTests {
                     walletAddress: "Re4dLGch8a1G98PeRtpHa5ApS6Gnik444CqB5BQ8rY1",
                     nonceAccountAddresses: nonceAccountAddresses,
                     nonceAccountAddressesSlot: 2256,
-                    initiator: "3wKxhgiogoCaA2uxPYeH7cy3cG4hxRPogrPmDPLS54iZ"
+                    initiator: "3wKxhgiogoCaA2uxPYeH7cy3cG4hxRPogrPmDPLS54iZ",
+                    strikeFeeAmount: 0,
+                    feeAccountGuidHash: Data(count: 32).base64EncodedString(),
+                    walletGuidHash: Data(count: 32).base64EncodedString()
                 ))
         )
     }
@@ -405,7 +444,10 @@ extension StrikeTests {
                     walletAddress: "JCd6uutAtgsbxDfM54ss4TyeG6kakvSfdxJwjBTjkPLh",
                     nonceAccountAddresses: nonceAccountAddresses,
                     nonceAccountAddressesSlot: 2256,
-                    initiator: "3wKxhgiogoCaA2uxPYeH7cy3cG4hxRPogrPmDPLS54iZ"
+                    initiator: "3wKxhgiogoCaA2uxPYeH7cy3cG4hxRPogrPmDPLS54iZ",
+                    strikeFeeAmount: 0,
+                    feeAccountGuidHash: Data(count: 32).base64EncodedString(),
+                    walletGuidHash: Data(count: 32).base64EncodedString()
                 ))
         )
     }
@@ -440,7 +482,10 @@ extension StrikeTests {
                     walletAddress: "ECzeaMTMBXYXXfVM53n5iPepf8749QUqEzjW8jxefGhh",
                     nonceAccountAddresses: nonceAccountAddresses,
                     nonceAccountAddressesSlot: 2256,
-                    initiator: "3wKxhgiogoCaA2uxPYeH7cy3cG4hxRPogrPmDPLS54iZ"
+                    initiator: "3wKxhgiogoCaA2uxPYeH7cy3cG4hxRPogrPmDPLS54iZ",
+                    strikeFeeAmount: 0,
+                    feeAccountGuidHash: Data(count: 32).base64EncodedString(),
+                    walletGuidHash: Data(count: 32).base64EncodedString()
                 ))
         )
     }
@@ -462,7 +507,10 @@ extension StrikeTests {
                     walletAddress: "4XaqL4MtTUDrncTGBqvTC9ketf8WVqrUocDkYhKAnDju",
                     nonceAccountAddresses: nonceAccountAddresses,
                     nonceAccountAddressesSlot: 2256,
-                    initiator: "3wKxhgiogoCaA2uxPYeH7cy3cG4hxRPogrPmDPLS54iZ"
+                    initiator: "3wKxhgiogoCaA2uxPYeH7cy3cG4hxRPogrPmDPLS54iZ",
+                    strikeFeeAmount: 0,
+                    feeAccountGuidHash: Data(count: 32).base64EncodedString(),
+                    walletGuidHash: Data(count: 32).base64EncodedString()
                 ))
         )
     }
@@ -493,7 +541,10 @@ extension StrikeTests {
                     walletAddress: "AoEAvW2TvZYmy2WbmqN4nXdJT8o21RbJP6xNK2yR4of",
                     nonceAccountAddresses: nonceAccountAddresses,
                     nonceAccountAddressesSlot: 2256,
-                    initiator: "3wKxhgiogoCaA2uxPYeH7cy3cG4hxRPogrPmDPLS54iZ"
+                    initiator: "3wKxhgiogoCaA2uxPYeH7cy3cG4hxRPogrPmDPLS54iZ",
+                    strikeFeeAmount: 0,
+                    feeAccountGuidHash: Data(count: 32).base64EncodedString(),
+                    walletGuidHash: Data(count: 32).base64EncodedString()
                 ))
         )
     }
@@ -540,7 +591,10 @@ extension StrikeTests {
                     walletAddress: "3CwacbyswAFN914pyjBRGrZm5m7QdSYuNHdnJWeTrJ85",
                     nonceAccountAddresses: nonceAccountAddresses,
                     nonceAccountAddressesSlot: 2256,
-                    initiator: "9CZ2ZaGe961oLCWJUpr16ofZxBM4yK9tGfbdwj57JNJP"
+                    initiator: "9CZ2ZaGe961oLCWJUpr16ofZxBM4yK9tGfbdwj57JNJP",
+                    strikeFeeAmount: 0,
+                    feeAccountGuidHash: Data(count: 32).base64EncodedString(),
+                    walletGuidHash: Data(count: 32).base64EncodedString()
                 )
             )
         )

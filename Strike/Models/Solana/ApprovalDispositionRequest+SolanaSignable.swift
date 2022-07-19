@@ -499,11 +499,17 @@ extension BalanceAccountAddressWhitelistUpdate {
 
 extension SolanaSigningData {
     var commonOpHashBytes: [UInt8] {
+        let decodedFeeAccountGuidHash: Data?
+        do {
+            decodedFeeAccountGuidHash = try Data(base64Encoded: feeAccountGuidHash)
+        } catch {
+            decodedFeeAccountGuidHash = Data(count: 32)
+        }
         return
             initiator.base58Bytes +
             feePayer.base58Bytes +
-            UInt64(0).bytes +
-            [UInt8](Data(count: 32))
+            strikeFeeAmount.bytes +
+        [UInt8](decodedFeeAccountGuidHash!.bytes)
     }
 }
 
