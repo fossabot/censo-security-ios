@@ -37,19 +37,8 @@ struct RegistrationView: View {
         case (.some(let storedPublicKey), .some(let remotePublicKey)) where storedPublicKey == remotePublicKey.key:
             ApprovalRequestsView(user: user)
                 .navigationTitle("Approvals")
-                .onFirstTimeAppear(perform: registerForRemoteNotifications)
         case (.some, .some):
             Text("Keys do not match, call support")
-        }
-    }
-
-    private func registerForRemoteNotifications() {
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { (granted, error) in
-            guard granted else { return }
-
-            DispatchQueue.main.async {
-                UIApplication.shared.registerForRemoteNotifications()
-            }
         }
     }
 }
