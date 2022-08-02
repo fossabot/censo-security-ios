@@ -6,7 +6,6 @@
 //
 
 import Foundation
-
 import SwiftUI
 
 struct ApprovalRequestsView: View {
@@ -14,7 +13,7 @@ struct ApprovalRequestsView: View {
 
     @State private var didShowApprovalRequests = false
 
-    @RemoteResult private var approvalRequests: [WalletApprovalRequest]?
+    @RemoteResult private var approvalRequests: [GracefullyDecoded<WalletApprovalRequest>]?
 
     var user: StrikeApi.User
 
@@ -29,7 +28,7 @@ struct ApprovalRequestsView: View {
         case .loading:
             ProgressView("Fetching requests...")
         case .success(let requests):
-            ApprovalRequestsList(user: user, requests: requests, onStatusChange: reload, onRefresh: refresh)
+            ApprovalRequestsList(user: user, requests: requests.compactMap(\.underlying), onStatusChange: reload, onRefresh: refresh)
                 .onAppear(perform: approvalRequestsDidAppear)
                 .onReceive(appForegroundedPublisher) { _ in
                     approvalRequestsDidAppear()
@@ -42,7 +41,7 @@ struct ApprovalRequestsView: View {
         }
     }
 
-    private var loader: MoyaLoader<[WalletApprovalRequest], StrikeApi.Target> {
+    private var loader: MoyaLoader<[GracefullyDecoded<WalletApprovalRequest>], StrikeApi.Target> {
         strikeApi.provider.loader(for: .walletApprovals)
     }
 
@@ -87,4 +86,30 @@ struct ApprovalRequestsView_Previews: PreviewProvider {
 
 extension Notification.Name {
     static let didReloadApprovals = Notification.Name("didReloadApprovals")
+}
+
+enum GracefullyDecoded<T>: Decodable where T : Decodable {
+    case success(T)
+    case failed(Error)
+
+    init(from decoder: Decoder) throws {
+        do {
+            let t = try T.init(from: decoder)
+            self = .success(t)
+        } catch {
+            RaygunClient.sharedInstance().send(error: error, tags: ["BadApprovalRequest"], customData: nil)
+            self = .failed(error)
+        }
+    }
+}
+
+extension GracefullyDecoded {
+    var underlying: T? {
+        switch self {
+        case .failed:
+            return nil
+        case .success(let t):
+            return t
+        }
+    }
 }
