@@ -37,8 +37,6 @@
 		<string>$(STRIKE_AUTH_BASE_URL)</string>
 		<key>API_BASE_URL</key>
 		<string>$(API_BASE_URL)</string>
-		<key>GK8_PUBLIC_KEY</key>
-		<string>$(GK8_PUBLIC_KEY)</string>
 		<key>OKTA</key>
 		<dict>
 			<key>clientId</key>

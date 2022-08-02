@@ -35,10 +35,10 @@ elif [[ $ENVIRONMENT == 'develop' ]]; then
   export CONFIGURATION="Release (Develop)"
   export PROVISIONING_PROFILE="Strike Mobile Dev AppStore"
   export RAYGUN_APPLICATION_ID="283703j"
-elif [[ $ENVIRONMENT == 'demo' ]]; then
-  export ICON_RIBBON="Demo"
-  export SCHEME="Strike (Demo)"
-  export CONFIGURATION="Release (Demo)"
+elif [[ $ENVIRONMENT == 'preprod' ]]; then
+  export ICON_RIBBON="Preprod"
+  export SCHEME="Strike (Preprod)"
+  export CONFIGURATION="Release (Preprod)"
   export PROVISIONING_PROFILE="Strike Mobile Demo AppStore"
   export RAYGUN_APPLICATION_ID="283706g"
 elif [[ $ENVIRONMENT == 'demo2' ]]; then
@@ -48,7 +48,7 @@ elif [[ $ENVIRONMENT == 'demo2' ]]; then
   export PROVISIONING_PROFILE="Strike Mobile Demo 2 AppStore"
   export RAYGUN_APPLICATION_ID="283706g"
 else
-  echo "Unknown environment. Use one of 'develop', 'demo', 'demo2' or 'production'"
+  echo "Unknown environment. Use one of 'develop', 'preprod', 'demo2' or 'production'"
 fi
 
 # Read AppleID credentials

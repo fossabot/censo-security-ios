@@ -11,7 +11,6 @@ import OktaOidc
 struct Configuration {
     static let termsOfServiceURL: URL = URL(string: "https://strikeprotocols.com/terms-of-service.html")!
     static let privacyPolicyURL: URL = URL(string: "https://strikeprotocols.com/privacy-policy.html")!
-    static let gk8PublicKey: String = stringValue(for: "GK8_PUBLIC_KEY")
     static let apiBaseURL: URL = URLValue(for: "API_BASE_URL")
     static let oktaDomain: URL = URLValue(for: "OKTA_DOMAIN")
     static let oktaOidc: OktaOidc = oktaOidcValue(for: "OKTA")
