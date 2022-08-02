@@ -38,8 +38,10 @@ extension MoyaProvider where Target == StrikeApi.Target {
             } else {
                 self.request(target) { result in
                     switch result {
-                    case .success(let response):
+                    case .success(let response) where response.statusCode <= 400:
                         completion(.success(response))
+                    case .success(let response):
+                        completion(.failure(MoyaError.statusCode(response)))
                     case .failure(let error):
                         completion(.failure(error))
                     }

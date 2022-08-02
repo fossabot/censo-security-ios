@@ -161,9 +161,9 @@ struct ApprovalRequestDetails<Content>: View where Content : View {
                     secondaryButton: Alert.Button.cancel(Text("Cancel"))
                 )
             case .ignoreError(let error):
-                return Alert.withDismissButton(title: Text("Error"), message: Text(ignoreMessage(for: error)))
+                return Alert.withDismissButton(title: Text("Error"), message: Text(error.message))
             case .approveError(let error):
-                return Alert.withDismissButton(title: Text("Error"), message: Text(ignoreMessage(for: error)))
+                return Alert.withDismissButton(title: Text("Error"), message: Text(error.message))
             }
         }
         .navigationBarItems(
@@ -186,24 +186,6 @@ struct ApprovalRequestDetails<Content>: View where Content : View {
                 toRecipients: [request.submitterEmail],
                 completion: nil
             )
-        }
-    }
-
-    private func ignoreMessage(for error: Error) -> String {
-        switch error {
-        case BiometryError.required:
-            return "Please enable biometry in settings to continue"
-        default:
-            return "Unable to \(request.details.ignoreCaption) request. Please try again"
-        }
-    }
-
-    private func approveMessage(for error: Error) -> String {
-        switch error {
-        case BiometryError.required:
-            return "Please enable biometry in settings to continue"
-        default:
-            return "Unable to approve request. Please try again"
         }
     }
 

@@ -113,6 +113,7 @@
 		3DC7A74527D67E8900A2BBA7 /* SolanaClientModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC7A74427D67E8800A2BBA7 /* SolanaClientModel.swift */; };
 		3DD9568725EF561F003F9ECF /* Moya+StrikeClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD9568125EF561F003F9ECF /* Moya+StrikeClient.swift */; };
 		3DDAF32F2639F7010015B54B /* RefreshScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDAF32E2639F7010015B54B /* RefreshScrollView.swift */; };
+		3DE53C7828996B8C00B4F014 /* Error+Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE53C7728996B8C00B4F014 /* Error+Message.swift */; };
 		3DEC0C8F2641B4DB00309A0F /* FactsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DEC0C8E2641B4DB00309A0F /* FactsSection.swift */; };
 		4006422F259A422400A8D8D3 /* StrikeApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4006422E259A422400A8D8D3 /* StrikeApi.swift */; };
 		40328E102593ED9900F2EE41 /* StrikeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40328E0F2593ED9900F2EE41 /* StrikeApp.swift */; };
@@ -259,6 +260,7 @@
 		3DC7A74427D67E8800A2BBA7 /* SolanaClientModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SolanaClientModel.swift; sourceTree = "<group>"; };
 		3DD9568125EF561F003F9ECF /* Moya+StrikeClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Moya+StrikeClient.swift"; sourceTree = "<group>"; };
 		3DDAF32E2639F7010015B54B /* RefreshScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshScrollView.swift; sourceTree = "<group>"; };
+		3DE53C7728996B8C00B4F014 /* Error+Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Error+Message.swift"; sourceTree = "<group>"; };
 		3DEC0C8E2641B4DB00309A0F /* FactsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FactsSection.swift; sourceTree = "<group>"; };
 		4006422E259A422400A8D8D3 /* StrikeApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrikeApi.swift; sourceTree = "<group>"; };
 		40328E0C2593ED9900F2EE41 /* Strike.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Strike.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -542,6 +544,7 @@
 				3DC7A74427D67E8800A2BBA7 /* SolanaClientModel.swift */,
 				3DB995FE27EE1804005655F0 /* BiometryError.swift */,
 				3DA5EEDF28353C5300D26BAF /* SolanaApprovalRequestType+Language.swift */,
+				3DE53C7728996B8C00B4F014 /* Error+Message.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -937,6 +940,7 @@
 				6C74FA0A2861FE68005C8DE1 /* AcceptVaultInvitationRow.swift in Sources */,
 				3D3D6D54261B95B100FEEE0B /* ApprovalRequestsView.swift in Sources */,
 				40BCB0AD261B8B8700CF58A8 /* MFARequiredView.swift in Sources */,
+				3DE53C7828996B8C00B4F014 /* Error+Message.swift in Sources */,
 				3DD9568725EF561F003F9ECF /* Moya+StrikeClient.swift in Sources */,
 				3DAA2717263092FD000F453D /* FirstTimeAppear.swift in Sources */,
 				3D6334EF2885C299002CEC5A /* KeyRecoverySuccess.swift in Sources */,

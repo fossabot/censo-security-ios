@@ -13,14 +13,47 @@ struct RetryView: View {
     var action: () -> Void
 
     var body: some View {
-        VStack {
-            Text("Something went wrong")
+        VStack(spacing: 30) {
+            Spacer()
+
+            Text(error.message)
                 .multilineTextAlignment(.center)
                 .padding()
 
             Button(action: action) {
                 Text("Retry")
+                    .frame(width: 100)
             }
+            .buttonStyle(FilledButtonStyle())
+
+            if error.showsHelpButton {
+                Button(action: showHelp) {
+                    Text("Get Help")
+                }
+                .foregroundColor(.Strike.purple)
+            }
+
+            Spacer()
+        }
+        .frame(maxWidth: .infinity)
+        .background(StrikeBackground().ignoresSafeArea())
+        .navigationBarTitleDisplayMode(.inline)
+    }
+
+    private func showHelp() {
+        if let helpUrl = URL(string: "https://help.strikeprotocols.com"), UIApplication.shared.canOpenURL(helpUrl) {
+            UIApplication.shared.open(helpUrl)
         }
     }
 }
+
+#if DEBUG
+struct RetryView_Previews: PreviewProvider {
+    static var previews: some View {
+        NavigationView {
+            RetryView(error: BiometryError.required, action: { })
+                .navigationTitle(Text("Approvals"))
+        }
+    }
+}
+#endif

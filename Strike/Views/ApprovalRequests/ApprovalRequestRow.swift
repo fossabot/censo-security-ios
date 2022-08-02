@@ -83,8 +83,8 @@ struct ApprovalRequestRow<Row, Detail>: View where Row : View, Detail: View {
                             primaryButton: Alert.Button.default(Text("Confirm"), action: approve),
                             secondaryButton: Alert.Button.cancel(Text("Cancel"))
                         )
-                    case .error:
-                        return Alert.withDismissButton(title: Text("Error"), message: Text("Unable to approve request. Please try again"))
+                    case .error(let error):
+                        return Alert.withDismissButton(title: Text("Error"), message: Text(error.message))
                     }
                 }
 
