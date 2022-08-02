@@ -93,6 +93,8 @@ extension Keychain {
     }
 
     static func publicKey(email: String) -> String? {
+        let email = email.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
+
         // RETIRE THIS BLOCK AND REMOVE PRODUCTION FLAG
         #if !PRODUCTION
         let passphraseService = "com.strikeprotocols.private-pass"
@@ -112,6 +114,8 @@ extension Keychain {
     }
 
     static func savePrivateKey(_ privateKey: Curve25519.Signing.PrivateKey, rootSeed: [UInt8], email: String) throws {
+        let email = email.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
+
         if !save(account: email, service: rootSeedService, data: Data(rootSeed)) {
             throw KeyError.couldNotSavePrivateKey
         }
@@ -150,11 +154,10 @@ extension Keychain {
     }
     
     private static func keyInfoForEmail(email: String) throws -> (privateKey: Curve25519.Signing.PrivateKey, encodedPublicKey: String) {
-        guard let privateKeyData = load(account: email, service: privateKeyService) else {
+        guard let privateKey = privateKey(for: email) else {
             throw KeyError.noPrivateKey
         }
 
-        let privateKey = try Curve25519.Signing.PrivateKey(rawRepresentation: privateKeyData)
         let publicKeyData = privateKey.publicKey.rawRepresentation
         let encodedPublicKey = Base58.encode(publicKeyData.bytes)
         return (privateKey, encodedPublicKey)
