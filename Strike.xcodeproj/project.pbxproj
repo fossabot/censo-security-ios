@@ -114,6 +114,9 @@
 		3DD9568725EF561F003F9ECF /* Moya+StrikeClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DD9568125EF561F003F9ECF /* Moya+StrikeClient.swift */; };
 		3DDAF32F2639F7010015B54B /* RefreshScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DDAF32E2639F7010015B54B /* RefreshScrollView.swift */; };
 		3DE53C7828996B8C00B4F014 /* Error+Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE53C7728996B8C00B4F014 /* Error+Message.swift */; };
+		3DE53C8A28A2A5CE00B4F014 /* Semver in Frameworks */ = {isa = PBXBuildFile; productRef = 3DE53C8928A2A5CE00B4F014 /* Semver */; };
+		3DE53C8C28A2B45D00B4F014 /* VersionCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE53C8B28A2B45D00B4F014 /* VersionCheck.swift */; };
+		3DE53C8E28A2BF9500B4F014 /* UpdateApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE53C8D28A2BF9500B4F014 /* UpdateApp.swift */; };
 		3DEC0C8F2641B4DB00309A0F /* FactsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DEC0C8E2641B4DB00309A0F /* FactsSection.swift */; };
 		4006422F259A422400A8D8D3 /* StrikeApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4006422E259A422400A8D8D3 /* StrikeApi.swift */; };
 		40328E102593ED9900F2EE41 /* StrikeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40328E0F2593ED9900F2EE41 /* StrikeApp.swift */; };
@@ -261,6 +264,8 @@
 		3DD9568125EF561F003F9ECF /* Moya+StrikeClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Moya+StrikeClient.swift"; sourceTree = "<group>"; };
 		3DDAF32E2639F7010015B54B /* RefreshScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshScrollView.swift; sourceTree = "<group>"; };
 		3DE53C7728996B8C00B4F014 /* Error+Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Error+Message.swift"; sourceTree = "<group>"; };
+		3DE53C8B28A2B45D00B4F014 /* VersionCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionCheck.swift; sourceTree = "<group>"; };
+		3DE53C8D28A2BF9500B4F014 /* UpdateApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateApp.swift; sourceTree = "<group>"; };
 		3DEC0C8E2641B4DB00309A0F /* FactsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FactsSection.swift; sourceTree = "<group>"; };
 		4006422E259A422400A8D8D3 /* StrikeApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrikeApi.swift; sourceTree = "<group>"; };
 		40328E0C2593ED9900F2EE41 /* Strike.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Strike.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -303,6 +308,7 @@
 			files = (
 				40A8ED9425AE8B9A004A7419 /* Moya in Frameworks */,
 				3DC2F42525FAA60F0061BB3A /* OktaAuthNative in Frameworks */,
+				3DE53C8A28A2A5CE00B4F014 /* Semver in Frameworks */,
 				6C74FA07285AAD5F005C8DE1 /* BIP39 in Frameworks */,
 				3D4C1456270D0B9A00382FBF /* OktaOidc in Frameworks */,
 				3D4C145F2710C9BE00382FBF /* raygun4apple.framework in Frameworks */,
@@ -430,6 +436,8 @@
 				3D61A0FA2655B4FF00AD1EE7 /* SignedInNavigationView.swift */,
 				3DA133A426B1AEB300BB4AF4 /* Profile.swift */,
 				3D633E152748656500BACCCE /* BiometryCheck.swift */,
+				3DE53C8B28A2B45D00B4F014 /* VersionCheck.swift */,
+				3DE53C8D28A2BF9500B4F014 /* UpdateApp.swift */,
 			);
 			path = Root;
 			sourceTree = "<group>";
@@ -758,6 +766,7 @@
 				3DC2F42425FAA60F0061BB3A /* OktaAuthNative */,
 				3D4C1455270D0B9A00382FBF /* OktaOidc */,
 				6C74FA06285AAD5F005C8DE1 /* BIP39 */,
+				3DE53C8928A2A5CE00B4F014 /* Semver */,
 			);
 			productName = Strike;
 			productReference = 40328E0C2593ED9900F2EE41 /* Strike.app */;
@@ -813,6 +822,7 @@
 				3DC2F42325FAA60F0061BB3A /* XCRemoteSwiftPackageReference "okta-auth-swift" */,
 				3D4C1454270D0B9A00382FBF /* XCRemoteSwiftPackageReference "okta-oidc-ios" */,
 				6C74FA05285AAD5F005C8DE1 /* XCRemoteSwiftPackageReference "BIP39" */,
+				3DE53C8828A2A5CE00B4F014 /* XCRemoteSwiftPackageReference "Semver.swift" */,
 			);
 			productRefGroup = 40328E0D2593ED9900F2EE41 /* Products */;
 			projectDirPath = "";
@@ -943,6 +953,7 @@
 				3DE53C7828996B8C00B4F014 /* Error+Message.swift in Sources */,
 				3DD9568725EF561F003F9ECF /* Moya+StrikeClient.swift in Sources */,
 				3DAA2717263092FD000F453D /* FirstTimeAppear.swift in Sources */,
+				3DE53C8E28A2BF9500B4F014 /* UpdateApp.swift in Sources */,
 				3D6334EF2885C299002CEC5A /* KeyRecoverySuccess.swift in Sources */,
 				3D6334EE2885C299002CEC5A /* KeyConfirmationSuccess.swift in Sources */,
 				3DB9960127EE1A1B005655F0 /* Data+Extensions.swift in Sources */,
@@ -960,6 +971,7 @@
 				40F907A625DDC31B00B107B0 /* StrikeApi+Mock.swift in Sources */,
 				3D1C762227DA850A0016BB32 /* Base58.swift in Sources */,
 				3D6334FA2885C2C9002CEC5A /* FocusedOnAppear.swift in Sources */,
+				3DE53C8C28A2B45D00B4F014 /* VersionCheck.swift in Sources */,
 				3DAF53C0262E158B000DD558 /* WithdrawalRow.swift in Sources */,
 				3DB995F827EB71FA005655F0 /* SignerUpdateDetails.swift in Sources */,
 				3D61A0FE2655B50700AD1EE7 /* MessageSupport.swift in Sources */,
@@ -1072,6 +1084,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
+				MIN_VERSION_URL = "https://strike-public-assets.s3.amazonaws.com/strike-security-app-version-dev.json";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				OKTA_CLIENT_ID = 0oa7ajsmclS0GyzMw357;
@@ -1198,6 +1211,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
+				MIN_VERSION_URL = "https://strike-public-assets.s3.amazonaws.com/strike-security-app-version-dev.json";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				OKTA_CLIENT_ID = 0oa7ajsmclS0GyzMw357;
@@ -1330,6 +1344,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
+				MIN_VERSION_URL = "https://strike-public-assets.s3.amazonaws.com/strike-security-app-version-dev.json";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				OKTA_CLIENT_ID = 0oa73mddnlx5MMo7j357;
@@ -1454,6 +1469,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
+				MIN_VERSION_URL = "https://strike-public-assets.s3.amazonaws.com/strike-security-app-version-dev.json";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				OKTA_CLIENT_ID = 0oa73mddnlx5MMo7j357;
@@ -1584,6 +1600,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
+				MIN_VERSION_URL = "https://strike-public-assets.s3.amazonaws.com/strike-security-app-version-dev.json";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				OKTA_CLIENT_ID = 0oa7ajwuye2dZD4e6357;
@@ -1708,6 +1725,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
+				MIN_VERSION_URL = "https://strike-public-assets.s3.amazonaws.com/strike-security-app-version-dev.json";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				OKTA_CLIENT_ID = 0oa7ajwuye2dZD4e6357;
@@ -1838,6 +1856,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
+				MIN_VERSION_URL = "https://strike-public-assets.s3.amazonaws.com/strike-security-app-version-dev.json";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				OKTA_CLIENT_ID = 0oa7ajzug1y8O0CPe357;
@@ -1967,6 +1986,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
+				MIN_VERSION_URL = "https://strike-public-assets.s3.amazonaws.com/strike-security-app-version-dev.json";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				OKTA_CLIENT_ID = 0oa7ajzug1y8O0CPe357;
@@ -2099,6 +2119,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
+				MIN_VERSION_URL = "https://strike-public-assets.s3.amazonaws.com/strike-security-app-version.json";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				OKTA_CLIENT_ID = 0oa7ajzug1y8O0CPe357;
@@ -2166,6 +2187,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
+				MIN_VERSION_URL = "https://strike-public-assets.s3.amazonaws.com/strike-security-app-version.json";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				OKTA_CLIENT_ID = 0oa7ajzug1y8O0CPe357;
@@ -2379,6 +2401,14 @@
 				minimumVersion = 2.4.2;
 			};
 		};
+		3DE53C8828A2A5CE00B4F014 /* XCRemoteSwiftPackageReference "Semver.swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/glwithu06/Semver.swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
 		40A8ED9225AE8B99004A7419 /* XCRemoteSwiftPackageReference "Moya" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Moya/Moya.git";
@@ -2407,6 +2437,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 3DC2F42325FAA60F0061BB3A /* XCRemoteSwiftPackageReference "okta-auth-swift" */;
 			productName = OktaAuthNative;
+		};
+		3DE53C8928A2A5CE00B4F014 /* Semver */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3DE53C8828A2A5CE00B4F014 /* XCRemoteSwiftPackageReference "Semver.swift" */;
+			productName = Semver;
 		};
 		40A8ED9325AE8B9A004A7419 /* Moya */ = {
 			isa = XCSwiftPackageProductDependency;

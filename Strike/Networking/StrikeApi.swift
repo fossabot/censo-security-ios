@@ -27,6 +27,8 @@ struct StrikeApi {
         case connectDApp(code: String)
 
         case resetPassword(String)
+
+        case minVersion
     }
     
     /// The provider for the Moya Target definition for this API.
@@ -341,14 +343,19 @@ struct AuthProviderPlugin: Moya.PluginType {
     func prepare(_ request: URLRequest, target: Moya.TargetType) -> URLRequest {
         var request = request
 
-        if let authProvider = authProvider, authProvider.isAuthenticated, let token = authProvider.bearerToken {
-            request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        switch target {
+        case StrikeApi.Target.minVersion:
+            break
+        default:
+            if let authProvider = authProvider, authProvider.isAuthenticated, let token = authProvider.bearerToken {
+                request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
 
-            if let email = authProvider.email, let signature = try? Keychain.signature(for: token, email: email) {
-                request.addValue(signature, forHTTPHeaderField: "X-Strike-Authorization-Signature")
+                if let email = authProvider.email, let signature = try? Keychain.signature(for: token, email: email) {
+                    request.addValue(signature, forHTTPHeaderField: "X-Strike-Authorization-Signature")
+                }
+            } else {
+                debugPrint("Unauthenticated request: \(request)")
             }
-        } else {
-            debugPrint("Unauthenticated request: \(request)")
         }
 
         return request
@@ -381,6 +388,8 @@ extension StrikeApi.Target: Moya.TargetType {
             return Configuration.solanaRpcURL
         case .resetPassword:
             return Configuration.strikeAuthBaseURL
+        case .minVersion:
+            return Configuration.minVersionURL
         default:
             return Configuration.apiBaseURL
         }
@@ -403,7 +412,8 @@ extension StrikeApi.Target: Moya.TargetType {
             return "v1/wallet-connect"
         case .registerApprovalDisposition(let request):
             return "v1/wallet-approvals/\(request.requestID)/dispositions"
-        case .multipleAccountNonce:
+        case .multipleAccountNonce,
+             .minVersion:
             return ""
         case .initiateRequest(let request):
             return "v1/wallet-approvals/\(request.requestID)/initiations"
@@ -416,7 +426,8 @@ extension StrikeApi.Target: Moya.TargetType {
         switch self {
         case .verifyUser,
              .walletSigners,
-             .walletApprovals:
+             .walletApprovals,
+             .minVersion:
             return .get
         case .connectDApp,
              .addWalletSigner,
@@ -437,7 +448,8 @@ extension StrikeApi.Target: Moya.TargetType {
         case .verifyUser,
              .walletSigners,
              .walletApprovals,
-             .resetPassword:
+             .resetPassword,
+             .minVersion:
             return .requestPlain
         case .addWalletSigner(let walletSigner):
             return .requestJSONEncodable(walletSigner)

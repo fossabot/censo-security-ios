@@ -19,6 +19,7 @@ struct Configuration {
     static let solanaRpcURL = URLValue(for: "SOLANA_RPC_URL")
     static let solanaCommitment = stringValue(for: "SOLANA_COMMITMENT")
     static let strikeAuthBaseURL: URL = URLValue(for: "STRIKE_AUTH_BASE_URL")
+    static let minVersionURL: URL = URLValue(for: "MIN_VERSION_URL")
 }
 
 extension Configuration {

@@ -28,6 +28,9 @@ struct StrikeApp: App {
                 .lockedByBiometry {
                     Locked()
                 }
+                .versionChecked {
+                    UpdateApp()
+                }
             #endif
         }
     }
