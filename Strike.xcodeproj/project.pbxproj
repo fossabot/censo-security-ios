@@ -145,6 +145,8 @@
 		6C74FA07285AAD5F005C8DE1 /* BIP39 in Frameworks */ = {isa = PBXBuildFile; productRef = 6C74FA06285AAD5F005C8DE1 /* BIP39 */; };
 		6C74FA0A2861FE68005C8DE1 /* AcceptVaultInvitationRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C74FA092861FE68005C8DE1 /* AcceptVaultInvitationRow.swift */; };
 		6C74FA0C28620130005C8DE1 /* AcceptVaultInvitationDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C74FA0B28620130005C8DE1 /* AcceptVaultInvitationDetails.swift */; };
+		6CD5B4A228A453DB00CD1A62 /* PasswordResetRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CD5B4A128A453DB00CD1A62 /* PasswordResetRow.swift */; };
+		6CD5B4A428A455E900CD1A62 /* PasswordResetDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CD5B4A328A455E900CD1A62 /* PasswordResetDetails.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -299,6 +301,8 @@
 		6C74FA0328526282005C8DE1 /* Bip44.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bip44.swift; sourceTree = "<group>"; };
 		6C74FA092861FE68005C8DE1 /* AcceptVaultInvitationRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcceptVaultInvitationRow.swift; sourceTree = "<group>"; };
 		6C74FA0B28620130005C8DE1 /* AcceptVaultInvitationDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcceptVaultInvitationDetails.swift; sourceTree = "<group>"; };
+		6CD5B4A128A453DB00CD1A62 /* PasswordResetRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordResetRow.swift; sourceTree = "<group>"; };
+		6CD5B4A328A455E900CD1A62 /* PasswordResetDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordResetDetails.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -509,6 +513,7 @@
 		3D3D6D52261B959300FEEE0B /* ApprovalRequests */ = {
 			isa = PBXGroup;
 			children = (
+				6CD5B4A028A453B400CD1A62 /* PasswordReset */,
 				6C74FA082861FE29005C8DE1 /* AcceptInvitation */,
 				3D3D6D53261B95B100FEEE0B /* ApprovalRequestsView.swift */,
 				3DC36BB4262B4E8C005DB1A7 /* ApprovalRequestsList.swift */,
@@ -744,6 +749,15 @@
 			path = AcceptInvitation;
 			sourceTree = "<group>";
 		};
+		6CD5B4A028A453B400CD1A62 /* PasswordReset */ = {
+			isa = PBXGroup;
+			children = (
+				6CD5B4A128A453DB00CD1A62 /* PasswordResetRow.swift */,
+				6CD5B4A328A455E900CD1A62 /* PasswordResetDetails.swift */,
+			);
+			path = PasswordReset;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -955,6 +969,7 @@
 				3DAA2717263092FD000F453D /* FirstTimeAppear.swift in Sources */,
 				3DE53C8E28A2BF9500B4F014 /* UpdateApp.swift in Sources */,
 				3D6334EF2885C299002CEC5A /* KeyRecoverySuccess.swift in Sources */,
+				6CD5B4A428A455E900CD1A62 /* PasswordResetDetails.swift in Sources */,
 				3D6334EE2885C299002CEC5A /* KeyConfirmationSuccess.swift in Sources */,
 				3DB9960127EE1A1B005655F0 /* Data+Extensions.swift in Sources */,
 				3D3D6D102616447200FEEE0B /* FilledButtonStyle.swift in Sources */,
@@ -965,6 +980,7 @@
 				3DA133A526B1AEB300BB4AF4 /* Profile.swift in Sources */,
 				3D1C762627DA89690016BB32 /* StrikeApi+AuthenticatedNonces.swift in Sources */,
 				40A9AF0425DF32B9004320EF /* FactList.swift in Sources */,
+				6CD5B4A228A453DB00CD1A62 /* PasswordResetRow.swift in Sources */,
 				3D3D6D122616447200FEEE0B /* LoadingModifier.swift in Sources */,
 				3D11520C28217321007CD43D /* BalanceAccountNameRow.swift in Sources */,
 				3D2CE49925F8423800137E05 /* SignInView.swift in Sources */,

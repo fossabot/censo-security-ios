@@ -41,7 +41,7 @@ extension StrikeApi.ApprovalDispositionRequest: SolanaSignable {
             return 12
         case .balanceAccountAddressWhitelistUpdate:
             return 14
-        case .loginApproval, .acceptVaultInvitation, .unknown:
+        case .loginApproval, .acceptVaultInvitation, .passwordReset, .unknown:
             return 0
         }
     }
@@ -172,7 +172,7 @@ extension StrikeApi.ApprovalDispositionRequest: SolanaSignable {
                     }
                 }
                 return Data(hashBytes)
-            case .loginApproval, .acceptVaultInvitation:
+            case .loginApproval, .acceptVaultInvitation, .passwordReset:
                 throw SolanaError.invalidRequest(reason: "Invalid request for Approval")
             case .unknown:
                 throw SolanaError.invalidRequest(reason: "Unknown Approval")
@@ -209,7 +209,7 @@ extension StrikeApi.ApprovalDispositionRequest: SolanaSignable {
                 return request.signingData
             case .dAppTransactionRequest(let request):
                 return request.signingData
-            case .loginApproval, .acceptVaultInvitation:
+            case .loginApproval, .acceptVaultInvitation, .passwordReset:
                 throw SolanaError.invalidRequest(reason: "Invalid request for Approval")
             case .unknown:
                 throw SolanaError.invalidRequest(reason: "Unknown Approval")
@@ -235,6 +235,8 @@ extension StrikeApi.ApprovalDispositionRequest: SolanaSignable {
 
     func signableData(approverPublicKey: String) throws -> Data {
         switch requestType {
+        case .passwordReset(let request):
+            return "".data(using: .utf8)!
         case .acceptVaultInvitation(let request):
             return request.vaultName.data(using: .utf8)!
         case .loginApproval(let request):

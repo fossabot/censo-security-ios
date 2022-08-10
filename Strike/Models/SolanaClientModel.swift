@@ -100,6 +100,7 @@ enum SolanaApprovalRequestType: Codable, Equatable {
     case dAppTransactionRequest(DAppTransactionRequest)
     case loginApproval(LoginApproval)
     case acceptVaultInvitation(AcceptVaultInvitation)
+    case passwordReset(PasswordReset)
     case unknown
 
     enum DetailsCodingKeys: String, CodingKey {
@@ -140,6 +141,8 @@ enum SolanaApprovalRequestType: Codable, Equatable {
             self = .loginApproval(try LoginApproval(from: decoder))
         case "AcceptVaultInvitation":
             self = .acceptVaultInvitation(try AcceptVaultInvitation(from: decoder))
+        case "PasswordReset":
+            self = .passwordReset(try PasswordReset(from: decoder))
         default:
             self = .unknown
         }
@@ -193,6 +196,9 @@ enum SolanaApprovalRequestType: Codable, Equatable {
         case .acceptVaultInvitation(let acceptVaultInvitation):
             try container.encode("AcceptVaultInvitation", forKey: .type)
             try acceptVaultInvitation.encode(to: encoder)
+        case .passwordReset(let passwordReset):
+            try container.encode("PasswordReset", forKey: .type)
+            try passwordReset.encode(to: encoder)
         case .unknown:
             try container.encode("Unknown", forKey: .type)
         }
@@ -562,6 +568,8 @@ struct AcceptVaultInvitation: Codable, Equatable  {
     var vaultName: String
 }
 
+struct PasswordReset: Codable, Equatable  {}
+
 extension SolanaApprovalRequestDetails {
     var nonceAccountAddresses: [String] {
         switch self {
@@ -604,6 +612,7 @@ extension SolanaApprovalRequestType {
             return request.signingData.nonceAccountAddresses
         case .loginApproval,
              .acceptVaultInvitation,
+             .passwordReset,
              .unknown:
             return []
         }
@@ -641,6 +650,7 @@ extension SolanaApprovalRequestType {
             return request.signingData.nonceAccountAddressesSlot
         case .loginApproval,
              .acceptVaultInvitation,
+             .passwordReset,
              .unknown:
             return 0
         }

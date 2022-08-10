@@ -715,6 +715,29 @@ class StrikeTests: XCTestCase {
         
     }
     
+    func testPasswordReset() throws {
+        let approvalData = "{\"id\": \"422e3504-4eea-493a-a0dd-64a001115540\", \"walletType\": \"Solana\", \"submitDate\": \"2022-06-21T14:20:38.145+00:00\", \"submitterName\": \"User 1\", \"submitterEmail\": \"authorized1@org1\", \"numberOfDispositionsRequired\": 1, \"numberOfApprovalsReceived\": 0, \"numberOfDeniesReceived\": 0, \"programVersion\": null, \"details\": {\"type\": \"PasswordReset\"}}\n"
+
+        let request: WalletApprovalRequest = Mock.decodeJsonType(data: approvalData.data(using: .utf8)!)
+        let approvalDispositionRequest = StrikeApi.ApprovalDispositionRequest(
+            disposition: .Approve,
+            requestID: request.id,
+            requestType: request.requestType,
+            nonces: [],
+            email: "dont care"
+        )
+        switch request.requestType {
+        case .passwordReset:
+            XCTAssertEqual(
+                String(decoding: try approvalDispositionRequest.signableData(approverPublicKey: "GYFxPGjuBXYKg1S91zgpVZCLP4guLGRho27bTAkAzjVL"), as: UTF8.self),
+                ""
+            )
+        default:
+            XCTFail("should not get here")
+        }
+        
+    }
+    
     func testBuildGetMultipleAccountsRequest() throws {
     
         var getMultipleAccountsRequest = StrikeApi.GetMultipleAccountsRequest.init(

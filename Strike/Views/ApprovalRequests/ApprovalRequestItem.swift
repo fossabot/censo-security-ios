@@ -107,6 +107,12 @@ struct ApprovalRequestItem: View {
             } detail: {
                 AcceptVaultInvitationDetails(requestType: request.requestType, acceptVaultInvitation: acceptVaultInvitation)
             }
+        case .passwordReset:
+            ApprovalRequestRow(user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
+                PasswordResetRow(requestType: request.requestType, email: request.submitterEmail)
+            } detail: {
+                PasswordResetDetails(requestType: request.requestType)
+            }
         }
     }
 }

@@ -55,6 +55,8 @@ extension SolanaApprovalRequestType {
             return "Log In"
         case .acceptVaultInvitation:
             return "Accept Invitation"
+        case .passwordReset:
+            return "Password Reset"
         }
     }
     
