@@ -554,12 +554,12 @@ extension StrikeTests {
             DAppTransactionRequest(
                 account: AccountInfo(
                     name: "Account 1",
-                    identifier: "3392e225-1f6a-442c-bb56-c35466013844",
+                    identifier: "3051fb93-f892-4b11-9608-bbc646addc92",
                     accountType: AccountType.BalanceAccount,
-                    address: "7etR3atK42QU7RwV6GSxqgYss4dpCcF9mvEaSqnXqbP4"
+                    address: "Cxrnw2Es4A4bGqbFd9dJEGnjDkhdmKwGgp3z8Ji8pYtz"
                 ),
                 dappInfo: SolanaDApp(
-                    address: "6txbcRGTsQ6tymXjgx11fVjqAGRtj37mhxCMePH4B5Gr",
+                    address: "Ekh3E1Zo3qvSCgck3f6FBYcw7KxuywsmR1v63M2eDnu3",
                     name: "DApp Name",
                     logo: "dapp-icon"
                 ),
@@ -571,27 +571,27 @@ extension StrikeTests {
                             SolanaInstruction(
                                 programId: "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
                                 accountMetas: [
-                                    SolanaAccountMeta(address: "32bJsGEdPMxHNgUhXWRTjqMJHZmbgf1ukBFmG56tQuts", signer: true, writable: true),
-                                    SolanaAccountMeta(address: "2DSmCoxPU1moZ2VYAtt1k6fLNYtgTtYQznUaXe8zz2kq", signer: false, writable: true),
-                                    SolanaAccountMeta(address: "32bJsGEdPMxHNgUhXWRTjqMJHZmbgf1ukBFmG56tQuts", signer: true, writable: true),
-                                    SolanaAccountMeta(address: "3CYKpq8zCRqzuFMzYqFDVRiiSTiZh7GP44sMrueaMK2C", signer: false, writable: false),
+                                    SolanaAccountMeta(address: "Cxrnw2Es4A4bGqbFd9dJEGnjDkhdmKwGgp3z8Ji8pYtz", signer: true, writable: true),
+                                    SolanaAccountMeta(address: "6UDDdg3GxpLBcX78M3G6ngsc8BaTEmZUFWVEdGCdUBg2", signer: false, writable: true),
+                                    SolanaAccountMeta(address: "Cxrnw2Es4A4bGqbFd9dJEGnjDkhdmKwGgp3z8Ji8pYtz", signer: true, writable: true),
+                                    SolanaAccountMeta(address: "Fh4aJeGnykwDsrEGSDwurSUk83GB8mbUvDNG9SEFYAVX", signer: false, writable: false),
                                     SolanaAccountMeta(address: "11111111111111111111111111111111", signer: false, writable: false),
                                     SolanaAccountMeta(address: "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA", signer: false, writable: false),
                                     SolanaAccountMeta(address: "SysvarRent111111111111111111111111111111111", signer: false, writable: false),
                                 ],
-                                data: "AQIDrA=="
+                                data: "AA=="
                             )
                         ]
                     )
                 ],
                 signingData: SolanaSigningData(
                     feePayer: "87VXbkJsqdDvXYfDBtS4kW4TcFor7ogofZXbXjT7t7AU",
-                    walletProgramId: "CPjitkp6iNimp1KkDeosrqcBCaxQdNjP6Wmn1xHGkVM7",
-                    multisigOpAccountAddress: "22btwB54QFYCLFVf53k64Jhj8KnpYCx2HwJmsqTq8Ly2",
-                    walletAddress: "3CwacbyswAFN914pyjBRGrZm5m7QdSYuNHdnJWeTrJ85",
+                    walletProgramId: "GaTAjM912JJbH9gLcwekjeq53UW85avaeZf7463MMvv6",
+                    multisigOpAccountAddress: "4h7gFc5QVham5cFyXbXStzffnqYVe6L74qHXn5SFabPL",
+                    walletAddress: "5jM4J6nh5RXxfktwZjrocjXHpx2ukGK7oVh73n9PBBpt",
                     nonceAccountAddresses: nonceAccountAddresses,
                     nonceAccountAddressesSlot: 2256,
-                    initiator: "9CZ2ZaGe961oLCWJUpr16ofZxBM4yK9tGfbdwj57JNJP",
+                    initiator: "GsRZ7gnpXGvn4pzEq1yrgha7zLt2MC4DQTjCoeDdSzS1",
                     strikeFeeAmount: 0,
                     feeAccountGuidHash: Data(count: 32).base64EncodedString(),
                     walletGuidHash: Data(count: 32).base64EncodedString()

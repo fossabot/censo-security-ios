@@ -241,7 +241,8 @@ extension StrikeApi.InitiationRequest: SolanaSignable {
                         instructionBatch: instructionBatch,
                         signingData: try signingData,
                         opAccountPublicKey: try opAccountPublicKey,
-                        dataAccountPublicKey: try dataAccountPublicKey
+                        dataAccountPublicKey: try dataAccountPublicKey,
+                        walletAccountPublicKey: try PublicKey(string: signingData.walletAddress)
                     )
                 }
             case .dAppTransactionRequest:
@@ -449,6 +450,7 @@ extension StrikeApi.InitiationRequest: SolanaSignable {
         var signingData: SolanaSigningData
         var opAccountPublicKey: PublicKey
         var dataAccountPublicKey: PublicKey
+        var walletAccountPublicKey: PublicKey
 
         func signableData(approverPublicKey: String) throws -> Data {
             return try Transaction.compileMessage(
@@ -463,6 +465,7 @@ extension StrikeApi.InitiationRequest: SolanaSignable {
                             keys: [
                                 Account.Meta(publicKey: opAccountPublicKey, isSigner: false, isWritable: true),
                                 Account.Meta(publicKey: dataAccountPublicKey, isSigner: false, isWritable: true),
+                                Account.Meta(publicKey: walletAccountPublicKey, isSigner: false, isWritable: false),
                                 Account.Meta(publicKey: try PublicKey(string: approverPublicKey), isSigner: true, isWritable: false)
                             ],
                             programId: try PublicKey(string: signingData.walletProgramId),
