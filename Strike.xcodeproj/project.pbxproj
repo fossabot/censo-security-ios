@@ -34,15 +34,11 @@
 		3D2CE49A25F8423800137E05 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2CE49825F8423800137E05 /* RootView.swift */; };
 		3D311D43260A336A007A0B98 /* RoundedCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D311D3F260A336A007A0B98 /* RoundedCell.swift */; };
 		3D311D45260A336A007A0B98 /* HelpButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D311D41260A336A007A0B98 /* HelpButton.swift */; };
-		3D311D56260A3A1A007A0B98 /* OktaAuthProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D311D54260A3A1A007A0B98 /* OktaAuthProvider.swift */; };
 		3D311D57260A3A1A007A0B98 /* MockAuthProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D311D55260A3A1A007A0B98 /* MockAuthProvider.swift */; };
 		3D311DEA260BD14A007A0B98 /* Moya+AuthProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D311DE9260BD14A007A0B98 /* Moya+AuthProvider.swift */; };
 		3D3854222639BD7F00C8693C /* Data+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3854212639BD7F00C8693C /* Data+Hex.swift */; };
 		3D3B4BDE262F4E57006E8619 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3D3B4BDD262F4E57006E8619 /* Preview Assets.xcassets */; };
-		3D3D6CEA2616432000FEEE0B /* UnsupportedAuthStatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3D6CE62616432000FEEE0B /* UnsupportedAuthStatusView.swift */; };
-		3D3D6CEB2616432000FEEE0B /* RecoverPasswordChallengeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3D6CE72616432000FEEE0B /* RecoverPasswordChallengeView.swift */; };
 		3D3D6CEC2616432000FEEE0B /* RecoverPasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3D6CE82616432000FEEE0B /* RecoverPasswordView.swift */; };
-		3D3D6CED2616432000FEEE0B /* LockedOutAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3D6CE92616432000FEEE0B /* LockedOutAccountView.swift */; };
 		3D3D6CF12616437400FEEE0B /* AuthProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3D6CF02616437400FEEE0B /* AuthProvider.swift */; };
 		3D3D6D102616447200FEEE0B /* FilledButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3D6D0D2616447200FEEE0B /* FilledButtonStyle.swift */; };
 		3D3D6D112616447200FEEE0B /* Alert+DismissButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3D6D0E2616447200FEEE0B /* Alert+DismissButton.swift */; };
@@ -51,7 +47,6 @@
 		3D3D6D362616B84700FEEE0B /* RegistrationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3D6D352616B84700FEEE0B /* RegistrationView.swift */; };
 		3D3D6D4F261B957800FEEE0B /* RetryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3D6D4E261B957800FEEE0B /* RetryView.swift */; };
 		3D3D6D54261B95B100FEEE0B /* ApprovalRequestsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3D6D53261B95B100FEEE0B /* ApprovalRequestsView.swift */; };
-		3D4C1456270D0B9A00382FBF /* OktaOidc in Frameworks */ = {isa = PBXBuildFile; productRef = 3D4C1455270D0B9A00382FBF /* OktaOidc */; };
 		3D4C145F2710C9BE00382FBF /* raygun4apple.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D61A0F42655983B00AD1EE7 /* raygun4apple.framework */; };
 		3D61A0FC2655B4FF00AD1EE7 /* SignedInNavigationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D61A0FA2655B4FF00AD1EE7 /* SignedInNavigationView.swift */; };
 		3D61A0FE2655B50700AD1EE7 /* MessageSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D61A0FD2655B50700AD1EE7 /* MessageSupport.swift */; };
@@ -103,7 +98,6 @@
 		3DBF9DC326E000CC00D7683E /* EmptyApprovalRequestsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBF9DC226E000CC00D7683E /* EmptyApprovalRequestsList.swift */; };
 		3DBF9DC526E0020300D7683E /* ApprovalRequestItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBF9DC426E0020300D7683E /* ApprovalRequestItem.swift */; };
 		3DC2F3FF25F896C40061BB3A /* RemoteResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC2F3FE25F896C40061BB3A /* RemoteResult.swift */; };
-		3DC2F42525FAA60F0061BB3A /* OktaAuthNative in Frameworks */ = {isa = PBXBuildFile; productRef = 3DC2F42425FAA60F0061BB3A /* OktaAuthNative */; };
 		3DC2F42925FAAA4E0061BB3A /* Networking+Environment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC2F42825FAAA4E0061BB3A /* Networking+Environment.swift */; };
 		3DC2F42D25FAAFD00061BB3A /* MoyaLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC2F42C25FAAFD00061BB3A /* MoyaLoader.swift */; };
 		3DC36BB5262B4E8C005DB1A7 /* ApprovalRequestsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DC36BB4262B4E8C005DB1A7 /* ApprovalRequestsList.swift */; };
@@ -117,6 +111,8 @@
 		3DE53C8A28A2A5CE00B4F014 /* Semver in Frameworks */ = {isa = PBXBuildFile; productRef = 3DE53C8928A2A5CE00B4F014 /* Semver */; };
 		3DE53C8C28A2B45D00B4F014 /* VersionCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE53C8B28A2B45D00B4F014 /* VersionCheck.swift */; };
 		3DE53C8E28A2BF9500B4F014 /* UpdateApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE53C8D28A2BF9500B4F014 /* UpdateApp.swift */; };
+		3DE53CCB28AAC0E500B4F014 /* JWTDecode in Frameworks */ = {isa = PBXBuildFile; productRef = 3DE53CCA28AAC0E500B4F014 /* JWTDecode */; };
+		3DE53CCD28AADEB300B4F014 /* StrikeAuthProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE53CCC28AADEB300B4F014 /* StrikeAuthProvider.swift */; };
 		3DEC0C8F2641B4DB00309A0F /* FactsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DEC0C8E2641B4DB00309A0F /* FactsSection.swift */; };
 		4006422F259A422400A8D8D3 /* StrikeApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4006422E259A422400A8D8D3 /* StrikeApi.swift */; };
 		40328E102593ED9900F2EE41 /* StrikeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40328E0F2593ED9900F2EE41 /* StrikeApp.swift */; };
@@ -127,9 +123,6 @@
 		40A9AF0425DF32B9004320EF /* FactList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40A9AF0325DF32B9004320EF /* FactList.swift */; };
 		40A9AF0E25DF5F0E004320EF /* ComposeMail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40A9AF0D25DF5F0E004320EF /* ComposeMail.swift */; };
 		40B093A625DF27CC00EA51C6 /* String+Masked.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B093A525DF27CC00EA51C6 /* String+Masked.swift */; };
-		40BCB0AD261B8B8700CF58A8 /* MFARequiredView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40BCB0AC261B8B8700CF58A8 /* MFARequiredView.swift */; };
-		40BCB0B1261B963100CF58A8 /* OktaError+LocalizedError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40BCB0B0261B963100CF58A8 /* OktaError+LocalizedError.swift */; };
-		40BCB0B7261BA17C00CF58A8 /* MFAChallengeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40BCB0B6261BA17C00CF58A8 /* MFAChallengeView.swift */; };
 		40CB67AD25C1076300DB15D6 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40CB67AC25C1076300DB15D6 /* Configuration.swift */; };
 		40CB67D725C1B75A00DB15D6 /* StrikeTheme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40CB67D625C1B75A00DB15D6 /* StrikeTheme.swift */; };
 		40CB67F925C3195D00DB15D6 /* Mock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40CB67F825C3195D00DB15D6 /* Mock.swift */; };
@@ -187,15 +180,11 @@
 		3D2CE49825F8423800137E05 /* RootView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		3D311D3F260A336A007A0B98 /* RoundedCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RoundedCell.swift; sourceTree = "<group>"; };
 		3D311D41260A336A007A0B98 /* HelpButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HelpButton.swift; sourceTree = "<group>"; };
-		3D311D54260A3A1A007A0B98 /* OktaAuthProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OktaAuthProvider.swift; sourceTree = "<group>"; };
 		3D311D55260A3A1A007A0B98 /* MockAuthProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockAuthProvider.swift; sourceTree = "<group>"; };
 		3D311DE9260BD14A007A0B98 /* Moya+AuthProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Moya+AuthProvider.swift"; sourceTree = "<group>"; };
 		3D3854212639BD7F00C8693C /* Data+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+Hex.swift"; sourceTree = "<group>"; };
 		3D3B4BDD262F4E57006E8619 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		3D3D6CE62616432000FEEE0B /* UnsupportedAuthStatusView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UnsupportedAuthStatusView.swift; sourceTree = "<group>"; };
-		3D3D6CE72616432000FEEE0B /* RecoverPasswordChallengeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecoverPasswordChallengeView.swift; sourceTree = "<group>"; };
 		3D3D6CE82616432000FEEE0B /* RecoverPasswordView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecoverPasswordView.swift; sourceTree = "<group>"; };
-		3D3D6CE92616432000FEEE0B /* LockedOutAccountView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LockedOutAccountView.swift; sourceTree = "<group>"; };
 		3D3D6CF02616437400FEEE0B /* AuthProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthProvider.swift; sourceTree = "<group>"; };
 		3D3D6D0D2616447200FEEE0B /* FilledButtonStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FilledButtonStyle.swift; sourceTree = "<group>"; };
 		3D3D6D0E2616447200FEEE0B /* Alert+DismissButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Alert+DismissButton.swift"; sourceTree = "<group>"; };
@@ -268,6 +257,7 @@
 		3DE53C7728996B8C00B4F014 /* Error+Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Error+Message.swift"; sourceTree = "<group>"; };
 		3DE53C8B28A2B45D00B4F014 /* VersionCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionCheck.swift; sourceTree = "<group>"; };
 		3DE53C8D28A2BF9500B4F014 /* UpdateApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateApp.swift; sourceTree = "<group>"; };
+		3DE53CCC28AADEB300B4F014 /* StrikeAuthProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrikeAuthProvider.swift; sourceTree = "<group>"; };
 		3DEC0C8E2641B4DB00309A0F /* FactsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FactsSection.swift; sourceTree = "<group>"; };
 		4006422E259A422400A8D8D3 /* StrikeApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrikeApi.swift; sourceTree = "<group>"; };
 		40328E0C2593ED9900F2EE41 /* Strike.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Strike.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -283,9 +273,6 @@
 		40A9AF0325DF32B9004320EF /* FactList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FactList.swift; sourceTree = "<group>"; };
 		40A9AF0D25DF5F0E004320EF /* ComposeMail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ComposeMail.swift; sourceTree = "<group>"; };
 		40B093A525DF27CC00EA51C6 /* String+Masked.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Masked.swift"; sourceTree = "<group>"; };
-		40BCB0AC261B8B8700CF58A8 /* MFARequiredView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MFARequiredView.swift; sourceTree = "<group>"; };
-		40BCB0B0261B963100CF58A8 /* OktaError+LocalizedError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "OktaError+LocalizedError.swift"; sourceTree = "<group>"; };
-		40BCB0B6261BA17C00CF58A8 /* MFAChallengeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MFAChallengeView.swift; sourceTree = "<group>"; };
 		40CB67AC25C1076300DB15D6 /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
 		40CB67D625C1B75A00DB15D6 /* StrikeTheme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrikeTheme.swift; sourceTree = "<group>"; };
 		40CB67F825C3195D00DB15D6 /* Mock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Mock.swift; sourceTree = "<group>"; };
@@ -311,11 +298,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				40A8ED9425AE8B9A004A7419 /* Moya in Frameworks */,
-				3DC2F42525FAA60F0061BB3A /* OktaAuthNative in Frameworks */,
 				3DE53C8A28A2A5CE00B4F014 /* Semver in Frameworks */,
 				6C74FA07285AAD5F005C8DE1 /* BIP39 in Frameworks */,
-				3D4C1456270D0B9A00382FBF /* OktaOidc in Frameworks */,
 				3D4C145F2710C9BE00382FBF /* raygun4apple.framework in Frameworks */,
+				3DE53CCB28AAC0E500B4F014 /* JWTDecode in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -422,12 +408,7 @@
 			isa = PBXGroup;
 			children = (
 				3D2CE49625F8423800137E05 /* SignInView.swift */,
-				3D3D6CE92616432000FEEE0B /* LockedOutAccountView.swift */,
 				3D3D6CE82616432000FEEE0B /* RecoverPasswordView.swift */,
-				3D3D6CE72616432000FEEE0B /* RecoverPasswordChallengeView.swift */,
-				3D3D6CE62616432000FEEE0B /* UnsupportedAuthStatusView.swift */,
-				40BCB0AC261B8B8700CF58A8 /* MFARequiredView.swift */,
-				40BCB0B6261BA17C00CF58A8 /* MFAChallengeView.swift */,
 			);
 			path = Auth;
 			sourceTree = "<group>";
@@ -450,7 +431,7 @@
 			isa = PBXGroup;
 			children = (
 				3D3D6CF02616437400FEEE0B /* AuthProvider.swift */,
-				3D311D54260A3A1A007A0B98 /* OktaAuthProvider.swift */,
+				3DE53CCC28AADEB300B4F014 /* StrikeAuthProvider.swift */,
 				3D311D55260A3A1A007A0B98 /* MockAuthProvider.swift */,
 				3D311DE9260BD14A007A0B98 /* Moya+AuthProvider.swift */,
 			);
@@ -714,7 +695,6 @@
 				3DC2F42C25FAAFD00061BB3A /* MoyaLoader.swift */,
 				40B093A525DF27CC00EA51C6 /* String+Masked.swift */,
 				3DC2F42825FAAA4E0061BB3A /* Networking+Environment.swift */,
-				40BCB0B0261B963100CF58A8 /* OktaError+LocalizedError.swift */,
 				3D3854212639BD7F00C8693C /* Data+Hex.swift */,
 				3DDAF32E2639F7010015B54B /* RefreshScrollView.swift */,
 				3DC2F3FE25F896C40061BB3A /* RemoteResult.swift */,
@@ -777,10 +757,9 @@
 			name = Strike;
 			packageProductDependencies = (
 				40A8ED9325AE8B9A004A7419 /* Moya */,
-				3DC2F42425FAA60F0061BB3A /* OktaAuthNative */,
-				3D4C1455270D0B9A00382FBF /* OktaOidc */,
 				6C74FA06285AAD5F005C8DE1 /* BIP39 */,
 				3DE53C8928A2A5CE00B4F014 /* Semver */,
+				3DE53CCA28AAC0E500B4F014 /* JWTDecode */,
 			);
 			productName = Strike;
 			productReference = 40328E0C2593ED9900F2EE41 /* Strike.app */;
@@ -833,10 +812,9 @@
 			mainGroup = 40328E032593ED9900F2EE41;
 			packageReferences = (
 				40A8ED9225AE8B99004A7419 /* XCRemoteSwiftPackageReference "Moya" */,
-				3DC2F42325FAA60F0061BB3A /* XCRemoteSwiftPackageReference "okta-auth-swift" */,
-				3D4C1454270D0B9A00382FBF /* XCRemoteSwiftPackageReference "okta-oidc-ios" */,
 				6C74FA05285AAD5F005C8DE1 /* XCRemoteSwiftPackageReference "BIP39" */,
 				3DE53C8828A2A5CE00B4F014 /* XCRemoteSwiftPackageReference "Semver.swift" */,
+				3DE53CC928AAC0E500B4F014 /* XCRemoteSwiftPackageReference "JWTDecode.swift" */,
 			);
 			productRefGroup = 40328E0D2593ED9900F2EE41 /* Products */;
 			projectDirPath = "";
@@ -915,7 +893,6 @@
 				3DAF53BC262E1421000DD558 /* Countdown.swift in Sources */,
 				3D6334F32885C299002CEC5A /* PasswordManager.swift in Sources */,
 				3D6334F92885C2C9002CEC5A /* StrikeProgressView.swift in Sources */,
-				40BCB0B7261BA17C00CF58A8 /* MFAChallengeView.swift in Sources */,
 				3DBC44E3280F17660016E1AB /* LoginRow.swift in Sources */,
 				3DC7A74327D006A900A2BBA7 /* KeyRetrieval.swift in Sources */,
 				40B093A625DF27CC00EA51C6 /* String+Masked.swift in Sources */,
@@ -928,7 +905,6 @@
 				3D311DEA260BD14A007A0B98 /* Moya+AuthProvider.swift in Sources */,
 				3D6334FB2885C2C9002CEC5A /* DarkRoundedTextFieldStyle.swift in Sources */,
 				3DC7A74527D67E8900A2BBA7 /* SolanaClientModel.swift in Sources */,
-				3D311D56260A3A1A007A0B98 /* OktaAuthProvider.swift in Sources */,
 				3D3D6CF12616437400FEEE0B /* AuthProvider.swift in Sources */,
 				3D1C761927D8501C0016BB32 /* PublicKey.swift in Sources */,
 				3DAA26F6262F5156000F453D /* DestructiveButtonStyle.swift in Sources */,
@@ -939,7 +915,6 @@
 				3D11A60B275851BA008C03B1 /* WalletConnected.swift in Sources */,
 				3D11A60027580CD2008C03B1 /* CaptureController.swift in Sources */,
 				3DB7F9BC26D6C0F800A49B4E /* ConversionRow.swift in Sources */,
-				3D3D6CEA2616432000FEEE0B /* UnsupportedAuthStatusView.swift in Sources */,
 				3DAF53C4262E1ACF000DD558 /* WithdrawalDetails.swift in Sources */,
 				3D11A60527580D81008C03B1 /* CameraPreview.swift in Sources */,
 				3D6334F12885C299002CEC5A /* PasswordManagerConfirm.swift in Sources */,
@@ -954,16 +929,15 @@
 				3DB7F9BE26D6C10400A49B4E /* ConversionDetail.swift in Sources */,
 				3DAA26F0262F5147000F453D /* PrimaryButtonStyle.swift in Sources */,
 				3D311D43260A336A007A0B98 /* RoundedCell.swift in Sources */,
-				40BCB0B1261B963100CF58A8 /* OktaError+LocalizedError.swift in Sources */,
 				3D952408283D0FB800D42243 /* BalanceAccountWhitelistRow.swift in Sources */,
 				40A9AF0E25DF5F0E004320EF /* ComposeMail.swift in Sources */,
 				3D6B530C285107BE00F7F77F /* WrapConversionDetail.swift in Sources */,
 				3D11521328217709007CD43D /* AddressBookUpdateDetails.swift in Sources */,
 				3D3D6CEC2616432000FEEE0B /* RecoverPasswordView.swift in Sources */,
 				6C0E3EF227EE5E29002FEE7C /* NaclLowLevel.swift in Sources */,
+				3DE53CCD28AADEB300B4F014 /* StrikeAuthProvider.swift in Sources */,
 				6C74FA0A2861FE68005C8DE1 /* AcceptVaultInvitationRow.swift in Sources */,
 				3D3D6D54261B95B100FEEE0B /* ApprovalRequestsView.swift in Sources */,
-				40BCB0AD261B8B8700CF58A8 /* MFARequiredView.swift in Sources */,
 				3DE53C7828996B8C00B4F014 /* Error+Message.swift in Sources */,
 				3DD9568725EF561F003F9ECF /* Moya+StrikeClient.swift in Sources */,
 				3DAA2717263092FD000F453D /* FirstTimeAppear.swift in Sources */,
@@ -999,7 +973,6 @@
 				3D6334FC2885C2C9002CEC5A /* BackButtonBar.swift in Sources */,
 				40328E102593ED9900F2EE41 /* StrikeApp.swift in Sources */,
 				3D95240A283D0FC300D42243 /* BalanceAccountWhitelistDetails.swift in Sources */,
-				3D3D6CED2616432000FEEE0B /* LockedOutAccountView.swift in Sources */,
 				3D11521828217FC2007CD43D /* BalanceAccountSettingsDetails.swift in Sources */,
 				3D3D6D362616B84700FEEE0B /* RegistrationView.swift in Sources */,
 				3DAF53B4262E13A4000DD558 /* ApprovalRequestRow.swift in Sources */,
@@ -1017,7 +990,6 @@
 				3D3D6D162616449C00FEEE0B /* HelpView.swift in Sources */,
 				3D115211282176FD007CD43D /* AddressBookUpdateRow.swift in Sources */,
 				6C74FA0C28620130005C8DE1 /* AcceptVaultInvitationDetails.swift in Sources */,
-				3D3D6CEB2616432000FEEE0B /* RecoverPasswordChallengeView.swift in Sources */,
 				3DC2F42D25FAAFD00061BB3A /* MoyaLoader.swift in Sources */,
 				3D61A0FC2655B4FF00AD1EE7 /* SignedInNavigationView.swift in Sources */,
 				3D6334ED2885C299002CEC5A /* PenAndPaperRecovery.swift in Sources */,
@@ -1103,9 +1075,6 @@
 				MIN_VERSION_URL = "https://strike-public-assets.s3.amazonaws.com/strike-security-app-version-dev.json";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
-				OKTA_CLIENT_ID = 0oa7ajsmclS0GyzMw357;
-				OKTA_DOMAIN = "https://strike-prime.okta.com";
-				OKTA_ISSUER = "https://login.strikeprotocols.com/oauth2/aus7834x2w3eqeZSr357";
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_SWIFT_FLAGS = "-Xfrontend -debug-time-function-bodies";
 				RAYGUN_API_KEY = CtOnGQjIo1U8dELkoUf0iw;
@@ -1230,9 +1199,6 @@
 				MIN_VERSION_URL = "https://strike-public-assets.s3.amazonaws.com/strike-security-app-version-dev.json";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
-				OKTA_CLIENT_ID = 0oa7ajsmclS0GyzMw357;
-				OKTA_DOMAIN = "https://strike-prime.okta.com";
-				OKTA_ISSUER = "https://login.strikeprotocols.com/oauth2/aus7834x2w3eqeZSr357";
 				OTHER_SWIFT_FLAGS = "-Xfrontend -debug-time-function-bodies";
 				RAYGUN_API_KEY = CtOnGQjIo1U8dELkoUf0iw;
 				RAYGUN_ENABLED = yes;
@@ -1363,9 +1329,6 @@
 				MIN_VERSION_URL = "https://strike-public-assets.s3.amazonaws.com/strike-security-app-version-dev.json";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
-				OKTA_CLIENT_ID = 0oa73mddnlx5MMo7j357;
-				OKTA_DOMAIN = "https://strike-prime.okta.com";
-				OKTA_ISSUER = "https://login.strikeprotocols.com/oauth2/aus783fl9oAoVKJv7357";
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_SWIFT_FLAGS = "-Xfrontend -debug-time-function-bodies";
 				RAYGUN_API_KEY = L9T2bPaEjr3Lede3SNpFJw;
@@ -1488,9 +1451,6 @@
 				MIN_VERSION_URL = "https://strike-public-assets.s3.amazonaws.com/strike-security-app-version-dev.json";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
-				OKTA_CLIENT_ID = 0oa73mddnlx5MMo7j357;
-				OKTA_DOMAIN = "https://strike-prime.okta.com";
-				OKTA_ISSUER = "https://login.strikeprotocols.com/oauth2/aus783fl9oAoVKJv7357";
 				OTHER_SWIFT_FLAGS = "-Xfrontend -debug-time-function-bodies";
 				RAYGUN_API_KEY = L9T2bPaEjr3Lede3SNpFJw;
 				RAYGUN_ENABLED = yes;
@@ -1619,9 +1579,6 @@
 				MIN_VERSION_URL = "https://strike-public-assets.s3.amazonaws.com/strike-security-app-version-dev.json";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
-				OKTA_CLIENT_ID = 0oa7ajwuye2dZD4e6357;
-				OKTA_DOMAIN = "https://strike-prime.okta.com";
-				OKTA_ISSUER = "https://login.strikeprotocols.com/oauth2/aus7834x2w3eqeZSr357";
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_SWIFT_FLAGS = "-Xfrontend -debug-time-function-bodies";
 				RAYGUN_API_KEY = CtOnGQjIo1U8dELkoUf0iw;
@@ -1744,9 +1701,6 @@
 				MIN_VERSION_URL = "https://strike-public-assets.s3.amazonaws.com/strike-security-app-version-dev.json";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
-				OKTA_CLIENT_ID = 0oa7ajwuye2dZD4e6357;
-				OKTA_DOMAIN = "https://strike-prime.okta.com";
-				OKTA_ISSUER = "https://login.strikeprotocols.com/oauth2/aus7834x2w3eqeZSr357";
 				OTHER_SWIFT_FLAGS = "-Xfrontend -debug-time-function-bodies";
 				RAYGUN_API_KEY = CtOnGQjIo1U8dELkoUf0iw;
 				RAYGUN_ENABLED = yes;
@@ -1875,9 +1829,6 @@
 				MIN_VERSION_URL = "https://strike-public-assets.s3.amazonaws.com/strike-security-app-version-dev.json";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
-				OKTA_CLIENT_ID = 0oa7ajzug1y8O0CPe357;
-				OKTA_DOMAIN = "https://strike-prime.okta.com";
-				OKTA_ISSUER = "https://login.strikeprotocols.com/oauth2/aus7834x2w3eqeZSr357";
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_SWIFT_FLAGS = "-Xfrontend -debug-time-function-bodies";
 				RAYGUN_API_KEY = vuxX53AURVfZS87D1WPqeg;
@@ -2005,9 +1956,6 @@
 				MIN_VERSION_URL = "https://strike-public-assets.s3.amazonaws.com/strike-security-app-version-dev.json";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
-				OKTA_CLIENT_ID = 0oa7ajzug1y8O0CPe357;
-				OKTA_DOMAIN = "https://strike-prime.okta.com";
-				OKTA_ISSUER = "https://login.strikeprotocols.com/oauth2/aus7834x2w3eqeZSr357";
 				OTHER_SWIFT_FLAGS = "-Xfrontend -debug-time-function-bodies";
 				RAYGUN_API_KEY = vuxX53AURVfZS87D1WPqeg;
 				RAYGUN_ENABLED = no;
@@ -2138,9 +2086,6 @@
 				MIN_VERSION_URL = "https://strike-public-assets.s3.amazonaws.com/strike-security-app-version.json";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
-				OKTA_CLIENT_ID = 0oa7ajzug1y8O0CPe357;
-				OKTA_DOMAIN = "https://strike-prime.okta.com";
-				OKTA_ISSUER = "https://login.strikeprotocols.com/oauth2/aus7834x2w3eqeZSr357";
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_SWIFT_FLAGS = "-Xfrontend -debug-time-function-bodies";
 				RAYGUN_API_KEY = vuxX53AURVfZS87D1WPqeg;
@@ -2206,9 +2151,6 @@
 				MIN_VERSION_URL = "https://strike-public-assets.s3.amazonaws.com/strike-security-app-version.json";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
-				OKTA_CLIENT_ID = 0oa7ajzug1y8O0CPe357;
-				OKTA_DOMAIN = "https://strike-prime.okta.com";
-				OKTA_ISSUER = "https://login.strikeprotocols.com/oauth2/aus7834x2w3eqeZSr357";
 				OTHER_SWIFT_FLAGS = "-Xfrontend -debug-time-function-bodies";
 				RAYGUN_API_KEY = vuxX53AURVfZS87D1WPqeg;
 				RAYGUN_ENABLED = yes;
@@ -2401,28 +2343,20 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		3D4C1454270D0B9A00382FBF /* XCRemoteSwiftPackageReference "okta-oidc-ios" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/okta/okta-oidc-ios.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 3.0.0;
-			};
-		};
-		3DC2F42325FAA60F0061BB3A /* XCRemoteSwiftPackageReference "okta-auth-swift" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/okta/okta-auth-swift.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.4.2;
-			};
-		};
 		3DE53C8828A2A5CE00B4F014 /* XCRemoteSwiftPackageReference "Semver.swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/glwithu06/Semver.swift.git";
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 1.0.0;
+			};
+		};
+		3DE53CC928AAC0E500B4F014 /* XCRemoteSwiftPackageReference "JWTDecode.swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/auth0/JWTDecode.swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.0.0;
 			};
 		};
 		40A8ED9225AE8B99004A7419 /* XCRemoteSwiftPackageReference "Moya" */ = {
@@ -2444,20 +2378,15 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		3D4C1455270D0B9A00382FBF /* OktaOidc */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 3D4C1454270D0B9A00382FBF /* XCRemoteSwiftPackageReference "okta-oidc-ios" */;
-			productName = OktaOidc;
-		};
-		3DC2F42425FAA60F0061BB3A /* OktaAuthNative */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 3DC2F42325FAA60F0061BB3A /* XCRemoteSwiftPackageReference "okta-auth-swift" */;
-			productName = OktaAuthNative;
-		};
 		3DE53C8928A2A5CE00B4F014 /* Semver */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 3DE53C8828A2A5CE00B4F014 /* XCRemoteSwiftPackageReference "Semver.swift" */;
 			productName = Semver;
+		};
+		3DE53CCA28AAC0E500B4F014 /* JWTDecode */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 3DE53CC928AAC0E500B4F014 /* XCRemoteSwiftPackageReference "JWTDecode.swift" */;
+			productName = JWTDecode;
 		};
 		40A8ED9325AE8B9A004A7419 /* Moya */ = {
 			isa = XCSwiftPackageProductDependency;

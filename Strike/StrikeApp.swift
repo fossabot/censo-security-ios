@@ -16,14 +16,12 @@ struct StrikeApp: App {
         WindowGroup {
             #if STUBBED
             RootView()
-                .withMessageSupport()
                 .environmentObject(appDelegate.viewRouter)
                 .lockedByBiometry {
                     Locked()
                 }
             #else
             RootView(authProvider: appDelegate.authProvider)
-                .withMessageSupport()
                 .environmentObject(appDelegate.viewRouter)
                 .lockedByBiometry {
                     Locked()
@@ -38,7 +36,7 @@ struct StrikeApp: App {
 
 class AppDelegate: NSObject, UIApplicationDelegate {
     var viewRouter = ViewRouter()
-    var authProvider = OktaAuthProvider()
+    var authProvider = StrikeAuthProvider()
 
     private lazy var strikeApi = {
         StrikeApi(authProvider: authProvider)

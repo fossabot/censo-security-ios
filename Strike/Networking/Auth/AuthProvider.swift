@@ -11,7 +11,6 @@ protocol AuthProvider: AnyObject {
     var isAuthenticated: Bool { get }
     var isExpired: Bool { get }
     var bearerToken: String? { get }
-    var email: String? { get }
 
     func refresh(completion: @escaping (Error?) -> Void)
     func invalidate()

@@ -75,6 +75,20 @@ public class Keychain {
         let result = SecItemDelete(query as CFDictionary)
         return result == noErr
     }
+
+    public class func contains(account: String, service: String) -> Bool {
+        var query = queryDictionary(account: account, service: service)
+
+        let context = LAContext()
+        context.interactionNotAllowed = true
+
+        query[kSecUseAuthenticationContext as String] = context
+
+        var result: AnyObject?
+        let status = SecItemCopyMatching(query as CFDictionary, &result)
+
+        return status == errSecInteractionNotAllowed
+    }
 }
 
 extension Keychain {
@@ -84,8 +98,9 @@ extension Keychain {
         case noPrivateKey
     }
 
-    static private let privateKeyService = "com.strikeprotocols.private-key"
-    static private let rootSeedService = "com.strikeprotocols.root-seed"
+    static private let privateKeyService = "com.strikeprotocols.private-key-biometry"
+    static private let rootSeedService = "com.strikeprotocols.root-seed-biometry"
+    static private let publicKeyService = "com.strikeprotocols.public-key"
 
     struct KeyPair {
         let encryptedPrivateKey: String
@@ -105,24 +120,49 @@ extension Keychain {
         }
         #endif
 
+        // MIGRATION FOR OLD USERS
+        let oldPrivateKeyService = "com.strikeprotocols.private-key"
+        let oldRootSeedService = "com.strikeprotocols.root-seed"
+
+        if let oldPrivateKeyData = load(account: email, service: oldPrivateKeyService) {
+            if let oldPrivateKey = try? Curve25519.Signing.PrivateKey(rawRepresentation: oldPrivateKeyData),
+               let oldRootSeed = load(account: email, service: oldRootSeedService)  {
+                do {
+                    try savePrivateKey(oldPrivateKey, rootSeed: oldRootSeed.bytes, email: email)
+                } catch {
+                    RaygunClient.sharedInstance().send(error: error, tags: ["key-migration"], customData: nil)
+                    return Base58.encode(oldPrivateKey.publicKey.rawRepresentation.bytes)
+                }
+            }
+        }
+
+        if let publicKeyData = load(account: email, service: publicKeyService), hasPrivateKey(email: email) {
+            return Base58.encode(publicKeyData.bytes)
+        }
+
         guard let privateKey = privateKey(for: email) else {
             return nil
         }
 
         let publicKeyData = privateKey.publicKey.rawRepresentation
+
+        save(account: email, service: publicKeyService, data: publicKeyData)
+
         return Base58.encode(publicKeyData.bytes)
     }
 
     static func savePrivateKey(_ privateKey: Curve25519.Signing.PrivateKey, rootSeed: [UInt8], email: String) throws {
         let email = email.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
 
-        if !save(account: email, service: rootSeedService, data: Data(rootSeed)) {
+        if !save(account: email, service: rootSeedService, data: Data(rootSeed), biometryProtected: true) {
             throw KeyError.couldNotSavePrivateKey
         }
 
-        if !save(account: email, service: privateKeyService, data: privateKey.rawRepresentation) {
+        if !save(account: email, service: privateKeyService, data: privateKey.rawRepresentation, biometryProtected: true) {
             throw KeyError.couldNotSavePrivateKey
         }
+
+        save(account: email, service: publicKeyService, data: privateKey.publicKey.rawRepresentation)
     }
 
     static func privateKey(for account: String) -> Curve25519.Signing.PrivateKey? {
@@ -134,26 +174,14 @@ extension Keychain {
             return nil
         }
     }
+
+    static func hasPrivateKey(email: String) -> Bool {
+        contains(account: email, service: privateKeyService)
+    }
 }
 
 extension Keychain {
-    static func signature(for signable: SolanaSignable, email: String) throws -> String {
-        let keyInfo = try keyInfoForEmail(email: email)
-        let signData = try signable.signableData(approverPublicKey: keyInfo.encodedPublicKey)
-        let signature = try keyInfo.privateKey.signature(for: signData)
-
-        return signature.base64EncodedString()
-    }
-    
-    static func signatureForKey(for signable: SolanaSignable, email: String, ephemeralPrivateKey: Curve25519.Signing.PrivateKey) throws -> String {
-        let keyInfo = try keyInfoForEmail(email: email)
-        let signData = try signable.signableData(approverPublicKey: keyInfo.encodedPublicKey)
-        let signature = try ephemeralPrivateKey.signature(for: signData)
-
-        return signature.base64EncodedString()
-    }
-    
-    private static func keyInfoForEmail(email: String) throws -> (privateKey: Curve25519.Signing.PrivateKey, encodedPublicKey: String) {
+    static func keyInfoForEmail(email: String) throws -> (privateKey: Curve25519.Signing.PrivateKey, encodedPublicKey: String) {
         guard let privateKey = privateKey(for: email) else {
             throw KeyError.noPrivateKey
         }

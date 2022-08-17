@@ -19,6 +19,15 @@
       }
     },
     {
+      "identity" : "jwtdecode.swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/auth0/JWTDecode.swift.git",
+      "state" : {
+        "revision" : "d07041068fed2d4b8a38f2b321ea6d97c9152c4a",
+        "version" : "3.0.0"
+      }
+    },
+    {
       "identity" : "logger",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/shibapm/Logger",
@@ -52,24 +61,6 @@
       "state" : {
         "revision" : "12f19662426d0434d6c330c6974d53e2eb10ecd9",
         "version" : "9.1.0"
-      }
-    },
-    {
-      "identity" : "okta-auth-swift",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/okta/okta-auth-swift.git",
-      "state" : {
-        "revision" : "4e0c02ff7d2a168c489b42326ebdab759c3cab77",
-        "version" : "2.4.2"
-      }
-    },
-    {
-      "identity" : "okta-oidc-ios",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/okta/okta-oidc-ios.git",
-      "state" : {
-        "revision" : "555cac26344a9562837f1e24dfa2fcceb98d274f",
-        "version" : "3.10.8"
       }
     },
     {

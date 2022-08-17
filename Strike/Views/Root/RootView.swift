@@ -18,7 +18,7 @@ struct RootView: View {
     }
     #else
 
-    @ObservedObject var authProvider: OktaAuthProvider
+    @ObservedObject var authProvider: StrikeAuthProvider
 
     var body: some View {
         if authProvider.isAuthenticated {

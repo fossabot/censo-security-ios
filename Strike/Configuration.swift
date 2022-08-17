@@ -6,14 +6,11 @@
 //
 
 import Foundation
-import OktaOidc
 
 struct Configuration {
     static let termsOfServiceURL: URL = URL(string: "https://strikeprotocols.com/terms-of-service.html")!
     static let privacyPolicyURL: URL = URL(string: "https://strikeprotocols.com/privacy-policy.html")!
     static let apiBaseURL: URL = URLValue(for: "API_BASE_URL")
-    static let oktaDomain: URL = URLValue(for: "OKTA_DOMAIN")
-    static let oktaOidc: OktaOidc = oktaOidcValue(for: "OKTA")
     static let raygunApiKey: String = stringValue(for: "RAYGUN_API_KEY")
     static let raygunEnabled: Bool = stringValue(for: "RAYGUN_ENABLED").lowercased() == "yes"
     static let solanaRpcURL = URLValue(for: "SOLANA_RPC_URL")
@@ -58,30 +55,4 @@ extension Configuration {
 
         return dict
     }
-    
-    static func oktaOidcConfigValue(for key: String) -> OktaOidcConfig {
-        guard let config = try? OktaOidcConfig(with: dictionaryValue(for: key)) else {
-            fatalError("`Info.plist` must contain an OktaOidcConfig for key `\(key)`")
-        }
-
-        config.noSSO = true
-
-        return config
-    }
-    
-    static func oktaOidcValue(for key: String) -> OktaOidc {
-        let config = oktaOidcConfigValue(for: key)
-        
-        guard let oidc = try? OktaOidc(configuration: config) else {
-            fatalError("`Info.plist` contains an invalid OktaOidcConfig for key `\(key)`")
-        }
-
-        return oidc
-    }
-}
-
-extension OktaOidcConfig {
-    static let current: OktaOidcConfig = {
-        Configuration.oktaOidc.configuration
-    }()
 }

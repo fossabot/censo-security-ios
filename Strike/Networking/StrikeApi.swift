@@ -14,6 +14,8 @@ struct StrikeApi {
     
     /// The Moya Target definition for this API.
     enum Target {
+        case login(Credentials)
+
         case verifyUser
         case walletSigners
         case addWalletSigner(WalletSigner)
@@ -119,7 +121,57 @@ extension DispatchQueue {
     fileprivate static let refreshTokenDispatchQueue = DispatchQueue(label: "com.strikeprotocols.authorization-queue")
 }
 
+extension Data: SolanaSignable {
+    func signableData(approverPublicKey: String) throws -> Data {
+        self
+    }
+}
+
 extension StrikeApi {
+    enum Credentials: Encodable {
+        case password(email: String, password: String)
+        case signature(email: String)
+
+        enum CodingKeys: String, CodingKey {
+            case credentials
+            case deviceId
+        }
+
+        enum CredentialsCodingKeys: String, CodingKey {
+            case type
+            case email
+            case password
+            case timestamp
+            case timestampSignature
+        }
+
+        func encode(to encoder: Encoder) throws {
+            var container = encoder.container(keyedBy: CodingKeys.self)
+            try container.encode(UIDevice.current.identifierForVendor?.uuidString ?? "", forKey: .deviceId)
+
+            var credentialsContainer = container.nestedContainer(keyedBy: CredentialsCodingKeys.self, forKey: .credentials)
+
+            switch self {
+            case .password(let email, let password):
+                try credentialsContainer.encode("PasswordBased", forKey: .type)
+                try credentialsContainer.encode(email, forKey: .email)
+                try credentialsContainer.encode(password, forKey: .password)
+            case .signature(let email):
+                let date = Date()
+                try credentialsContainer.encode("SignatureBased", forKey: .type)
+                try credentialsContainer.encode(email, forKey: .email)
+                try credentialsContainer.encode(date, forKey: .timestamp)
+
+                let dateString = DateFormatter.iso8601Full.string(from: date)
+
+                let keyInfo = try Keychain.keyInfoForEmail(email: email)
+                let signature = try keyInfo.privateKey.signature(for: dateString.data(using: .utf8)!).base64EncodedString()
+
+                try credentialsContainer.encode(signature, forKey: .timestampSignature)
+            }
+        }
+    }
+
     struct User: Codable, Identifiable {
         let id: String
         let fullName: String
@@ -269,7 +321,8 @@ extension StrikeApi {
 
             try container.encode(disposition.rawValue, forKey: .approvalDisposition)
 
-            let signature = try Keychain.signature(for: self, email: email)
+            let keyInfo = try Keychain.keyInfoForEmail(email: email)
+            let signature = try keyInfo.privateKey.signature(for: signableData(approverPublicKey: keyInfo.encodedPublicKey)).base64EncodedString()
             try container.encode(signature, forKey: .signature)
         }
     }
@@ -313,10 +366,12 @@ extension StrikeApi {
 
             try container.encode(disposition.rawValue, forKey: .approvalDisposition)
 
-            let initiatorSignature = try Keychain.signature(for: self, email: email)
+            let keyInfo = try Keychain.keyInfoForEmail(email: email)
+            let initiatorSignature = try keyInfo.privateKey.signature(for: signableData(approverPublicKey: keyInfo.encodedPublicKey)).base64EncodedString()
             try container.encode(initiatorSignature, forKey: .initiatorSignature)
             try container.encode(try self.opAccountPublicKey.base58EncodedString, forKey: .opAccountAddress)
-            try container.encode(try Keychain.signatureForKey(for: self, email: email, ephemeralPrivateKey: self.opAccountPrivateKey), forKey: .opAccountSignature)
+            let ephemeralSignature = try opAccountPrivateKey.signature(for: signableData(approverPublicKey: keyInfo.encodedPublicKey)).base64EncodedString()
+            try container.encode(ephemeralSignature, forKey: .opAccountSignature)
 
             if try !supplyInstructions.isEmpty {
                 let supplyDappInstructions = SupplyDAppInstructions(
@@ -324,7 +379,7 @@ extension StrikeApi {
                         SupplyDappInstructionsTxSignature(
                             nonce: instruction.nonce.value,
                             nonceAccountAddress: instruction.nonceAccountAddress,
-                            signature: try Keychain.signature(for: instruction, email: email)
+                            signature: try keyInfo.privateKey.signature(for: instruction.signableData(approverPublicKey: keyInfo.encodedPublicKey)).base64EncodedString()
                         )
                     })
                 )
@@ -348,10 +403,6 @@ struct AuthProviderPlugin: Moya.PluginType {
         default:
             if let authProvider = authProvider, authProvider.isAuthenticated, let token = authProvider.bearerToken {
                 request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-
-                if let email = authProvider.email, let signature = try? Keychain.signature(for: token, email: email) {
-                    request.addValue(signature, forHTTPHeaderField: "X-Strike-Authorization-Signature")
-                }
             } else {
                 debugPrint("Unauthenticated request: \(request)")
             }
@@ -380,6 +431,14 @@ extension String: SolanaSignable {
 
 // MARK: - Moya Target
 
+extension StrikeApi.Target {
+    var encoder: JSONEncoder {
+        let encoder = JSONEncoder()
+        encoder.dateEncodingStrategy = .formatted(.iso8601Full)
+        return encoder
+    }
+}
+
 extension StrikeApi.Target: Moya.TargetType {
     var baseURL: URL {
         switch self {
@@ -396,6 +455,8 @@ extension StrikeApi.Target: Moya.TargetType {
     
     var path: String {
         switch self {
+        case .login:
+            return "v1/login"
         case .verifyUser:
             return "v1/users"
         case .walletSigners,
@@ -433,9 +494,9 @@ extension StrikeApi.Target: Moya.TargetType {
              .multipleAccountNonce,
              .registerApprovalDisposition,
              .initiateRequest,
-             .resetPassword:
-            return .post
-        case .registerPushToken:
+             .resetPassword,
+             .registerPushToken,
+             .login:
             return .post
         case .unregisterPushToken:
             return .delete
@@ -444,6 +505,8 @@ extension StrikeApi.Target: Moya.TargetType {
     
     var task: Moya.Task {
         switch self {
+        case .login(let credentials):
+            return .requestCustomJSONEncodable(credentials, encoder: encoder)
         case .verifyUser,
              .walletSigners,
              .walletApprovals,

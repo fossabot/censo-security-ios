@@ -6,53 +6,45 @@
 //
 
 import SwiftUI
-import OktaAuthNative
 
 struct SignInView: View {
-    let authProvider: OktaAuthProvider
-
-    @State private var username = ""
-    @State private var password = ""
-    
+    @AppStorage("email") private var username = ""
     @State private var isAuthenticating: Bool = false
-    
-    enum SheetType {
-        case recoverPassword
-        case lockedOut
-        case factorRequired(OktaAuthStatusFactorRequired)
-        case factorChallenge(OktaAuthStatusFactorChallenge)
-        case unsupportedStatus(OktaAuthStatus)
-    }
-    
-    @State private var currentSheet: SheetType?
+    @State private var showingPassword = false
+    @State private var currentAlert: AlertType?
+
+    var authProvider: StrikeAuthProvider
     
     enum AlertType {
         case signInError(Error)
     }
 
-    @State private var currentAlert: AlertType?
-    
+    var canSignIn: Bool {
+        return !(username.isEmpty || isAuthenticating)
+    }
+
     var body: some View {
-        VStack {
-            ScrollView {
-                VStack {
-                    Image("Logo")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(maxHeight: 22)
-                        .padding(50)
+        NavigationView {
+            VStack(spacing: 0) {
+                ScrollView {
+                    VStack {
+                        Image("Logo")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(maxHeight: 22)
+                            .padding(50)
 
-                    Text("Sign in with the account you created on the web")
-                        .multilineTextAlignment(.center)
-                        .padding([.leading, .trailing], 60)
-                        .padding([.bottom], 20)
+                        Text("Sign in with the account you created on the web")
+                            .multilineTextAlignment(.center)
+                            .padding([.leading, .trailing], 60)
+                            .padding([.bottom], 20)
 
-                    VStack(alignment: .leading, spacing: 20) {
-                        Text("Email")
+                        VStack(alignment: .leading, spacing: 20) {
+                            Text("Email")
 
-                        TextField("", text: $username, onEditingChanged: {value in
-                            print("sdf: \(value)")
-                        })
+                            TextField("", text: $username) {
+                                if canSignIn { signIn() }
+                            }
                             .keyboardType(.emailAddress)
                             .textContentType(.emailAddress)
                             .autocapitalization(.none)
@@ -60,25 +52,136 @@ struct SignInView: View {
                             .foregroundColor(Color.black)
                             .accentColor(Color.Strike.purple)
                             .textFieldStyle(LightRoundedTextFieldStyle())
-                            //.colorScheme(.dark)
+                        }
+                        .padding(35)
+                        .background(
+                            Rectangle()
+                                .border(.gray.opacity(0.4), width: 1)
+                                .foregroundColor(.black)
+                        )
+                        .padding(20)
+                        .disabled(isAuthenticating)
+                    }
+                }
 
+                Spacer()
+
+                Button(action: signIn) {
+                    Text("Sign in")
+                        .loadingIndicator(when: isAuthenticating)
+                        .frame(maxWidth: .infinity)
+                }
+                .buttonStyle(FilledButtonStyle())
+                .disabled(!canSignIn)
+                .ignoresSafeArea(.keyboard, edges: .bottom)
+                .padding(30)
+
+                NavigationLink(isActive: $showingPassword) {
+                    PasswordView(username: username, authProvider: authProvider)
+                } label: {
+                    EmptyView()
+                }
+            }
+            .navigationBarHidden(true)
+            .background(
+                StrikeBackground()
+            )
+            .alert(item: $currentAlert) { item in
+                switch item {
+                case .signInError:
+                    return Alert(
+                        title: Text("Sign In Error"),
+                        message: Text("An error occured trying to sign you in"),
+                        primaryButton: .default(Text("Use Password"), action: {
+                            showingPassword = true
+                        }),
+                        secondaryButton: .cancel(Text("Try Again"))
+                    )
+                }
+            }
+        }
+    }
+
+    private func signIn() {
+        if Keychain.hasPrivateKey(email: username) {
+            isAuthenticating = true
+
+            authProvider.authenticate(.signature(email: username)) { error in
+                isAuthenticating = false
+
+                if let error = error {
+                    showSignInError(error)
+                }
+            }
+        } else {
+            showingPassword = true
+        }
+    }
+
+    private func showSignInError(_ error: Error) {
+        currentAlert = .signInError(error)
+    }
+}
+
+
+struct PasswordView: View {
+    @Environment(\.presentationMode) var presentationMode
+
+    @State private var password = ""
+    @State private var isAuthenticating: Bool = false
+    @State private var showingPassword = false
+    @State private var currentAlert: AlertType?
+
+    enum AlertType {
+        case signInError(Error)
+    }
+
+    var username: String
+    var authProvider: StrikeAuthProvider
+
+    var canSignIn: Bool {
+        return !(password.isEmpty || isAuthenticating)
+    }
+
+    var body: some View {
+        VStack(spacing: 0) {
+            BackButtonBar(caption: "Email", presentationMode: presentationMode)
+                .frame(height: 50)
+
+            ScrollView {
+                VStack {
+                    Image("Logo")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(maxHeight: 22)
+                        .padding([.leading, .trailing, .bottom], 50)
+
+                    (Text("Signing in as ") + Text(username).bold())
+                        .multilineTextAlignment(.center)
+                        .padding([.leading, .trailing], 60)
+                        .padding([.bottom], 20)
+
+                    VStack(alignment: .leading, spacing: 20) {
                         Text("Password")
 
-                        VStack(alignment: .trailing, spacing: 10) {
-                            SecureField("", text: $password) {
-                                if canSignIn { signIn() }
-                            }
-                            .textContentType(.password)
-                            .foregroundColor(Color.black)
-                            .accentColor(Color.Strike.purple)
-                            .textFieldStyle(LightRoundedTextFieldStyle())
-                            //.colorScheme(.dark)
-
-                            Button("Forgot password?") {
-                                currentSheet = .recoverPassword
-                            }
-                            .foregroundColor(Color.Strike.purple)
+                        SecureField("", text: $password) {
+                            if canSignIn { signIn() }
                         }
+                        .textContentType(.password)
+                        .foregroundColor(Color.black)
+                        .accentColor(Color.Strike.purple)
+                        .textFieldStyle(LightRoundedTextFieldStyle())
+
+//                        HStack {
+//                            Spacer()
+//
+//                            Button {
+//
+//                            } label: {
+//                                Text("Forgot password?")
+//                            }
+//                            .foregroundColor(.Strike.purple)
+//                        }
                     }
                     .padding(35)
                     .background(
@@ -103,6 +206,7 @@ struct SignInView: View {
             .ignoresSafeArea(.keyboard, edges: .bottom)
             .padding(30)
         }
+        .navigationBarHidden(true)
         .background(
             StrikeBackground()
         )
@@ -112,84 +216,33 @@ struct SignInView: View {
                 return Alert.withDismissButton(title: Text("Sign In Error"), message: Text("Please check your username and password"))
             }
         }
-        .sheet(item: $currentSheet) { item in
-            NavigationView {
-                switch item {
-                case .recoverPassword:
-                    RecoverPasswordView(username: $username)
-                case .lockedOut:
-                    LockedOutAccountView()
-                case .factorRequired(let status):
-                    MFARequiredView(status: status, onReceiveSessionToken: authenticate(sessionToken:))
-                case .factorChallenge(let status):
-                    MFAChallengeView(status: status, onReceiveSessionToken: authenticate(sessionToken:))
-                case .unsupportedStatus(let status):
-                    UnsupportedAuthStatusView(status: status)
-                }
-            }
-        }
     }
-}
 
-extension SignInView {
-    var canSignIn: Bool {
-        return !(username.isEmpty || password.isEmpty || isAuthenticating)
-    }
-    
     private func signIn() {
-        authenticate(username: username, password: password)
-    }
-    
-    private func authenticate(username: String, password: String) {
+        showingPassword = true
+
         isAuthenticating = true
-        OktaAuthSdk.authenticate(with: Configuration.oktaDomain, username: username, password: password) { status in
-            guard let successStatus = status as? OktaAuthStatusSuccess, let sessionToken = successStatus.sessionToken else {
-                isAuthenticating = false
-                showStatus(status)
-                return
-            }
-            
-            authProvider.authenticate(with: sessionToken) { error in
-                isAuthenticating = false
-                if let error = error {
-                    showSignInError(error)
-                }
-            }
-        } onError: { error in
+
+        authProvider.authenticate(.password(email: username, password: password)) { error in
             isAuthenticating = false
-            showSignInError(error)
-        }
-    }
-    
-    private func authenticate(sessionToken: String) {
-        isAuthenticating = true
-        authProvider.authenticate(with: sessionToken) { error in
-            isAuthenticating = false
+
             if let error = error {
                 showSignInError(error)
             }
         }
     }
-}
 
-extension SignInView {
-    private func showStatus(_ status: OktaAuthStatus) {
-        switch status {
-        case is OktaAuthStatusUnauthenticated, is OktaAuthStatusSuccess:
-            break
-        case is OktaAuthStatusLockedOut:
-            currentSheet = .lockedOut
-        case let factorRequiredStatus as OktaAuthStatusFactorRequired:
-            currentSheet = .factorRequired(factorRequiredStatus)
-        case let factorChallengeStatus as OktaAuthStatusFactorChallenge:
-            currentSheet = .factorChallenge(factorChallengeStatus)
-        default:
-            currentSheet = .unsupportedStatus(status)
-        }
-    }
-    
     private func showSignInError(_ error: Error) {
         currentAlert = .signInError(error)
+    }
+}
+
+extension PasswordView.AlertType: Identifiable {
+    var id: Int {
+        switch self {
+        case .signInError:
+            return 0
+        }
     }
 }
 
@@ -202,27 +255,12 @@ extension SignInView.AlertType: Identifiable {
     }
 }
 
-extension SignInView.SheetType: Identifiable {
-    var id: Int {
-        switch self {
-        case .lockedOut:
-            return 0
-        case .recoverPassword:
-            return 1
-        case .factorRequired:
-            return 2
-        case .factorChallenge:
-            return 3
-        case .unsupportedStatus:
-            return 4
-        }
-    }
-}
-
 #if DEBUG
 struct SignInView_Previews: PreviewProvider {
     static var previews: some View {
-        SignInView(authProvider: OktaAuthProvider())
+        SignInView(authProvider: StrikeAuthProvider())
+
+        PasswordView(username: "john@hollywood.com", authProvider: StrikeAuthProvider())
     }
 }
 #endif
