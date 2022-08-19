@@ -57,16 +57,7 @@ extension StrikeApi.InitiationRequest: SolanaSignable {
             try PublicKey(string: Base58.encode(opAccountPrivateKey.publicKey.rawRepresentation.bytes))
         }
     }
-    
-    var dataAccountPublicKey: PublicKey {
-        get throws {
-            guard let privateKey = dataAccountPrivateKey else {
-                throw SolanaError.invalidRequest(reason: "Missing data account private key")
-            }
-            return try PublicKey(string: Base58.encode(privateKey.publicKey.rawRepresentation.bytes))
-        }
-    }
-    
+
     var createOpAccountMeta: [Account.Meta] {
         get throws {
             try [
@@ -96,41 +87,7 @@ extension StrikeApi.InitiationRequest: SolanaSignable {
             )
         }
     }
-    
-    var createDataAccountMeta: [Account.Meta] {
-        get throws {
-            try [
-                Account.Meta(publicKey: PublicKey(string: signingData.feePayer), isSigner: true, isWritable: true),
-                Account.Meta(publicKey: dataAccountPublicKey, isSigner: true, isWritable: true)
-            ]
-        }
-    }
-    
-    var createDataAccountInstruction: TransactionInstruction {
-        get throws {
-            try TransactionInstruction(
-                keys: try createDataAccountMeta,
-                programId: SYS_PROGRAM_ID,
-                data: [UInt8](createDataAccounTransactionInstructionData)
-            )
-        }
-    }
-    
-    var createDataAccounTransactionInstructionData: Data {
-        get throws {
-            guard let dataAccountCreationInfo = initiation.dataAccountCreationInfo else {
-                throw SolanaError.invalidRequest(reason: "Missing data account creation")
-            }
-            return try Data(
-                UInt32(0).bytes +
-                dataAccountCreationInfo.minBalanceForRentExemption.bytes +
-                dataAccountCreationInfo.accountSize.bytes +
-                signingData.walletProgramId.base58Bytes
-            )
-        }
-    }
-    
-
+        
     var instructionData: Data {
         get throws {
             let commonBytes = try signingData.commonInitiationBytes
@@ -241,7 +198,6 @@ extension StrikeApi.InitiationRequest: SolanaSignable {
                         instructionBatch: instructionBatch,
                         signingData: try signingData,
                         opAccountPublicKey: try opAccountPublicKey,
-                        dataAccountPublicKey: try dataAccountPublicKey,
                         walletAccountPublicKey: try PublicKey(string: signingData.walletAddress)
                     )
                 }
@@ -370,7 +326,6 @@ extension StrikeApi.InitiationRequest: SolanaSignable {
         case .dAppTransactionRequest:
             return [
                 Account.Meta(publicKey: try opAccountPublicKey, isSigner: false, isWritable: true),
-                Account.Meta(publicKey: try dataAccountPublicKey, isSigner: false, isWritable: true),
                 Account.Meta(publicKey: try PublicKey(string: signingData.walletAddress), isSigner: false, isWritable: false),
                 Account.Meta(publicKey: approverPublicKey, isSigner: true, isWritable: false),
                 Account.Meta(publicKey: SYSVAR_CLOCK_PUBKEY, isSigner: false, isWritable: false),
@@ -425,10 +380,6 @@ extension StrikeApi.InitiationRequest: SolanaSignable {
 
         instructions.append(try createOpAccountInstruction)
 
-        if initiation.dataAccountCreationInfo != nil {
-            instructions.append(try createDataAccountInstruction)
-        }
-
         instructions.append(try TransactionInstruction(
                 keys: instructionAccountMeta(approverPublicKey: try PublicKey(string: approverPublicKey)),
                 programId: PublicKey(string: signingData.walletProgramId),
@@ -449,7 +400,6 @@ extension StrikeApi.InitiationRequest: SolanaSignable {
         var instructionBatch: SolanaInstructionBatch
         var signingData: SolanaSigningData
         var opAccountPublicKey: PublicKey
-        var dataAccountPublicKey: PublicKey
         var walletAccountPublicKey: PublicKey
 
         func signableData(approverPublicKey: String) throws -> Data {
@@ -464,7 +414,6 @@ extension StrikeApi.InitiationRequest: SolanaSignable {
                         TransactionInstruction(
                             keys: [
                                 Account.Meta(publicKey: opAccountPublicKey, isSigner: false, isWritable: true),
-                                Account.Meta(publicKey: dataAccountPublicKey, isSigner: false, isWritable: true),
                                 Account.Meta(publicKey: walletAccountPublicKey, isSigner: false, isWritable: false),
                                 Account.Meta(publicKey: try PublicKey(string: approverPublicKey), isSigner: true, isWritable: false)
                             ],

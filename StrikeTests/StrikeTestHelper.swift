@@ -554,12 +554,12 @@ extension StrikeTests {
             DAppTransactionRequest(
                 account: AccountInfo(
                     name: "Account 1",
-                    identifier: "3051fb93-f892-4b11-9608-bbc646addc92",
+                    identifier: "4c4a24fe-0cb2-427c-b0f8-aa37d014edad",
                     accountType: AccountType.BalanceAccount,
-                    address: "Cxrnw2Es4A4bGqbFd9dJEGnjDkhdmKwGgp3z8Ji8pYtz"
+                    address: "6NfdEZkXsnN5fVB7HA788TnvTvWa9fsvkZ7Z7sQW5ZRP"
                 ),
                 dappInfo: SolanaDApp(
-                    address: "Ekh3E1Zo3qvSCgck3f6FBYcw7KxuywsmR1v63M2eDnu3",
+                    address: "nb7bwgxXdfbBE3146YZcJh7JkstYvoa7kJuzHoPp6Ty",
                     name: "DApp Name",
                     logo: "dapp-icon"
                 ),
@@ -571,10 +571,10 @@ extension StrikeTests {
                             SolanaInstruction(
                                 programId: "ATokenGPvbdGVxr1b2hvZbsiqW5xWH25efTNsLJA8knL",
                                 accountMetas: [
-                                    SolanaAccountMeta(address: "Cxrnw2Es4A4bGqbFd9dJEGnjDkhdmKwGgp3z8Ji8pYtz", signer: true, writable: true),
-                                    SolanaAccountMeta(address: "6UDDdg3GxpLBcX78M3G6ngsc8BaTEmZUFWVEdGCdUBg2", signer: false, writable: true),
-                                    SolanaAccountMeta(address: "Cxrnw2Es4A4bGqbFd9dJEGnjDkhdmKwGgp3z8Ji8pYtz", signer: true, writable: true),
-                                    SolanaAccountMeta(address: "Fh4aJeGnykwDsrEGSDwurSUk83GB8mbUvDNG9SEFYAVX", signer: false, writable: false),
+                                    SolanaAccountMeta(address: "6NfdEZkXsnN5fVB7HA788TnvTvWa9fsvkZ7Z7sQW5ZRP", signer: true, writable: true),
+                                    SolanaAccountMeta(address: "DBDUyieRkz3JGCmjCtQYzKzeaq3EVo8LzidCeCx3o8m4", signer: false, writable: true),
+                                    SolanaAccountMeta(address: "6NfdEZkXsnN5fVB7HA788TnvTvWa9fsvkZ7Z7sQW5ZRP", signer: true, writable: true),
+                                    SolanaAccountMeta(address: "9P5hmZhGoPnXnP9FgKJgERDk1MzL3MnvzeAFUhcbqGFH", signer: false, writable: false),
                                     SolanaAccountMeta(address: "11111111111111111111111111111111", signer: false, writable: false),
                                     SolanaAccountMeta(address: "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA", signer: false, writable: false),
                                     SolanaAccountMeta(address: "SysvarRent111111111111111111111111111111111", signer: false, writable: false),
@@ -586,15 +586,15 @@ extension StrikeTests {
                 ],
                 signingData: SolanaSigningData(
                     feePayer: "87VXbkJsqdDvXYfDBtS4kW4TcFor7ogofZXbXjT7t7AU",
-                    walletProgramId: "GaTAjM912JJbH9gLcwekjeq53UW85avaeZf7463MMvv6",
-                    multisigOpAccountAddress: "4h7gFc5QVham5cFyXbXStzffnqYVe6L74qHXn5SFabPL",
-                    walletAddress: "5jM4J6nh5RXxfktwZjrocjXHpx2ukGK7oVh73n9PBBpt",
+                    walletProgramId: "Hq38vrTB34LdEQdNDqM5j96ZT9k3LcEPb6GiLAPu7Hrk",
+                    multisigOpAccountAddress: "7vs3w6TSF7kFNy7rqNsxryPmvC1VfhWR1k3wK4FgPg5z",
+                    walletAddress: "9ru2T5qATxhER5AUyRHn4RBHkHeJFMfPguCTK98YipCH",
                     nonceAccountAddresses: nonceAccountAddresses,
                     nonceAccountAddressesSlot: 2256,
-                    initiator: "GsRZ7gnpXGvn4pzEq1yrgha7zLt2MC4DQTjCoeDdSzS1",
+                    initiator: "BtstAXkRrjBdpDvknnfPwnr6UquXpUvAPZSFZi8wDftS",
                     strikeFeeAmount: 0,
                     feeAccountGuidHash: Data(count: 32).base64EncodedString(),
-                    walletGuidHash: Data(count: 32).base64EncodedString()
+                    walletGuidHash: "xNO5k8ivvkCXwEB5l1AbG/OfsaBDDlXs0/muBNL2PJQ="
                 )
             )
         )
@@ -637,10 +637,10 @@ extension StrikeTests {
         )
     }
     
-    func getOpAccountCreationInfo() -> MultisigAccountCreationInfo {
+    func getOpAccountCreationInfo(accountSize: UInt64 = 952, minBalanceForRentExemption: UInt64 = 7516800) -> MultisigAccountCreationInfo {
         return MultisigAccountCreationInfo(
-            accountSize: 952,
-            minBalanceForRentExemption: 7516800
+            accountSize: accountSize,
+            minBalanceForRentExemption: minBalanceForRentExemption
         )
     }
 }
