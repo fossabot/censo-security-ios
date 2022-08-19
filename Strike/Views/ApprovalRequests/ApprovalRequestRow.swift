@@ -145,8 +145,7 @@ struct ApprovalRequestRow<Row, Detail>: View where Row : View, Detail: View {
                         requestType: requestType,
                         nonces: nonces,
                         email: user.loginName,
-                        opAccountPrivateKey: Curve25519.Signing.PrivateKey(),
-                        dataAccountPrivateKey: Curve25519.Signing.PrivateKey()
+                        opAccountPrivateKey: Curve25519.Signing.PrivateKey()
                     )
                 )
             }

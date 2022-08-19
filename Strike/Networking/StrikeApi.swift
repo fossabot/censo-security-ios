@@ -278,7 +278,6 @@ extension StrikeApi {
         let nonces: [Nonce]
         let email: String
         let opAccountPrivateKey: Curve25519.Signing.PrivateKey
-        let dataAccountPrivateKey: Curve25519.Signing.PrivateKey?
 
         enum CodingKeys: String, CodingKey {
             case initiatorSignature
@@ -297,8 +296,6 @@ extension StrikeApi {
         }
 
         private struct SupplyDAppInstructions: Encodable {
-            let dataAccountAddress: String
-            let dataAccountSignature: String
             let supplyInstructionInitiatorSignatures: [SupplyDappInstructionsTxSignature]
         }
 
@@ -317,10 +314,8 @@ extension StrikeApi {
             try container.encode(try self.opAccountPublicKey.base58EncodedString, forKey: .opAccountAddress)
             try container.encode(try Keychain.signatureForKey(for: self, email: email, ephemeralPrivateKey: self.opAccountPrivateKey), forKey: .opAccountSignature)
 
-            if let dataAccountPrivateKey = dataAccountPrivateKey, initiation.dataAccountCreationInfo != nil {
+            if try !supplyInstructions.isEmpty {
                 let supplyDappInstructions = SupplyDAppInstructions(
-                    dataAccountAddress: try self.dataAccountPublicKey.base58EncodedString,
-                    dataAccountSignature: try Keychain.signatureForKey(for: self, email: email, ephemeralPrivateKey: dataAccountPrivateKey),
                     supplyInstructionInitiatorSignatures: try supplyInstructions.map({ instruction in
                         SupplyDappInstructionsTxSignature(
                             nonce: instruction.nonce.value,

@@ -84,7 +84,7 @@ struct Locked: View {
             Spacer()
 
             if LAContext().biometryType == .none {
-                Text("We're sorry. The Strike Mobile App requirs biometric authentication for security purposes and your device does not support bioemtric authentication")
+                Text("We're sorry. The Strike Mobile App requirs biometric authentication for security purposes and your device does not support biometric authentication")
             } else {
                 Text("The Strike Mobile App requires \(biometryType) to be enabled for security purposes.")
                     .multilineTextAlignment(.leading)

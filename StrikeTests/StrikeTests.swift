@@ -44,7 +44,6 @@ class StrikeTests: XCTestCase {
     func testSignersUpdateInitiationRequest() throws {
         let initiation = MultisigOpInitiation(
             opAccountCreationInfo: getOpAccountCreationInfo(),
-            dataAccountCreationInfo: nil,
             initiatorIsApprover: true
         )
         let requestType: SolanaApprovalRequestType = getSignersUpdateRequest(nonceAccountAddresses: ["5Fx8Nk98DbUcNUe4izqJkcYwfaMGmKRbXi1A7fVPfzj7"])
@@ -57,8 +56,7 @@ class StrikeTests: XCTestCase {
             requestType: requestType,
             nonces: [StrikeApi.Nonce("6HeTZQvWzhX8aLpm7K213scyGExytur2qiXxqLAMKnBb")],
             email: "dont care",
-            opAccountPrivateKey: pk,
-            dataAccountPrivateKey: nil
+            opAccountPrivateKey: pk
         )
 
         XCTAssertEqual(
@@ -85,7 +83,6 @@ class StrikeTests: XCTestCase {
     func testBalanceAccountCreationInitiationRequest() throws {
         let initiation = MultisigOpInitiation(
             opAccountCreationInfo: getOpAccountCreationInfo(),
-            dataAccountCreationInfo: nil,
             initiatorIsApprover: true
         )
         let requestType: SolanaApprovalRequestType = getBalanceAccountCreationRequest(nonceAccountAddresses: ["CL8fZq5BzjCBXmixSMKqBsFoCLSFxqN6GvheDQ68HP44"])
@@ -98,8 +95,7 @@ class StrikeTests: XCTestCase {
             requestType: requestType,
             nonces: [StrikeApi.Nonce("QRKqHqP5SNEngXrcK2QeAR2nqx9AmwbHrmYF49ZbkEK")],
             email: "dont care",
-            opAccountPrivateKey: pk,
-            dataAccountPrivateKey: nil
+            opAccountPrivateKey: pk
         )
 
         XCTAssertEqual(
@@ -126,7 +122,6 @@ class StrikeTests: XCTestCase {
     func testSolWithdrawalRequestInitiationRequest() throws {
         let initiation = MultisigOpInitiation(
             opAccountCreationInfo: getOpAccountCreationInfo(),
-            dataAccountCreationInfo: nil,
             initiatorIsApprover: true
         )
         let requestType: SolanaApprovalRequestType = getSolWithdrawalRequest(nonceAccountAddresses: ["CL8fZq5BzjCBXmixSMKqBsFoCLSFxqN6GvheDQ68HP44"])
@@ -139,8 +134,7 @@ class StrikeTests: XCTestCase {
             requestType: requestType,
             nonces: [StrikeApi.Nonce("4LTSSabuoUArWeLyAS2nstT4EjmP8L3y8qXYgJqRs6RC")],
             email: "dont care",
-            opAccountPrivateKey: pk,
-            dataAccountPrivateKey: nil
+            opAccountPrivateKey: pk
         )
 
         XCTAssertEqual(
@@ -168,7 +162,6 @@ class StrikeTests: XCTestCase {
     func testSplWithdrawalRequestInitiationRequest() throws {
         let initiation = MultisigOpInitiation(
             opAccountCreationInfo: getOpAccountCreationInfo(),
-            dataAccountCreationInfo: nil,
             initiatorIsApprover: true
         )
         let requestType: SolanaApprovalRequestType = getSplWithdrawalRequest(nonceAccountAddresses: ["6UcFAr9rqGfFEtLxnYdW6QjeRor3aej5akLpYpXUkPWX"])
@@ -181,8 +174,7 @@ class StrikeTests: XCTestCase {
             requestType: requestType,
             nonces: [StrikeApi.Nonce("9kV51VcoGhA1YFkBxBhd7rG1nz7ZCVcsBpqaaGa1hgCD")],
             email: "dont care",
-            opAccountPrivateKey: pk,
-            dataAccountPrivateKey: nil
+            opAccountPrivateKey: pk
         )
 
         XCTAssertEqual(
@@ -209,7 +201,6 @@ class StrikeTests: XCTestCase {
     func testUSDCConversionRequestInitiationRequest() throws {
         let initiation = MultisigOpInitiation(
             opAccountCreationInfo: getOpAccountCreationInfo(),
-            dataAccountCreationInfo: nil,
             initiatorIsApprover: true
         )
         let requestType: SolanaApprovalRequestType = getConversionRequest(nonceAccountAddresses: ["6UcFAr9rqGfFEtLxnYdW6QjeRor3aej5akLpYpXUkPWX"])
@@ -222,8 +213,7 @@ class StrikeTests: XCTestCase {
             requestType: requestType,
             nonces: [StrikeApi.Nonce("9kV51VcoGhA1YFkBxBhd7rG1nz7ZCVcsBpqaaGa1hgCD")],
             email: "dont care",
-            opAccountPrivateKey: pk,
-            dataAccountPrivateKey: nil
+            opAccountPrivateKey: pk
         )
 
         XCTAssertEqual(
@@ -235,7 +225,6 @@ class StrikeTests: XCTestCase {
     func testWrapConversionRequestInitiationRequest() throws {
         let initiation = MultisigOpInitiation(
             opAccountCreationInfo: getOpAccountCreationInfo(),
-            dataAccountCreationInfo: nil,
             initiatorIsApprover: true
         )
         let requestType: SolanaApprovalRequestType = getWrapConversionRequest(nonceAccountAddresses: ["2vztVvZ75DahxgQVokC41yGyuiGNVaYiq7SvbiuJvjPn"])
@@ -249,8 +238,7 @@ class StrikeTests: XCTestCase {
             requestType: requestType,
             nonces: [StrikeApi.Nonce("5HprjcSDd6j66giEixqAjnpaTUbBBqSd2qTRzerKip6Q")],
             email: "dont care",
-            opAccountPrivateKey: pk,
-            dataAccountPrivateKey: nil
+            opAccountPrivateKey: pk
         )
 
         XCTAssertEqual(
@@ -262,7 +250,6 @@ class StrikeTests: XCTestCase {
     func testUnwrapConversionRequestInitiationRequest() throws {
         let initiation = MultisigOpInitiation(
             opAccountCreationInfo: getOpAccountCreationInfo(),
-            dataAccountCreationInfo: nil,
             initiatorIsApprover: true
         )
         let requestType: SolanaApprovalRequestType = getUnwrapConversionRequest(nonceAccountAddresses: ["C2Fo1L8qFzmfucaVpLxVt7sYdUEorHYiYfNS2iPGXhxP"])
@@ -275,8 +262,7 @@ class StrikeTests: XCTestCase {
             requestType: requestType,
             nonces: [StrikeApi.Nonce("3sW5nKBjmPkCtaXcBQperkPbjjq1zh55WBYzqtn9snjP")],
             email: "dont care",
-            opAccountPrivateKey: pk,
-            dataAccountPrivateKey: nil
+            opAccountPrivateKey: pk
         )
 
         XCTAssertEqual(
@@ -284,22 +270,17 @@ class StrikeTests: XCTestCase {
             "0301091069ab8cb05413af9614f898a1f1fdfbc07e7ad5eb2eb1d0f1c49f448bd179c71559dd5a48b688d5903bf3567f05edf0ca12745f9146356f9256033dae9a31cc4a2421b9558d9cad67bd5659f0331b3fde0d92a4c499163a4c2ccc11270a2d1d2ca3c2dd1d18d8e3fc1fa348bbf55e69e9e8a08ce9d200c25d75a4f249959f504c6275d74f500d64b47ff8dc6c9bfb82e3719880e03108b80f16d99216a7cab105691ced267cd43434095fd9cca6f91dfc377cd32477982218304ddbfb22f80dd4ef0bb334bbe5de40c74a349008b2e63384f665fc8b7fe3f5e78f72763a49127706a7d517192c568ee08a845f73d29788cf035c3145b21ab344d8062ea9400000f620464ffe688ce6d211cd6634828308f9ee848ee9c65e9b447f6cc110bcb1f3069b8857feab8184fb687f634618c035dac439dc1aeb3b5598a0f0000000000106a7d51718c774c928566398691d5eb68b5eb8a39b4b6d5c73555b2100000000000000000000000000000000000000000000000000000000000000000000000006ddf6e1d765a193d9cbe146ceeb79ac1cb485ed5f5b37913a8cf5857eff00a906a7d517192c5c51218cc94c3d4af17f58daee089ba1fd44e3dbd98a000000008c97258f4e2489f1bb3d1029148e0d830b5a1399daff1084048e7bd8dbe9f85901e7592836b04fb733c4ba26fba673c11822b869e3d71275da54051523c747c72aa74c4491bcecb2fb4e5c9deb5e9e12aa1286114d50d7fcbd1948e10cb2701e030b0303070004040000000b020001340000000080b2720000000000b80300000000000001e7592836b04fb733c4ba26fba673c11822b869e3d71275da54051523c747c70f0e0108040509020a00060b0c0d0e04530af01d1f00000000000139ed553bc39b91b4368c79f3383ead20640d917fec1312697463a4b062b8ed5539ed553bc39b91b4368c79f3383ead20640d917fec1312697463a4b062b8ed5500a3e1110000000001"
         )
     }
-    
+
     func testDAppTransactionRequestInitiationRequest() throws {
-        let opAccountPk = try Curve25519.Signing.PrivateKey.init(rawRepresentation: "72919ad129d320c2549e305cbae397e17621210bbb8da8160759599dfb19e586".data(using: .hexadecimal)!)
-        let dataAccountPk = try Curve25519.Signing.PrivateKey.init(rawRepresentation: "24781fb0253e9af0b83eb7e957aea3797c9ac93a6af046443c570bf92ee9f13b".data(using: .hexadecimal)!)
+        let opAccountPk = try Curve25519.Signing.PrivateKey.init(rawRepresentation: "4ec791e7966d99d23e8bc41f3822a34d001e2c03605f33759bed2cd74fd40d0c".data(using: .hexadecimal)!)
 
         let initiation = MultisigOpInitiation(
-            opAccountCreationInfo: getOpAccountCreationInfo(),
-            dataAccountCreationInfo: MultisigAccountCreationInfo(
-                accountSize: 2696,
-                minBalanceForRentExemption: 19655040
-            ),
+            opAccountCreationInfo: getOpAccountCreationInfo(accountSize: 3712, minBalanceForRentExemption: 26726400),
             initiatorIsApprover: true
         )
 
-        let nonceAccountAddresses = ["E9LmFCnKKvCsmhedfx8Smee8NvYZy5oAFE4xDkTq1GNo", "FG2QeVobPkMBT2QTXdKn2SwLzXdUAku9QYxJWAXxJQXH"]
-        let nonces = [StrikeApi.Nonce("GksejZ2XrNoZqaXq1b2E7VSvLP5vWJMiQPhnLj36MiKG"), StrikeApi.Nonce("HkBTPCWmyC1t5tcqivjrx3CJ7qNuZBLUnELWP9U7nyQF")]
+        let nonceAccountAddresses = ["2qpuGj3H4iG632vWbayr5Yx3uVb9irMq1cYWiciFbLrG", "7Y9C78kSA8hg4z9QoUii1Eqog7qiQjtuzfSL71wKCzUS"]
+        let nonces = [StrikeApi.Nonce("453hdmRBt3jt9KqHeJAC9pAduuJzTDCJZQBi1kemAQbG"), StrikeApi.Nonce("8ZMPfGBZjmqCMe6ngR5sM9XWnsfaHcEGm1GF6M7ifkzL")]
 
         let requestType: SolanaApprovalRequestType = getDAppTransactionRequest(nonceAccountAddresses: nonceAccountAddresses)
         let request = getWalletInitiationRequest(requestType, initiation: initiation)
@@ -310,13 +291,12 @@ class StrikeTests: XCTestCase {
             requestType: requestType,
             nonces: nonces,
             email: "dont care",
-            opAccountPrivateKey: opAccountPk,
-            dataAccountPrivateKey: dataAccountPk
+            opAccountPrivateKey: opAccountPk
         )
 
         XCTAssertEqual(
-            try initiationRequest.signableData(approverPublicKey: "GsRZ7gnpXGvn4pzEq1yrgha7zLt2MC4DQTjCoeDdSzS1").toHexString(),
-            "0401050a69ab8cb05413af9614f898a1f1fdfbc07e7ad5eb2eb1d0f1c49f448bd179c71536d9d7b2e297c89f61498ee3ddc424dffeaee6f3c16f5b9176cac1c24e21fdff8a2d81d83d1d2bc417bf547b7cf3a59f2283a1f7993a6bb612aa567073318445ebca1b79477e5969da6b236522704719b4e37229845bd8ed5ef842138f21f396c34aec248d9d2b4e1bba0e2aa686b826f76181a83aa6517b9d1d601754abf30c06a7d517192c568ee08a845f73d29788cf035c3145b21ab344d8062ea94000004647d1eaec352cc638abca3e1a783e3c694d24fc3eb9819c3b81842ed5bdc47106a7d51718c774c928566398691d5eb68b5eb8a39b4b6d5c73555b21000000000000000000000000000000000000000000000000000000000000000000000000e7710efed94c7bfc5d2d5da3348641544f4fe2eb674e4d5afe9915f60b3a98dbea1c8caaac2dcd8f9891f09545d45bb0fd8787a3c8ebf8fd29384a4f1cf64197040803040500040400000008020001340000000080b2720000000000b803000000000000e7710efed94c7bfc5d2d5da3348641544f4fe2eb674e4d5afe9915f60b3a98db08020002340000000080e92b0100000000880a000000000000e7710efed94c7bfc5d2d5da3348641544f4fe2eb674e4d5afe9915f60b3a98db09060102060307008b0110000000000000000000000000000000000000000000000000000000000000000000000000000000000054168434d48b552863d1479b232e7c057d5fe2a1ff375721636553489ea3a1dbcc592d249785285c4b1707024b7a760789ccbe2a905d45a681feb5be96d446ee2e90c13b0d471b592c2984568133a41676460f72c885db57ad26bd5b628f938201"
+            try initiationRequest.signableData(approverPublicKey: "BtstAXkRrjBdpDvknnfPwnr6UquXpUvAPZSFZi8wDftS").toHexString(),
+            "0301050969ab8cb05413af9614f898a1f1fdfbc07e7ad5eb2eb1d0f1c49f448bd179c71566f27f2db441c6844925694845bb7f91fa08bb705b9ffbf9f189a0af46a652fda1df05ed1b96a36d0c048af32557c335b46afae3c8f776640ae5f5cb0eb6b9df1b5dba547244d7e30522b076d82809741955522f259f5dee9a1e15fd218083e506a7d517192c568ee08a845f73d29788cf035c3145b21ab344d8062ea940000083a5c7a7d932826c8487798ee6cfd509c6ea293106e5b8ecca977d2c41e337e206a7d51718c774c928566398691d5eb68b5eb8a39b4b6d5c73555b21000000000000000000000000000000000000000000000000000000000000000000000000fa09491f04ac2239eb373bbef45c45f284a55a980487b9566a58b31bf44fb0352d9c7004f85156016de1317cebf952f64cdbbc7056d5b8a4e300f89a96672607030703030400040400000007020001340000000000d0970100000000800e000000000000fa09491f04ac2239eb373bbef45c45f284a55a980487b9566a58b31bf44fb035080501050206008b011000000000000000000000000000000000000000000000000000000000000000000000000000000000008fa39a0314aaeeb6edf40164c2ef98f4b759f451e6f13044ccbc2a9f8eb070fd0badb583fd3e78be40bd8be44103ef35bc46f819251c20ff210be3a97a62ebc82e90c13b0d471b592c2984568133a41676460f72c885db57ad26bd5b628f938201"
         )
 
         let supplyInstructions = try initiationRequest.supplyInstructions
@@ -324,23 +304,23 @@ class StrikeTests: XCTestCase {
         XCTAssertEqual(supplyInstructions[0].nonce, nonces[1])
         XCTAssertEqual(supplyInstructions[0].nonceAccountAddress, nonceAccountAddresses[1])
         try XCTAssertEqual(
-            supplyInstructions[0].signableData(approverPublicKey: "GsRZ7gnpXGvn4pzEq1yrgha7zLt2MC4DQTjCoeDdSzS1").toHexString(),
-            "0201040969ab8cb05413af9614f898a1f1fdfbc07e7ad5eb2eb1d0f1c49f448bd179c715ebca1b79477e5969da6b236522704719b4e37229845bd8ed5ef842138f21f396d3dcebb92f4068431c4297b45c8cd60bafa0c1dd73edc22856c16f6bed1f8cb036d9d7b2e297c89f61498ee3ddc424dffeaee6f3c16f5b9176cac1c24e21fdff8a2d81d83d1d2bc417bf547b7cf3a59f2283a1f7993a6bb612aa56707331844506a7d517192c568ee08a845f73d29788cf035c3145b21ab344d8062ea94000004647d1eaec352cc638abca3e1a783e3c694d24fc3eb9819c3b81842ed5bdc4710000000000000000000000000000000000000000000000000000000000000000e7710efed94c7bfc5d2d5da3348641544f4fe2eb674e4d5afe9915f60b3a98dbf8cac97748b89cabd8a7287a42150af9417836ce6bc496acacb90f4ecff8246c020703020500040400000008040304060190021c0001008c97258f4e2489f1bb3d1029148e0d830b5a1399daff1084048e7bd8dbe9f859070003b1bfccf3ae32d83207f3f3fa89fbaee8caa1feb2f3028db08fbef4177614474b015142ee6227d8b27cd5ef3f3df2b24ae8676602d55d76a523b413eb831324435703b1bfccf3ae32d83207f3f3fa89fbaee8caa1feb2f3028db08fbef4177614474b00da46e4052f8df12f319c2819386380e6483def0abcc79fba10a1025e9e09e0d20000000000000000000000000000000000000000000000000000000000000000000006ddf6e1d765a193d9cbe146ceeb79ac1cb485ed5f5b37913a8cf5857eff00a90006a7d517192c5c51218cc94c3d4af17f58daee089ba1fd44e3dbd98a00000000010000"
+            supplyInstructions[0].signableData(approverPublicKey: "BtstAXkRrjBdpDvknnfPwnr6UquXpUvAPZSFZi8wDftS").toHexString(),
+            "0201040869ab8cb05413af9614f898a1f1fdfbc07e7ad5eb2eb1d0f1c49f448bd179c715a1df05ed1b96a36d0c048af32557c335b46afae3c8f776640ae5f5cb0eb6b9df61206386ac12c66621091063ee33ff67766782dc8be4d092d563b3f0c69469d366f27f2db441c6844925694845bb7f91fa08bb705b9ffbf9f189a0af46a652fd06a7d517192c568ee08a845f73d29788cf035c3145b21ab344d8062ea940000083a5c7a7d932826c8487798ee6cfd509c6ea293106e5b8ecca977d2c41e337e20000000000000000000000000000000000000000000000000000000000000000fa09491f04ac2239eb373bbef45c45f284a55a980487b9566a58b31bf44fb035704b733ffb52f99a655a10bd88bd595584952862bb9845d8058cc3f0d73e52c90206030204000404000000070303050190021c0001008c97258f4e2489f1bb3d1029148e0d830b5a1399daff1084048e7bd8dbe9f8590700034fd74e0317ab5320172983c9e619f60429b2cd1513230b6dda5c09611995ba5601b4ea2a426fee32cf5fb1e44cd4527e485c614107ee1222acfcf089f01c3ed0e7034fd74e0317ab5320172983c9e619f60429b2cd1513230b6dda5c09611995ba56007c85973e9d59ddddf27b0700a10b00857e9daa46708a4a2f0ef97e3ebb691a580000000000000000000000000000000000000000000000000000000000000000000006ddf6e1d765a193d9cbe146ceeb79ac1cb485ed5f5b37913a8cf5857eff00a90006a7d517192c5c51218cc94c3d4af17f58daee089ba1fd44e3dbd98a00000000010000"
         )
     }
-    
+
     func testDAppTransactionRequestApprovalDisposition() throws {
-        let request = getWalletApprovalRequest(getDAppTransactionRequest(nonceAccountAddresses: ["SdZ9G9Dwac2QsKqPBkUYvtVisWrQqkGCQXwmFBMrZKp"]))
+        let request = getWalletApprovalRequest(getDAppTransactionRequest(nonceAccountAddresses: ["49BWf2pjTevVMZk1odBiaT5m1cx4z2Q87A6MPtwtPqAn"]))
         let approvalRequest = StrikeApi.ApprovalDispositionRequest(
             disposition: .Approve,
             requestID: request.id,
             requestType: request.requestType,
-            nonces: [StrikeApi.Nonce("GksejZ2XrNoZqaXq1b2E7VSvLP5vWJMiQPhnLj36MiKG")],
+            nonces: [StrikeApi.Nonce("47bdPMECePMq44kc97JwNzGtMBynLTJGr9hcsYYb4qgG")],
             email: "dont care"
         )
         XCTAssertEqual(
-            try approvalRequest.signableData(approverPublicKey: "9HjLeBSKveA1VMteJA1iJrR51CE1aULpx79nzT6ADcTF").toHexString(),
-            "0201040869ab8cb05413af9614f898a1f1fdfbc07e7ad5eb2eb1d0f1c49f448bd179c7157b26a92aa92569a4faaac5c2f0637b48267cd27c81cb2016aae97678ba93236e0690da27cd18eae3eb41df29e0cc35e48839527d6aa1d19c880bfc7e0dbf936b36d9d7b2e297c89f61498ee3ddc424dffeaee6f3c16f5b9176cac1c24e21fdff06a7d517192c568ee08a845f73d29788cf035c3145b21ab344d8062ea940000006a7d51718c774c928566398691d5eb68b5eb8a39b4b6d5c73555b21000000000000000000000000000000000000000000000000000000000000000000000000e7710efed94c7bfc5d2d5da3348641544f4fe2eb674e4d5afe9915f60b3a98dbea1c8caaac2dcd8f9891f09545d45bb0fd8787a3c8ebf8fd29384a4f1cf64197020603020400040400000007030301052209012f1816d5f5130b61f81618f086c024ba91da50290e08f6bfdafa47bc5693aaad"
+            try approvalRequest.signableData(approverPublicKey: "4L3kZzJQVbHbpxNLdBK6SFtvJgnrgWDb62hJgNfaGaeS").toHexString(),
+            "0201040869ab8cb05413af9614f898a1f1fdfbc07e7ad5eb2eb1d0f1c49f448bd179c715317434f927df16dcdac690e2aa964c736536a77f81da2a342a03bdf2437651072eab97a901ae7ae5c9ea3844f680385928c4edc49624eebeb04938445aff421766f27f2db441c6844925694845bb7f91fa08bb705b9ffbf9f189a0af46a652fd06a7d517192c568ee08a845f73d29788cf035c3145b21ab344d8062ea940000006a7d51718c774c928566398691d5eb68b5eb8a39b4b6d5c73555b21000000000000000000000000000000000000000000000000000000000000000000000000fa09491f04ac2239eb373bbef45c45f284a55a980487b9566a58b31bf44fb0352e43b2ea0eba51b2f359f97e77fca863364aaf03b43214d891d625140e75425d0206030204000404000000070303010522090113ee5f2a8938c2f77b07b1b403b54e8180906d1a8408fb65ffa221f6e02e1a7f"
         )
     }
 
@@ -362,7 +342,6 @@ class StrikeTests: XCTestCase {
     func testAddDAppBookEntryInitiationRequest() throws {
         let initiation = MultisigOpInitiation(
             opAccountCreationInfo: getOpAccountCreationInfo(),
-            dataAccountCreationInfo: nil,
             initiatorIsApprover: true
         )
         let requestType: SolanaApprovalRequestType = getAddDAppBookEntry(nonceAccountAddresses: ["AaFj4THN8CJmDPyJjPuDpsfC5FZys2Wmczust5UfmqeN"])
@@ -375,8 +354,7 @@ class StrikeTests: XCTestCase {
             requestType: requestType,
             nonces: [StrikeApi.Nonce("9PGftXH39kRKndTxL4hQppfonLMZQpWWWzvaHzYsAcLy")],
             email: "dont care",
-            opAccountPrivateKey: pk,
-            dataAccountPrivateKey: nil
+            opAccountPrivateKey: pk
         )
 
         XCTAssertEqual(
@@ -403,7 +381,6 @@ class StrikeTests: XCTestCase {
     func testRemoveDAppBookEntryInitiationRequest() throws {
         let initiation = MultisigOpInitiation(
             opAccountCreationInfo: getOpAccountCreationInfo(),
-            dataAccountCreationInfo: nil,
             initiatorIsApprover: true
         )
         let requestType: SolanaApprovalRequestType = getRemoveDAppBookEntry(nonceAccountAddresses: ["AaFj4THN8CJmDPyJjPuDpsfC5FZys2Wmczust5UfmqeN"])
@@ -416,8 +393,7 @@ class StrikeTests: XCTestCase {
             requestType: requestType,
             nonces: [StrikeApi.Nonce("9PGftXH39kRKndTxL4hQppfonLMZQpWWWzvaHzYsAcLy")],
             email: "dont care",
-            opAccountPrivateKey: pk,
-            dataAccountPrivateKey: nil
+            opAccountPrivateKey: pk
         )
 
         XCTAssertEqual(
@@ -429,7 +405,6 @@ class StrikeTests: XCTestCase {
     func testAddAddressBookEntryInitiationRequest() throws {
         let initiation = MultisigOpInitiation(
             opAccountCreationInfo: getOpAccountCreationInfo(),
-            dataAccountCreationInfo: nil,
             initiatorIsApprover: true
        )
         let requestType: SolanaApprovalRequestType = getAddAddressBookEntry(nonceAccountAddresses: ["8R4EuFv5f31D8HijRXA4eyebKMZ287ho2UyPpbtQ8Gos"])
@@ -442,8 +417,7 @@ class StrikeTests: XCTestCase {
             requestType: requestType,
             nonces: [StrikeApi.Nonce("7r8cdEASTnapMjhk569Kwq7mtWwaqjMmkxYe75PBCCK5")],
             email: "dont care",
-            opAccountPrivateKey: pk,
-            dataAccountPrivateKey: nil
+            opAccountPrivateKey: pk
         )
 
         XCTAssertEqual(
@@ -486,7 +460,6 @@ class StrikeTests: XCTestCase {
     func testWalletConfigPolicyUpdateInitiationRequest() throws {
         let initiation = MultisigOpInitiation(
             opAccountCreationInfo: getOpAccountCreationInfo(),
-            dataAccountCreationInfo: nil,
             initiatorIsApprover: true
         )
         let requestType: SolanaApprovalRequestType = getWalletConfigPolicyUpdate(nonceAccountAddresses: ["5osJEyGL1Ryiv9jedyhjnMqXHQaAM6A5PK253DTCTVdf"])
@@ -499,8 +472,7 @@ class StrikeTests: XCTestCase {
             requestType: requestType,
             nonces: [StrikeApi.Nonce("7r8cdEASTnapMjhk569Kwq7mtWwaqjMmkxYe75PBCCK5")],
             email: "dont care",
-            opAccountPrivateKey: pk,
-            dataAccountPrivateKey: nil
+            opAccountPrivateKey: pk
         )
 
         XCTAssertEqual(
@@ -528,7 +500,6 @@ class StrikeTests: XCTestCase {
     func testBalanceAccountSettingsUpdateUpdateInitiationRequest() throws {
         let initiation = MultisigOpInitiation(
             opAccountCreationInfo: getOpAccountCreationInfo(),
-            dataAccountCreationInfo: nil,
             initiatorIsApprover: true
         )
         let requestType: SolanaApprovalRequestType = getBalanceAccountSettingsUpdate(nonceAccountAddresses: ["CL8fZq5BzjCBXmixSMKqBsFoCLSFxqN6GvheDQ68HP44"])
@@ -541,8 +512,7 @@ class StrikeTests: XCTestCase {
             requestType: requestType,
             nonces: [StrikeApi.Nonce("J2gVnUf56KpHARmwbagi3sX2TFHXNBUBGugXtvJrgxJq")],
             email: "dont care",
-            opAccountPrivateKey: pk,
-            dataAccountPrivateKey: nil
+            opAccountPrivateKey: pk
         )
 
         XCTAssertEqual(
@@ -569,7 +539,6 @@ class StrikeTests: XCTestCase {
     func testBalanceAccountPolicyUpdateInitiationRequest() throws {
         let initiation = MultisigOpInitiation(
             opAccountCreationInfo: getOpAccountCreationInfo(),
-            dataAccountCreationInfo: nil,
             initiatorIsApprover: true
         )
         let requestType: SolanaApprovalRequestType = getBalanceAccountPolicyUpdate(nonceAccountAddresses: ["5Fx8Nk98DbUcNUe4izqJkcYwfaMGmKRbXi1A7fVPfzj7"])
@@ -582,8 +551,7 @@ class StrikeTests: XCTestCase {
             requestType: requestType,
             nonces: [StrikeApi.Nonce("DvKqKEBaJ71C5Hw8Yn45NvsYhpXfAYHybBbUa17nHcUm")],
             email: "dont care",
-            opAccountPrivateKey: pk,
-            dataAccountPrivateKey: nil
+            opAccountPrivateKey: pk
         )
 
         XCTAssertEqual(
@@ -610,7 +578,6 @@ class StrikeTests: XCTestCase {
     func testBalanceAccountAddressWhitelistUpdateInitiationRequest() throws {
         let initiation = MultisigOpInitiation(
             opAccountCreationInfo: getOpAccountCreationInfo(),
-            dataAccountCreationInfo: nil,
             initiatorIsApprover: true
         )
         let requestType: SolanaApprovalRequestType = getBalanceAccountAddressWhitelistUpdate(nonceAccountAddresses: ["9LGMMPep1WKdiNNwicDvx8JiwgtBKPWhidaSv3rVUNz"])
@@ -623,8 +590,7 @@ class StrikeTests: XCTestCase {
             requestType: requestType,
             nonces: [StrikeApi.Nonce("Bb2XveQNyXVBJvJUPnsbhRtYqePUi8xbvBaJxk96BKDG")],
             email: "dont care",
-            opAccountPrivateKey: pk,
-            dataAccountPrivateKey: nil
+            opAccountPrivateKey: pk
         )
 
         XCTAssertEqual(
@@ -651,7 +617,6 @@ class StrikeTests: XCTestCase {
     func testBalanceAccountNameUpdateInitiationRequest() throws {
         let initiation = MultisigOpInitiation(
             opAccountCreationInfo: getOpAccountCreationInfo(),
-            dataAccountCreationInfo: nil,
             initiatorIsApprover: true
         )
         let requestType: SolanaApprovalRequestType = getBalanceAccountNameUpdate(nonceAccountAddresses: ["AaFj4THN8CJmDPyJjPuDpsfC5FZys2Wmczust5UfmqeN"])
@@ -664,8 +629,7 @@ class StrikeTests: XCTestCase {
             requestType: requestType,
             nonces: [StrikeApi.Nonce("9PGftXH39kRKndTxL4hQppfonLMZQpWWWzvaHzYsAcLy")],
             email: "dont care",
-            opAccountPrivateKey: pk,
-            dataAccountPrivateKey: nil
+            opAccountPrivateKey: pk
         )
 
         XCTAssertEqual(
