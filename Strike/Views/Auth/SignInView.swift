@@ -172,16 +172,16 @@ struct PasswordView: View {
                         .accentColor(Color.Strike.purple)
                         .textFieldStyle(LightRoundedTextFieldStyle())
 
-//                        HStack {
-//                            Spacer()
-//
-//                            Button {
-//
-//                            } label: {
-//                                Text("Forgot password?")
-//                            }
-//                            .foregroundColor(.Strike.purple)
-//                        }
+                        HStack {
+                            Spacer()
+
+                            NavigationLink {
+                                KeyRetrievalSignInRecovery(email: username, authProvider: authProvider)
+                            } label: {
+                                Text("Forgot password?")
+                            }
+                            .foregroundColor(.Strike.purple)
+                        }
                     }
                     .padding(35)
                     .background(

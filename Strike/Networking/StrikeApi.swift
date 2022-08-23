@@ -130,7 +130,7 @@ extension Data: SolanaSignable {
 extension StrikeApi {
     enum Credentials: Encodable {
         case password(email: String, password: String)
-        case signature(email: String)
+        case signature(email: String, privateKey: Curve25519.Signing.PrivateKey? = nil)
 
         enum CodingKeys: String, CodingKey {
             case credentials
@@ -156,7 +156,7 @@ extension StrikeApi {
                 try credentialsContainer.encode("PasswordBased", forKey: .type)
                 try credentialsContainer.encode(email, forKey: .email)
                 try credentialsContainer.encode(password, forKey: .password)
-            case .signature(let email):
+            case .signature(let email, .none):
                 let date = Date()
                 try credentialsContainer.encode("SignatureBased", forKey: .type)
                 try credentialsContainer.encode(email, forKey: .email)
@@ -166,6 +166,17 @@ extension StrikeApi {
 
                 let keyInfo = try Keychain.keyInfoForEmail(email: email)
                 let signature = try keyInfo.privateKey.signature(for: dateString.data(using: .utf8)!).base64EncodedString()
+
+                try credentialsContainer.encode(signature, forKey: .timestampSignature)
+            case .signature(let email, .some(let privateKey)):
+                let date = Date()
+                try credentialsContainer.encode("SignatureBased", forKey: .type)
+                try credentialsContainer.encode(email, forKey: .email)
+                try credentialsContainer.encode(date, forKey: .timestamp)
+
+                let dateString = DateFormatter.iso8601Full.string(from: date)
+
+                let signature = try privateKey.signature(for: dateString.data(using: .utf8)!).base64EncodedString()
 
                 try credentialsContainer.encode(signature, forKey: .timestampSignature)
             }

@@ -94,6 +94,9 @@
 		3DBC44E3280F17660016E1AB /* LoginRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBC44E2280F17660016E1AB /* LoginRow.swift */; };
 		3DBC44E5280F18830016E1AB /* LoginDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBC44E4280F18830016E1AB /* LoginDetails.swift */; };
 		3DBD7DCE2655CE0F00662C62 /* ApprovalsNeeded.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBD7DCD2655CE0F00662C62 /* ApprovalsNeeded.swift */; };
+		3DBE36ED28B52C820096850B /* PasswordManagerSignInRecovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBE36EC28B52C810096850B /* PasswordManagerSignInRecovery.swift */; };
+		3DBE36EF28B539C40096850B /* PenAndPaperSignInRecovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBE36EE28B539C40096850B /* PenAndPaperSignInRecovery.swift */; };
+		3DBE36F128B53B3B0096850B /* KeyRetrievalSignInRecovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBE36F028B53B3B0096850B /* KeyRetrievalSignInRecovery.swift */; };
 		3DBF9DAF26DE7A0E00D7683E /* ViewRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBF9DAE26DE7A0E00D7683E /* ViewRouter.swift */; };
 		3DBF9DC326E000CC00D7683E /* EmptyApprovalRequestsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBF9DC226E000CC00D7683E /* EmptyApprovalRequestsList.swift */; };
 		3DBF9DC526E0020300D7683E /* ApprovalRequestItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBF9DC426E0020300D7683E /* ApprovalRequestItem.swift */; };
@@ -241,6 +244,9 @@
 		3DBC44E2280F17660016E1AB /* LoginRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginRow.swift; sourceTree = "<group>"; };
 		3DBC44E4280F18830016E1AB /* LoginDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginDetails.swift; sourceTree = "<group>"; };
 		3DBD7DCD2655CE0F00662C62 /* ApprovalsNeeded.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApprovalsNeeded.swift; sourceTree = "<group>"; };
+		3DBE36EC28B52C810096850B /* PasswordManagerSignInRecovery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordManagerSignInRecovery.swift; sourceTree = "<group>"; };
+		3DBE36EE28B539C40096850B /* PenAndPaperSignInRecovery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PenAndPaperSignInRecovery.swift; sourceTree = "<group>"; };
+		3DBE36F028B53B3B0096850B /* KeyRetrievalSignInRecovery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyRetrievalSignInRecovery.swift; sourceTree = "<group>"; };
 		3DBF9DAE26DE7A0E00D7683E /* ViewRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewRouter.swift; sourceTree = "<group>"; };
 		3DBF9DC226E000CC00D7683E /* EmptyApprovalRequestsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyApprovalRequestsList.swift; sourceTree = "<group>"; };
 		3DBF9DC426E0020300D7683E /* ApprovalRequestItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApprovalRequestItem.swift; sourceTree = "<group>"; };
@@ -409,6 +415,9 @@
 			children = (
 				3D2CE49625F8423800137E05 /* SignInView.swift */,
 				3D3D6CE82616432000FEEE0B /* RecoverPasswordView.swift */,
+				3DBE36EC28B52C810096850B /* PasswordManagerSignInRecovery.swift */,
+				3DBE36EE28B539C40096850B /* PenAndPaperSignInRecovery.swift */,
+				3DBE36F028B53B3B0096850B /* KeyRetrievalSignInRecovery.swift */,
 			);
 			path = Auth;
 			sourceTree = "<group>";
@@ -893,6 +902,7 @@
 				3DAF53BC262E1421000DD558 /* Countdown.swift in Sources */,
 				3D6334F32885C299002CEC5A /* PasswordManager.swift in Sources */,
 				3D6334F92885C2C9002CEC5A /* StrikeProgressView.swift in Sources */,
+				3DBE36EF28B539C40096850B /* PenAndPaperSignInRecovery.swift in Sources */,
 				3DBC44E3280F17660016E1AB /* LoginRow.swift in Sources */,
 				3DC7A74327D006A900A2BBA7 /* KeyRetrieval.swift in Sources */,
 				40B093A625DF27CC00EA51C6 /* String+Masked.swift in Sources */,
@@ -902,6 +912,7 @@
 				3DC7A74127D0067D00A2BBA7 /* KeyGeneration.swift in Sources */,
 				3D3854222639BD7F00C8693C /* Data+Hex.swift in Sources */,
 				40CB67D725C1B75A00DB15D6 /* StrikeTheme.swift in Sources */,
+				3DBE36F128B53B3B0096850B /* KeyRetrievalSignInRecovery.swift in Sources */,
 				3D311DEA260BD14A007A0B98 /* Moya+AuthProvider.swift in Sources */,
 				3D6334FB2885C2C9002CEC5A /* DarkRoundedTextFieldStyle.swift in Sources */,
 				3DC7A74527D67E8900A2BBA7 /* SolanaClientModel.swift in Sources */,
@@ -929,6 +940,7 @@
 				3DB7F9BE26D6C10400A49B4E /* ConversionDetail.swift in Sources */,
 				3DAA26F0262F5147000F453D /* PrimaryButtonStyle.swift in Sources */,
 				3D311D43260A336A007A0B98 /* RoundedCell.swift in Sources */,
+				3DBE36ED28B52C820096850B /* PasswordManagerSignInRecovery.swift in Sources */,
 				3D952408283D0FB800D42243 /* BalanceAccountWhitelistRow.swift in Sources */,
 				40A9AF0E25DF5F0E004320EF /* ComposeMail.swift in Sources */,
 				3D6B530C285107BE00F7F77F /* WrapConversionDetail.swift in Sources */,
