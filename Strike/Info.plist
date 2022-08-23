@@ -33,12 +33,10 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>Configuration</key>
 	<dict>
-		<key>MIN_VERSION_URL</key>
-		<string>$(MIN_VERSION_URL)</string>
-		<key>STRIKE_AUTH_BASE_URL</key>
-		<string>$(STRIKE_AUTH_BASE_URL)</string>
 		<key>API_BASE_URL</key>
 		<string>$(API_BASE_URL)</string>
+		<key>MIN_VERSION_URL</key>
+		<string>$(MIN_VERSION_URL)</string>
 		<key>OKTA</key>
 		<dict>
 			<key>clientId</key>
@@ -62,6 +60,8 @@
 		<string>$(SOLANA_COMMITMENT)</string>
 		<key>SOLANA_RPC_URL</key>
 		<string>$(SOLANA_RPC_URL)</string>
+		<key>STRIKE_AUTH_BASE_URL</key>
+		<string>$(STRIKE_AUTH_BASE_URL)</string>
 	</dict>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
