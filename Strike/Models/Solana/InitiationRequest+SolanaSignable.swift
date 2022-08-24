@@ -137,7 +137,7 @@ extension StrikeApi.InitiationRequest: SolanaSignable {
                     request.account.identifier.sha256HashBytes +
                     request.dappInfo.address.base58Bytes +
                     request.dappInfo.name.sha256HashBytes +
-                    ([UInt8(request.instructions.map { $0.instructions.count }.reduce(0, +))])
+                    (UInt16(request.instructions.map { $0.decodedBytes.count }.reduce(0, +)).bytes)
                 )
             case .balanceAccountNameUpdate(let request):
                 return Data(
@@ -191,11 +191,11 @@ extension StrikeApi.InitiationRequest: SolanaSignable {
         get throws {
             switch requestType {
             case .dAppTransactionRequest(let request) where request.instructions.count + 1 == nonces.count && nonces.count == request.signingData.nonceAccountAddresses.count:
-                return try request.instructions.enumerated().map { (i, instructionBatch) in
+                return try request.instructions.enumerated().map { (i, instructionChunk) in
                     SupplyDappInstruction(
                         nonce: nonces[i + 1],
                         nonceAccountAddress: request.signingData.nonceAccountAddresses[i + 1],
-                        instructionBatch: instructionBatch,
+                        instructionChunk: instructionChunk,
                         signingData: try signingData,
                         opAccountPublicKey: try opAccountPublicKey,
                         walletAccountPublicKey: try PublicKey(string: signingData.walletAddress)
@@ -397,7 +397,7 @@ extension StrikeApi.InitiationRequest: SolanaSignable {
     struct SupplyDappInstruction: SolanaSignable {
         var nonce: StrikeApi.Nonce
         var nonceAccountAddress: String
-        var instructionBatch: SolanaInstructionBatch
+        var instructionChunk: SolanaInstructionChunk
         var signingData: SolanaSigningData
         var opAccountPublicKey: PublicKey
         var walletAccountPublicKey: PublicKey
@@ -418,7 +418,7 @@ extension StrikeApi.InitiationRequest: SolanaSignable {
                                 Account.Meta(publicKey: try PublicKey(string: approverPublicKey), isSigner: true, isWritable: false)
                             ],
                             programId: try PublicKey(string: signingData.walletProgramId),
-                            data: [UInt8](instructionBatch.combinedBytes)
+                            data: [UInt8](instructionChunk.combinedBytes)
                         )
                     ]
                 ).serialize()
@@ -427,41 +427,23 @@ extension StrikeApi.InitiationRequest: SolanaSignable {
 }
 
 
-extension SolanaAccountMeta {
-    var flags: UInt8 {
-        return (writable ? 1 : 0) + (signer ? 2 : 0)
-    }
-    
-    var combinedBytes: [UInt8] {
-        return [flags] + address.base58Bytes
-    }
-}
-
-extension SolanaInstructionBatch {
-    
+extension SolanaInstructionChunk {
     var combinedBytes: [UInt8] {
         return [UInt8](Data(
             [28] +
-            ([from]) +
-            UInt16(instructions.count).bytes +
-            (instructions.flatMap(\.combinedBytes) as [UInt8])
+            offset.bytes +
+            UInt16(decodedBytes.count).bytes +
+            decodedBytes
         ))
     }
 }
 
-extension SolanaInstruction {
-    
-    var combinedBytes: [UInt8] {
-        guard let b64DecodedData = Data(base64Encoded: data) else {
+extension SolanaInstructionChunk {
+    var decodedBytes: [UInt8] {
+        guard let b64DecodedData = Data(base64Encoded: instructionData) else {
             return []
         }
-        return [UInt8](Data(
-            programId.base58Bytes +
-            (UInt16(accountMetas.count).bytes) +
-            (accountMetas.flatMap(\.combinedBytes) as [UInt8]) +
-            (UInt16(b64DecodedData.count).bytes) +
-            Data(base64Encoded: data)!
-        ))
+        return [UInt8](b64DecodedData)
     }
 }
 

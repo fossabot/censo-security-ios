@@ -157,21 +157,13 @@ extension StrikeApi.ApprovalDispositionRequest: SolanaSignable {
                     request.signer.combinedBytes
                 )
             case .dAppTransactionRequest(let request):
-                var hashBytes = try Data(
+                return try Data(
                     [opCode] +
                     commonBytes +
                     signingData.walletAddress.base58Bytes +
-                    request.combinedBytes
-                ).sha256HashBytes
-                for instructionBatch in request.instructions {
-                    for instruction in instructionBatch.instructions {
-                        hashBytes = Data(
-                            hashBytes +
-                            instruction.combinedBytes
-                        ).sha256HashBytes
-                    }
-                }
-                return Data(hashBytes)
+                    request.combinedBytes +
+                    request.instructions.map { $0.decodedBytes }.joined()
+                )
             case .loginApproval, .acceptVaultInvitation, .passwordReset:
                 throw SolanaError.invalidRequest(reason: "Invalid request for Approval")
             case .unknown:
@@ -222,13 +214,8 @@ extension StrikeApi.ApprovalDispositionRequest: SolanaSignable {
             var data = Data()
             data.append(contentsOf: [opIndex])
             data.append(contentsOf: [solanaProgramValue])
-            switch requestType {
-            case .dAppTransactionRequest:
-                try data.append(opHashData)
-            default:
-                let opHash = try Data(SHA256.hash(data: opHashData))
-                data.append(opHash)
-            }
+            let opHash = try Data(SHA256.hash(data: opHashData))
+            data.append(opHash)
             return data
         }
     }
@@ -433,7 +420,7 @@ extension DAppTransactionRequest {
         return
             account.identifier.sha256HashBytes +
             dappInfo.combinedBytes +
-            UInt16(instructions.map { $0.instructions.count }.reduce(0, +)).bytes
+            UInt16(instructions.map { $0.decodedBytes.count }.reduce(0, +)).bytes
     }
 }
 

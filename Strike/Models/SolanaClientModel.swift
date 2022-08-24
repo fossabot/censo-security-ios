@@ -352,21 +352,9 @@ struct WrapConversionRequest: Codable, Equatable {
     var signingData: SolanaSigningData
 }
 
-struct SolanaAccountMeta: Codable, Equatable {
-    var address: String
-    var signer: Bool
-    var writable: Bool
-}
-
-struct SolanaInstruction: Codable, Equatable {
-    var programId: String
-    var accountMetas: [SolanaAccountMeta]
-    var data: String
-}
-
-struct SolanaInstructionBatch: Codable, Equatable {
-    var from: UInt8
-    var instructions: [SolanaInstruction]
+struct SolanaInstructionChunk: Codable, Equatable {
+    var offset: UInt16
+    var instructionData: String
 }
 
 struct DAppTransactionRequest: Codable, Equatable  {
@@ -384,7 +372,7 @@ struct DAppTransactionRequest: Codable, Equatable  {
     var account: AccountInfo
     var dappInfo: SolanaDApp
     var balanceChanges: [SymbolAndAmountInfo]
-    var instructions: [SolanaInstructionBatch]
+    var instructions: [SolanaInstructionChunk]
     var signingData: SolanaSigningData
 }
 
