@@ -154,7 +154,7 @@ extension StrikeApi.ApprovalDispositionRequest: SolanaSignable {
                     commonBytes +
                     signingData.walletAddress.base58Bytes +
                     [request.slotUpdateType.toSolanaProgramValue()] +
-                    request.signer.combinedBytes
+                    request.signer.opHashBytes
                 )
             case .dAppTransactionRequest(let request):
                 var hashBytes = try Data(
@@ -291,6 +291,9 @@ extension SymbolAndAmountInfo {
 
 extension SlotSignerInfo {
     var combinedBytes: [UInt8] {
+        return [slotId] + value.publicKey.base58Bytes + (value.nameHashIsEmpty ? Data(count: 32).bytes : value.email.sha256HashBytes)
+    }
+    var opHashBytes: [UInt8] {
         return [slotId] + value.publicKey.base58Bytes
     }
 }

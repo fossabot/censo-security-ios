@@ -65,7 +65,7 @@ extension ApprovalPolicy {
 
 extension SlotSignerInfo {
     static var sample: Self {
-        SlotSignerInfo(slotId: 8, value: SignerInfo(publicKey: "1234", name: "John Smith", email: "john@strikeprotocl.com"))
+        SlotSignerInfo(slotId: 8, value: SignerInfo(publicKey: "1234", name: "John Smith", email: "john@strikeprotocl.com", nameHashIsEmpty: false))
     }
 }
 
