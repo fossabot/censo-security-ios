@@ -80,26 +80,30 @@ struct StrikeApi {
                 attemptRequest()
                 return
             }
-            
-            DispatchGroup.refreshTokenDispatchGroup.wait()
 
-            guard authProvider.isExpired else {
-                attemptRequest()
-                return
-            }
+            DispatchQueue.refreshTokenDispatchQueue.async {
+                DispatchGroup.refreshTokenDispatchGroup.wait()
 
-            DispatchGroup.refreshTokenDispatchGroup.enter()
-
-            authProvider.refresh { (error) in
-                DispatchGroup.refreshTokenDispatchGroup.leave()
-
-                if let error = error {
+                guard authProvider.isExpired else {
                     callbackQueue.async {
-                        closure(.failure(MoyaError.underlying(error, nil)))
+                        attemptRequest()
                     }
-                } else {
-                    callbackQueue.async {
-                        closure(.success(originalRequest))
+                    return
+                }
+
+                DispatchGroup.refreshTokenDispatchGroup.enter()
+
+                authProvider.refresh { (error) in
+                    DispatchGroup.refreshTokenDispatchGroup.leave()
+
+                    if let error = error {
+                        callbackQueue.async {
+                            closure(.failure(MoyaError.underlying(error, nil)))
+                        }
+                    } else {
+                        callbackQueue.async {
+                            closure(.success(originalRequest))
+                        }
                     }
                 }
             }
