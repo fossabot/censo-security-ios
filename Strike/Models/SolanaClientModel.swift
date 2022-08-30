@@ -291,6 +291,7 @@ struct SignerInfo: Codable, Equatable {
     let publicKey: String
     let name: String
     let email: String
+    let nameHashIsEmpty: Bool
 }
 
 struct SolanaDApp: Codable, Equatable {

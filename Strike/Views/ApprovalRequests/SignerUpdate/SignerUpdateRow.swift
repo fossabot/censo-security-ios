@@ -39,7 +39,7 @@ struct SignerUpdateRow_Previews: PreviewProvider {
 
 extension SignersUpdate {
     static var sample: Self {
-        SignersUpdate(slotUpdateType: .SetIfEmpty, signer: SlotSignerInfo(slotId: 2, value: SignerInfo(publicKey: "fdn8398f7n3949dfhkjh498fd7hhjgdfg97hjg", name: "John Malkovich", email: "john@hollywood.com")), signingData: .sample)
+        SignersUpdate(slotUpdateType: .SetIfEmpty, signer: SlotSignerInfo(slotId: 2, value: SignerInfo(publicKey: "fdn8398f7n3949dfhkjh498fd7hhjgdfg97hjg", name: "John Malkovich", email: "john@hollywood.com", nameHashIsEmpty: false)), signingData: .sample)
     }
 }
 
