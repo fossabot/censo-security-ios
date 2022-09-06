@@ -705,7 +705,7 @@ class StrikeTests: XCTestCase {
         case .passwordReset:
             XCTAssertEqual(
                 String(decoding: try approvalDispositionRequest.signableData(approverPublicKey: "GYFxPGjuBXYKg1S91zgpVZCLP4guLGRho27bTAkAzjVL"), as: UTF8.self),
-                ""
+                request.id
             )
         default:
             XCTFail("should not get here")

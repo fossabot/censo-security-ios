@@ -223,7 +223,7 @@ extension StrikeApi.ApprovalDispositionRequest: SolanaSignable {
     func signableData(approverPublicKey: String) throws -> Data {
         switch requestType {
         case .passwordReset(let request):
-            return "".data(using: .utf8)!
+            return requestID.data(using: .utf8)!
         case .acceptVaultInvitation(let request):
             return request.vaultName.data(using: .utf8)!
         case .loginApproval(let request):
