@@ -267,7 +267,7 @@ extension StrikeApi.InitiationRequest: SolanaSignable {
                                                                           tokenMintAddress: WRAPPED_SOL_MINT).get()
             var accounts = [
                 Account.Meta(publicKey: try opAccountPublicKey, isSigner: false, isWritable: true),
-                Account.Meta(publicKey: try PublicKey(string: signingData.walletAddress), isSigner: false, isWritable: false),
+                Account.Meta(publicKey: try PublicKey(string: signingData.walletAddress), isSigner: false, isWritable: true),
                 Account.Meta(publicKey: sourcePublicKey, isSigner: false, isWritable: true),
                 Account.Meta(publicKey: sourceTokenPublicKey, isSigner: false, isWritable: true),
                 Account.Meta(publicKey: WRAPPED_SOL_MINT, isSigner: false, isWritable: false),
@@ -326,7 +326,7 @@ extension StrikeApi.InitiationRequest: SolanaSignable {
         case .dAppTransactionRequest:
             return [
                 Account.Meta(publicKey: try opAccountPublicKey, isSigner: false, isWritable: true),
-                Account.Meta(publicKey: try PublicKey(string: signingData.walletAddress), isSigner: false, isWritable: false),
+                Account.Meta(publicKey: try PublicKey(string: signingData.walletAddress), isSigner: false, isWritable: true),
                 Account.Meta(publicKey: approverPublicKey, isSigner: true, isWritable: false),
                 Account.Meta(publicKey: SYSVAR_CLOCK_PUBKEY, isSigner: false, isWritable: false),
                 Account.Meta(publicKey: try PublicKey(string: signingData.feePayer), isSigner: true, isWritable: false)
@@ -334,7 +334,7 @@ extension StrikeApi.InitiationRequest: SolanaSignable {
         default:
             return [
                 Account.Meta(publicKey: try opAccountPublicKey, isSigner: false, isWritable: true),
-                Account.Meta(publicKey: try PublicKey(string: signingData.walletAddress), isSigner: false, isWritable: false),
+                Account.Meta(publicKey: try PublicKey(string: signingData.walletAddress), isSigner: false, isWritable: true),
                 Account.Meta(publicKey: approverPublicKey, isSigner: true, isWritable: false),
                 Account.Meta(publicKey: SYSVAR_CLOCK_PUBKEY, isSigner: false, isWritable: false),
                 Account.Meta(publicKey: try PublicKey(string: signingData.feePayer), isSigner: true, isWritable: false)
@@ -353,7 +353,7 @@ extension StrikeApi.InitiationRequest: SolanaSignable {
         }
         return [
             Account.Meta(publicKey: try opAccountPublicKey, isSigner: false, isWritable: true),
-            Account.Meta(publicKey: try PublicKey(string: signingData.walletAddress), isSigner: false, isWritable: false),
+            Account.Meta(publicKey: try PublicKey(string: signingData.walletAddress), isSigner: false, isWritable: true),
             Account.Meta(publicKey: sourcePublicKey, isSigner: false, isWritable: true),
             Account.Meta(publicKey: destinationPublicKey, isSigner: false, isWritable: false),
             Account.Meta(publicKey: approverPublicKey, isSigner: true, isWritable: false),
