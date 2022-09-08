@@ -55,17 +55,6 @@ struct StrikeApi {
     
     fileprivate static func authTokenEndpointResolver(authProvider: AuthProvider?, callbackQueue: DispatchQueue = .main) -> MoyaProvider<Target>.RequestClosure {
         return { [weak authProvider] endpoint, closure in
-            func attemptRequest() {
-                do {
-                    let request = try endpoint.urlRequest()
-                    closure(.success(request))
-                } catch let error as MoyaError {
-                    closure(.failure(error))
-                } catch {
-                    closure(.failure(.underlying(error, nil)))
-                }
-            }
-            
             let originalRequest: URLRequest
 
             do {
@@ -73,6 +62,10 @@ struct StrikeApi {
             } catch {
                 closure(.failure(.underlying(error, nil)))
                 return
+            }
+
+            func attemptRequest() {
+                closure(.success(originalRequest))
             }
 
             guard let authProvider = authProvider, authProvider.isExpired else {
