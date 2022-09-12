@@ -38,6 +38,8 @@ extension StrikeApi.InitiationRequest: SolanaSignable {
             return 26
         case .balanceAccountAddressWhitelistUpdate:
             return 33
+        case .signData:
+            return 35
         default:
             return 0
         }
@@ -91,6 +93,14 @@ extension StrikeApi.InitiationRequest: SolanaSignable {
     var instructionData: Data {
         get throws {
             let commonBytes = try signingData.commonInitiationBytes
+            
+            if let dataToSign = try signingData.dataToSign  {
+                return try Data(
+                    [35] +
+                    commonBytes +
+                    SignData(base64Data: dataToSign, signingData: signingData).combinedBytes
+                )
+            }
             
             switch requestType {
             case .balanceAccountCreation(let request):
@@ -181,6 +191,12 @@ extension StrikeApi.InitiationRequest: SolanaSignable {
                     commonBytes +
                     request.combinedBytes
                 )
+            case .signData(let request):
+                return Data(
+                    [opCode] +
+                    commonBytes +
+                    request.combinedBytes
+                )
             default:
                 throw SolanaError.invalidRequest(reason: "Unknown Approval")
             }
@@ -238,6 +254,8 @@ extension StrikeApi.InitiationRequest: SolanaSignable {
             case .dAppBookUpdate(let request):
                 return request.signingData
             case .walletConfigPolicyUpdate(let request):
+                return request.signingData
+            case .signData(let request):
                 return request.signingData
             default:
                 throw SolanaError.invalidRequest(reason: "Unknown Initiation")

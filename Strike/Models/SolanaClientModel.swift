@@ -84,6 +84,7 @@ extension WalletApprovalRequest {
     }
 }
 
+
 enum SolanaApprovalRequestType: Codable, Equatable {
     case withdrawalRequest(WithdrawalRequest)
     case conversionRequest(ConversionRequest)
@@ -101,6 +102,7 @@ enum SolanaApprovalRequestType: Codable, Equatable {
     case loginApproval(LoginApproval)
     case acceptVaultInvitation(AcceptVaultInvitation)
     case passwordReset(PasswordReset)
+    case signData(SignData)
     case unknown
 
     enum DetailsCodingKeys: String, CodingKey {
@@ -143,6 +145,25 @@ enum SolanaApprovalRequestType: Codable, Equatable {
             self = .acceptVaultInvitation(try AcceptVaultInvitation(from: decoder))
         case "PasswordReset":
             self = .passwordReset(try PasswordReset(from: decoder))
+        case "SignData":
+            let request = try SignData(from: decoder)
+            // a sign data may have an actual approval request embedded in the base64 data (for instance balance account creation for a bitcoin wallet)
+            // this code checks if this is the case and will return the embedded approval type (with the original bas64 data which needs to be signed
+            // added to the solana signing data). If it is not a json or one of the expected approval types then it is returned as Sign Data request.
+            do {
+                let decoder = JSONDecoder()
+                decoder.dateDecodingStrategy = .formatted(.iso8601Full)
+                let signDataParsedJson = try decoder.decode(SignDataApprovalRequestJson.self, from: Data(base64Encoded: request.base64Data)!)
+                switch (signDataParsedJson.data) {
+                case .balanceAccountCreation(var embeddedRequest):
+                    embeddedRequest.signingData = request.signingData.addDataToSign(dataToSign: request.base64Data)
+                    self = .balanceAccountCreation(embeddedRequest)
+                default:
+                    self = .signData(request)
+                }
+            } catch {
+                self = .signData(request)
+            }
         default:
             self = .unknown
         }
@@ -199,6 +220,9 @@ enum SolanaApprovalRequestType: Codable, Equatable {
         case .passwordReset(let passwordReset):
             try container.encode("PasswordReset", forKey: .type)
             try passwordReset.encode(to: encoder)
+        case .signData(let signData):
+            try container.encode("SignData", forKey: .type)
+            try signData.encode(to: encoder)
         case .unknown:
             try container.encode("Unknown", forKey: .type)
         }
@@ -272,6 +296,7 @@ struct AccountInfo: Codable, Equatable {
     let identifier: String
     let accountType: AccountType
     let address: String?
+    let chainName: String?
 }
 
 struct SolanaSigningData: Codable, Equatable {
@@ -285,6 +310,7 @@ struct SolanaSigningData: Codable, Equatable {
     let strikeFeeAmount: UInt64
     let feeAccountGuidHash: String
     let walletGuidHash: String
+    var dataToSign: String?
 }
 
 struct SignerInfo: Codable, Equatable {
@@ -558,6 +584,15 @@ struct AcceptVaultInvitation: Codable, Equatable  {
 
 struct PasswordReset: Codable, Equatable  {}
 
+struct SignData: Codable, Equatable  {
+    var base64Data: String
+    var signingData: SolanaSigningData
+}
+
+struct SignDataApprovalRequestJson: Codable, Equatable  {
+    var data: SolanaApprovalRequestType
+}
+
 extension SolanaApprovalRequestDetails {
     var nonceAccountAddresses: [String] {
         switch self {
@@ -566,6 +601,22 @@ extension SolanaApprovalRequestDetails {
         case .multisigOpInitiation(_, let requestType):
             return requestType.nonceAccountAddresses
         }
+    }
+}
+
+extension SolanaSigningData {
+    func addDataToSign(dataToSign: String) -> Self {
+        return SolanaSigningData(feePayer: self.feePayer,
+                                 walletProgramId: self.walletProgramId,
+                                 multisigOpAccountAddress: self.multisigOpAccountAddress,
+                                 walletAddress: self.walletAddress,
+                                 nonceAccountAddresses: self.nonceAccountAddresses,
+                                 nonceAccountAddressesSlot: self.nonceAccountAddressesSlot,
+                                 initiator: self.initiator,
+                                 strikeFeeAmount: self.strikeFeeAmount,
+                                 feeAccountGuidHash: self.feeAccountGuidHash,
+                                 walletGuidHash: self.walletGuidHash,
+                                 dataToSign: dataToSign)
     }
 }
 
@@ -597,6 +648,8 @@ extension SolanaApprovalRequestType {
         case .walletConfigPolicyUpdate(let request):
             return request.signingData.nonceAccountAddresses
         case .wrapConversionRequest(let request):
+            return request.signingData.nonceAccountAddresses
+        case .signData(let request):
             return request.signingData.nonceAccountAddresses
         case .loginApproval,
              .acceptVaultInvitation,
@@ -635,6 +688,8 @@ extension SolanaApprovalRequestType {
         case .walletConfigPolicyUpdate(let request):
             return request.signingData.nonceAccountAddressesSlot
         case .wrapConversionRequest(let request):
+            return request.signingData.nonceAccountAddressesSlot
+        case .signData(let request):
             return request.signingData.nonceAccountAddressesSlot
         case .loginApproval,
              .acceptVaultInvitation,
@@ -725,7 +780,8 @@ extension AccountInfo {
             name: "Main",
             identifier: "identifier",
             accountType: AccountType.BalanceAccount,
-            address: "83746gfd8bj7"
+            address: "83746gfd8bj7",
+            chainName: nil
         )
     }
 }

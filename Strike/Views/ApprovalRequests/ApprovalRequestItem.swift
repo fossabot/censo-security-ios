@@ -113,6 +113,8 @@ struct ApprovalRequestItem: View {
             } detail: {
                 PasswordResetDetails(requestType: request.requestType)
             }
+        case .signData:
+            UnknownRequestRow(request: request, timerPublisher: timerPublisher)
         }
     }
 }

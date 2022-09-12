@@ -41,6 +41,8 @@ extension StrikeApi.ApprovalDispositionRequest: SolanaSignable {
             return 12
         case .balanceAccountAddressWhitelistUpdate:
             return 14
+        case .signData:
+            return 15
         case .loginApproval, .acceptVaultInvitation, .passwordReset, .unknown:
             return 0
         }
@@ -58,61 +60,60 @@ extension StrikeApi.ApprovalDispositionRequest: SolanaSignable {
     var opHashData: Data {
         get throws {
             let commonBytes: [UInt8] = try signingData.commonOpHashBytes
+            if let dataToSign = try signingData.dataToSign {
+                return try Data(
+                    [15] +
+                    commonBytes +
+                    SignData(base64Data: dataToSign, signingData: signingData).combinedBytes
+                )
+            }
             switch requestType {
             case .balanceAccountCreation(let request):
                 return try Data(
                     [opCode] +
                     commonBytes +
-                    signingData.walletAddress.base58Bytes +
                     request.combinedBytes
                 )
             case .balanceAccountNameUpdate(let request):
                 return try Data(
                     [opCode] +
                     commonBytes +
-                    signingData.walletAddress.base58Bytes +
                     request.combinedBytes
                 )
             case .balanceAccountSettingsUpdate(let request):
                 return try Data(
                     [opCode] +
                     commonBytes +
-                    signingData.walletAddress.base58Bytes +
                     request.combinedBytes
                 )
             case .balanceAccountPolicyUpdate(let request):
                 return try Data(
                     [opCode] +
                     commonBytes +
-                    signingData.walletAddress.base58Bytes +
                     request.combinedBytes
                 )
             case .balanceAccountAddressWhitelistUpdate(let request):
                 return try Data(
                     [opCode] +
                     commonBytes +
-                    signingData.walletAddress.base58Bytes +
                     request.combinedBytes
                 )
             case .walletConfigPolicyUpdate(let request):
                 return try Data(
                     [opCode] +
                     commonBytes +
-                    signingData.walletAddress.base58Bytes +
                     request.approvalPolicy.combinedBytes
                 )
             case .addressBookUpdate(let request):
                 return try Data(
                     [opCode] +
                     commonBytes +
-                    signingData.walletAddress.base58Bytes +
                     request.combinedBytes
                 )
             case .dAppBookUpdate(let request):
                 return try Data(
                     [opCode] +
                     commonBytes +
-                    signingData.walletAddress.base58Bytes +
                     request.combinedBytes
                 )
             case .withdrawalRequest(let request):
@@ -121,7 +122,6 @@ extension StrikeApi.ApprovalDispositionRequest: SolanaSignable {
                     [opCode] +
                     commonBytes) +
                 Data(
-                    signingData.walletAddress.base58Bytes +
                     request.account.identifier.sha256HashBytes +
                     request.destination.address.base58Bytes +
                     request.symbolAndAmountInfo.fundamentalAmount.bytes +
@@ -133,7 +133,6 @@ extension StrikeApi.ApprovalDispositionRequest: SolanaSignable {
                     [opCode] +
                     commonBytes) +
                 Data(
-                    signingData.walletAddress.base58Bytes +
                     request.account.identifier.sha256HashBytes +
                     request.destination.address.base58Bytes +
                     request.symbolAndAmountInfo.fundamentalAmount.bytes +
@@ -143,7 +142,6 @@ extension StrikeApi.ApprovalDispositionRequest: SolanaSignable {
                 return try Data(
                     [opCode] +
                     commonBytes +
-                    signingData.walletAddress.base58Bytes +
                     request.account.identifier.sha256HashBytes +
                     request.symbolAndAmountInfo.fundamentalAmount.bytes +
                     ([UInt8(request.symbolAndAmountInfo.symbolInfo.symbol == "SOL" ? 0 : 1)] as [UInt8])
@@ -152,7 +150,6 @@ extension StrikeApi.ApprovalDispositionRequest: SolanaSignable {
                 return try Data(
                     [opCode] +
                     commonBytes +
-                    signingData.walletAddress.base58Bytes +
                     [request.slotUpdateType.toSolanaProgramValue()] +
                     request.signer.opHashBytes
                 )
@@ -160,9 +157,14 @@ extension StrikeApi.ApprovalDispositionRequest: SolanaSignable {
                 return try Data(
                     [opCode] +
                     commonBytes +
-                    signingData.walletAddress.base58Bytes +
                     request.combinedBytes +
                     request.instructions.map { $0.decodedBytes }.joined()
+                )
+            case .signData(let request):
+                return try Data(
+                    [opCode] +
+                    commonBytes +
+                    request.combinedBytes
                 )
             case .loginApproval, .acceptVaultInvitation, .passwordReset:
                 throw SolanaError.invalidRequest(reason: "Invalid request for Approval")
@@ -200,6 +202,8 @@ extension StrikeApi.ApprovalDispositionRequest: SolanaSignable {
             case .signersUpdate(let request):
                 return request.signingData
             case .dAppTransactionRequest(let request):
+                return request.signingData
+            case .signData(let request):
                 return request.signingData
             case .loginApproval, .acceptVaultInvitation, .passwordReset:
                 throw SolanaError.invalidRequest(reason: "Invalid request for Approval")
@@ -488,6 +492,13 @@ extension BalanceAccountAddressWhitelistUpdate {
     }
 }
 
+extension SignData {
+    var combinedBytes: [UInt8] {
+        let dataToSignHash: [UInt8] = Data(base64Encoded: base64Data)!.sha256HashBytes
+        return UInt16(dataToSignHash.count).bytes + dataToSignHash
+    }
+}
+
 
 extension SolanaSigningData {
     var commonOpHashBytes: [UInt8] {
@@ -501,7 +512,8 @@ extension SolanaSigningData {
             initiator.base58Bytes +
             feePayer.base58Bytes +
             strikeFeeAmount.bytes +
-        [UInt8](decodedFeeAccountGuidHash!.bytes)
+            [UInt8](decodedFeeAccountGuidHash!.bytes) +
+            walletAddress.base58Bytes
     }
 }
 
