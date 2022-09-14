@@ -738,4 +738,92 @@ class StrikeTests: XCTestCase {
             getAccountInfoResponse.nonces
         )
     }
+    
+    func testSignDataForPlainTextApprovalRequest() throws {
+        let approvalData = "{\"id\": \"6a196209-b207-47a8-aff0-b609324c9e0e\", \"walletType\": \"Solana\", \"submitDate\": \"2022-09-10T10:35:20.161+00:00\", \"submitterName\": \"User 1\", \"submitterEmail\": \"authorized1@org4\", \"approvalTimeoutInSeconds\": 18000, \"numberOfDispositionsRequired\": 2, \"numberOfApprovalsReceived\": 1, \"numberOfDeniesReceived\": 0, \"programVersion\": 1, \"details\": {\"type\": \"SignData\", \"base64Data\": \"U29tZSCxbmFyeSDadGE=\", \"signingData\": {\"feePayer\": \"87VXbkJsqdDvXYfDBtS4kW4TcFor7ogofZXbXjT7t7AU\", \"walletProgramId\": \"Hk3CaEtWizNe4tJ8heB1MEsFXuc82PaEgKY3V1eRnFHt\", \"multisigOpAccountAddress\": \"B9k6TF3TqxxErAjm9xbEM1wo6pXL7awUBVwz9GHSvK4d\", \"walletAddress\": \"5u9Q3gR5ZEHG3FYben6b4XnRUgsdV1CGzUp1CGo2xpcp\", \"nonceAccountAddresses\": [\"GG9poSiQMRyZRVR8vSATYZBFcRncamRDyMiumDXDkgHM\"], \"nonceAccountAddressesSlot\": 481, \"initiator\": \"5SrmRzk1CGbHLt8UrNdBXVLtSeje3zW9y9CpfnrS78w\", \"strikeFeeAmount\": 0, \"feeAccountGuidHash\": \"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=\", \"walletGuidHash\": \"RATnHZIZKJRvD0BHwo2on7xqdHNtVMS3U9dqD3o3fLc=\"}}, \"vaultName\": \"Test Organization 4\"}\n"
+
+
+        let request: WalletApprovalRequest = Mock.decodeJsonType(data: approvalData.data(using: .utf8)!)
+        let approvalRequest = StrikeApi.ApprovalDispositionRequest(
+            disposition: .Approve,
+            requestID: request.id,
+            requestType: request.requestType,
+            nonces: [StrikeApi.Nonce("2U5pPGeproZb8smwt9mSAp5zkss7C1xrBZ1ixYiA65Cq")],
+            email: "dont care"
+        )
+        XCTAssertEqual(
+            try approvalRequest.signableData(approverPublicKey: "GBqNjtAuRCG6ZMc5qahkZgdNkDWozunqCrk9kUZofpjg").toHexString(),
+            "0201040869ab8cb05413af9614f898a1f1fdfbc07e7ad5eb2eb1d0f1c49f448bd179c715e1a5cf3fab8f98681bb1c2ab56b568f2130aced971afe993db6cb89f505a5057e2c0fe5804959c1384f0471ea41f4b6d80b3e54736755d516b5db6f5f665956896d23e0675489b40443f764b8b368efa0e13694c2b6090f18667db0231c44ef206a7d517192c568ee08a845f73d29788cf035c3145b21ab344d8062ea940000006a7d51718c774c928566398691d5eb68b5eb8a39b4b6d5c73555b21000000000000000000000000000000000000000000000000000000000000000000000000f8c173dfe79d7c7b9277684179dc740f657b46bc391c72e99e7695ee78e76c7315cbd0b9873580854605c61c9c08684e0db3256877269949b1bb7e3dfbf0d276020603020400040400000007030301052209016aa58199b0486c9279964a911dcf8f165a2004568280e60063603a59d037d114"
+        )
+    }
+
+    func testSignDataForPlainTextInitiationRequest() throws {
+        let approvalData = "{\"id\": \"6a196209-b207-47a8-aff0-b609324c9e0e\", \"walletType\": \"Solana\", \"submitDate\": \"2022-09-10T10:35:20.161+00:00\", \"submitterName\": \"User 1\", \"submitterEmail\": \"authorized1@org4\", \"approvalTimeoutInSeconds\": null, \"numberOfDispositionsRequired\": 2, \"numberOfApprovalsReceived\": 0, \"numberOfDeniesReceived\": 0, \"programVersion\": 1, \"details\": {\"type\": \"MultisigOpInitiation\", \"details\": {\"type\": \"SignData\", \"base64Data\": \"U29tZSCxbmFyeSDadGE=\", \"signingData\": {\"feePayer\": \"87VXbkJsqdDvXYfDBtS4kW4TcFor7ogofZXbXjT7t7AU\", \"walletProgramId\": \"Hk3CaEtWizNe4tJ8heB1MEsFXuc82PaEgKY3V1eRnFHt\", \"multisigOpAccountAddress\": \"11111111111111111111111111111111\", \"walletAddress\": \"5u9Q3gR5ZEHG3FYben6b4XnRUgsdV1CGzUp1CGo2xpcp\", \"nonceAccountAddresses\": [\"GqH8ELz24NLWArdzGFa8Y29eLHgfvCpJhnAQjAvycznf\"], \"nonceAccountAddressesSlot\": 479, \"initiator\": \"5SrmRzk1CGbHLt8UrNdBXVLtSeje3zW9y9CpfnrS78w\", \"strikeFeeAmount\": 0, \"feeAccountGuidHash\": \"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=\", \"walletGuidHash\": \"RATnHZIZKJRvD0BHwo2on7xqdHNtVMS3U9dqD3o3fLc=\"}}, \"opAccountCreationInfo\": {\"accountSize\": 3649, \"minBalanceForRentExemption\": 26287920}, \"initiatorIsApprover\": true}, \"vaultName\": \"Test Organization 4\"}\n"
+
+        let request: WalletApprovalRequest = Mock.decodeJsonType(data: approvalData.data(using: .utf8)!)
+        let pk = try Curve25519.Signing.PrivateKey.init(rawRepresentation: "afbdbb77f072edf581050da4f60bdaf543fe4bed493e011bb4f411345940976e".data(using: .hexadecimal)!)
+        let initiationRequest = StrikeApi.InitiationRequest(
+            disposition: .Approve,
+            requestID: request.id,
+            initiation: getOpAccountCreationInfo(request)!,
+            requestType: request.requestType,
+            nonces: [StrikeApi.Nonce("mXY4UKHQeS8pRva5WjuKeTCuCFYYCixZuKh2Vk1aKo6")],
+            email: "dont care",
+            opAccountPrivateKey: pk
+        )
+
+        XCTAssertEqual(
+            try initiationRequest.signableData(approverPublicKey: "5SrmRzk1CGbHLt8UrNdBXVLtSeje3zW9y9CpfnrS78w").toHexString(),
+            "0301040969ab8cb05413af9614f898a1f1fdfbc07e7ad5eb2eb1d0f1c49f448bd179c71596d23e0675489b40443f764b8b368efa0e13694c2b6090f18667db0231c44ef201238f9e5b8ccbc602ca478dc3afeb66d39794afabb6d44e0bffc9182b7d91bceb3d6a3962d0b55e5f5c423b991ef81f53e5839f3c29cc578f384d991246f6b448ca71d727e64a9d5a5df685e84832e44220815d3deb8f16866a54cb5e047b6106a7d517192c568ee08a845f73d29788cf035c3145b21ab344d8062ea940000006a7d51718c774c928566398691d5eb68b5eb8a39b4b6d5c73555b21000000000000000000000000000000000000000000000000000000000000000000000000f8c173dfe79d7c7b9277684179dc740f657b46bc391c72e99e7695ee78e76c730b68150c1630c6c8bb55c0e65252408e01d52f1f4c78d59dd6c6d3b049566d810307030305000404000000070200013400000000301f910100000000410e000000000000f8c173dfe79d7c7b9277684179dc740f657b46bc391c72e99e7695ee78e76c73080501040206004c2300000000000000000000000000000000000000000000000000000000000000000000000000000000002000ec95cd80234483ef831d02c21c9ee4ec4f714a44603eaee22666681c496a83dd"
+        )
+    }
+    
+    func testSignDataForBalanceAccountCreationApprovalRequest() throws {
+        let approvalData = "{\"id\": \"33d18d6c-7fb7-4325-b0af-4b6da8a05690\", \"walletType\": \"Solana\", \"submitDate\": \"2022-09-09T20:49:47.249+00:00\", \"submitterName\": \"User 1\", \"submitterEmail\": \"authorized1@org5\", \"approvalTimeoutInSeconds\": 18000, \"numberOfDispositionsRequired\": 2, \"numberOfApprovalsReceived\": 1, \"numberOfDeniesReceived\": 0, \"programVersion\": 1, \"details\": {\"type\": \"SignData\", \"base64Data\": \"eyJfdHlwZSI6IkNyZWF0ZUJhbGFuY2VBY2NvdW50IiwicHJvdmlkZXJJZCI6ImJpdGNvaW4iLCJkYXRhIjp7InR5cGUiOiJCYWxhbmNlQWNjb3VudENyZWF0aW9uIiwiYWNjb3VudFNsb3QiOjAsImFjY291bnRJbmZvIjp7ImlkZW50aWZpZXIiOiI3ZDE1MTQ1Ni0yOGNiLTRmZjUtYTZiOC1iOTg4ODVlODdkMTkiLCJuYW1lIjoiQml0Y29pbiBBY2NvdW50IDEiLCJhY2NvdW50VHlwZSI6IkJhbGFuY2VBY2NvdW50IiwiYWRkcmVzcyI6Im14RW1MVWRYYVEza2huRVhyR1ZmQ1dRQnVTRG03Q2VYWEQifSwiYXBwcm92YWxQb2xpY3kiOnsiYXBwcm92YWxzUmVxdWlyZWQiOjEsImFwcHJvdmFsVGltZW91dCI6MzYwMDAwMCwiYXBwcm92ZXJzIjpbeyJzbG90SWQiOjAsInZhbHVlIjp7InB1YmxpY0tleSI6InlYYkdINjJnWUI3dzR6aUMxZXlyS29YM2I4UzMyWkttcXFoRWFDUzF3WFBEdkhvTXdpRmVmZ3Z5TXZmWlFUTXZIQ1pyV1NocDVGWHVMZWFpTUxNUGtSOSIsIm5hbWUiOiJVc2VyIDEiLCJlbWFpbCI6ImF1dGhvcml6ZWQxQG9yZzUiLCJuYW1lSGFzaElzRW1wdHkiOnRydWV9fV19LCJ3aGl0ZWxpc3RFbmFibGVkIjoiT2ZmIiwiZGFwcHNFbmFibGVkIjoiT2ZmIiwiYWRkcmVzc0Jvb2tTbG90IjowLCJzdGFraW5nVmFsaWRhdG9yIjpudWxsLCJzaWduaW5nRGF0YSI6eyJmZWVQYXllciI6IiIsIndhbGxldFByb2dyYW1JZCI6IiIsIm11bHRpc2lnT3BBY2NvdW50QWRkcmVzcyI6IiIsIndhbGxldEFkZHJlc3MiOiIiLCJub25jZUFjY291bnRBZGRyZXNzZXMiOltdLCJub25jZUFjY291bnRBZGRyZXNzZXNTbG90IjowLCJpbml0aWF0b3IiOiIiLCJzdHJpa2VGZWVBbW91bnQiOjAsImZlZUFjY291bnRHdWlkSGFzaCI6IiIsIndhbGxldEd1aWRIYXNoIjoiIn19fQ==\", \"signingData\": {\"feePayer\": \"87VXbkJsqdDvXYfDBtS4kW4TcFor7ogofZXbXjT7t7AU\", \"walletProgramId\": \"GYdjan963vVRh8sHAQeXy8U6aBmsSHuUTYio6R4br7K1\", \"multisigOpAccountAddress\": \"zoUp5YxMz1jm7T2iQ3FbjUCFV2yNQpNrUW2R7UNXZ7E\", \"walletAddress\": \"74KQTHwW3f6fvqrkqE7GeoRJQyGinV6xMdJ6BpPET8rG\", \"nonceAccountAddresses\": [\"EhvNkf9T3ZHnLmtsgLRJ3TmGWe6oWvRQejSTqzG6xaou\"], \"nonceAccountAddressesSlot\": 16224, \"initiator\": \"7nTeukQZH8FSg59VbsCeQqyAojpLjcRvueXLRpxDr3fn\", \"strikeFeeAmount\": 0, \"feeAccountGuidHash\": \"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=\", \"walletGuidHash\": \"OTDldXFSr0Rn49uJ/MIDYqmE1DBHT7S8bIrLSHNo9Yw=\"}}, \"vaultName\": \"Test Organization 5\"}\n"
+
+
+        let request: WalletApprovalRequest = Mock.decodeJsonType(data: approvalData.data(using: .utf8)!)
+        let approvalRequest = StrikeApi.ApprovalDispositionRequest(
+            disposition: .Approve,
+            requestID: request.id,
+            requestType: request.requestType,
+            nonces: [StrikeApi.Nonce("9dNtUVv25bMpyrFyRgrgdmygymYxeCiw8geHfKLVYnyu")],
+            email: "dont care"
+        )
+        XCTAssertEqual(
+            try approvalRequest.signableData(approverPublicKey: "7xQTcWf8hWnYb2DfNHX43qGSmME8TAcvPY6DJ9KPUnTK").toHexString(),
+            "0201040869ab8cb05413af9614f898a1f1fdfbc07e7ad5eb2eb1d0f1c49f448bd179c7156757974e9d4a7a1f6367333182c168c8abaa4616428d182e6e7d77b675458aa2cba3838600fb16cdfe56197da6ebc0e943ed59c03ea18539c79049d5e802a0cc0ecea9219bc5d14e3119b89bdece9afaf3a91e6db985961c16181349c49d094906a7d517192c568ee08a845f73d29788cf035c3145b21ab344d8062ea940000006a7d51718c774c928566398691d5eb68b5eb8a39b4b6d5c73555b21000000000000000000000000000000000000000000000000000000000000000000000000e6f9d82d908d2e9a64f43557fbaefd85806a4b1fcb08454bcb5bab5f2ab8d014802f271d98da48f43a3cbdbfb5623a006de53b3f24771acba31f2f265b789530020603020400040400000007030301052209016e60d6be52226fc9f59faff76a8258b86c5b34eefaaf1fb21b5d1e918d515cd6"
+        )
+    }
+
+    func testSignDataForBalanceAccountCreationInitiationRequest() throws {
+        let approvalData = "{\"id\": \"00c06a34-75b5-48b1-bbb4-fddc8addb8ee\", \"walletType\": \"Solana\", \"submitDate\": \"2022-09-09T20:06:11.425+00:00\", \"submitterName\": \"User 1\", \"submitterEmail\": \"authorized1@org5\", \"approvalTimeoutInSeconds\": null, \"numberOfDispositionsRequired\": 2, \"numberOfApprovalsReceived\": 0, \"numberOfDeniesReceived\": 0, \"programVersion\": 1, \"details\": {\"type\": \"MultisigOpInitiation\", \"details\": {\"type\": \"SignData\", \"base64Data\": \"eyJfdHlwZSI6IkNyZWF0ZUJhbGFuY2VBY2NvdW50IiwicHJvdmlkZXJJZCI6ImJpdGNvaW4iLCJkYXRhIjp7InR5cGUiOiJCYWxhbmNlQWNjb3VudENyZWF0aW9uIiwiYWNjb3VudFNsb3QiOjAsImFjY291bnRJbmZvIjp7ImlkZW50aWZpZXIiOiI1NTczNmMyMy04ZjE4LTRmM2UtYjM2MC05ZmI5MTQ5MjNiOTIiLCJuYW1lIjoiQml0Y29pbiBBY2NvdW50IDEiLCJhY2NvdW50VHlwZSI6IkJhbGFuY2VBY2NvdW50IiwiYWRkcmVzcyI6Im16U2JqOXJpUWtBNUJESzk0SGo5WUJNRnZlQ0pZVHhkdWEifSwiYXBwcm92YWxQb2xpY3kiOnsiYXBwcm92YWxzUmVxdWlyZWQiOjEsImFwcHJvdmFsVGltZW91dCI6MzYwMDAwMCwiYXBwcm92ZXJzIjpbeyJzbG90SWQiOjAsInZhbHVlIjp7InB1YmxpY0tleSI6IjIxQWNqWWRHbmZuTHZuc1BYdkF5TEZrbmVNa052MzljTGdNTU5kU0wyWTg5bVlwYlN5dFoyeUZiV0hFWjZrTGc2OUZKMkZDVDhOYVNVdlkzV2pTMTJCV28iLCJuYW1lIjoiVXNlciAxIiwiZW1haWwiOiJhdXRob3JpemVkMUBvcmc1IiwibmFtZUhhc2hJc0VtcHR5Ijp0cnVlfX1dfSwid2hpdGVsaXN0RW5hYmxlZCI6Ik9mZiIsImRhcHBzRW5hYmxlZCI6Ik9mZiIsImFkZHJlc3NCb29rU2xvdCI6MCwic3Rha2luZ1ZhbGlkYXRvciI6bnVsbCwic2lnbmluZ0RhdGEiOnsiZmVlUGF5ZXIiOiIiLCJ3YWxsZXRQcm9ncmFtSWQiOiIiLCJtdWx0aXNpZ09wQWNjb3VudEFkZHJlc3MiOiIiLCJ3YWxsZXRBZGRyZXNzIjoiIiwibm9uY2VBY2NvdW50QWRkcmVzc2VzIjpbXSwibm9uY2VBY2NvdW50QWRkcmVzc2VzU2xvdCI6MCwiaW5pdGlhdG9yIjoiIiwic3RyaWtlRmVlQW1vdW50IjowLCJmZWVBY2NvdW50R3VpZEhhc2giOiIiLCJ3YWxsZXRHdWlkSGFzaCI6IiJ9fX0=\", \"signingData\": {\"feePayer\": \"87VXbkJsqdDvXYfDBtS4kW4TcFor7ogofZXbXjT7t7AU\", \"walletProgramId\": \"4Kra2q9aGe9n5YAarPWH3BvZSXVBLAZTCQhuPh9VQun1\", \"multisigOpAccountAddress\": \"11111111111111111111111111111111\", \"walletAddress\": \"37jZd3fa6hQ98ufPFA6N7WQvUm6DtsBjnEakGY5pqrB9\", \"nonceAccountAddresses\": [\"Gntfv3uZaqEJTrm2BWy87ZgTPEyPwyEVQGVhdhGvLA5j\"], \"nonceAccountAddressesSlot\": 10462, \"initiator\": \"4Gyit71SY3zUUmDMvAT3Lqbex8wBhWJRx8xpEXd5qq66\", \"strikeFeeAmount\": 0, \"feeAccountGuidHash\": \"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=\", \"walletGuidHash\": \"9KVyRePx9RQkHs8orY2k87NzyoSiLkPsjpVxCIgUlLA=\"}}, \"opAccountCreationInfo\": {\"accountSize\": 3649, \"minBalanceForRentExemption\": 26287920}, \"initiatorIsApprover\": true}, \"vaultName\": \"Test Organization 5\"}\n"
+
+
+        let request: WalletApprovalRequest = Mock.decodeJsonType(data: approvalData.data(using: .utf8)!)
+        let pk = try Curve25519.Signing.PrivateKey.init(rawRepresentation: "5647f96596cf1d7e5b3e8f79401840dee7125aded4b185e66963f0d56c1466bb".data(using: .hexadecimal)!)
+        let initiationRequest = StrikeApi.InitiationRequest(
+            disposition: .Approve,
+            requestID: request.id,
+            initiation: getOpAccountCreationInfo(request)!,
+            requestType: request.requestType,
+            nonces: [StrikeApi.Nonce("6ZY5GcyceDoL9ezZcT2znhnCSacePMtZYUhcXETyrRcb")],
+            email: "dont care",
+            opAccountPrivateKey: pk
+        )
+
+        XCTAssertEqual(
+            try initiationRequest.signableData(approverPublicKey: "4Gyit71SY3zUUmDMvAT3Lqbex8wBhWJRx8xpEXd5qq66").toHexString(),
+            "0301040969ab8cb05413af9614f898a1f1fdfbc07e7ad5eb2eb1d0f1c49f448bd179c715eaed3fd176bbffdb0f461ecd630cda4222a93ebc95765d0355dc0b30379d438c30aae8a6182fd1294d717eacf294e2ed515bfe980cba907006a100928bddfb27eaa0dd6522a309e59454de9c2f37e8cef9bd8d10683b6f035faa9f9504fa88fe1f70fbf53c47a529b7275ea23a1d4c811cd0210f748bd1b70fcf05b6f53baa6006a7d517192c568ee08a845f73d29788cf035c3145b21ab344d8062ea940000006a7d51718c774c928566398691d5eb68b5eb8a39b4b6d5c73555b2100000000000000000000000000000000000000000000000000000000000000000000000031679052f04f2d670da777f48a043ebadc013c519b3a60fe9be19546844002da52a027d3066f2028195e3a2a3b00fb521729f6bbd885c3e941600ef9af8b76180307030305000404000000070200013400000000301f910100000000410e00000000000031679052f04f2d670da777f48a043ebadc013c519b3a60fe9be19546844002da080501040206004c2300000000000000000000000000000000000000000000000000000000000000000000000000000000002000e20ac1082fd5ef74246e6fe2cde37d41a449aee5ee9ba84936db99b37aec714e"
+        )
+    }
+    
+    func getOpAccountCreationInfo(_ request: WalletApprovalRequest) -> MultisigOpInitiation? {
+        switch request.details {
+        case .multisigOpInitiation(let initiation, _):
+            return MultisigOpInitiation(opAccountCreationInfo: initiation.opAccountCreationInfo, initiatorIsApprover: initiation.initiatorIsApprover)
+        default:
+            return nil
+        }
+    }
 }

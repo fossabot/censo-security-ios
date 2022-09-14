@@ -24,7 +24,7 @@ extension SolanaApprovalRequestType {
         case .signersUpdate:
             return "Add User"
         case .balanceAccountCreation(let accountCreation) where accountCreation.accountInfo.accountType == .BalanceAccount:
-            return "Add Wallet"
+            return "Add \(accountCreation.accountInfo.chainName ?? "Solana") Wallet"
         case .balanceAccountCreation:
             return "Add Wallet"
         case .balanceAccountNameUpdate:
@@ -51,6 +51,8 @@ extension SolanaApprovalRequestType {
             return "Update Administration Policy"
         case .dAppTransactionRequest:
             return "Execute dApp Transaction"
+        case .signData:
+            return "Sign Data"
         case .loginApproval:
             return "Log In"
         case .acceptVaultInvitation:
