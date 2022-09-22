@@ -23,6 +23,7 @@
 		3D11A60727581510008C03B1 /* CameraAccessRequired.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D11A60627581510008C03B1 /* CameraAccessRequired.swift */; };
 		3D11A60B275851BA008C03B1 /* WalletConnected.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D11A60A275851BA008C03B1 /* WalletConnected.swift */; };
 		3D11A60D27585F72008C03B1 /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D11A60C27585F72008C03B1 /* ImageLoader.swift */; };
+		3D1AD40728DC007D0085ACAA /* ForegroundBiometryLock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1AD40628DC007D0085ACAA /* ForegroundBiometryLock.swift */; };
 		3D1C761927D8501C0016BB32 /* PublicKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1C761827D8501C0016BB32 /* PublicKey.swift */; };
 		3D1C761B27D8503B0016BB32 /* TransactionInstruction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1C761A27D8503B0016BB32 /* TransactionInstruction.swift */; };
 		3D1C762027D871D80016BB32 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1C761F27D871D80016BB32 /* Message.swift */; };
@@ -172,6 +173,7 @@
 		3D11A60627581510008C03B1 /* CameraAccessRequired.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraAccessRequired.swift; sourceTree = "<group>"; };
 		3D11A60A275851BA008C03B1 /* WalletConnected.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletConnected.swift; sourceTree = "<group>"; };
 		3D11A60C27585F72008C03B1 /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
+		3D1AD40628DC007D0085ACAA /* ForegroundBiometryLock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForegroundBiometryLock.swift; sourceTree = "<group>"; };
 		3D1C761827D8501C0016BB32 /* PublicKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicKey.swift; sourceTree = "<group>"; };
 		3D1C761A27D8503B0016BB32 /* TransactionInstruction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionInstruction.swift; sourceTree = "<group>"; };
 		3D1C761F27D871D80016BB32 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
@@ -478,6 +480,7 @@
 				3D6334F52885C2C9002CEC5A /* FocusedOnAppear.swift */,
 				3D6334F82885C2C9002CEC5A /* StrikeBackground.swift */,
 				3D6334F42885C2C9002CEC5A /* StrikeProgressView.swift */,
+				3D1AD40628DC007D0085ACAA /* ForegroundBiometryLock.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -910,6 +913,7 @@
 				6C74FA0428526282005C8DE1 /* Bip44.swift in Sources */,
 				3DBD7DCE2655CE0F00662C62 /* ApprovalsNeeded.swift in Sources */,
 				3DC7A74127D0067D00A2BBA7 /* KeyGeneration.swift in Sources */,
+				3D1AD40728DC007D0085ACAA /* ForegroundBiometryLock.swift in Sources */,
 				3D3854222639BD7F00C8693C /* Data+Hex.swift in Sources */,
 				40CB67D725C1B75A00DB15D6 /* StrikeTheme.swift in Sources */,
 				3DBE36F128B53B3B0096850B /* KeyRetrievalSignInRecovery.swift in Sources */,

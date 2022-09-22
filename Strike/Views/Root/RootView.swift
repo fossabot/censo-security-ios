@@ -15,6 +15,7 @@ struct RootView: View {
         MainView(onSignOut: {})
             .environment(\.strikeApi, StrikeApi(authProvider: nil, stubClosure: MoyaProvider.delayedStub(0.5)))
             .onFirstTimeAppear(perform: registerForRemoteNotifications)
+            .foregroundBiometryProtected(onFailure: {})
     }
     #else
 
@@ -25,6 +26,7 @@ struct RootView: View {
             MainView(onSignOut: signOut)
                 .environment(\.strikeApi, StrikeApi(authProvider: authProvider))
                 .onFirstTimeAppear(perform: registerForRemoteNotifications)
+                .foregroundBiometryProtected(onFailure: signOut)
         } else {
             SignInView(authProvider: authProvider)
         }
