@@ -38,6 +38,9 @@ struct MainView: View {
             SignedInNavigationView(user: user, onSignOut: onSignOut) { onProfile in
                 RegistrationView(user: user, onReloadUser: reload, onProfile: onProfile)
             }
+            .onFirstTimeAppear {
+                Keychain.migrateIfNeeded(for: user.loginName)
+            }
         }
     }
 

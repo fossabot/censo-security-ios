@@ -32,7 +32,7 @@ public class Keychain {
         SecItemDelete(query as CFDictionary)
 
         if biometryProtected {
-            query[kSecAttrAccessControl as String] = SecAccessControlCreateWithFlags(nil, kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly, [.userPresence], nil)
+            query[kSecAttrAccessControl as String] = SecAccessControlCreateWithFlags(nil, kSecAttrAccessibleWhenPasscodeSetThisDeviceOnly, [.biometryCurrentSet], nil)
         }
 
         let result = SecItemAdd(query as CFDictionary, nil)
@@ -50,7 +50,7 @@ public class Keychain {
             context.localizedReason = prompt
 
             query[kSecUseAuthenticationContext as String] = context
-            query[kSecAttrAccessControl as String] = SecAccessControlCreateWithFlags(nil, kSecAttrAccessibleWhenUnlockedThisDeviceOnly, [.userPresence], nil)
+            query[kSecAttrAccessControl as String] = SecAccessControlCreateWithFlags(nil, kSecAttrAccessibleWhenUnlockedThisDeviceOnly, [.biometryCurrentSet], nil)
         }
 
         var foundData: AnyObject? = nil
@@ -177,6 +177,26 @@ extension Keychain {
 
     static func hasPrivateKey(email: String) -> Bool {
         contains(account: email, service: privateKeyService)
+    }
+
+    static private let schemaService = "com.strikeprotocols.schema"
+    static private let latestSchemaVersion = "20221004"
+
+    static func migrateIfNeeded(for account: String) {
+        let schemaVersionData = load(account: account, service: schemaService)
+        let schemeVersion = schemaVersionData.flatMap { String(data: $0, encoding: .utf8) }
+
+        if schemeVersion != latestSchemaVersion {
+            if let privateKeyData = load(account: account, service: privateKeyService) {
+                save(account: account, service: privateKeyService, data: privateKeyData, synced: false, biometryProtected: true)
+            }
+
+            if let rootSeedData = load(account: account, service: rootSeedService) {
+                save(account: account, service: rootSeedService, data: rootSeedData, synced: false, biometryProtected: true)
+            }
+
+            save(account: account, service: schemaService, data: latestSchemaVersion.data(using: .utf8)!)
+        }
     }
 }
 
