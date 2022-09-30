@@ -11,8 +11,8 @@ import BIP39
 
 struct TestItem: Codable {
     let mnemonic: String
-    let privateKeyHex: String
-    let publicKeyBase58: String
+    let privateKey: String
+    let publicKey: String
 }
 
 struct TestItems: Codable {
@@ -22,9 +22,9 @@ struct TestItems: Codable {
 
 class BipTests: XCTestCase {
     
-    func testWithKnownDataSet() throws {
+    func testSolanaWithKnownDataSet() throws {
         let bundle = Bundle(for: type(of: self))
-        guard let url = bundle.url(forResource: "test-data", withExtension: "json") else {
+        guard let url = bundle.url(forResource: "solana-test-data", withExtension: "json") else {
             XCTFail("Missing file: test-data.json")
             return
         }
@@ -33,9 +33,30 @@ class BipTests: XCTestCase {
         for testItem in testItems.items {
             let ed25519PrivateKey = try Ed25519HierachicalPrivateKey.fromRootSeed(rootSeed: try Mnemonic(phrase: testItem.mnemonic.components(separatedBy: " ")).seed)
             // @solana/web3j code which generated this data set represents the private key as the actual private key(32 bytes) appended with public key (another 32 bytes)
-            XCTAssertEqual(testItem.privateKeyHex, (ed25519PrivateKey.privateKey.rawRepresentation + ed25519PrivateKey.privateKey.publicKey.rawRepresentation).toHexString().lowercased())
-            XCTAssertEqual(testItem.publicKeyBase58, Base58.encode(ed25519PrivateKey.privateKey.publicKey.rawRepresentation.bytes))
+            XCTAssertEqual(testItem.privateKey, (ed25519PrivateKey.privateKey.rawRepresentation + ed25519PrivateKey.privateKey.publicKey.rawRepresentation).toHexString().lowercased())
+            XCTAssertEqual(testItem.publicKey, Base58.encode(ed25519PrivateKey.privateKey.publicKey.rawRepresentation.bytes))
 
+        }
+    }
+    
+    func testBitcoinWithKnownDataSet() throws {
+        let bundle = Bundle(for: type(of: self))
+        guard let url = bundle.url(forResource: "bitcoin-test-data", withExtension: "json") else {
+            XCTFail("Missing file: test-data.json")
+            return
+        }
+        let decoder = JSONDecoder()
+        let testItems = try! decoder.decode(TestItems.self, from: try Data(contentsOf: url))
+        for (index, testItem) in testItems.items[0..<200].enumerated() {
+            print("processing \(index)")
+            
+            let rootSeed = try Mnemonic(phrase: testItem.mnemonic.components(separatedBy: " ")).seed
+            let signingKey = try Secp256k1HierarchicalKey.fromRootSeed(rootSeed: rootSeed, derivationPath: Secp256k1HierarchicalKey.bitcoinDerivationPath)
+                .derived(at: DerivationNode.notHardened(0))
+
+            XCTAssertEqual(testItem.privateKey, signingKey.getBase58ExtendedPrivateKey())
+            XCTAssertEqual(testItem.publicKey, signingKey.getBase58ExtendedPublicKey())
+        
         }
     }
     
@@ -105,4 +126,61 @@ class BipTests: XCTestCase {
         XCTAssertTrue(Wordlists.english.contains("forget"))
         XCTAssertFalse(Wordlists.english.contains("forged"))
     }
+    
+    func testBitcoinKey() throws {
+        
+        let seedPhrase = "bacon loop helmet quarter exist notice laundry auction rain bus vanish buyer drama icon response"
+        let expectedXprv = "xprvA3HQivyehcyaqxxDcV3Niye157nbJKpuETYf6aZZup65XHNbyrXrkVZuT5T3i7bTsoCjTXnqWfjLxWdMUgDL3kTM4XftmSQnz7LP6RGiShr"
+        let expectedXpub = "xpub6GGm8SWYXzXt4T2giWaP67ajd9d5hnYkbgUFtxyBU9d4Q5hkXPr7JHtPJN5dD6uNVXb7EEpdZeXvG5XwFVWhUj4Q2ufhYH38fuHK9ERTy3d"
+        let expectedPubKey = "0318287a66643f9db1956c812c533bb3d6b22dce7955d7169d6f8ed39d4e96c909"
+        
+        let rootSeed = try Mnemonic(phrase: seedPhrase.components(separatedBy: " ")).seed
+
+        let signingKey = try Secp256k1HierarchicalKey
+            .fromRootSeed(rootSeed: rootSeed, derivationPath: Secp256k1HierarchicalKey.bitcoinDerivationPath)
+            .derived(at: DerivationNode.notHardened(0))
+
+        XCTAssertEqual(expectedXprv, signingKey.getBase58ExtendedPrivateKey())
+        XCTAssertEqual(expectedXpub, signingKey.getBase58ExtendedPublicKey())
+        XCTAssertEqual(expectedPubKey, signingKey.privateKey.getPublicKeyBytes().toHexString())
+        
+        let keyFromExtendedKey = try Secp256k1HierarchicalKey.fromBase58ExtendedKey(extendedKey: expectedXprv)
+        XCTAssertEqual(signingKey.privateKey.raw, keyFromExtendedKey.privateKey.raw)
+        XCTAssertEqual(signingKey.privateKey.chainCode, keyFromExtendedKey.privateKey.chainCode)
+        XCTAssertEqual(signingKey.privateKey.fingerprint, keyFromExtendedKey.privateKey.fingerprint)
+        XCTAssertEqual(signingKey.privateKey.index, keyFromExtendedKey.privateKey.index)
+        
+        XCTAssertEqual(keyFromExtendedKey.getBase58ExtendedPrivateKey(), expectedXprv)
+        
+        XCTAssertEqual(
+            "xprvA4cB8k96tmXLGrVb8u68kA353rZ5XTn9m3S8EL76uU57PFYjpkzSdXxx8zmjbzKCDTvVzYrvphocPBxqMkKhoHXWoKdP1oGdSmM2MR4szeG",
+            keyFromExtendedKey.derived(at: DerivationNode.notHardened(1)).getBase58ExtendedPrivateKey()
+        )
+        
+        
+    }
+    
+    func testBitcoinSigning() throws {
+        let bitcoinExtendedPrivateKey = "tprv8igBmKYoTNej2GHV2ZvfQ3eJM9yAeDoMs8pTDqJLR1EzCHJc42QrxLGuh6Hh5b248yzeC5DAWyby76b9rbhL7L7GJuAeXY1k7yiYyjajcW4"
+        let bitcoinKey = try Secp256k1HierarchicalKey
+            .fromBase58ExtendedKey(extendedKey: bitcoinExtendedPrivateKey)
+            .derived(at: DerivationNode.notHardened(0))
+
+        let messagesToSign = [
+            "OdGGt+Yh9Fp1wjHVGwpbmVJnjWOdFnZpeC+F9l+HG8g=",
+            "AnxjVJFcoqK4y3URV/UMI4F9jIER5bb2cDI+TtkMtMc=",
+            "m73uZw7PDXkA5VzKxDEqdT+AMT2vwGvVcjzlRyd4a6E="
+        ]
+        let knownGoodSignatures = [
+            "MEQCIBiSprONqD6ejJ+DnFMBO4J/XuBB0+g1AZbsVhAwVvOxAiAzxIvPIbILK1T3ansYRN64F16OTfxVBV6r+W878BWWUg==",
+            "MEQCIGrIRsSweu+vxPD7bf3cTQQeTKGK6dL3y0bhixPFLdGAAiAS5Ryvpch7KusXaAqMGkmkFt/IzgdpJ2LHTWzXSuPxOw==",
+            "MEMCH19ac8Hpx+fKnzyZSxjFR6uRHnTgyYOa3J995/jAor0CIDJT47QNi9BdGOQBLSApVwAWYxNPlgamvrSbkn7i5uI1"
+        ]
+        for i in 0..<messagesToSign.count {
+            XCTAssertEqual(knownGoodSignatures[i], try bitcoinKey.signData(message: Data(base64Encoded: messagesToSign[i])!).base64EncodedString())
+            XCTAssertTrue(try bitcoinKey.verifySignature(Data(base64Encoded: knownGoodSignatures[i])!, message: Data(base64Encoded: messagesToSign[i])!))
+        }
+    }
+
+    
 }
