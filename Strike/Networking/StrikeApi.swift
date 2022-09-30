@@ -120,6 +120,10 @@ extension Data: SolanaSignable {
     }
 }
 
+enum ApiError: Error, Equatable {
+    case other(String)
+}
+
 extension StrikeApi {
     enum Credentials: Encodable {
         case password(email: String, password: String)
@@ -309,25 +313,51 @@ extension StrikeApi {
         let email: String
 
         enum CodingKeys: String, CodingKey {
-            case signature
+            case signatureInfo
             case approvalDisposition
-            case nonce
-            case nonceAccountAddress
         }
 
         func encode(to encoder: Encoder) throws {
             var container = encoder.container(keyedBy: CodingKeys.self)
 
-            if let nonce = nonces.first, let nonceAccountAddress = requestType.nonceAccountAddresses.first {
-                try container.encode(nonce.value, forKey: .nonce)
-                try container.encode(nonceAccountAddress, forKey: .nonceAccountAddress)
-            }
+            let keyInfo = try Keychain.keyInfoForEmail(email: email)
+            let signatureInfo: SignatureType = try
+            {
+                switch requestType {
+                case .loginApproval, .acceptVaultInvitation, .passwordReset:
+                    return SignatureType.nochain(
+                        NoChainSignature(
+                            signature: try keyInfo.privateKey.signature(for: signableData(approverPublicKey: keyInfo.encodedPublicKey)).base64EncodedString()
+                        )
+                    )
+                case .withdrawalRequest(let request):
+                    switch (request.signingData) {
+                    case .bitcoin(let signingData):
+                        if let bitcoinKey = Keychain.bitcoinPrivateKey(for: email, childKeyIndex: signingData.childKeyIndex) {
+                            return SignatureType.bitcoin(
+                                BitcoinSignatures(
+                                    signatures: try signableDataList(approverPublicKey: keyInfo.encodedPublicKey).map( { try bitcoinKey.signData(message: $0).base64EncodedString() })
+                                )
+                            )
+                        } else {
+                            throw ApiError.other("trying to sign bitcoin request but no bitcoin key")
+                        }
+                    default:
+                        break
+                    }
+                    fallthrough
+                default:
+                    let signature = try keyInfo.privateKey.signature(for: signableData(approverPublicKey: keyInfo.encodedPublicKey)).base64EncodedString()
+                    if let nonce = nonces.first, let nonceAccountAddress = requestType.nonceAccountAddresses.first {
+                        return SignatureType.solana(SolanaSignature(signature: signature, nonce: nonce.value, nonceAccountAddress: nonceAccountAddress))
+                    } else {
+                        throw ApiError.other("cannot create solana signature with no nonce data")
+                    }
+                }
+            }()
 
             try container.encode(disposition.rawValue, forKey: .approvalDisposition)
-
-            let keyInfo = try Keychain.keyInfoForEmail(email: email)
-            let signature = try keyInfo.privateKey.signature(for: signableData(approverPublicKey: keyInfo.encodedPublicKey)).base64EncodedString()
-            try container.encode(signature, forKey: .signature)
+            try container.encode(signatureInfo, forKey: .signatureInfo)
         }
     }
     

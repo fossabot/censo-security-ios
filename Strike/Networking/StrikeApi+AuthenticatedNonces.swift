@@ -46,7 +46,7 @@ extension MoyaProvider where Target == StrikeApi.Target {
                 if response.slot < accountAddressesSlot {
                     // limit the retries to 20
                     if retryCount > 20 {
-                        completion(.failure(SolanaError.noAccountsForSlot))
+                        completion(.failure(ApprovalError.noAccountsForSlot))
                     } else {
                         self?.sendRequestWithNonces(accountAddresses: accountAddresses,
                                                     accountAddressesSlot: accountAddressesSlot,

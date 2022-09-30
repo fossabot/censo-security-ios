@@ -139,7 +139,7 @@ extension StrikeTests {
                     address: "2DQz5vWgs1PKxPDd9YaYKoemgFriRJqoFRniAQ7Wtuva",
                     tag: nil
                 ),
-                signingData: SolanaSigningData(
+                signingData: SigningData.solana(SolanaSigningData(
                     feePayer: "87VXbkJsqdDvXYfDBtS4kW4TcFor7ogofZXbXjT7t7AU",
                     walletProgramId: "db4pdTHvA3XLBgKfwKzdx8DcNpHuWWn63t6u8kbYiuS",
                     multisigOpAccountAddress: "9NDFtaczqouZ9SGTfd489EfN3KvMQgrAjpuu4QEr9Kys",
@@ -150,7 +150,7 @@ extension StrikeTests {
                     strikeFeeAmount: 0,
                     feeAccountGuidHash: Data(count: 32).base64EncodedString(),
                     walletGuidHash: Data(count: 32).base64EncodedString()
-                )
+                ))
             )
         )
     }
@@ -183,7 +183,7 @@ extension StrikeTests {
                     address: "7DhLZAT5buGyXpjpfRNKaHc1imjJaDzCXXTdM59JHrpQ",
                     tag: nil
                 ),
-                signingData: SolanaSigningData(
+                signingData: SigningData.solana(SolanaSigningData(
                     feePayer: "FM36ah2bH8nQWJNPCRzu7R69gE5o6UhujqJFtDpWN5as",
                     walletProgramId: "zeZ7E8F6UaNYy3ry3Mt6MGUSr679oTKV8tzXVe5B4bP",
                     multisigOpAccountAddress: "6UcFAr9rqGfFEtLxnYdW6QjeRor3aej5akLpYpXUkPWX",
@@ -194,7 +194,7 @@ extension StrikeTests {
                     strikeFeeAmount: 0,
                     feeAccountGuidHash: Data(count: 32).base64EncodedString(),
                     walletGuidHash: Data(count: 32).base64EncodedString()
-                )
+                ))
             )
         )
     }
