@@ -28,7 +28,7 @@
 		3D1C761B27D8503B0016BB32 /* TransactionInstruction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1C761A27D8503B0016BB32 /* TransactionInstruction.swift */; };
 		3D1C762027D871D80016BB32 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1C761F27D871D80016BB32 /* Message.swift */; };
 		3D1C762227DA850A0016BB32 /* Base58.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1C762127DA850A0016BB32 /* Base58.swift */; };
-		3D1C762427DA861F0016BB32 /* ApprovalDispositionRequest+SolanaSignable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1C762327DA861F0016BB32 /* ApprovalDispositionRequest+SolanaSignable.swift */; };
+		3D1C762427DA861F0016BB32 /* ApprovalDispositionRequest+SignableData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1C762327DA861F0016BB32 /* ApprovalDispositionRequest+SignableData.swift */; };
 		3D1C762627DA89690016BB32 /* StrikeApi+AuthenticatedNonces.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1C762527DA89690016BB32 /* StrikeApi+AuthenticatedNonces.swift */; };
 		3D2BCA08264D7A79000A6D56 /* ChangeDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2BCA07264D7A79000A6D56 /* ChangeDetails.swift */; };
 		3D2CE49925F8423800137E05 /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2CE49625F8423800137E05 /* SignInView.swift */; };
@@ -192,7 +192,7 @@
 		3D1C761A27D8503B0016BB32 /* TransactionInstruction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransactionInstruction.swift; sourceTree = "<group>"; };
 		3D1C761F27D871D80016BB32 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		3D1C762127DA850A0016BB32 /* Base58.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Base58.swift; sourceTree = "<group>"; };
-		3D1C762327DA861F0016BB32 /* ApprovalDispositionRequest+SolanaSignable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ApprovalDispositionRequest+SolanaSignable.swift"; sourceTree = "<group>"; };
+		3D1C762327DA861F0016BB32 /* ApprovalDispositionRequest+SignableData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ApprovalDispositionRequest+SignableData.swift"; sourceTree = "<group>"; };
 		3D1C762527DA89690016BB32 /* StrikeApi+AuthenticatedNonces.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "StrikeApi+AuthenticatedNonces.swift"; sourceTree = "<group>"; };
 		3D2BCA07264D7A79000A6D56 /* ChangeDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeDetails.swift; sourceTree = "<group>"; };
 		3D2CE49625F8423800137E05 /* SignInView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
@@ -414,7 +414,7 @@
 				3D1C761827D8501C0016BB32 /* PublicKey.swift */,
 				3D1C761A27D8503B0016BB32 /* TransactionInstruction.swift */,
 				3D1C761F27D871D80016BB32 /* Message.swift */,
-				3D1C762327DA861F0016BB32 /* ApprovalDispositionRequest+SolanaSignable.swift */,
+				3D1C762327DA861F0016BB32 /* ApprovalDispositionRequest+SignableData.swift */,
 				6C0E3EEC27EE5AFE002FEE7C /* InitiationRequest+SolanaSignable.swift */,
 			);
 			path = Solana;
@@ -960,7 +960,7 @@
 				3D11520E2821732E007CD43D /* BalanceAccountNameDetails.swift in Sources */,
 				3D6B530A285107B300F7F77F /* WrapConversionRow.swift in Sources */,
 				3DAF53B8262E1402000DD558 /* ApprovalRequestDetails.swift in Sources */,
-				3D1C762427DA861F0016BB32 /* ApprovalDispositionRequest+SolanaSignable.swift in Sources */,
+				3D1C762427DA861F0016BB32 /* ApprovalDispositionRequest+SignableData.swift in Sources */,
 				3D3D6D4F261B957800FEEE0B /* RetryView.swift in Sources */,
 				3DB7F9C026D6C2CD00A49B4E /* UnknownRequestRow.swift in Sources */,
 				3D1C762027D871D80016BB32 /* Message.swift in Sources */,

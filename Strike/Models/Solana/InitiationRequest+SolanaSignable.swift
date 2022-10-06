@@ -198,7 +198,7 @@ extension StrikeApi.InitiationRequest: SolanaSignable {
                     request.combinedBytes
                 )
             default:
-                throw SolanaError.invalidRequest(reason: "Unknown Approval")
+                throw ApprovalError.invalidRequest(reason: "Unknown Approval")
             }
         }
     }
@@ -218,7 +218,7 @@ extension StrikeApi.InitiationRequest: SolanaSignable {
                     )
                 }
             case .dAppTransactionRequest:
-                throw SolanaError.invalidRequest(reason: "Nonce count does not match instruction count")
+                throw ApprovalError.invalidRequest(reason: "Nonce count does not match instruction count")
             default:
                 return []
             }
@@ -232,7 +232,12 @@ extension StrikeApi.InitiationRequest: SolanaSignable {
             case .balanceAccountCreation(let request):
                 return request.signingData
             case .withdrawalRequest(let request):
-                return request.signingData
+                switch request.signingData {
+                case .solana(let signingData):
+                    return signingData
+                default:
+                    throw ApprovalError.invalidRequest(reason: "Invalid signing data for Initiation")
+                }
             case .conversionRequest(let request):
                 return request.signingData
             case .wrapConversionRequest(let request):
@@ -258,7 +263,7 @@ extension StrikeApi.InitiationRequest: SolanaSignable {
             case .signData(let request):
                 return request.signingData
             default:
-                throw SolanaError.invalidRequest(reason: "Unknown Initiation")
+                throw ApprovalError.invalidRequest(reason: "Unknown Initiation")
             }
         }
     }
@@ -266,17 +271,19 @@ extension StrikeApi.InitiationRequest: SolanaSignable {
     func instructionAccountMeta(approverPublicKey: PublicKey) throws -> [Account.Meta] {
         switch requestType {
         case .withdrawalRequest(let request):
+            let tokenMintAddress = request.symbolAndAmountInfo.symbolInfo.tokenMintAddress != nil ? request.symbolAndAmountInfo.symbolInfo.tokenMintAddress! : EMPTY_KEY.base58EncodedString
             return try getTransferAndConversionAccounts(
                 sourceAddress: request.account.address!,
                 destinationAddress: request.destination.address,
-                tokenMintAddress: request.symbolAndAmountInfo.symbolInfo.tokenMintAddress,
+                tokenMintAddress: tokenMintAddress,
                 approverPublicKey: approverPublicKey
             )
         case .conversionRequest(let request):
+            let tokenMintAddress = request.symbolAndAmountInfo.symbolInfo.tokenMintAddress != nil ? request.symbolAndAmountInfo.symbolInfo.tokenMintAddress! : EMPTY_KEY.base58EncodedString
             return try getTransferAndConversionAccounts(
                 sourceAddress: request.account.address!,
                 destinationAddress: request.destination.address,
-                tokenMintAddress: request.symbolAndAmountInfo.symbolInfo.tokenMintAddress,
+                tokenMintAddress: tokenMintAddress,
                 approverPublicKey: approverPublicKey
             )
         case .wrapConversionRequest(let request):
@@ -388,7 +395,7 @@ extension StrikeApi.InitiationRequest: SolanaSignable {
     
     func signableData(approverPublicKey: String) throws -> Data {
         guard let nonce = nonces.first, let nonceAccountAddress = requestType.nonceAccountAddresses.first else {
-            throw SolanaError.invalidRequest(reason: "Not enough nonce accounts")
+            throw ApprovalError.invalidRequest(reason: "Not enough nonce accounts")
         }
 
         var instructions = try [TransactionInstruction.createAdvanceNonceInstruction(

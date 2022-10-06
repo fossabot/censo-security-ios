@@ -53,11 +53,6 @@ enum WalletType: String, Codable {
     case Solana = "Solana"
 }
 
-struct ApprovalDispositionRequestResponse: Codable, Equatable {
-    let signature: String
-    let approvalDisposition: ApprovalDisposition
-    let recentBlockhash: String
-}
 
 struct WalletApprovalRequest: Codable, Equatable {
     let id: String
@@ -280,7 +275,7 @@ enum AccountType: String, Codable {
 struct SymbolInfo: Codable, Equatable {
     let symbol: String
     let symbolDescription: String
-    let tokenMintAddress: String
+    let tokenMintAddress: String?
     let imageUrl: String?
     let nftMetadata: NftMetadata?
 }
@@ -297,6 +292,65 @@ struct AccountInfo: Codable, Equatable {
     let accountType: AccountType
     let address: String?
     let chainName: String?
+}
+
+struct TransactionInput: Codable, Equatable {
+    let txId: String
+    let index: Int
+    let amount: Int64
+    let prevOutScriptHex: String
+    let base64HashForSignature: String
+}
+
+struct TransactionOutput: Codable, Equatable {
+    let index: Int
+    let amount: Int64
+    let pubKeyScriptHex: String
+    let address: String
+    let isChange: Bool
+}
+
+struct BitcoinTransaction: Codable, Equatable {
+    let version: Int
+    let txIns: [TransactionInput]
+    let txOuts: [TransactionOutput]
+    let totalFee: Int64
+}
+
+enum SigningData: Codable, Equatable {
+    case bitcoin(BitcoinSigningData)
+    case solana(SolanaSigningData)
+
+    enum SigningDataCodingKeys: String, CodingKey {
+        case type
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: SigningDataCodingKeys.self)
+        let type = try container.decode(String.self, forKey: .type)
+
+        switch type {
+        case "bitcoin":
+            self = .bitcoin(try BitcoinSigningData(from: decoder))
+        default:
+            self = .solana(try SolanaSigningData(from: decoder))
+        }
+    }
+
+    func encode(to encoder: Encoder) throws {
+        switch self {
+        case .bitcoin(let request):
+            try request.encode(to: encoder)
+        case .solana(let request):
+            try request.encode(to: encoder)
+        }
+    }
+}
+
+
+struct BitcoinSigningData: Codable, Equatable {
+    let childKeyIndex: UInt32
+    let transaction: BitcoinTransaction
 }
 
 struct SolanaSigningData: Codable, Equatable {
@@ -361,7 +415,7 @@ struct WithdrawalRequest: Codable, Equatable  {
     var account: AccountInfo
     var symbolAndAmountInfo: SymbolAndAmountInfo
     var destination: DestinationAddress
-    var signingData: SolanaSigningData
+    var signingData: SigningData
 }
 
 struct ConversionRequest: Codable, Equatable {
@@ -571,6 +625,11 @@ protocol SolanaSignable {
     func signableData(approverPublicKey: String) throws -> Data
 }
 
+protocol SignableData {
+    func signableData(approverPublicKey: String) throws -> Data
+    func signableDataList(approverPublicKey: String) throws -> [Data]
+}
+
 struct LoginApproval: Codable, Equatable  {
     var jwtToken: String
     var email: String
@@ -591,6 +650,63 @@ struct SignData: Codable, Equatable  {
 
 struct SignDataApprovalRequestJson: Codable, Equatable  {
     var data: SolanaApprovalRequestType
+}
+
+struct NoChainSignature: Codable, Equatable  {
+    let signature: String
+}
+
+struct SolanaSignature: Codable, Equatable  {
+    let signature: String
+    let nonce: String
+    let nonceAccountAddress: String
+}
+
+struct BitcoinSignatures: Codable, Equatable  {
+    let signatures: [String]
+}
+
+enum SignatureType: Codable, Equatable {
+    case nochain(NoChainSignature)
+    case solana(SolanaSignature)
+    case bitcoin(BitcoinSignatures)
+    case unknown
+
+    enum DetailsCodingKeys: String, CodingKey {
+        case type
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: DetailsCodingKeys.self)
+        let type = try container.decode(String.self, forKey: .type)
+        switch type {
+        case "nochain":
+            self = .nochain(try NoChainSignature(from: decoder))
+        case "solana":
+            self = .solana(try SolanaSignature(from: decoder))
+        case "bitcoin":
+            self = .bitcoin(try BitcoinSignatures(from: decoder))
+        default:
+            self = .unknown
+        }
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: DetailsCodingKeys.self)
+        switch self {
+        case .nochain(let request):
+            try container.encode("nochain", forKey: .type)
+            try request.encode(to: encoder)
+        case .solana(let request):
+            try container.encode("solana", forKey: .type)
+            try request.encode(to: encoder)
+        case .bitcoin(let request):
+            try container.encode("bitcoin", forKey: .type)
+            try request.encode(to: encoder)
+        case .unknown:
+            try container.encode("unknown", forKey: .type)
+        }
+    }
 }
 
 extension SolanaApprovalRequestDetails {
@@ -644,7 +760,12 @@ extension SolanaApprovalRequestType {
         case .signersUpdate(let request):
             return request.signingData.nonceAccountAddresses
         case .withdrawalRequest(let request):
-            return request.signingData.nonceAccountAddresses
+            switch request.signingData {
+            case .solana(let signingData):
+                return signingData.nonceAccountAddresses
+            default:
+                return []
+            }
         case .walletConfigPolicyUpdate(let request):
             return request.signingData.nonceAccountAddresses
         case .wrapConversionRequest(let request):
@@ -684,7 +805,12 @@ extension SolanaApprovalRequestType {
         case .signersUpdate(let request):
             return request.signingData.nonceAccountAddressesSlot
         case .withdrawalRequest(let request):
-            return request.signingData.nonceAccountAddressesSlot
+            switch request.signingData {
+            case .solana(let signingData):
+                return signingData.nonceAccountAddressesSlot
+            default:
+                return 0
+            }
         case .walletConfigPolicyUpdate(let request):
             return request.signingData.nonceAccountAddressesSlot
         case .wrapConversionRequest(let request):
@@ -741,7 +867,7 @@ extension WithdrawalRequest {
             account: .sample,
             symbolAndAmountInfo: .sample,
             destination: .sample,
-            signingData: .sample
+            signingData: .solana(.sample)
         )
     }
 }

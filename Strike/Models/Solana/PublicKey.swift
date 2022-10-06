@@ -34,7 +34,7 @@ struct PublicKey: Codable, Equatable, CustomStringConvertible, Hashable {
     public init(string: String?) throws {
         guard let string = string, string.utf8.count >= PublicKey.numberOfBytes
         else {
-            throw SolanaError.other("Invalid public key input")
+            throw ApprovalError.other("Invalid public key input")
         }
         let bytes = Base58.decode(string)
         self.bytes = bytes
@@ -42,14 +42,14 @@ struct PublicKey: Codable, Equatable, CustomStringConvertible, Hashable {
 
     public init(data: Data) throws {
         guard data.count <= PublicKey.numberOfBytes else {
-            throw SolanaError.other("Invalid public key input")
+            throw ApprovalError.other("Invalid public key input")
         }
         self.bytes = [UInt8](data)
     }
 
     public init(bytes: [UInt8]?) throws {
         guard let bytes = bytes, bytes.count <= PublicKey.numberOfBytes else {
-            throw SolanaError.other("Invalid public key input")
+            throw ApprovalError.other("Invalid public key input")
         }
         self.bytes = bytes
     }
@@ -130,7 +130,7 @@ extension PublicKey {
                 return .success((publicKey, nonce))
             }
         }
-        return .failure(SolanaError.notFoundProgramAddress)
+        return .failure(ApprovalError.notFoundProgramAddress)
     }
 
     private static func createProgramAddress(
@@ -141,7 +141,7 @@ extension PublicKey {
         var data = Data()
         for seed in seeds {
             if seed.bytes.count > maxSeedLength {
-                return .failure(SolanaError.other("Max seed length exceeded"))
+                return .failure(ApprovalError.other("Max seed length exceeded"))
             }
             data.append(seed)
         }
@@ -154,10 +154,10 @@ extension PublicKey {
 
         // check it
         if isOnCurve(publicKeyBytes: publicKeyBytes).toBool() {
-            return .failure(SolanaError.other("Invalid seeds, address must fall off the curve"))
+            return .failure(ApprovalError.other("Invalid seeds, address must fall off the curve"))
         }
         guard let newKey = try? PublicKey(data: publicKeyBytes) else {
-            return .failure(SolanaError.invalidPublicKey)
+            return .failure(ApprovalError.invalidPublicKey)
         }
         return .success(newKey)
     }

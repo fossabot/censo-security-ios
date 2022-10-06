@@ -12,7 +12,7 @@ struct Transaction {
     static func compileMessage(feePayer: PublicKey, recentBlockhash: String, instructions: [TransactionInstruction]) throws -> Message {
         // verify instructions
         guard instructions.count > 0 else {
-            throw SolanaError.other("No instructions provided")
+            throw ApprovalError.other("No instructions provided")
         }
         
         // programIds & accountMetas
@@ -330,7 +330,7 @@ struct Account {
 extension Array where Element == Account.Meta {
     func index(ofElementWithPublicKey publicKey: PublicKey) throws -> Int {
         guard let index = firstIndex(where: {$0.publicKey == publicKey})
-        else {throw SolanaError.other("Could not found accountIndex")}
+        else {throw ApprovalError.other("Could not found accountIndex")}
         return index
     }
 }

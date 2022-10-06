@@ -818,6 +818,25 @@ class StrikeTests: XCTestCase {
         )
     }
     
+    func testBitcoinWithdrawalApproval() throws {
+        let approvalData = "{\"id\":\"77475988-fd42-41c0-8ef6-cba19c1b1251\",\"walletType\":\"Solana\",\"submitDate\":\"2022-09-28T22:58:12.035+00:00\",\"submitterName\":\"User 1\",\"submitterEmail\":\"authorized1@org1\",\"approvalTimeoutInSeconds\":3600,\"numberOfDispositionsRequired\":1,\"numberOfApprovalsReceived\":0,\"numberOfDeniesReceived\":0,\"programVersion\":null,\"details\":{\"type\":\"WithdrawalRequest\",\"account\":{\"identifier\":\"a7c36ae6-7ccf-4051-937b-4dfa34a29736\",\"name\":\"Bitcoin Wallet 1\",\"accountType\":\"BalanceAccount\",\"address\":\"mxUpwv18LoZWg6k7ksGoj3r8geruTcwqZq\"},\"symbolAndAmountInfo\":{\"symbolInfo\":{\"symbol\":\"BTC\",\"symbolDescription\":\"Bitcoin\",\"imageUrl\":\"https://s3.us-east-1.amazonaws.com/strike-public-assets/logos/BTC.png\"},\"amount\":\"0.50010380\",\"nativeAmount\":\"0.50010380\",\"usdEquivalent\":\"31581.55\"},\"destination\":{\"name\":\"Bitcoin Wallet 2\",\"address\":\"mwRPxwxTS9YD2bkUAqKYcHCPMpUoMemhPo\"},\"signingData\":{\"type\":\"bitcoin\",\"childKeyIndex\":0,\"transaction\":{\"version\":1,\"txIns\":[{\"txId\":\"81788c968daae8c6ea30a5041f283a798ad5ab253cb99ef2f0d0b167f937dd77\",\"index\":1,\"amount\":20000000,\"prevOutScriptHex\":\"76A914BA132C598CAA68EDEE903578AE11B6B03BFDC78588AC\",\"base64HashForSignature\":\"OdGGt+Yh9Fp1wjHVGwpbmVJnjWOdFnZpeC+F9l+HG8g=\"},{\"txId\":\"5b4f03ab2e30fc4b716d4aefc47a6db59cdfca0a788068ce5131278e9d9f3d33\",\"index\":1,\"amount\":20000000,\"prevOutScriptHex\":\"76A914BA132C598CAA68EDEE903578AE11B6B03BFDC78588AC\",\"base64HashForSignature\":\"AnxjVJFcoqK4y3URV/UMI4F9jIER5bb2cDI+TtkMtMc=\"},{\"txId\":\"bb149f176978a86e83ab12a7aee4c21fd5830963d89af74064762c4f023d35ea\",\"index\":1,\"amount\":20000000,\"prevOutScriptHex\":\"76A914BA132C598CAA68EDEE903578AE11B6B03BFDC78588AC\",\"base64HashForSignature\":\"m73uZw7PDXkA5VzKxDEqdT+AMT2vwGvVcjzlRyd4a6E=\"}],\"txOuts\":[{\"index\":0,\"amount\":50000000,\"pubKeyScriptHex\":\"76A914AE74F20C5186F642F1396917DECF8246CEFDD13588AC\",\"address\":\"mwRPxwxTS9YD2bkUAqKYcHCPMpUoMemhPo\",\"isChange\":false},{\"index\":1,\"amount\":9989620,\"pubKeyScriptHex\":\"76A914BA132C598CAA68EDEE903578AE11B6B03BFDC78588AC\",\"address\":\"mxUpwv18LoZWg6k7ksGoj3r8geruTcwqZq\",\"isChange\":true}],\"totalFee\":10380}}},\"vaultName\":\"Test Organization 1\"}\n"
+        
+        let request: WalletApprovalRequest = Mock.decodeJsonType(data: approvalData.data(using: .utf8)!)
+        
+        let approvalRequest = StrikeApi.ApprovalDispositionRequest(
+            disposition: .Approve,
+            requestID: request.id,
+            requestType: request.requestType,
+            nonces: [],
+            email: "dont care"
+        )
+        XCTAssertEqual(
+            try approvalRequest.signableDataList(approverPublicKey: "4Gyit71SY3zUUmDMvAT3Lqbex8wBhWJRx8xpEXd5qq66").map( {$0.base64EncodedString()} ),
+            ["OdGGt+Yh9Fp1wjHVGwpbmVJnjWOdFnZpeC+F9l+HG8g=", "AnxjVJFcoqK4y3URV/UMI4F9jIER5bb2cDI+TtkMtMc=", "m73uZw7PDXkA5VzKxDEqdT+AMT2vwGvVcjzlRyd4a6E="]
+        )
+
+    }
+    
     func getOpAccountCreationInfo(_ request: WalletApprovalRequest) -> MultisigOpInitiation? {
         switch request.details {
         case .multisigOpInitiation(let initiation, _):

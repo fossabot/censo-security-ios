@@ -8,7 +8,7 @@
 import Foundation
 import CryptoKit
 
-extension StrikeApi.ApprovalDispositionRequest: SolanaSignable {
+extension StrikeApi.ApprovalDispositionRequest: SignableData {
     var opIndex: UInt8 {
         return 9
     }
@@ -117,6 +117,7 @@ extension StrikeApi.ApprovalDispositionRequest: SolanaSignable {
                     request.combinedBytes
                 )
             case .withdrawalRequest(let request):
+                let tokenMintAddress = request.symbolAndAmountInfo.symbolInfo.tokenMintAddress != nil ? request.symbolAndAmountInfo.symbolInfo.tokenMintAddress! : EMPTY_KEY.base58EncodedString
                 return try
                 Data(
                     [opCode] +
@@ -125,9 +126,10 @@ extension StrikeApi.ApprovalDispositionRequest: SolanaSignable {
                     request.account.identifier.sha256HashBytes +
                     request.destination.address.base58Bytes +
                     request.symbolAndAmountInfo.fundamentalAmount.bytes +
-                    request.symbolAndAmountInfo.symbolInfo.tokenMintAddress.base58Bytes
+                    tokenMintAddress.base58Bytes
                 )
             case .conversionRequest(let request):
+                let tokenMintAddress = request.symbolAndAmountInfo.symbolInfo.tokenMintAddress != nil ? request.symbolAndAmountInfo.symbolInfo.tokenMintAddress! : EMPTY_KEY.base58EncodedString
                 return try
                 Data(
                     [opCode] +
@@ -136,7 +138,7 @@ extension StrikeApi.ApprovalDispositionRequest: SolanaSignable {
                     request.account.identifier.sha256HashBytes +
                     request.destination.address.base58Bytes +
                     request.symbolAndAmountInfo.fundamentalAmount.bytes +
-                    request.symbolAndAmountInfo.symbolInfo.tokenMintAddress.base58Bytes
+                    tokenMintAddress.base58Bytes
                 )
             case .wrapConversionRequest(let request):
                 return try Data(
@@ -167,9 +169,9 @@ extension StrikeApi.ApprovalDispositionRequest: SolanaSignable {
                     request.combinedBytes
                 )
             case .loginApproval, .acceptVaultInvitation, .passwordReset:
-                throw SolanaError.invalidRequest(reason: "Invalid request for Approval")
+                throw ApprovalError.invalidRequest(reason: "Invalid request for Approval")
             case .unknown:
-                throw SolanaError.invalidRequest(reason: "Unknown Approval")
+                throw ApprovalError.invalidRequest(reason: "Unknown Approval")
             }
         }
     }
@@ -194,7 +196,12 @@ extension StrikeApi.ApprovalDispositionRequest: SolanaSignable {
             case .walletConfigPolicyUpdate(let request):
                 return request.signingData
             case .withdrawalRequest(let request):
-                return request.signingData
+                switch request.signingData {
+                case .solana(let signingData):
+                    return signingData
+                default:
+                    throw ApprovalError.invalidRequest(reason: "Invalid signing data for approval")
+                }
             case .conversionRequest(let request):
                 return request.signingData
             case .wrapConversionRequest(let request):
@@ -206,9 +213,9 @@ extension StrikeApi.ApprovalDispositionRequest: SolanaSignable {
             case .signData(let request):
                 return request.signingData
             case .loginApproval, .acceptVaultInvitation, .passwordReset:
-                throw SolanaError.invalidRequest(reason: "Invalid request for Approval")
+                throw ApprovalError.invalidRequest(reason: "Invalid request for Approval")
             case .unknown:
-                throw SolanaError.invalidRequest(reason: "Unknown Approval")
+                throw ApprovalError.invalidRequest(reason: "Unknown Approval")
             }
         }
     }
@@ -223,21 +230,33 @@ extension StrikeApi.ApprovalDispositionRequest: SolanaSignable {
             return data
         }
     }
-
+    
     func signableData(approverPublicKey: String) throws -> Data {
+        return try signableDataList(approverPublicKey: approverPublicKey)[0]
+    }
+
+    func signableDataList(approverPublicKey: String) throws -> [Data] {
         switch requestType {
-        case .passwordReset(let request):
-            return requestID.data(using: .utf8)!
+        case .passwordReset:
+            return [requestID.data(using: .utf8)!]
         case .acceptVaultInvitation(let request):
-            return request.vaultName.data(using: .utf8)!
+            return [request.vaultName.data(using: .utf8)!]
         case .loginApproval(let request):
-            return request.jwtToken.data(using: .utf8)!
+            return [request.jwtToken.data(using: .utf8)!]
+        case .withdrawalRequest(let request):
+            switch request.signingData {
+            case .bitcoin(let signingData):
+                return signingData.transaction.txIns.map( {Data(base64Encoded: $0.base64HashForSignature)!} )
+            default:
+                break
+            }
+            fallthrough
         default:
             guard let nonce = nonces.first, let nonceAccountAddress = requestType.nonceAccountAddresses.first else {
-                throw SolanaError.invalidRequest(reason: "Not enough nonce accounts")
+                throw ApprovalError.invalidRequest(reason: "Not enough nonce accounts")
             }
 
-            return try Transaction.compileMessage(
+            return try [Transaction.compileMessage(
                 feePayer: try PublicKey(string: signingData.feePayer),
                 recentBlockhash: nonce.value,
                 instructions: [
@@ -254,7 +273,7 @@ extension StrikeApi.ApprovalDispositionRequest: SolanaSignable {
                         data: [UInt8](transactionInstructionData)
                     )
                 ]
-            ).serialize()
+            ).serialize()]
         }
     }
 }
@@ -385,7 +404,7 @@ extension UInt16 {
     }
 }
 
-enum SolanaError: Error, Equatable {
+enum ApprovalError: Error, Equatable {
     case other(String)
     case invalidRequest(reason: String? = nil)
     case notFoundProgramAddress

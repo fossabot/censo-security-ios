@@ -101,6 +101,7 @@ extension Keychain {
     static private let privateKeyService = "com.strikeprotocols.private-key-biometry"
     static private let rootSeedService = "com.strikeprotocols.root-seed-biometry"
     static private let publicKeyService = "com.strikeprotocols.public-key"
+    static private let bitcoinPrivateKeyService = "com.strikeprotocols.bitcoin-private-key-biometry"
 
     struct KeyPair {
         let encryptedPrivateKey: String
@@ -174,6 +175,16 @@ extension Keychain {
             return nil
         }
     }
+    
+    static func bitcoinPrivateKey(for account: String, childKeyIndex: UInt32) -> Secp256k1HierarchicalKey? {
+        if let privateKeyData = load(account: account, service: bitcoinPrivateKeyService) {
+            return try? Secp256k1HierarchicalKey
+                .fromBase58ExtendedKey(extendedKey: privateKeyData.base58String)
+                .derived(at: DerivationNode.notHardened(childKeyIndex))
+        } else {
+            return nil
+        }
+    }
 
     static func hasPrivateKey(email: String) -> Bool {
         contains(account: email, service: privateKeyService)
@@ -197,6 +208,10 @@ extension Keychain {
 
             save(account: account, service: schemaService, data: latestSchemaVersion.data(using: .utf8)!)
         }
+    }
+    
+    static func hasBitcoinPrivateKey(email: String) -> Bool {
+        contains(account: email, service: bitcoinPrivateKeyService)
     }
 }
 
