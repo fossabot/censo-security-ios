@@ -51,6 +51,15 @@ enum BooleanSetting: String, Codable {
 
 enum WalletType: String, Codable {
     case Solana = "Solana"
+    case Bitcoin = "Bitcoin"
+    case Ethereum = "Ethereum"
+}
+
+enum LogoType: String, Codable {
+    case png = "png"
+    case jpeg = "jpeg"
+    case svg = "svg"
+    case ico = "ico"
 }
 
 

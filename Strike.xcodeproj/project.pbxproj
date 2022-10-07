@@ -156,6 +156,8 @@
 		6CBA96DD28E64680000A3727 /* RIPEMD160.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CBA96DC28E64680000A3727 /* RIPEMD160.swift */; };
 		6CBA96DF28E66BAE000A3727 /* bitcoin-test-data.json in Resources */ = {isa = PBXBuildFile; fileRef = 6CBA96DE28E66BAE000A3727 /* bitcoin-test-data.json */; };
 		6CBA96E128E743A4000A3727 /* Secp256k1HierarchicalKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CBA96E028E743A4000A3727 /* Secp256k1HierarchicalKey.swift */; };
+		6CCDBD5828EF8BBD00BBB5B6 /* AdditionalKeyRegistration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CCDBD5728EF8BBD00BBB5B6 /* AdditionalKeyRegistration.swift */; };
+		6CCDBD5A28EFC4BE00BBB5B6 /* KeychainTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CCDBD5928EFC4BE00BBB5B6 /* KeychainTests.swift */; };
 		6CD5B4A228A453DB00CD1A62 /* PasswordResetRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CD5B4A128A453DB00CD1A62 /* PasswordResetRow.swift */; };
 		6CD5B4A428A455E900CD1A62 /* PasswordResetDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CD5B4A328A455E900CD1A62 /* PasswordResetDetails.swift */; };
 /* End PBXBuildFile section */
@@ -323,6 +325,8 @@
 		6CBA96DE28E66BAE000A3727 /* bitcoin-test-data.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "bitcoin-test-data.json"; sourceTree = "<group>"; };
 		6CBA96E028E743A4000A3727 /* Secp256k1HierarchicalKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Secp256k1HierarchicalKey.swift; sourceTree = "<group>"; };
 		6CCDBD5428ECF09200BBB5B6 /* LICENSE.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = LICENSE.md; sourceTree = "<group>"; };
+		6CCDBD5728EF8BBD00BBB5B6 /* AdditionalKeyRegistration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdditionalKeyRegistration.swift; sourceTree = "<group>"; };
+		6CCDBD5928EFC4BE00BBB5B6 /* KeychainTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainTests.swift; sourceTree = "<group>"; };
 		6CD5B4A128A453DB00CD1A62 /* PasswordResetRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordResetRow.swift; sourceTree = "<group>"; };
 		6CD5B4A328A455E900CD1A62 /* PasswordResetDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordResetDetails.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -528,6 +532,7 @@
 				3D6334EA2885C299002CEC5A /* PenAndPaper.swift */,
 				3D6334E42885C298002CEC5A /* PenAndPaperConfirm.swift */,
 				3D6334E52885C298002CEC5A /* PenAndPaperRecovery.swift */,
+				6CCDBD5728EF8BBD00BBB5B6 /* AdditionalKeyRegistration.swift */,
 			);
 			path = Registration;
 			sourceTree = "<group>";
@@ -719,6 +724,7 @@
 				6C1E8C98285118F900F7C337 /* BipTests.swift */,
 				6C74FA0128525AC3005C8DE1 /* solana-test-data.json */,
 				6CBA96DE28E66BAE000A3727 /* bitcoin-test-data.json */,
+				6CCDBD5928EFC4BE00BBB5B6 /* KeychainTests.swift */,
 			);
 			path = StrikeTests;
 			sourceTree = "<group>";
@@ -951,6 +957,7 @@
 				3D2BCA08264D7A79000A6D56 /* ChangeDetails.swift in Sources */,
 				3DBC44E5280F18830016E1AB /* LoginDetails.swift in Sources */,
 				3D11521628217FB5007CD43D /* BalanceAccountSettingsRow.swift in Sources */,
+				6CCDBD5828EF8BBD00BBB5B6 /* AdditionalKeyRegistration.swift in Sources */,
 				3D6334EC2885C299002CEC5A /* PenAndPaperConfirm.swift in Sources */,
 				3DBF9DC326E000CC00D7683E /* EmptyApprovalRequestsList.swift in Sources */,
 				3DB995FB27EB7997005655F0 /* AccountCreationRow.swift in Sources */,
@@ -1092,6 +1099,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				40328E222593ED9D00F2EE41 /* StrikeTests.swift in Sources */,
+				6CCDBD5A28EFC4BE00BBB5B6 /* KeychainTests.swift in Sources */,
 				6C1E8C99285118F900F7C337 /* BipTests.swift in Sources */,
 				6C0E3EFB27F09D2A002FEE7C /* StrikeTestHelper.swift in Sources */,
 			);

@@ -12,7 +12,7 @@ struct PasswordManagerRecovery: View {
     @Environment(\.presentationMode) var presentationMode
 
     var user: StrikeApi.User
-    var publicKey: StrikeApi.PublicKey
+    var publicKeys: PublicKeys
     var onSuccess: () -> Void
 
     @State private var pastedPhrase: String = ""
@@ -71,7 +71,7 @@ struct PasswordManagerRecovery: View {
                 title: Text("Something went wrong"),
                 message: Text("Could not save your private key to keychain"),
                 primaryButton: .default(Text("Try again"), action: {
-                    savePrivateKey(phrase: pastedPhrase)
+                    savePrivateKeys(phrase: pastedPhrase)
                 }),
                 secondaryButton: .cancel(Text("Cancel"), action: {
                     pastedPhrase = ""
@@ -79,7 +79,7 @@ struct PasswordManagerRecovery: View {
             )
         }
         .onChange(of: pastedPhrase) { newValue in
-            savePrivateKey(phrase: newValue)
+            savePrivateKeys(phrase: newValue)
         }
 
         NavigationLink(isActive: .constant(showingSuccess)) {
@@ -89,7 +89,7 @@ struct PasswordManagerRecovery: View {
         }
     }
 
-    private func savePrivateKey(phrase: String) {
+    private func savePrivateKeys(phrase: String) {
         incorrectPhrase = false
 
         let pastedWords = phrase.lowercased().split(separator: " ").map(String.init)
@@ -100,12 +100,11 @@ struct PasswordManagerRecovery: View {
 
         do {
             let rootSeed = try Mnemonic(phrase: pastedWords).seed
-            let privateKey = try Ed25519HierachicalPrivateKey.fromRootSeed(rootSeed: rootSeed).privateKey
-            let publicKeyData = privateKey.publicKey.rawRepresentation
-            let phraseEncodedPublicKey = Base58.encode(publicKeyData.bytes)
-
-            if phraseEncodedPublicKey == publicKey.key {
-                try Keychain.savePrivateKey(privateKey, rootSeed: rootSeed, email: user.loginName)
+            let privateKeys = try PrivateKeys.fromRootSeed(rootSeed: rootSeed)
+            
+            if privateKeys.solana.encodedPublicKey == publicKeys.solana {
+                try Keychain.saveRootSeed(rootSeed, email: user.loginName)
+                try Keychain.savePrivateKeys(privateKeys, email: user.loginName)
 
                 showingSuccess = true
             } else {
@@ -123,7 +122,7 @@ struct PasswordManagerRecovery: View {
 struct PasswordManagerRecovery_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            PasswordManagerRecovery(user: .sample, publicKey: StrikeApi.PublicKey(key: "", walletType: ""), onSuccess: {})
+            PasswordManagerRecovery(user: .sample, publicKeys: PublicKeys(solana: "", bitcoin: ""), onSuccess: {})
         }
     }
 }

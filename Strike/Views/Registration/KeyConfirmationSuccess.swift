@@ -11,7 +11,7 @@ import BIP39
 struct KeyConfirmationSuccess: View {
     @Environment(\.strikeApi) var strikeApi
 
-    @RemoteResult private var walletSigner: StrikeApi.WalletSigner?
+    @RemoteResult private var signers: StrikeApi.Signers?
 
     var user: StrikeApi.User
     var phrase: [String]
@@ -19,7 +19,7 @@ struct KeyConfirmationSuccess: View {
 
     var body: some View {
         Group {
-            switch $walletSigner {
+            switch $signers {
             case .idle:
                 StrikeProgressView(text: "Registering your key with Strike...")
                     .onAppear(perform: reload)
@@ -70,25 +70,36 @@ struct KeyConfirmationSuccess: View {
     private func reload() {
         do {
             let rootSeed = try Mnemonic(phrase: phrase).seed
-            let privateKey = try Ed25519HierachicalPrivateKey.fromRootSeed(rootSeed: rootSeed).privateKey
-            let publicKey = Base58.encode(privateKey.publicKey.rawRepresentation.bytes)
+            let privateKeys = try PrivateKeys.fromRootSeed(rootSeed: rootSeed)
+            
+            try Keychain.saveRootSeed(rootSeed, email: user.loginName)
+            try Keychain.savePrivateKeys(privateKeys, email: user.loginName)
 
-            try Keychain.savePrivateKey(privateKey, rootSeed: rootSeed, email: user.loginName)
-
-            _walletSigner.reload(
+            _signers.reload(
                 using: strikeApi.provider.loader(
-                    for: .addWalletSigner(
-                        StrikeApi.WalletSigner(
-                            publicKey: publicKey,
-                            walletType: "Solana"
-                        )
+                    for: .addWalletSigners(
+                        StrikeApi.Signers(
+                            signers: [
+                                StrikeApi.WalletSigner(
+                                    publicKey: privateKeys.solana.encodedPublicKey,
+                                    walletType: WalletType.Solana,
+                                    signature: nil
+                                ),
+                                StrikeApi.WalletSigner(
+                                    publicKey: privateKeys.bitcoin!.getBase58ExtendedPublicKey(),
+                                    walletType: WalletType.Bitcoin,
+                                    signature: nil
+                                )
+                                ],
+                            userImage: nil
+                         )
                     )
                 )
             ) {
 
             }
         } catch {
-            _walletSigner.content = .failure(error)
+            _signers.content = .failure(error)
         }
     }
 }

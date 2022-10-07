@@ -12,7 +12,7 @@ struct PenAndPaperRecovery: View {
     @Environment(\.presentationMode) var presentationMode
 
     var user: StrikeApi.User
-    var publicKey: StrikeApi.PublicKey
+    var publicKeys: PublicKeys
     var onSuccess: () -> Void
 
     @State private var phraseIndex: Int = 0
@@ -132,12 +132,11 @@ struct PenAndPaperRecovery: View {
     private func finish() {
         do {
             let rootSeed = try Mnemonic(phrase: typedPhrase.map({ $0.lowercased().trimmingCharacters(in: .whitespaces) })).seed
-            let privateKey = try Ed25519HierachicalPrivateKey.fromRootSeed(rootSeed: rootSeed).privateKey
-            let publicKeyData = privateKey.publicKey.rawRepresentation
-            let phraseEncodedPublicKey = Base58.encode(publicKeyData.bytes)
+            let privateKeys = try PrivateKeys.fromRootSeed(rootSeed: rootSeed)
 
-            if phraseEncodedPublicKey == publicKey.key {
-                try Keychain.savePrivateKey(privateKey, rootSeed: rootSeed, email: user.loginName)
+            if privateKeys.solana.encodedPublicKey == publicKeys.solana {
+                try Keychain.saveRootSeed(rootSeed, email: user.loginName)
+                try Keychain.savePrivateKeys(privateKeys, email: user.loginName)
 
                 showingSuccess = true
             } else {
@@ -155,7 +154,7 @@ struct PenAndPaperRecovery: View {
 struct PenAndPaperRecovery_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            PenAndPaperRecovery(user: .sample, publicKey: StrikeApi.PublicKey(key: "sdfsdf", walletType: "Solana"), onSuccess: {})
+            PenAndPaperRecovery(user: .sample, publicKeys: PublicKeys(solana: "sdfsdf", bitcoin: ""), onSuccess: {})
         }
     }
 }

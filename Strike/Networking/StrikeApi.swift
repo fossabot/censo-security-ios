@@ -18,7 +18,7 @@ struct StrikeApi {
 
         case verifyUser
         case walletSigners
-        case addWalletSigner(WalletSigner)
+        case addWalletSigners(Signers)
         case walletApprovals
         case registerApprovalDisposition(ApprovalDispositionRequest)
         case multipleAccountNonce(GetMultipleAccountsRequest)
@@ -161,8 +161,8 @@ extension StrikeApi {
 
                 let dateString = DateFormatter.iso8601Full.string(from: date)
 
-                let keyInfo = try Keychain.keyInfoForEmail(email: email)
-                let signature = try keyInfo.privateKey.signature(for: dateString.data(using: .utf8)!).base64EncodedString()
+                let privateKeys = try Keychain.keyInfoForEmail(email: email)
+                let signature = try privateKeys.solana.signature(for: dateString.data(using: .utf8)!).base64EncodedString()
 
                 try credentialsContainer.encode(signature, forKey: .timestampSignature)
             case .signature(let email, .some(let privateKey)):
@@ -192,7 +192,7 @@ extension StrikeApi {
 
     struct PublicKey: Codable {
         let key: String
-        let walletType: String
+        let walletType: WalletType
     }
     
     struct Organization: Codable {
@@ -207,7 +207,19 @@ extension StrikeApi {
 
     struct WalletSigner: Codable {
         let publicKey: String
-        let walletType: String
+        let walletType: WalletType
+        let signature: String?
+    }
+    
+    struct UserImage: Codable {
+        let image: String
+        let type: LogoType
+        let signature: String
+    }
+    
+    struct Signers: Codable {
+        let signers: [WalletSigner]
+        let userImage: UserImage?
     }
 
     struct ConnectedWallet: Codable {
@@ -320,23 +332,24 @@ extension StrikeApi {
         func encode(to encoder: Encoder) throws {
             var container = encoder.container(keyedBy: CodingKeys.self)
 
-            let keyInfo = try Keychain.keyInfoForEmail(email: email)
+            let privateKeys = try Keychain.keyInfoForEmail(email: email)
+            let approverPublicKey = privateKeys.solana.encodedPublicKey
             let signatureInfo: SignatureType = try
             {
                 switch requestType {
                 case .loginApproval, .acceptVaultInvitation, .passwordReset:
                     return SignatureType.nochain(
                         NoChainSignature(
-                            signature: try keyInfo.privateKey.signature(for: signableData(approverPublicKey: keyInfo.encodedPublicKey)).base64EncodedString()
+                            signature: try privateKeys.solana.signature(for: signableData(approverPublicKey: approverPublicKey)).base64EncodedString()
                         )
                     )
                 case .withdrawalRequest(let request):
                     switch (request.signingData) {
                     case .bitcoin(let signingData):
-                        if let bitcoinKey = Keychain.bitcoinPrivateKey(for: email, childKeyIndex: signingData.childKeyIndex) {
+                        if let bitcoinKey = privateKeys.bitcoin?.derived(at: DerivationNode.notHardened(signingData.childKeyIndex)) {
                             return SignatureType.bitcoin(
                                 BitcoinSignatures(
-                                    signatures: try signableDataList(approverPublicKey: keyInfo.encodedPublicKey).map( { try bitcoinKey.signData(message: $0).base64EncodedString() })
+                                    signatures: try signableDataList(approverPublicKey: approverPublicKey).map( { try bitcoinKey.signData(message: $0).base64EncodedString() })
                                 )
                             )
                         } else {
@@ -347,7 +360,7 @@ extension StrikeApi {
                     }
                     fallthrough
                 default:
-                    let signature = try keyInfo.privateKey.signature(for: signableData(approverPublicKey: keyInfo.encodedPublicKey)).base64EncodedString()
+                    let signature = try privateKeys.solana.signature(for: signableData(approverPublicKey: approverPublicKey)).base64EncodedString()
                     if let nonce = nonces.first, let nonceAccountAddress = requestType.nonceAccountAddresses.first {
                         return SignatureType.solana(SolanaSignature(signature: signature, nonce: nonce.value, nonceAccountAddress: nonceAccountAddress))
                     } else {
@@ -400,11 +413,12 @@ extension StrikeApi {
 
             try container.encode(disposition.rawValue, forKey: .approvalDisposition)
 
-            let keyInfo = try Keychain.keyInfoForEmail(email: email)
-            let initiatorSignature = try keyInfo.privateKey.signature(for: signableData(approverPublicKey: keyInfo.encodedPublicKey)).base64EncodedString()
+            let solanaPrivateKey = try Keychain.keyInfoForEmail(email: email).solana
+            let approverPublicKey = solanaPrivateKey.encodedPublicKey
+            let initiatorSignature = try solanaPrivateKey.signature(for: signableData(approverPublicKey: approverPublicKey)).base64EncodedString()
             try container.encode(initiatorSignature, forKey: .initiatorSignature)
             try container.encode(try self.opAccountPublicKey.base58EncodedString, forKey: .opAccountAddress)
-            let ephemeralSignature = try opAccountPrivateKey.signature(for: signableData(approverPublicKey: keyInfo.encodedPublicKey)).base64EncodedString()
+            let ephemeralSignature = try opAccountPrivateKey.signature(for: signableData(approverPublicKey: approverPublicKey)).base64EncodedString()
             try container.encode(ephemeralSignature, forKey: .opAccountSignature)
 
             if try !supplyInstructions.isEmpty {
@@ -413,7 +427,7 @@ extension StrikeApi {
                         SupplyDappInstructionsTxSignature(
                             nonce: instruction.nonce.value,
                             nonceAccountAddress: instruction.nonceAccountAddress,
-                            signature: try keyInfo.privateKey.signature(for: instruction.signableData(approverPublicKey: keyInfo.encodedPublicKey)).base64EncodedString()
+                            signature: try solanaPrivateKey.signature(for: instruction.signableData(approverPublicKey: approverPublicKey)).base64EncodedString()
                         )
                     })
                 )
@@ -421,6 +435,21 @@ extension StrikeApi {
                 try container.encode(supplyDappInstructions, forKey: .supplyDappInstructions)
             }
         }
+    }
+}
+
+extension StrikeApi.User {
+    var registeredPublicKeys: PublicKeys? {
+        if self.publicKeys.isEmpty {
+            return nil
+        }
+        if let solanaKey = self.publicKeys.first(where: { $0.walletType == WalletType.Solana }) {
+            return PublicKeys(
+                solana: solanaKey.key,
+                bitcoin: self.publicKeys.first(where: { $0.walletType == WalletType.Bitcoin })?.key
+            )
+        }
+        return nil
     }
 }
 
@@ -493,9 +522,10 @@ extension StrikeApi.Target: Moya.TargetType {
             return "v1/login"
         case .verifyUser:
             return "v1/users"
-        case .walletSigners,
-             .addWalletSigner:
+        case .walletSigners:
             return "v1/wallet-signers"
+        case .addWalletSigners:
+            return "v2/wallet-signers"
         case .walletApprovals:
             return "v1/wallet-approvals"
         case .registerPushToken:
@@ -524,7 +554,7 @@ extension StrikeApi.Target: Moya.TargetType {
              .minVersion:
             return .get
         case .connectDApp,
-             .addWalletSigner,
+             .addWalletSigners,
              .multipleAccountNonce,
              .registerApprovalDisposition,
              .initiateRequest,
@@ -547,8 +577,8 @@ extension StrikeApi.Target: Moya.TargetType {
              .resetPassword,
              .minVersion:
             return .requestPlain
-        case .addWalletSigner(let walletSigner):
-            return .requestJSONEncodable(walletSigner)
+        case .addWalletSigners(let signers):
+            return .requestJSONEncodable(signers)
         case .registerPushToken(let token, let deviceIdentifier):
             #if DEBUG
             return .requestJSONEncodable([

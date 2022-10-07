@@ -11,7 +11,7 @@ import SwiftUI
 struct RegistrationView: View {
     @Environment(\.strikeApi) var strikeApi
 
-    @State private var storedPublicKey: String?
+    @State private var storedPublicKeys: PublicKeys?
 
     var user: StrikeApi.User
     var onReloadUser: () -> Void
@@ -21,24 +21,34 @@ struct RegistrationView: View {
         self.user = user
         self.onReloadUser = onReloadUser
         self.onProfile = onProfile
-        self._storedPublicKey = State(initialValue: Keychain.publicKey(email: user.loginName))
+        Keychain.migrateIfNeeded(for: user.loginName)
+        self._storedPublicKeys = State(initialValue: Keychain.publicKeys(email: user.loginName))
     }
 
     var body: some View {
-        switch (storedPublicKey, user.publicKeys.first) {
+        switch (storedPublicKeys, user.registeredPublicKeys) {
         case (_, .none):
             KeyGeneration(user: user, onSuccess: onReloadUser, onProfile: onProfile)
-        case (.none, .some(let remotePublicKey)):
-            KeyRetrieval(user: user, publicKey: remotePublicKey) {
-                storedPublicKey = Keychain.publicKey(email: user.loginName)
+        case (.none, .some(let remotePublicKeys)):
+            KeyRetrieval(user: user, publicKeys: remotePublicKeys) {
+                storedPublicKeys = Keychain.publicKeys(email: user.loginName)
             } onProfile: {
                 onProfile()
             }
-        case (.some(let storedPublicKey), .some(let remotePublicKey)) where storedPublicKey == remotePublicKey.key:
+        case (.some(let storedPublicKeys), .some(let remotePublicKeys)) where storedPublicKeys == remotePublicKeys:
             ApprovalRequestsView(user: user)
                 .navigationTitle("Approvals")
-        case (.some, .some):
-            Text("Keys do not match, call support")
+        case (.some(let storedKeys), .some(let remoteKeys)):
+            // check if we need to register the bitcoin key
+            if storedKeys.bitcoin != nil && remoteKeys.bitcoin == nil {
+                AdditionalKeyRegistration(
+                    user: user,
+                    keyToRegister: StrikeApi.WalletSigner(publicKey: storedKeys.bitcoin!, walletType: WalletType.Bitcoin, signature: nil)) {
+                    onReloadUser()
+                }
+            } else {
+                Text("Keys do not match, call support")
+            }
         }
     }
 }

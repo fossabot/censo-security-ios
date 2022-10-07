@@ -11,6 +11,103 @@ import LocalAuthentication
 import CryptoKit
 import BIP39
 
+
+struct PrivateKeys: Codable {
+    var solana: Curve25519.Signing.PrivateKey
+    var bitcoin: Secp256k1HierarchicalKey?
+    
+    init(solana: Curve25519.Signing.PrivateKey, bitcoin: Secp256k1HierarchicalKey?) {
+        self.solana = solana
+        self.bitcoin = bitcoin
+    }
+    
+    enum CodingKeys: String, CodingKey {
+        case solana
+        case bitcoin
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let solanaKey = try container.decode(String.self, forKey: .solana)
+        let bitcoinExtendedKey = try container.decode(String?.self, forKey: .bitcoin)
+        self = PrivateKeys(
+            solana: try Curve25519.Signing.PrivateKey.init(rawRepresentation: Base58.decode(solanaKey)),
+            bitcoin: bitcoinExtendedKey != nil ? try Secp256k1HierarchicalKey.fromBase58ExtendedKey(extendedKey: bitcoinExtendedKey!) : nil
+        )
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode( Base58.encode([UInt8](solana.rawRepresentation)), forKey: .solana)
+        try container.encode( bitcoin?.getBase58ExtendedPrivateKey(), forKey: .bitcoin)
+    }
+}
+
+extension PrivateKeys {
+    var bytes: Data {
+        get throws {
+            return try JSONEncoder().encode(self)
+        }
+    }
+}
+
+extension PrivateKeys {
+    var publicKeys: PublicKeys {
+        get throws {
+            PublicKeys(
+                solana: Base58.encode([UInt8](solana.publicKey.rawRepresentation)),
+                bitcoin: bitcoin?.getBase58ExtendedPublicKey()
+            )
+        }
+    }
+}
+
+extension PrivateKeys {
+    static func fromRootSeed(rootSeed: [UInt8]) throws -> PrivateKeys {
+        return PrivateKeys(
+            solana: try Ed25519HierachicalPrivateKey.fromRootSeed(rootSeed: rootSeed).privateKey,
+            bitcoin: try Secp256k1HierarchicalKey.fromRootSeed(rootSeed: rootSeed, derivationPath: Secp256k1HierarchicalKey.bitcoinDerivationPath)
+        )
+    }
+}
+
+extension Curve25519.Signing.PrivateKey {
+    var encodedPublicKey: String {
+        return Base58.encode(self.publicKey.rawRepresentation.bytes)
+    }
+}
+
+struct PublicKeys: Codable, Equatable {
+    var solana: String
+    var bitcoin: String?
+}
+
+extension PublicKeys {
+    var bytes: Data {
+        get throws {
+            return try JSONEncoder().encode(self)
+        }
+    }
+}
+
+extension Data {
+    var privateKeys: PrivateKeys {
+        get throws {
+            return try JSONDecoder().decode(PrivateKeys.self, from: self)
+        }
+    }
+}
+
+extension Data {
+    var publicKeys: PublicKeys {
+        get throws {
+            return try JSONDecoder().decode(PublicKeys.self, from: self)
+        }
+    }
+}
+
+
+
 public class Keychain {
     private class func queryDictionary(account: String, service: String) -> [String : Any] {
         return [
@@ -87,7 +184,7 @@ public class Keychain {
         var result: AnyObject?
         let status = SecItemCopyMatching(query as CFDictionary, &result)
 
-        return status == errSecInteractionNotAllowed
+        return status == errSecInteractionNotAllowed || status == noErr
     }
 }
 
@@ -101,14 +198,13 @@ extension Keychain {
     static private let privateKeyService = "com.strikeprotocols.private-key-biometry"
     static private let rootSeedService = "com.strikeprotocols.root-seed-biometry"
     static private let publicKeyService = "com.strikeprotocols.public-key"
-    static private let bitcoinPrivateKeyService = "com.strikeprotocols.bitcoin-private-key-biometry"
 
     struct KeyPair {
         let encryptedPrivateKey: String
         let publicKey: String
     }
 
-    static func publicKey(email: String) -> String? {
+    static func publicKeys(email: String) -> PublicKeys? {
         let email = email.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
 
         // RETIRE THIS BLOCK AND REMOVE PRODUCTION FLAG
@@ -121,69 +217,58 @@ extension Keychain {
         }
         #endif
 
-        // MIGRATION FOR OLD USERS
-        let oldPrivateKeyService = "com.strikeprotocols.private-key"
-        let oldRootSeedService = "com.strikeprotocols.root-seed"
-
-        if let oldPrivateKeyData = load(account: email, service: oldPrivateKeyService) {
-            if let oldPrivateKey = try? Curve25519.Signing.PrivateKey(rawRepresentation: oldPrivateKeyData),
-               let oldRootSeed = load(account: email, service: oldRootSeedService)  {
-                do {
-                    try savePrivateKey(oldPrivateKey, rootSeed: oldRootSeed.bytes, email: email)
-                } catch {
-                    RaygunClient.sharedInstance().send(error: error, tags: ["key-migration"], customData: nil)
-                    return Base58.encode(oldPrivateKey.publicKey.rawRepresentation.bytes)
-                }
-            }
-        }
-
         if let publicKeyData = load(account: email, service: publicKeyService), hasPrivateKey(email: email) {
-            return Base58.encode(publicKeyData.bytes)
+            return try? publicKeyData.publicKeys
         }
 
-        guard let privateKey = privateKey(for: email) else {
+        guard let privateKeys = privateKeys(for: email) else {
             return nil
         }
 
-        let publicKeyData = privateKey.publicKey.rawRepresentation
+        if let publicKeys = try? privateKeys.publicKeys {
+            if let publicKeysBytes = try? publicKeys.bytes {
+                save(account: email, service: publicKeyService, data: publicKeysBytes)
+                return publicKeys
+            }
+        }
 
-        save(account: email, service: publicKeyService, data: publicKeyData)
-
-        return Base58.encode(publicKeyData.bytes)
+        return nil
     }
 
-    static func savePrivateKey(_ privateKey: Curve25519.Signing.PrivateKey, rootSeed: [UInt8], email: String) throws {
+    static func saveRootSeed(_ rootSeed: [UInt8], email: String) throws {
         let email = email.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
 
         if !save(account: email, service: rootSeedService, data: Data(rootSeed), biometryProtected: true) {
             throw KeyError.couldNotSavePrivateKey
         }
+    }
+    
+    static func savePrivateKeys(_ privateKeys: PrivateKeys, email: String) throws {
+        let email = email.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
 
-        if !save(account: email, service: privateKeyService, data: privateKey.rawRepresentation, biometryProtected: true) {
+        if !save(account: email, service: privateKeyService, data: try privateKeys.bytes, biometryProtected: true) {
             throw KeyError.couldNotSavePrivateKey
         }
 
-        save(account: email, service: publicKeyService, data: privateKey.publicKey.rawRepresentation)
+        save(account: email, service: publicKeyService, data: try privateKeys.publicKeys.bytes)
     }
 
-    static func privateKey(for account: String) -> Curve25519.Signing.PrivateKey? {
+    static func privateKeys(for account: String) -> PrivateKeys? {
         if let privateKeyData = load(account: account, service: privateKeyService) {
-            return try? Curve25519.Signing.PrivateKey(rawRepresentation: privateKeyData)
+            return try? privateKeyData.privateKeys
         } else if let rootSeedData = load(account: account, service: rootSeedService) {
-            return try? Ed25519HierachicalPrivateKey.fromRootSeed(rootSeed: rootSeedData.bytes).privateKey
-        } else {
-            return nil
+            if let solanaKey = try? Ed25519HierachicalPrivateKey.fromRootSeed(rootSeed: rootSeedData.bytes).privateKey {
+                return PrivateKeys(
+                    solana: solanaKey,
+                    bitcoin: try? .fromRootSeed(rootSeed: rootSeedData.bytes, derivationPath: Secp256k1HierarchicalKey.bitcoinDerivationPath)
+                )
+            }
         }
+        return nil
     }
     
-    static func bitcoinPrivateKey(for account: String, childKeyIndex: UInt32) -> Secp256k1HierarchicalKey? {
-        if let privateKeyData = load(account: account, service: bitcoinPrivateKeyService) {
-            return try? Secp256k1HierarchicalKey
-                .fromBase58ExtendedKey(extendedKey: privateKeyData.base58String)
-                .derived(at: DerivationNode.notHardened(childKeyIndex))
-        } else {
-            return nil
-        }
+    static func rootSeed(for account: String) -> Data? {
+        return load(account: account, service: rootSeedService)
     }
 
     static func hasPrivateKey(email: String) -> Bool {
@@ -191,38 +276,76 @@ extension Keychain {
     }
 
     static private let schemaService = "com.strikeprotocols.schema"
-    static private let latestSchemaVersion = "20221004"
+    static private let schemaVersion1 = "20221004"
+    static private let schemaVersion2 = "20221008"
 
     static func migrateIfNeeded(for account: String) {
         let schemaVersionData = load(account: account, service: schemaService)
-        let schemeVersion = schemaVersionData.flatMap { String(data: $0, encoding: .utf8) }
+        let schemaVersion = schemaVersionData.flatMap { String(data: $0, encoding: .utf8) }
 
-        if schemeVersion != latestSchemaVersion {
-            if let privateKeyData = load(account: account, service: privateKeyService) {
-                save(account: account, service: privateKeyService, data: privateKeyData, synced: false, biometryProtected: true)
+        switch(schemaVersion) {
+        case nil:
+            
+            // handle really old users whose keys were not behind biometry
+            let oldPrivateKeyService = "com.strikeprotocols.private-key"
+            let oldRootSeedService = "com.strikeprotocols.root-seed"
+            
+            if let oldPrivateKeyData = load(account: account, service: oldPrivateKeyService) {
+                if let oldPrivateKey = try? Curve25519.Signing.PrivateKey(rawRepresentation: oldPrivateKeyData),
+                   let oldRootSeed = load(account: account, service: oldRootSeedService)  {
+                    do {
+                        try saveRootSeed(oldRootSeed.bytes, email: account)
+                        save(account: account, service: privateKeyService, data: oldPrivateKey.rawRepresentation, biometryProtected: false)
+                        clear(account: account, service: oldRootSeedService)
+                        clear(account: account, service: oldPrivateKeyService)
+                    } catch {
+                        RaygunClient.sharedInstance().send(error: error, tags: ["key-migration"], customData: nil)
+                    }
+                }
             }
-
+            save(account: account, service: schemaService, data: schemaVersion1.data(using: .utf8)!)
+            fallthrough
+            
+        case schemaVersion1:
             if let rootSeedData = load(account: account, service: rootSeedService) {
                 save(account: account, service: rootSeedService, data: rootSeedData, synced: false, biometryProtected: true)
+                
+                // we are migrating from just storing a solana private key to storing a json structure with all the keys.
+                // as part of this we will also create their bitcoin key and store it. This will cause the Registration View
+                // to see a delta between what is stored and what backend has, so it triggers registration of the
+                // bitcoin key
+                //
+                // also in order to save a face id - instead of reading the existing private key, we will regenerate all the keys
+                // from the root seed and store them in the new structure if they previously stored a private key
+                if contains(account: account, service: privateKeyService) {
+                    do {
+                        try Keychain.savePrivateKeys(
+                            try PrivateKeys(
+                               solana: Ed25519HierachicalPrivateKey.fromRootSeed(rootSeed: rootSeedData.bytes).privateKey,
+                               bitcoin: try Secp256k1HierarchicalKey.fromRootSeed(rootSeed: rootSeedData.bytes, derivationPath: Secp256k1HierarchicalKey.bitcoinDerivationPath)
+                            ),
+                            email: account
+                        )
+                    } catch {
+                        RaygunClient.sharedInstance().send(error: error, tags: ["key-migration"], customData: nil)
+                    }
+                }
             }
-
-            save(account: account, service: schemaService, data: latestSchemaVersion.data(using: .utf8)!)
+            save(account: account, service: schemaService, data: schemaVersion2.data(using: .utf8)!)
+            fallthrough
+            
+        default:
+            break
         }
-    }
-    
-    static func hasBitcoinPrivateKey(email: String) -> Bool {
-        contains(account: email, service: bitcoinPrivateKeyService)
     }
 }
 
 extension Keychain {
-    static func keyInfoForEmail(email: String) throws -> (privateKey: Curve25519.Signing.PrivateKey, encodedPublicKey: String) {
-        guard let privateKey = privateKey(for: email) else {
+    static func keyInfoForEmail(email: String) throws -> PrivateKeys {
+        guard let privateKeys = privateKeys(for: email) else {
             throw KeyError.noPrivateKey
         }
 
-        let publicKeyData = privateKey.publicKey.rawRepresentation
-        let encodedPublicKey = Base58.encode(publicKeyData.bytes)
-        return (privateKey, encodedPublicKey)
+        return privateKeys
     }
 }
