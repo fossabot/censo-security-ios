@@ -307,7 +307,7 @@ struct TransactionInput: Codable, Equatable {
     let txId: String
     let index: Int
     let amount: Int64
-    let prevOutScriptHex: String
+    let inputScriptHex: String
     let base64HashForSignature: String
 }
 
