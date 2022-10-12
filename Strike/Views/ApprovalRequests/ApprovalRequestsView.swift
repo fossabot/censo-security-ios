@@ -63,7 +63,7 @@ struct ApprovalRequestsView: View {
     }
 
     private func refresh(_ context: RefreshContext) {
-        _approvalRequests.reload(using: loader, silent: true) {
+        _approvalRequests.reload(using: loader, silent: true) { _ in
             context.endRefreshing()
         }
 

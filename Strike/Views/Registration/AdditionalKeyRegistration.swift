@@ -55,8 +55,8 @@ struct AdditionalKeyRegistration: View {
                          )
                     )
                 )
-            ) {
-                if case .success = _signers.content {
+            ) { error in
+                if error == nil {
                     onSuccess()
                 }
             }

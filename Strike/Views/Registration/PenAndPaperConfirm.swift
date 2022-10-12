@@ -32,12 +32,16 @@ struct PenAndPaperConfirm: View {
             BackButtonBar(caption: "Write down phrase", presentationMode: presentationMode)
 
             Spacer()
-                .frame(height: 10)
+                .frame(maxHeight: 50)
 
             Text("Enter each word to verify you have the phrase written down correctly")
                 .font(.system(size: 18).bold())
-                .padding(40)
+                .padding([.leading, .trailing], 40)
                 .foregroundColor(.white.opacity(0.8))
+                .fixedSize(horizontal: false, vertical: true)
+
+            Spacer()
+                .frame(maxHeight: 40)
 
             Text("Enter word #")
                 .font(.system(size: 18).bold())
@@ -61,7 +65,6 @@ struct PenAndPaperConfirm: View {
             .accentColor(Color.Strike.purple)
             .focusedOnAppear()
 
-            Spacer()
             Spacer()
             Spacer()
         }
