@@ -37,7 +37,7 @@ struct RemoteResult<Value>: DynamicProperty {
         case failure(Error)
     }
 
-    func reload<L>(using loader: L, silent: Bool = false, completion: (() -> Void)? = nil) where L : Loadable, L.Value == Value {
+    func reload<L>(using loader: L, silent: Bool = false, completion: ((Error?) -> Void)? = nil) where L : Loadable, L.Value == Value {
         let shouldChangeState: Bool
 
         if case .success = content {
@@ -54,11 +54,11 @@ struct RemoteResult<Value>: DynamicProperty {
             switch result {
             case .success(let value):
                 self.content = .success(value)
+                completion?(nil)
             case .failure(let error):
                 self.content = .failure(error)
+                completion?(error)
             }
-
-            completion?()
         }
     }
 }

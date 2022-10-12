@@ -71,9 +71,6 @@ struct KeyConfirmationSuccess: View {
         do {
             let rootSeed = try Mnemonic(phrase: phrase).seed
             let privateKeys = try PrivateKeys.fromRootSeed(rootSeed: rootSeed)
-            
-            try Keychain.saveRootSeed(rootSeed, email: user.loginName)
-            try Keychain.savePrivateKeys(privateKeys, email: user.loginName)
 
             _signers.reload(
                 using: strikeApi.provider.loader(
@@ -95,8 +92,13 @@ struct KeyConfirmationSuccess: View {
                          )
                     )
                 )
-            ) {
-
+            ) { error in
+                do {
+                    try Keychain.saveRootSeed(rootSeed, email: user.loginName)
+                    try Keychain.savePrivateKeys(privateKeys, email: user.loginName)
+                } catch {
+                    _signers.content = .failure(error)
+                }
             }
         } catch {
             _signers.content = .failure(error)
