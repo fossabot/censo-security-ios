@@ -446,7 +446,8 @@ extension StrikeApi.User {
         if let solanaKey = self.publicKeys.first(where: { $0.walletType == WalletType.Solana }) {
             return PublicKeys(
                 solana: solanaKey.key,
-                bitcoin: self.publicKeys.first(where: { $0.walletType == WalletType.Bitcoin })?.key
+                bitcoin: self.publicKeys.first(where: { $0.walletType == WalletType.Bitcoin })?.key,
+                ethereum: self.publicKeys.first(where: { $0.walletType == WalletType.Ethereum })?.key
             )
         }
         return nil

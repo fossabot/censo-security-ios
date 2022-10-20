@@ -27,6 +27,12 @@ public struct Secp256k1HierarchicalKey {
                                         DerivationNode.hardened(0),
                                         DerivationNode.notHardened(0)]
     
+    static let ethereumDerivationPath = [DerivationNode.hardened(44),
+                                         DerivationNode.hardened(60),
+                                         DerivationNode.hardened(0),
+                                         DerivationNode.notHardened(0)]
+    
+    
     public init(privateKey: Secp256k1PrivateKey) {
         self.privateKey = privateKey
     }
@@ -41,6 +47,10 @@ public struct Secp256k1HierarchicalKey {
     
     public func getBase58ExtendedPrivateKey() -> String {
         return getBase58ExtendedKey(isPrivate: true, isMainnet: true)
+    }
+    
+    public func getBase58CompressedPublicKey() -> String {
+        return Base58.encode([UInt8](privateKey.getPublicKeyBytes()))
     }
     
     private func getBase58ExtendedKey(isPrivate: Bool, isMainnet: Bool) -> String {

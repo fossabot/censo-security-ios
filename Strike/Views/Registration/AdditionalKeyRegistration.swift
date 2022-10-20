@@ -14,19 +14,19 @@ struct AdditionalKeyRegistration: View {
     @RemoteResult private var signers: StrikeApi.Signers?
 
     var user: StrikeApi.User
-    var keyToRegister: StrikeApi.WalletSigner
+    var keysToRegister: [StrikeApi.WalletSigner]
     var onSuccess: () -> Void
 
     var body: some View {
         Group {
             switch $signers {
             case .idle:
-                StrikeProgressView(text: "Registering your \(keyToRegister.walletType) key with Strike...")
+                StrikeProgressView(text: "Registering your additional keys with Strike...")
                     .onAppear(perform: reload)
             case .failure(let error):
                 RetryView(error: error, action: reload)
             default:
-                StrikeProgressView(text: "Registering your \(keyToRegister.walletType) key with Strike...")
+                StrikeProgressView(text: "Registering your additional keys with Strike...")
             }
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -44,13 +44,13 @@ struct AdditionalKeyRegistration: View {
                 using: strikeApi.provider.loader(
                     for: .addWalletSigners(
                         StrikeApi.Signers(
-                            signers: [
+                            signers: try keysToRegister.map({
                                 StrikeApi.WalletSigner(
-                                    publicKey: keyToRegister.publicKey,
-                                    walletType: keyToRegister.walletType,
-                                    signature: try privateKeys?.solana.signature(for: Base58.decode(keyToRegister.publicKey)).base64EncodedString()
+                                    publicKey: $0.publicKey,
+                                    walletType: $0.walletType,
+                                    signature: try privateKeys?.solana.signature(for: Base58.decode($0.publicKey)).base64EncodedString()
                                 )
-                            ],
+                            }),
                             userImage: nil
                          )
                     )
@@ -70,7 +70,10 @@ struct AdditionalKeyRegistration: View {
 struct AdditionalKeyRegistration_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            AdditionalKeyRegistration(user: .sample, keyToRegister: StrikeApi.WalletSigner(publicKey: "", walletType: WalletType.Bitcoin, signature: nil), onSuccess: {})
+            AdditionalKeyRegistration(user: .sample,
+                                      keysToRegister: [StrikeApi.WalletSigner(publicKey: "", walletType: WalletType.Bitcoin, signature: nil)],
+                                      onSuccess: {}
+            )
         }
     }
 }

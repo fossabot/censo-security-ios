@@ -24,6 +24,17 @@ struct RegistrationView: View {
         Keychain.migrateIfNeeded(for: user.loginName)
         self._storedPublicKeys = State(initialValue: Keychain.publicKeys(email: user.loginName))
     }
+    
+    private func getKeysToRegister(storedKeys: PublicKeys, remoteKeys: PublicKeys) -> [StrikeApi.WalletSigner]? {
+        var keysToRegister: [StrikeApi.WalletSigner] = []
+        if storedKeys.bitcoin != nil && remoteKeys.bitcoin == nil {
+            keysToRegister.append(StrikeApi.WalletSigner(publicKey: storedKeys.bitcoin!, walletType: WalletType.Bitcoin, signature: nil))
+        }
+        if storedKeys.ethereum != nil && remoteKeys.ethereum == nil {
+            keysToRegister.append(StrikeApi.WalletSigner(publicKey: storedKeys.ethereum!, walletType: WalletType.Ethereum, signature: nil))
+        }
+        return !keysToRegister.isEmpty ? keysToRegister : nil
+    }
 
     var body: some View {
         switch (storedPublicKeys, user.registeredPublicKeys) {
@@ -40,10 +51,10 @@ struct RegistrationView: View {
                 .navigationTitle("Approvals")
         case (.some(let storedKeys), .some(let remoteKeys)):
             // check if we need to register the bitcoin key
-            if storedKeys.bitcoin != nil && remoteKeys.bitcoin == nil {
+            if let keysToRegister = self.getKeysToRegister(storedKeys: storedKeys, remoteKeys: remoteKeys) {
                 AdditionalKeyRegistration(
                     user: user,
-                    keyToRegister: StrikeApi.WalletSigner(publicKey: storedKeys.bitcoin!, walletType: WalletType.Bitcoin, signature: nil)) {
+                    keysToRegister: keysToRegister) {
                     onReloadUser()
                 }
             } else {

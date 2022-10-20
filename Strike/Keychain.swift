@@ -15,24 +15,29 @@ import BIP39
 struct PrivateKeys: Codable {
     var solana: Curve25519.Signing.PrivateKey
     var bitcoin: Secp256k1HierarchicalKey?
+    var ethereum: Secp256k1HierarchicalKey?
     
-    init(solana: Curve25519.Signing.PrivateKey, bitcoin: Secp256k1HierarchicalKey?) {
+    init(solana: Curve25519.Signing.PrivateKey, bitcoin: Secp256k1HierarchicalKey?, ethereum: Secp256k1HierarchicalKey?) {
         self.solana = solana
         self.bitcoin = bitcoin
+        self.ethereum = ethereum
     }
     
     enum CodingKeys: String, CodingKey {
         case solana
         case bitcoin
+        case ethereum
     }
     
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let solanaKey = try container.decode(String.self, forKey: .solana)
         let bitcoinExtendedKey = try container.decode(String?.self, forKey: .bitcoin)
+        let ethereumExtendedKey = try container.decode(String?.self, forKey: .ethereum)
         self = PrivateKeys(
             solana: try Curve25519.Signing.PrivateKey.init(rawRepresentation: Base58.decode(solanaKey)),
-            bitcoin: bitcoinExtendedKey != nil ? try Secp256k1HierarchicalKey.fromBase58ExtendedKey(extendedKey: bitcoinExtendedKey!) : nil
+            bitcoin: bitcoinExtendedKey != nil ? try Secp256k1HierarchicalKey.fromBase58ExtendedKey(extendedKey: bitcoinExtendedKey!) : nil,
+            ethereum: ethereumExtendedKey != nil ? try Secp256k1HierarchicalKey.fromBase58ExtendedKey(extendedKey: ethereumExtendedKey!) : nil
         )
     }
 
@@ -40,6 +45,7 @@ struct PrivateKeys: Codable {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode( Base58.encode([UInt8](solana.rawRepresentation)), forKey: .solana)
         try container.encode( bitcoin?.getBase58ExtendedPrivateKey(), forKey: .bitcoin)
+        try container.encode( ethereum?.getBase58ExtendedPrivateKey(), forKey: .ethereum)
     }
 }
 
@@ -56,7 +62,8 @@ extension PrivateKeys {
         get throws {
             PublicKeys(
                 solana: Base58.encode([UInt8](solana.publicKey.rawRepresentation)),
-                bitcoin: bitcoin?.getBase58ExtendedPublicKey()
+                bitcoin: bitcoin?.getBase58ExtendedPublicKey(),
+                ethereum: ethereum?.getBase58CompressedPublicKey()
             )
         }
     }
@@ -66,7 +73,8 @@ extension PrivateKeys {
     static func fromRootSeed(rootSeed: [UInt8]) throws -> PrivateKeys {
         return PrivateKeys(
             solana: try Ed25519HierachicalPrivateKey.fromRootSeed(rootSeed: rootSeed).privateKey,
-            bitcoin: try Secp256k1HierarchicalKey.fromRootSeed(rootSeed: rootSeed, derivationPath: Secp256k1HierarchicalKey.bitcoinDerivationPath)
+            bitcoin: try Secp256k1HierarchicalKey.fromRootSeed(rootSeed: rootSeed, derivationPath: Secp256k1HierarchicalKey.bitcoinDerivationPath),
+            ethereum: try Secp256k1HierarchicalKey.fromRootSeed(rootSeed: rootSeed, derivationPath: Secp256k1HierarchicalKey.ethereumDerivationPath)
         )
     }
 }
@@ -80,6 +88,7 @@ extension Curve25519.Signing.PrivateKey {
 struct PublicKeys: Codable, Equatable {
     var solana: String
     var bitcoin: String?
+    var ethereum: String?
 }
 
 extension PublicKeys {
@@ -257,12 +266,7 @@ extension Keychain {
         if let privateKeyData = load(account: account, service: privateKeyService) {
             return try? privateKeyData.privateKeys
         } else if let rootSeedData = load(account: account, service: rootSeedService) {
-            if let solanaKey = try? Ed25519HierachicalPrivateKey.fromRootSeed(rootSeed: rootSeedData.bytes).privateKey {
-                return PrivateKeys(
-                    solana: solanaKey,
-                    bitcoin: try? .fromRootSeed(rootSeed: rootSeedData.bytes, derivationPath: Secp256k1HierarchicalKey.bitcoinDerivationPath)
-                )
-            }
+            return try? PrivateKeys.fromRootSeed(rootSeed: rootSeedData.bytes)
         }
         return nil
     }
@@ -278,6 +282,7 @@ extension Keychain {
     static private let schemaService = "com.strikeprotocols.schema"
     static private let schemaVersion1 = "20221004"
     static private let schemaVersion2 = "20221008"
+    static private let schemaVersion3 = "20221020"
 
     static func migrateIfNeeded(for account: String) {
         let schemaVersionData = load(account: account, service: schemaService)
@@ -306,7 +311,7 @@ extension Keychain {
             save(account: account, service: schemaService, data: schemaVersion1.data(using: .utf8)!)
             fallthrough
             
-        case schemaVersion1:
+        case schemaVersion1, schemaVersion2:
             if let rootSeedData = load(account: account, service: rootSeedService) {
                 save(account: account, service: rootSeedService, data: rootSeedData, synced: false, biometryProtected: true)
                 
@@ -320,10 +325,7 @@ extension Keychain {
                 if contains(account: account, service: privateKeyService) {
                     do {
                         try Keychain.savePrivateKeys(
-                            try PrivateKeys(
-                               solana: Ed25519HierachicalPrivateKey.fromRootSeed(rootSeed: rootSeedData.bytes).privateKey,
-                               bitcoin: try Secp256k1HierarchicalKey.fromRootSeed(rootSeed: rootSeedData.bytes, derivationPath: Secp256k1HierarchicalKey.bitcoinDerivationPath)
-                            ),
+                            try PrivateKeys.fromRootSeed(rootSeed: rootSeedData.bytes),
                             email: account
                         )
                     } catch {
@@ -331,7 +333,7 @@ extension Keychain {
                     }
                 }
             }
-            save(account: account, service: schemaService, data: schemaVersion2.data(using: .utf8)!)
+            save(account: account, service: schemaService, data: schemaVersion3.data(using: .utf8)!)
             fallthrough
             
         default:
