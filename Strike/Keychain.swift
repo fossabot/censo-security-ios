@@ -63,7 +63,7 @@ extension PrivateKeys {
             PublicKeys(
                 solana: Base58.encode([UInt8](solana.publicKey.rawRepresentation)),
                 bitcoin: bitcoin?.getBase58ExtendedPublicKey(),
-                ethereum: ethereum?.getBase58CompressedPublicKey()
+                ethereum: ethereum?.getBase58UncompressedPublicKey()
             )
         }
     }

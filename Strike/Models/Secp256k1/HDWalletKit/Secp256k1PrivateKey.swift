@@ -53,6 +53,10 @@ public struct Secp256k1PrivateKey {
         return Crypto.generatePublicKey(data: raw, compressed: true)
     }
     
+    public func getUncompressedPublicKeyBytes() -> Data {
+        return Crypto.generatePublicKey(data: raw, compressed: false)
+    }
+    
     private func getFingerPrint() -> UInt32 {
         return Crypto.generatePublicKey(data: raw, compressed: true).sha256Hash160.prefix(4).uint32
     }

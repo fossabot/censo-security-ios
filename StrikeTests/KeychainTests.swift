@@ -61,7 +61,7 @@ class KeychainTests: XCTestCase {
             PublicKeys(
                 solana: privateKeys.solana.encodedPublicKey,
                 bitcoin: privateKeys.bitcoin?.getBase58ExtendedPublicKey(),
-                ethereum: privateKeys.ethereum?.getBase58CompressedPublicKey()
+                ethereum: privateKeys.ethereum?.getBase58UncompressedPublicKey()
             )
         )
         

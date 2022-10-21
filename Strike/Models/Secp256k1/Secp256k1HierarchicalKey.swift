@@ -49,8 +49,8 @@ public struct Secp256k1HierarchicalKey {
         return getBase58ExtendedKey(isPrivate: true, isMainnet: true)
     }
     
-    public func getBase58CompressedPublicKey() -> String {
-        return Base58.encode([UInt8](privateKey.getPublicKeyBytes()))
+    public func getBase58UncompressedPublicKey() -> String {
+        return Base58.encode([UInt8](privateKey.getUncompressedPublicKeyBytes()))
     }
     
     private func getBase58ExtendedKey(isPrivate: Bool, isMainnet: Bool) -> String {
