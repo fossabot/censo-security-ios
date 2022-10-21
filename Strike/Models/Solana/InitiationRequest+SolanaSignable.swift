@@ -385,7 +385,7 @@ extension StrikeApi.InitiationRequest: SolanaSignable {
             Account.Meta(publicKey: SYSVAR_CLOCK_PUBKEY, isSigner: false, isWritable: false),
             Account.Meta(publicKey: try PublicKey(string: signingData.feePayer), isSigner: true, isWritable: true),
             Account.Meta(publicKey: tokenMintPublicKey, isSigner: false, isWritable: false),
-            Account.Meta(publicKey: destinationTokenAddress, isSigner: false, isWritable: true),
+            Account.Meta(publicKey: destinationTokenAddress, isSigner: false, isWritable: tokenMintPublicKey != EMPTY_KEY),
             Account.Meta(publicKey: SYS_PROGRAM_ID, isSigner: false, isWritable: false),
             Account.Meta(publicKey: TOKEN_PROGRAM_ID, isSigner: false, isWritable: false),
             Account.Meta(publicKey: SYSVAR_RENT_PUBKEY, isSigner: false, isWritable: false),
