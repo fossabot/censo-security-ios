@@ -31,10 +31,6 @@ struct PasswordManagerSignInRecovery: View {
                     .padding()
 
                 if !incorrectPhrase {
-                    Text("We've cleared your clipboard.")
-                        .padding([.leading, .trailing], 50)
-                        .padding([.top, .bottom], 10)
-
                     Text("Open your Password Manager, copy your recovery phrase, and paste it here.")
                         .padding([.leading, .trailing], 50)
                         .padding([.top, .bottom], 10)
@@ -70,9 +66,6 @@ struct PasswordManagerSignInRecovery: View {
         .buttonStyle(FilledButtonStyle())
         .navigationBarHidden(true)
         .background(StrikeBackground())
-        .onAppear {
-            UIPasteboard.general.string = nil
-        }
         .alert(isPresented: $showingSignInError) {
             Alert(
                 title: Text("Error"),
