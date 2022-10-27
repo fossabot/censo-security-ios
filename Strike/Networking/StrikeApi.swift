@@ -19,7 +19,7 @@ struct StrikeApi {
         case verifyUser
         case walletSigners
         case addWalletSigners(Signers)
-        case walletApprovals
+        case approvalRequests
         case registerApprovalDisposition(ApprovalDispositionRequest)
         case multipleAccountNonce(GetMultipleAccountsRequest)
         case initiateRequest(InitiationRequest)
@@ -338,11 +338,24 @@ extension StrikeApi {
             {
                 switch requestType {
                 case .loginApproval, .acceptVaultInvitation, .passwordReset:
-                    return SignatureType.nochain(
-                        NoChainSignature(
-                            signature: try privateKeys.solana.signature(for: signableData(approverPublicKey: approverPublicKey)).base64EncodedString()
-                        )
-                    )
+                    return try getNoChainSignature(key: privateKeys.solana, approverPublicKey: approverPublicKey)
+                case .walletCreation(let walletCreation):
+                    switch (walletCreation.accountInfo.chainName) {
+                    case "Bitcoin":
+                        if let key = privateKeys.bitcoin {
+                            return try getNoChainSignature(key: key, approverPublicKey: approverPublicKey)
+                        } else {
+                            throw ApiError.other("trying to sign bitcoin request but no bitcoin key")
+                        }
+                    case "Ethereum":
+                        if let key = privateKeys.ethereum {
+                            return try getNoChainSignature(key: key, approverPublicKey: approverPublicKey)
+                        } else {
+                            throw ApiError.other("trying to sign ethereum request but no ethereum key")
+                        }
+                    default:
+                        return try getSolanaSignatureInfo(privateKeys: privateKeys, approverPublicKey: approverPublicKey)
+                    }
                 case .withdrawalRequest(let request):
                     switch (request.signingData) {
                     case .bitcoin(let signingData):
@@ -360,17 +373,37 @@ extension StrikeApi {
                     }
                     fallthrough
                 default:
-                    let signature = try privateKeys.solana.signature(for: signableData(approverPublicKey: approverPublicKey)).base64EncodedString()
-                    if let nonce = nonces.first, let nonceAccountAddress = requestType.nonceAccountAddresses.first {
-                        return SignatureType.solana(SolanaSignature(signature: signature, nonce: nonce.value, nonceAccountAddress: nonceAccountAddress))
-                    } else {
-                        throw ApiError.other("cannot create solana signature with no nonce data")
-                    }
+                    return try getSolanaSignatureInfo(privateKeys: privateKeys, approverPublicKey: approverPublicKey)
                 }
             }()
 
             try container.encode(disposition.rawValue, forKey: .approvalDisposition)
             try container.encode(signatureInfo, forKey: .signatureInfo)
+        }
+        
+        private func getNoChainSignature(key: Curve25519.Signing.PrivateKey, approverPublicKey: String) throws -> SignatureType {
+            let dataToSign = try signableData(approverPublicKey: approverPublicKey)
+            return SignatureType.nochain(NoChainSignature(
+                signature: try key.signature(for: dataToSign).base64EncodedString(),
+                signedData: dataToSign.base64EncodedString()
+            ))
+        }
+        
+        private func getNoChainSignature(key: Secp256k1HierarchicalKey, approverPublicKey: String) throws -> SignatureType {
+            let dataToSign = try signableData(approverPublicKey: approverPublicKey)
+            return SignatureType.nochain(NoChainSignature(
+                signature: try key.signData(message: dataToSign).base64EncodedString(),
+                signedData: dataToSign.base64EncodedString()
+            ))
+        }
+        
+        private func getSolanaSignatureInfo(privateKeys: PrivateKeys, approverPublicKey: String) throws -> SignatureType {
+            let signature = try privateKeys.solana.signature(for: signableData(approverPublicKey: approverPublicKey)).base64EncodedString()
+            if let nonce = nonces.first, let nonceAccountAddress = requestType.nonceAccountAddresses.first {
+                return SignatureType.solana(SolanaSignature(signature: signature, nonce: nonce.value, nonceAccountAddress: nonceAccountAddress))
+            } else {
+                throw ApiError.other("cannot create solana signature with no nonce data")
+            }
         }
     }
     
@@ -527,8 +560,8 @@ extension StrikeApi.Target: Moya.TargetType {
             return "v1/wallet-signers"
         case .addWalletSigners:
             return "v2/wallet-signers"
-        case .walletApprovals:
-            return "v1/wallet-approvals"
+        case .approvalRequests:
+            return "v1/approval-requests"
         case .registerPushToken:
             return "v1/notification-tokens"
         case .unregisterPushToken(let deviceIdentifier):
@@ -536,12 +569,12 @@ extension StrikeApi.Target: Moya.TargetType {
         case .connectDApp:
             return "v1/wallet-connect"
         case .registerApprovalDisposition(let request):
-            return "v1/wallet-approvals/\(request.requestID)/dispositions"
+            return "v1/approval-requests/\(request.requestID)/dispositions"
         case .multipleAccountNonce,
              .minVersion:
             return ""
         case .initiateRequest(let request):
-            return "v1/wallet-approvals/\(request.requestID)/initiations"
+            return "v1/approval-requests/\(request.requestID)/initiations"
         case .resetPassword(let email):
             return "email/\(email.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? "[INVALID_EMAIL]")/reset"
         }
@@ -551,7 +584,7 @@ extension StrikeApi.Target: Moya.TargetType {
         switch self {
         case .verifyUser,
              .walletSigners,
-             .walletApprovals,
+             .approvalRequests,
              .minVersion:
             return .get
         case .connectDApp,
@@ -574,7 +607,7 @@ extension StrikeApi.Target: Moya.TargetType {
             return .requestCustomJSONEncodable(credentials, encoder: encoder)
         case .verifyUser,
              .walletSigners,
-             .walletApprovals,
+             .approvalRequests,
              .resetPassword,
              .minVersion:
             return .requestPlain

@@ -67,20 +67,20 @@ extension StrikeTests {
         )
     }
 
-    func getSignersUpdateWalletRequest(nonceAccountAddresses: [String]) ->  WalletApprovalRequest {
-        return getWalletApprovalRequest(getSignersUpdateRequest(nonceAccountAddresses: nonceAccountAddresses))
+    func getSignersUpdateApprovalRequest(nonceAccountAddresses: [String]) ->  ApprovalRequest {
+        return getApprovalRequest(getSignersUpdateRequest(nonceAccountAddresses: nonceAccountAddresses))
     }
         
-    func getBalanceAccountCreationRequest(nonceAccountAddresses: [String]) -> SolanaApprovalRequestType {
-        return .balanceAccountCreation(
-            BalanceAccountCreation(
+    func getSolanaWalletCreationRequest(nonceAccountAddresses: [String]) -> SolanaApprovalRequestType {
+        return .walletCreation(
+            WalletCreation(
                 accountSlot: 0,
                 accountInfo: AccountInfo(
                     name: "Account 1",
                     identifier: "c6055be1-a895-45a6-b0f3-fce261760b89",
                     accountType: AccountType.BalanceAccount,
                     address: nil,
-                    chainName: nil
+                    chainName: "Solana"
                 ),
                 approvalPolicy: ApprovalPolicy(
                     approvalsRequired: 1,
@@ -111,6 +111,63 @@ extension StrikeTests {
         )
     }
     
+    func getBitcoinWalletCreationRequest() -> SolanaApprovalRequestType {
+        return .walletCreation(
+            WalletCreation(
+                accountSlot: 0,
+                accountInfo: AccountInfo(
+                    name: "Account 1",
+                    identifier: "c6055be1-a895-45a6-b0f3-fce261760b89",
+                    accountType: AccountType.BalanceAccount,
+                    address: nil,
+                    chainName: "Bitcoin"
+                ),
+                approvalPolicy: ApprovalPolicy(
+                    approvalsRequired: 1,
+                    approvalTimeout: 3600000,
+                    approvers: [SlotSignerInfo(slotId: 0, value: SignerInfo(
+                        publicKey: "3wKxhgiogoCaA2uxPYeH7cy3cG4hxRPogrPmDPLS54iZ",
+                        name: "User 1",
+                        email: "authorized1@org1",
+                        nameHashIsEmpty: false
+                    ))]
+                ),
+                whitelistEnabled: BooleanSetting.Off,
+                dappsEnabled: BooleanSetting.Off,
+                addressBookSlot: 1,
+                signingData: nil
+            )
+        )
+    }
+    
+    func getEthereumWalletCreationRequest() -> SolanaApprovalRequestType {
+        return .walletCreation(
+            WalletCreation(
+                accountSlot: 0,
+                accountInfo: AccountInfo(
+                    name: "Account 1",
+                    identifier: "c6055be1-a895-45a6-b0f3-fce261760b89",
+                    accountType: AccountType.BalanceAccount,
+                    address: nil,
+                    chainName: "Ethereum"
+                ),
+                approvalPolicy: ApprovalPolicy(
+                    approvalsRequired: 1,
+                    approvalTimeout: 3600000,
+                    approvers: [SlotSignerInfo(slotId: 0, value: SignerInfo(
+                        publicKey: "3wKxhgiogoCaA2uxPYeH7cy3cG4hxRPogrPmDPLS54iZ",
+                        name: "User 1",
+                        email: "authorized1@org1",
+                        nameHashIsEmpty: false
+                    ))]
+                ),
+                whitelistEnabled: BooleanSetting.Off,
+                dappsEnabled: BooleanSetting.Off,
+                addressBookSlot: 1,
+                signingData: nil
+            )
+        )
+    }
  
     func getSolWithdrawalRequest(nonceAccountAddresses: [String]) -> SolanaApprovalRequestType {
         return .withdrawalRequest(
@@ -615,10 +672,9 @@ extension StrikeTests {
     }
     
     
-    func getWalletApprovalRequest(_ requestType: SolanaApprovalRequestType) -> WalletApprovalRequest {
-        return WalletApprovalRequest(
+    func getApprovalRequest(_ requestType: SolanaApprovalRequestType) -> ApprovalRequest {
+        return ApprovalRequest(
             id: "1",
-            walletType: WalletType.Solana,
             submitterName: "",
             submitterEmail: "",
             submitDate: Date(),
@@ -631,10 +687,9 @@ extension StrikeTests {
         )
     }
 
-    func getWalletInitiationRequest(_ requestType: SolanaApprovalRequestType, initiation: MultisigOpInitiation) -> WalletApprovalRequest {
-        return WalletApprovalRequest(
+    func getWalletInitiationRequest(_ requestType: SolanaApprovalRequestType, initiation: MultisigOpInitiation) -> ApprovalRequest {
+        return ApprovalRequest(
             id: "1",
-            walletType: WalletType.Solana,
             submitterName: "",
             submitterEmail: "",
             submitDate: Date(),

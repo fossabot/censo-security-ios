@@ -13,7 +13,7 @@ struct ApprovalRequestsView: View {
 
     @State private var didShowApprovalRequests = false
 
-    @RemoteResult private var approvalRequests: [GracefullyDecoded<WalletApprovalRequest>]?
+    @RemoteResult private var approvalRequests: [GracefullyDecoded<ApprovalRequest>]?
 
     var user: StrikeApi.User
 
@@ -41,8 +41,8 @@ struct ApprovalRequestsView: View {
         }
     }
 
-    private var loader: MoyaLoader<[GracefullyDecoded<WalletApprovalRequest>], StrikeApi.Target> {
-        strikeApi.provider.loader(for: .walletApprovals)
+    private var loader: MoyaLoader<[GracefullyDecoded<ApprovalRequest>], StrikeApi.Target> {
+        strikeApi.provider.loader(for: .approvalRequests)
     }
 
     private func reload() {

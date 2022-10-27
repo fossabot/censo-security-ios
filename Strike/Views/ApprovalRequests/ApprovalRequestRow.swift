@@ -18,7 +18,7 @@ struct ApprovalRequestRow<Row, Detail>: View where Row : View, Detail: View {
     @State private var navigated = false
 
     var user: StrikeApi.User
-    var request: WalletApprovalRequest
+    var request: ApprovalRequest
     var timerPublisher: Publishers.Autoconnect<Timer.TimerPublisher>
     var onStatusChange: (() -> Void)?
     @ViewBuilder var row: () -> Row
@@ -179,7 +179,7 @@ extension ApprovalRequestRow {
     }
 }
 
-extension WalletApprovalRequest {
+extension ApprovalRequest {
     var expireDate: Date? {
         approvalTimeoutInSeconds != nil ? submitDate.addingTimeInterval(TimeInterval(approvalTimeoutInSeconds!)) : nil
     }

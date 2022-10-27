@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 struct BalanceAccountWhitelistDetails: View {
-    var request: WalletApprovalRequest
+    var request: ApprovalRequest
     var update: BalanceAccountAddressWhitelistUpdate
     var user: StrikeApi.User
 

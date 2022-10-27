@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 struct WalletConfigPolicyDetails: View {
-    var request: WalletApprovalRequest
+    var request: ApprovalRequest
     var update: WalletConfigPolicyUpdate
 
     var body: some View {

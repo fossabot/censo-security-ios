@@ -10,7 +10,7 @@ import SwiftUI
 
 
 struct ApprovalsNeeded: View {
-    var request: WalletApprovalRequest
+    var request: ApprovalRequest
 
     var body: some View {
         let numApprovalsNeeded = request.numberOfDispositionsRequired - request.numberOfApprovalsReceived
