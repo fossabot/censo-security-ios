@@ -149,24 +149,7 @@ enum SolanaApprovalRequestType: Codable, Equatable {
         case "PasswordReset":
             self = .passwordReset(try PasswordReset(from: decoder))
         case "SignData":
-            let request = try SignData(from: decoder)
-            // a sign data may have an actual approval request embedded in the base64 data (for instance balance account creation for a bitcoin wallet)
-            // this code checks if this is the case and will return the embedded approval type (with the original bas64 data which needs to be signed
-            // added to the solana signing data). If it is not a json or one of the expected approval types then it is returned as Sign Data request.
-            do {
-                let decoder = JSONDecoder()
-                decoder.dateDecodingStrategy = .formatted(.iso8601Full)
-                let signDataParsedJson = try decoder.decode(SignDataApprovalRequestJson.self, from: Data(base64Encoded: request.base64Data)!)
-                switch (signDataParsedJson.data) {
-                case .walletCreation(var embeddedRequest):
-                    embeddedRequest.signingData = request.signingData.addDataToSign(dataToSign: request.base64Data)
-                    self = .walletCreation(embeddedRequest)
-                default:
-                    self = .signData(request)
-                }
-            } catch {
-                self = .signData(request)
-            }
+            self = .signData(try SignData(from: decoder))
         default:
             self = .unknown
         }
