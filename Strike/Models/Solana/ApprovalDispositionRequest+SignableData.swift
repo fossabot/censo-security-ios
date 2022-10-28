@@ -15,7 +15,7 @@ extension StrikeApi.ApprovalDispositionRequest: SignableData {
 
     var opCode: UInt8 {
         switch requestType {
-        case .balanceAccountCreation:
+        case .walletCreation:
             return 1
         case .withdrawalRequest:
             return 3
@@ -68,7 +68,7 @@ extension StrikeApi.ApprovalDispositionRequest: SignableData {
                 )
             }
             switch requestType {
-            case .balanceAccountCreation(let request):
+            case .walletCreation(let request):
                 return try Data(
                     [opCode] +
                     commonBytes +
@@ -179,8 +179,12 @@ extension StrikeApi.ApprovalDispositionRequest: SignableData {
     var signingData: SolanaSigningData {
         get throws {
             switch requestType {
-            case .balanceAccountCreation(let request):
-                return request.signingData
+            case .walletCreation(let request):
+                if request.accountInfo.chainName == "Solana" {
+                    return request.signingData!
+                } else {
+                    throw ApprovalError.invalidRequest(reason: "Invalid signing data for approval")
+                }
             case .balanceAccountNameUpdate(let request):
                 return request.signingData
             case .balanceAccountPolicyUpdate(let request):
@@ -243,6 +247,15 @@ extension StrikeApi.ApprovalDispositionRequest: SignableData {
             return [request.vaultName.data(using: .utf8)!]
         case .loginApproval(let request):
             return [request.jwtToken.data(using: .utf8)!]
+        case .walletCreation(let walletCreation):
+            switch (walletCreation.accountInfo.chainName) {
+            case "Bitcoin":
+                return [try JSONEncoder().encode(requestType)]
+            case "Ethereum":
+                return [try JSONEncoder().encode(requestType)]
+            default:
+                return [try getSolanaSignableData(requestType: requestType, approverPublicKey: approverPublicKey)]
+            }
         case .withdrawalRequest(let request):
             switch request.signingData {
             case .bitcoin(let signingData):
@@ -252,29 +265,33 @@ extension StrikeApi.ApprovalDispositionRequest: SignableData {
             }
             fallthrough
         default:
-            guard let nonce = nonces.first, let nonceAccountAddress = requestType.nonceAccountAddresses.first else {
-                throw ApprovalError.invalidRequest(reason: "Not enough nonce accounts")
-            }
-
-            return try [Transaction.compileMessage(
-                feePayer: try PublicKey(string: signingData.feePayer),
-                recentBlockhash: nonce.value,
-                instructions: [
-                    try TransactionInstruction.createAdvanceNonceInstruction(
-                        nonceAccountAddress: nonceAccountAddress,
-                        feePayer: signingData.feePayer),
-                    TransactionInstruction(
-                        keys: [
-                            Account.Meta(publicKey: try PublicKey(string: signingData.multisigOpAccountAddress), isSigner: false, isWritable: true),
-                            Account.Meta(publicKey: PublicKey(string: approverPublicKey), isSigner: true, isWritable: false),
-                            Account.Meta(publicKey: SYSVAR_CLOCK_PUBKEY, isSigner: false, isWritable: false)
-                        ],
-                        programId: PublicKey(string: signingData.walletProgramId),
-                        data: [UInt8](transactionInstructionData)
-                    )
-                ]
-            ).serialize()]
+            return [try getSolanaSignableData(requestType: requestType, approverPublicKey: approverPublicKey)]
         }
+    }
+    
+    private func getSolanaSignableData(requestType: SolanaApprovalRequestType, approverPublicKey: String) throws -> Data {
+        guard let nonce = nonces.first, let nonceAccountAddress = requestType.nonceAccountAddresses.first else {
+            throw ApprovalError.invalidRequest(reason: "Not enough nonce accounts")
+        }
+        
+        return try Transaction.compileMessage(
+            feePayer: try PublicKey(string: signingData.feePayer),
+            recentBlockhash: nonce.value,
+            instructions: [
+                try TransactionInstruction.createAdvanceNonceInstruction(
+                    nonceAccountAddress: nonceAccountAddress,
+                    feePayer: signingData.feePayer),
+                TransactionInstruction(
+                    keys: [
+                        Account.Meta(publicKey: try PublicKey(string: signingData.multisigOpAccountAddress), isSigner: false, isWritable: true),
+                        Account.Meta(publicKey: PublicKey(string: approverPublicKey), isSigner: true, isWritable: false),
+                        Account.Meta(publicKey: SYSVAR_CLOCK_PUBKEY, isSigner: false, isWritable: false)
+                    ],
+                    programId: PublicKey(string: signingData.walletProgramId),
+                    data: [UInt8](transactionInstructionData)
+                )
+            ]
+        ).serialize()
     }
 }
 
@@ -450,7 +467,7 @@ extension DAppTransactionRequest {
     }
 }
 
-extension BalanceAccountCreation {
+extension WalletCreation {
     var combinedBytes: [UInt8] {
         return
             accountInfo.identifier.sha256HashBytes +

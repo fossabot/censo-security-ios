@@ -12,7 +12,7 @@ extension StrikeApi.InitiationRequest: SolanaSignable {
 
     var opCode: UInt8 {
         switch requestType {
-        case .balanceAccountCreation:
+        case .walletCreation:
             return 3
         case .withdrawalRequest:
             return 7
@@ -103,7 +103,7 @@ extension StrikeApi.InitiationRequest: SolanaSignable {
             }
             
             switch requestType {
-            case .balanceAccountCreation(let request):
+            case .walletCreation(let request):
                 return Data(
                     [opCode] +
                     commonBytes +
@@ -229,8 +229,12 @@ extension StrikeApi.InitiationRequest: SolanaSignable {
     var signingData: SolanaSigningData {
         get throws {
             switch requestType {
-            case .balanceAccountCreation(let request):
-                return request.signingData
+            case .walletCreation(let request):
+                if request.accountInfo.chainName == "Solana" {
+                    return request.signingData!
+                } else {
+                    throw ApprovalError.invalidRequest(reason: "Invalid signing data for Initiation")
+                }
             case .withdrawalRequest(let request):
                 switch request.signingData {
                 case .solana(let signingData):

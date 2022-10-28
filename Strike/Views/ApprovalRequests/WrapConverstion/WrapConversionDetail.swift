@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 struct WrapConversionDetail: View {
-    var request: WalletApprovalRequest
+    var request: ApprovalRequest
     var conversion: WrapConversionRequest
 
     var body: some View {

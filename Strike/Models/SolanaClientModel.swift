@@ -63,9 +63,8 @@ enum LogoType: String, Codable {
 }
 
 
-struct WalletApprovalRequest: Codable, Equatable {
+struct ApprovalRequest: Codable, Equatable {
     let id: String
-    let walletType: WalletType
     let submitterName: String
     let submitterEmail: String
     let submitDate: Date
@@ -77,7 +76,7 @@ struct WalletApprovalRequest: Codable, Equatable {
     let details: SolanaApprovalRequestDetails
 }
 
-extension WalletApprovalRequest {
+extension ApprovalRequest {
     var requestType: SolanaApprovalRequestType {
         switch details {
         case .multisigOpInitiation(_, let requestType):
@@ -94,7 +93,7 @@ enum SolanaApprovalRequestType: Codable, Equatable {
     case conversionRequest(ConversionRequest)
     case wrapConversionRequest(WrapConversionRequest)
     case signersUpdate(SignersUpdate)
-    case balanceAccountCreation(BalanceAccountCreation)
+    case walletCreation(WalletCreation)
     case balanceAccountNameUpdate(BalanceAccountNameUpdate)
     case balanceAccountPolicyUpdate(BalanceAccountPolicyUpdate)
     case balanceAccountSettingsUpdate(BalanceAccountSettingsUpdate)
@@ -125,8 +124,8 @@ enum SolanaApprovalRequestType: Codable, Equatable {
             self = .wrapConversionRequest(try WrapConversionRequest(from: decoder))
         case "SignersUpdate":
             self = .signersUpdate(try SignersUpdate(from: decoder))
-        case "BalanceAccountCreation":
-            self = .balanceAccountCreation(try BalanceAccountCreation(from: decoder))
+        case "WalletCreation":
+            self = .walletCreation(try WalletCreation(from: decoder))
         case "BalanceAccountNameUpdate":
             self = .balanceAccountNameUpdate(try BalanceAccountNameUpdate(from: decoder))
         case "BalanceAccountPolicyUpdate":
@@ -150,24 +149,7 @@ enum SolanaApprovalRequestType: Codable, Equatable {
         case "PasswordReset":
             self = .passwordReset(try PasswordReset(from: decoder))
         case "SignData":
-            let request = try SignData(from: decoder)
-            // a sign data may have an actual approval request embedded in the base64 data (for instance balance account creation for a bitcoin wallet)
-            // this code checks if this is the case and will return the embedded approval type (with the original bas64 data which needs to be signed
-            // added to the solana signing data). If it is not a json or one of the expected approval types then it is returned as Sign Data request.
-            do {
-                let decoder = JSONDecoder()
-                decoder.dateDecodingStrategy = .formatted(.iso8601Full)
-                let signDataParsedJson = try decoder.decode(SignDataApprovalRequestJson.self, from: Data(base64Encoded: request.base64Data)!)
-                switch (signDataParsedJson.data) {
-                case .balanceAccountCreation(var embeddedRequest):
-                    embeddedRequest.signingData = request.signingData.addDataToSign(dataToSign: request.base64Data)
-                    self = .balanceAccountCreation(embeddedRequest)
-                default:
-                    self = .signData(request)
-                }
-            } catch {
-                self = .signData(request)
-            }
+            self = .signData(try SignData(from: decoder))
         default:
             self = .unknown
         }
@@ -188,9 +170,9 @@ enum SolanaApprovalRequestType: Codable, Equatable {
         case .signersUpdate(let signersUpdate):
             try container.encode("SignersUpdate", forKey: .type)
             try signersUpdate.encode(to: encoder)
-        case .balanceAccountCreation(let balanceAccountCreation):
-            try container.encode("BalanceAccountCreation", forKey: .type)
-            try balanceAccountCreation.encode(to: encoder)
+        case .walletCreation(let walletCreation):
+            try container.encode("WalletCreation", forKey: .type)
+            try walletCreation.encode(to: encoder)
         case .balanceAccountNameUpdate(let balanceAccountNameUpdate):
             try container.encode("BalanceAccountNameUpdate", forKey: .type)
             try balanceAccountNameUpdate.encode(to: encoder)
@@ -472,14 +454,14 @@ struct SignersUpdate: Codable, Equatable  {
     var signingData: SolanaSigningData
 }
 
-struct BalanceAccountCreation: Codable, Equatable  {
+struct WalletCreation: Codable, Equatable  {
     var accountSlot: UInt8
     var accountInfo: AccountInfo
     var approvalPolicy: ApprovalPolicy
     var whitelistEnabled: BooleanSetting
     var dappsEnabled: BooleanSetting
     var addressBookSlot: UInt8
-    var signingData: SolanaSigningData
+    var signingData: SolanaSigningData?
 }
 
 struct BalanceAccountNameUpdate: Codable, Equatable  {
@@ -663,6 +645,7 @@ struct SignDataApprovalRequestJson: Codable, Equatable  {
 
 struct NoChainSignature: Codable, Equatable  {
     let signature: String
+    let signedData: String
 }
 
 struct SolanaSignature: Codable, Equatable  {
@@ -752,8 +735,8 @@ extension SolanaApprovalRequestType {
             return request.signingData.nonceAccountAddresses
         case .addressBookUpdate(let request):
             return request.signingData.nonceAccountAddresses
-        case .balanceAccountCreation(let request):
-            return request.signingData.nonceAccountAddresses
+        case .walletCreation(let request):
+            return request.signingData?.nonceAccountAddresses ?? []
         case .balanceAccountNameUpdate(let request):
             return request.signingData.nonceAccountAddresses
         case .balanceAccountPolicyUpdate(let request):
@@ -797,8 +780,8 @@ extension SolanaApprovalRequestType {
             return request.signingData.nonceAccountAddressesSlot
         case .addressBookUpdate(let request):
             return request.signingData.nonceAccountAddressesSlot
-        case .balanceAccountCreation(let request):
-            return request.signingData.nonceAccountAddressesSlot
+        case .walletCreation(let request):
+            return request.signingData?.nonceAccountAddressesSlot ?? 0
         case .balanceAccountNameUpdate(let request):
             return request.signingData.nonceAccountAddressesSlot
         case .balanceAccountPolicyUpdate(let request):
@@ -836,11 +819,10 @@ extension SolanaApprovalRequestType {
 }
 
 #if DEBUG
-extension WalletApprovalRequest {
+extension ApprovalRequest {
     static var sample: Self {
-        WalletApprovalRequest(
+        ApprovalRequest(
             id: "id",
-            walletType: .Solana,
             submitterName: "John Q",
             submitterEmail: "johnq@gmail.com",
             submitDate: Date(),
@@ -854,9 +836,8 @@ extension WalletApprovalRequest {
     }
 
     static var sample2: Self {
-        WalletApprovalRequest(
+        ApprovalRequest(
             id: "id",
-            walletType: .Solana,
             submitterName: "John Q",
             submitterEmail: "johnq@gmail.com",
             submitDate: Date(),

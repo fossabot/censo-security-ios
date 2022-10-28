@@ -8,9 +8,9 @@
 import Foundation
 import SwiftUI
 
-struct AccountCreationDetails: View {
-    var request: WalletApprovalRequest
-    var accountCreation: BalanceAccountCreation
+struct WalletCreationDetails: View {
+    var request: ApprovalRequest
+    var accountCreation: WalletCreation
 
     var body: some View {
         VStack(alignment: .center, spacing: 10) {
@@ -49,13 +49,13 @@ extension DateComponentsFormatter {
 #if DEBUG
 struct AccountCreationDetails_Previews: PreviewProvider {
     static var previews: some View {
-        AccountCreationDetails(request: .sample, accountCreation: .sample)
+        WalletCreationDetails(request: .sample, accountCreation: .sample)
 
         let timerPublisher = Timer.TimerPublisher(interval: 1, runLoop: .current, mode: .default).autoconnect()
 
         NavigationView {
             ApprovalRequestDetails(user: .sample, request: .sample, timerPublisher: timerPublisher) {
-                AccountCreationDetails(request: .sample, accountCreation: .sample)
+                WalletCreationDetails(request: .sample, accountCreation: .sample)
             }
         }
     }

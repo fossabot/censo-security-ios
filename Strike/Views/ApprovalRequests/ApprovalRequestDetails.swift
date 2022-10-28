@@ -20,7 +20,7 @@ struct ApprovalRequestDetails<Content>: View where Content : View {
     @State private var timeRemaining: DateComponents = DateComponents()
 
     var user: StrikeApi.User
-    var request: WalletApprovalRequest
+    var request: ApprovalRequest
     var timerPublisher: Publishers.Autoconnect<Timer.TimerPublisher>
     var onStatusChange: (() -> Void)?
     @ViewBuilder var content: () -> Content

@@ -23,9 +23,9 @@ extension SolanaApprovalRequestType {
             return "Remove User"
         case .signersUpdate:
             return "Add User"
-        case .balanceAccountCreation(let accountCreation) where accountCreation.accountInfo.accountType == .BalanceAccount:
-            return "Add \(accountCreation.accountInfo.chainName ?? "Solana") Wallet"
-        case .balanceAccountCreation:
+        case .walletCreation(let walletCreation) where walletCreation.accountInfo.accountType == .BalanceAccount:
+            return "Add \(walletCreation.accountInfo.chainName ?? "Solana") Wallet"
+        case .walletCreation:
             return "Add Wallet"
         case .balanceAccountNameUpdate:
             return "Rename"

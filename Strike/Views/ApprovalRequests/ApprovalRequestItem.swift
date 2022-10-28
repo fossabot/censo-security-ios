@@ -13,7 +13,7 @@ import Alamofire
 
 struct ApprovalRequestItem: View {
     var user: StrikeApi.User
-    var request: WalletApprovalRequest
+    var request: ApprovalRequest
     var onStatusChange: (() -> Void)?
     var timerPublisher: Publishers.Autoconnect<Timer.TimerPublisher>
 
@@ -39,11 +39,11 @@ struct ApprovalRequestItem: View {
             } detail: {
                 SignerUpdateDetails(request: request, signersUpdate: signersUpdate)
             }
-        case .balanceAccountCreation(let accountCreation):
+        case .walletCreation(let walletCreation):
             ApprovalRequestRow(user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
-                AccountCreationRow(requestType: request.requestType, accountCreation: accountCreation)
+                WalletCreationRow(requestType: request.requestType, accountCreation: walletCreation)
             } detail: {
-                AccountCreationDetails(request: request, accountCreation: accountCreation)
+                WalletCreationDetails(request: request, accountCreation: walletCreation)
             }
         case .dAppTransactionRequest(let dAppTransactionRequest):
             ApprovalRequestRow(user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {

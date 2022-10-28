@@ -12,7 +12,7 @@ import Combine
 
 struct ApprovalRequestsList: View {
     var user: StrikeApi.User
-    var requests: [WalletApprovalRequest]
+    var requests: [ApprovalRequest]
     var onStatusChange: (() -> Void)?
     var onRefresh: (RefreshContext) -> Void
 

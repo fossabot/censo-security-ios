@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 struct AddressBookUpdateDetails: View {
-    var request: WalletApprovalRequest
+    var request: ApprovalRequest
     var update: AddressBookUpdate
 
     var body: some View {

@@ -11,7 +11,7 @@ import SwiftUI
 import Combine
 
 struct UnknownRequestRow: View {
-    var request: WalletApprovalRequest
+    var request: ApprovalRequest
     var timerPublisher: Publishers.Autoconnect<Timer.TimerPublisher>
 
     var body: some View {

@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 struct WithdrawalDetails: View {
-    var request: WalletApprovalRequest
+    var request: ApprovalRequest
     var withdrawal: WithdrawalRequest
 
     var body: some View {
@@ -26,7 +26,7 @@ struct WithdrawalDetails: View {
     }
 }
 
-extension WalletApprovalRequest {
+extension ApprovalRequest {
     var numberOfApprovalsNeeded: Int {
         numberOfDispositionsRequired - numberOfApprovalsReceived
     }

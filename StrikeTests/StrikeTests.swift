@@ -12,7 +12,7 @@ import CryptoKit
 class StrikeTests: XCTestCase {
     
     func testSignersUpdateSerializedOp() throws {
-        let request: WalletApprovalRequest = getSignersUpdateWalletRequest(nonceAccountAddresses: ["6XQy8HrrMmsfmajFpWo5tWhDUiESg8obA4NGWJwjNgpR"])
+        let request: ApprovalRequest = getSignersUpdateApprovalRequest(nonceAccountAddresses: ["6XQy8HrrMmsfmajFpWo5tWhDUiESg8obA4NGWJwjNgpR"])
         let approvalRequest = StrikeApi.ApprovalDispositionRequest(
             disposition: .Approve,
             requestID: request.id,
@@ -27,7 +27,7 @@ class StrikeTests: XCTestCase {
     }
 
     func testSignersUpdateApprovalDisposition() throws {
-        let request: WalletApprovalRequest = getWalletApprovalRequest(getSignersUpdateRequestForApproval(nonceAccountAddresses: ["Deuspj2g5crN81b6GocKANAhB3Y5D6XseXjiT1bery7Z"]))
+        let request: ApprovalRequest = getApprovalRequest(getSignersUpdateRequestForApproval(nonceAccountAddresses: ["Deuspj2g5crN81b6GocKANAhB3Y5D6XseXjiT1bery7Z"]))
         let approvalRequest = StrikeApi.ApprovalDispositionRequest(
             disposition: .Approve,
             requestID: request.id,
@@ -65,8 +65,8 @@ class StrikeTests: XCTestCase {
         )
     }
 
-    func testBalanceAccountCreationApprovalDisposition() throws {
-        let request = getWalletApprovalRequest(getBalanceAccountCreationRequest(nonceAccountAddresses: ["Hy4Ztych4X12wWieCaFbSEbwZRxmjRTMgbm7RDybYTpD"]))
+    func testSolanaWalletCreationApprovalDisposition() throws {
+        let request = getApprovalRequest(getSolanaWalletCreationRequest(nonceAccountAddresses: ["Hy4Ztych4X12wWieCaFbSEbwZRxmjRTMgbm7RDybYTpD"]))
         let approvalRequest = StrikeApi.ApprovalDispositionRequest(
             disposition: .Approve,
             requestID: request.id,
@@ -80,12 +80,48 @@ class StrikeTests: XCTestCase {
         )
     }
     
-    func testBalanceAccountCreationInitiationRequest() throws {
+    func testBitcoinWalletCreationApprovalDisposition() throws {
+        let request = getApprovalRequest(getBitcoinWalletCreationRequest())
+        let approvalRequest = StrikeApi.ApprovalDispositionRequest(
+            disposition: .Approve,
+            requestID: request.id,
+            requestType: request.requestType,
+            nonces: [],
+            email: "dont care"
+        )
+        
+        let signableData = try approvalRequest.signableData(approverPublicKey: "7AH35qStXtrUgRkmqDmhjufNHjF74R1A9cCKT3C3HaAR")
+        
+        XCTAssertEqual(
+            try JSONDecoder().decode(SolanaApprovalRequestType.self, from: signableData),
+            approvalRequest.requestType
+        )
+    }
+    
+    func testEthereumWalletCreationApprovalDisposition() throws {
+        let request = getApprovalRequest(getEthereumWalletCreationRequest())
+        let approvalRequest = StrikeApi.ApprovalDispositionRequest(
+            disposition: .Approve,
+            requestID: request.id,
+            requestType: request.requestType,
+            nonces: [],
+            email: "dont care"
+        )
+        
+        let signableData = try approvalRequest.signableData(approverPublicKey: "7AH35qStXtrUgRkmqDmhjufNHjF74R1A9cCKT3C3HaAR")
+        
+        XCTAssertEqual(
+            try JSONDecoder().decode(SolanaApprovalRequestType.self, from: signableData),
+            approvalRequest.requestType
+        )
+    }
+    
+    func testWalletCreationInitiationRequest() throws {
         let initiation = MultisigOpInitiation(
             opAccountCreationInfo: getOpAccountCreationInfo(),
             initiatorIsApprover: true
         )
-        let requestType: SolanaApprovalRequestType = getBalanceAccountCreationRequest(nonceAccountAddresses: ["CL8fZq5BzjCBXmixSMKqBsFoCLSFxqN6GvheDQ68HP44"])
+        let requestType: SolanaApprovalRequestType = getSolanaWalletCreationRequest(nonceAccountAddresses: ["CL8fZq5BzjCBXmixSMKqBsFoCLSFxqN6GvheDQ68HP44"])
         let request = getWalletInitiationRequest(requestType, initiation: initiation)
         let pk = try Curve25519.Signing.PrivateKey.init(rawRepresentation: "2d7db52f8ff35aec03cd7be8d26c45d798774a4d5dfa9a9c559778752fb87d11".data(using: .hexadecimal)!)
         let initiationRequest = StrikeApi.InitiationRequest(
@@ -105,7 +141,7 @@ class StrikeTests: XCTestCase {
     }
     
     func testSolWithdrawalRequestApprovalDisposition() throws {
-        let request = getWalletApprovalRequest(getSolWithdrawalRequest(nonceAccountAddresses: ["AaFj4THN8CJmDPyJjPuDpsfC5FZys2Wmczust5UfmqeN"]))
+        let request = getApprovalRequest(getSolWithdrawalRequest(nonceAccountAddresses: ["AaFj4THN8CJmDPyJjPuDpsfC5FZys2Wmczust5UfmqeN"]))
         let approvalRequest = StrikeApi.ApprovalDispositionRequest(
             disposition: .Approve,
             requestID: request.id,
@@ -145,7 +181,7 @@ class StrikeTests: XCTestCase {
 
 
     func testSplWithdrawalRequestApprovalDisposition() throws {
-        let request = getWalletApprovalRequest(getSplWithdrawalRequest(nonceAccountAddresses: ["AaFj4THN8CJmDPyJjPuDpsfC5FZys2Wmczust5UfmqeN"]))
+        let request = getApprovalRequest(getSplWithdrawalRequest(nonceAccountAddresses: ["AaFj4THN8CJmDPyJjPuDpsfC5FZys2Wmczust5UfmqeN"]))
         let approvalRequest = StrikeApi.ApprovalDispositionRequest(
             disposition: .Approve,
             requestID: request.id,
@@ -184,7 +220,7 @@ class StrikeTests: XCTestCase {
     }
 
     func testUSDCconversionRequestApprovalDisposition() throws {
-        let request = getWalletApprovalRequest(getConversionRequest(nonceAccountAddresses: ["6UcFAr9rqGfFEtLxnYdW6QjeRor3aej5akLpYpXUkPWX"]))
+        let request = getApprovalRequest(getConversionRequest(nonceAccountAddresses: ["6UcFAr9rqGfFEtLxnYdW6QjeRor3aej5akLpYpXUkPWX"]))
         let approvalRequest = StrikeApi.ApprovalDispositionRequest(
             disposition: .Approve,
             requestID: request.id,
@@ -321,7 +357,7 @@ class StrikeTests: XCTestCase {
     }
 
     func testDAppTransactionRequestApprovalDisposition() throws {
-        let request = getWalletApprovalRequest(getDAppTransactionRequest(nonceAccountAddresses: ["7mKUZ5BjRu1bwbhFWNfhntaXnT1L1H7XNDfCi3Bc9zYf"]))
+        let request = getApprovalRequest(getDAppTransactionRequest(nonceAccountAddresses: ["7mKUZ5BjRu1bwbhFWNfhntaXnT1L1H7XNDfCi3Bc9zYf"]))
         let approvalRequest = StrikeApi.ApprovalDispositionRequest(
             disposition: .Approve,
             requestID: request.id,
@@ -336,7 +372,7 @@ class StrikeTests: XCTestCase {
     }
 
     func testAddDAppBookEntryApprovalRequest() throws {
-        let request = getWalletApprovalRequest(getAddDAppBookEntry(nonceAccountAddresses: ["AaFj4THN8CJmDPyJjPuDpsfC5FZys2Wmczust5UfmqeN"]))
+        let request = getApprovalRequest(getAddDAppBookEntry(nonceAccountAddresses: ["AaFj4THN8CJmDPyJjPuDpsfC5FZys2Wmczust5UfmqeN"]))
         let approvalRequest = StrikeApi.ApprovalDispositionRequest(
             disposition: .Approve,
             requestID: request.id,
@@ -375,7 +411,7 @@ class StrikeTests: XCTestCase {
     }
 
     func testRemoveDAppBookEntryApprovalRequest() throws {
-        let request = getWalletApprovalRequest(getRemoveDAppBookEntry(nonceAccountAddresses: ["AaFj4THN8CJmDPyJjPuDpsfC5FZys2Wmczust5UfmqeN"]))
+        let request = getApprovalRequest(getRemoveDAppBookEntry(nonceAccountAddresses: ["AaFj4THN8CJmDPyJjPuDpsfC5FZys2Wmczust5UfmqeN"]))
         let approvalRequest = StrikeApi.ApprovalDispositionRequest(
             disposition: .Approve,
             requestID: request.id,
@@ -438,7 +474,7 @@ class StrikeTests: XCTestCase {
     }
     
     func testAddAddressBookEntryApprovalRequest() throws {
-        let request = getWalletApprovalRequest(getAddAddressBookEntry(nonceAccountAddresses: ["Aj8MqPBaM8fSbgJiUtq2PXESGTSQPsgHqJ13JyzQZCRZ"]))
+        let request = getApprovalRequest(getAddAddressBookEntry(nonceAccountAddresses: ["Aj8MqPBaM8fSbgJiUtq2PXESGTSQPsgHqJ13JyzQZCRZ"]))
         let approvalRequest = StrikeApi.ApprovalDispositionRequest(
             disposition: .Approve,
             requestID: request.id,
@@ -454,7 +490,7 @@ class StrikeTests: XCTestCase {
     
 
     func testWalletConfigPolicyUpdateApprovalRequest() throws {
-        let request = getWalletApprovalRequest(getWalletConfigPolicyUpdate(nonceAccountAddresses: ["AaFj4THN8CJmDPyJjPuDpsfC5FZys2Wmczust5UfmqeN"]))
+        let request = getApprovalRequest(getWalletConfigPolicyUpdate(nonceAccountAddresses: ["AaFj4THN8CJmDPyJjPuDpsfC5FZys2Wmczust5UfmqeN"]))
         let approvalRequest = StrikeApi.ApprovalDispositionRequest(
             disposition: .Approve,
             requestID: request.id,
@@ -494,7 +530,7 @@ class StrikeTests: XCTestCase {
     
 
     func testBalanceAccountSettingsUpdateApprovalRequest() throws {
-        let request = getWalletApprovalRequest(getBalanceAccountSettingsUpdate(nonceAccountAddresses: ["CpBzxGEDYnzi9jfGteSR6sCnmtT9XwirXQaCtSvmWnka"]))
+        let request = getApprovalRequest(getBalanceAccountSettingsUpdate(nonceAccountAddresses: ["CpBzxGEDYnzi9jfGteSR6sCnmtT9XwirXQaCtSvmWnka"]))
         let approvalRequest = StrikeApi.ApprovalDispositionRequest(
             disposition: .Approve,
             requestID: request.id,
@@ -533,7 +569,7 @@ class StrikeTests: XCTestCase {
     }
 
     func testBalanceAccountPolicyUpdateApprovalRequest() throws {
-        let request = getWalletApprovalRequest(getBalanceAccountPolicyUpdate(nonceAccountAddresses: ["BzZpoiceSXQTtrrZUMU67s6pCJzqCDJAVvgJCRw64fJV"]))
+        let request = getApprovalRequest(getBalanceAccountPolicyUpdate(nonceAccountAddresses: ["BzZpoiceSXQTtrrZUMU67s6pCJzqCDJAVvgJCRw64fJV"]))
         let approvalRequest = StrikeApi.ApprovalDispositionRequest(
             disposition: .Approve,
             requestID: request.id,
@@ -572,7 +608,7 @@ class StrikeTests: XCTestCase {
     }
     
     func testBalanceAccountAddressWhitelistUpdateApprovalRequest() throws {
-        let request = getWalletApprovalRequest(getBalanceAccountAddressWhitelistUpdate(nonceAccountAddresses: ["481dDMZGAiATXnLkBw1mEMdsJSwWWg3F2zHEsciaXZ98"]))
+        let request = getApprovalRequest(getBalanceAccountAddressWhitelistUpdate(nonceAccountAddresses: ["481dDMZGAiATXnLkBw1mEMdsJSwWWg3F2zHEsciaXZ98"]))
         let approvalRequest = StrikeApi.ApprovalDispositionRequest(
             disposition: .Approve,
             requestID: request.id,
@@ -611,7 +647,7 @@ class StrikeTests: XCTestCase {
     }
 
     func testBalanceAccountNameUpdateApprovalRequest() throws {
-        let request = getWalletApprovalRequest(getBalanceAccountNameUpdate(nonceAccountAddresses: ["AaFj4THN8CJmDPyJjPuDpsfC5FZys2Wmczust5UfmqeN"]))
+        let request = getApprovalRequest(getBalanceAccountNameUpdate(nonceAccountAddresses: ["AaFj4THN8CJmDPyJjPuDpsfC5FZys2Wmczust5UfmqeN"]))
         let approvalRequest = StrikeApi.ApprovalDispositionRequest(
             disposition: .Approve,
             requestID: request.id,
@@ -653,7 +689,7 @@ class StrikeTests: XCTestCase {
         let jwtToken = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImF1ZCI6IlNvbHIifQ.SWCJDd6B_m7xr_puQH-wgbxvXyJYXH9lTpldOU0eQKc"
         let email = "sample@email.co"
         let name = "Sample User Name"
-        let request = getWalletApprovalRequest(getLoginApproval(jwtToken, email: email, name: name))
+        let request = getApprovalRequest(getLoginApproval(jwtToken, email: email, name: name))
         let approvalRequest = StrikeApi.ApprovalDispositionRequest(
             disposition: .Approve,
             requestID: request.id,
@@ -668,9 +704,9 @@ class StrikeTests: XCTestCase {
     }
     
     func testAcceptVaultInvitation() throws {
-        let approvalData = "{\"id\": \"422e3504-4eea-493a-a0dd-64a001115540\", \"walletType\": \"Solana\", \"submitDate\": \"2022-06-21T14:20:38.145+00:00\", \"submitterName\": \"User 1\", \"submitterEmail\": \"authorized1@org1\", \"numberOfDispositionsRequired\": 1, \"numberOfApprovalsReceived\": 0, \"numberOfDeniesReceived\": 0, \"programVersion\": null, \"details\": {\"type\": \"AcceptVaultInvitation\", \"vaultGuid\": \"58e03f93-b9bc-4f22-b485-8e7a0abd8440\", \"vaultName\": \"Test Organization 1\"}, \"vaultName\": \"Test Organization 1\"}\n"
+        let approvalData = "{\"id\": \"422e3504-4eea-493a-a0dd-64a001115540\", \"submitDate\": \"2022-06-21T14:20:38.145+00:00\", \"submitterName\": \"User 1\", \"submitterEmail\": \"authorized1@org1\", \"numberOfDispositionsRequired\": 1, \"numberOfApprovalsReceived\": 0, \"numberOfDeniesReceived\": 0, \"details\": {\"type\": \"AcceptVaultInvitation\", \"vaultGuid\": \"58e03f93-b9bc-4f22-b485-8e7a0abd8440\", \"vaultName\": \"Test Organization 1\"}, \"vaultName\": \"Test Organization 1\"}\n"
 
-        let request: WalletApprovalRequest = Mock.decodeJsonType(data: approvalData.data(using: .utf8)!)
+        let request: ApprovalRequest = Mock.decodeJsonType(data: approvalData.data(using: .utf8)!)
         let approvalDispositionRequest = StrikeApi.ApprovalDispositionRequest(
             disposition: .Approve,
             requestID: request.id,
@@ -691,9 +727,9 @@ class StrikeTests: XCTestCase {
     }
     
     func testPasswordReset() throws {
-        let approvalData = "{\"id\": \"422e3504-4eea-493a-a0dd-64a001115540\", \"walletType\": \"Solana\", \"submitDate\": \"2022-06-21T14:20:38.145+00:00\", \"submitterName\": \"User 1\", \"submitterEmail\": \"authorized1@org1\", \"numberOfDispositionsRequired\": 1, \"numberOfApprovalsReceived\": 0, \"numberOfDeniesReceived\": 0, \"programVersion\": null, \"details\": {\"type\": \"PasswordReset\"}}\n"
+        let approvalData = "{\"id\": \"422e3504-4eea-493a-a0dd-64a001115540\", \"submitDate\": \"2022-06-21T14:20:38.145+00:00\", \"submitterName\": \"User 1\", \"submitterEmail\": \"authorized1@org1\", \"numberOfDispositionsRequired\": 1, \"numberOfApprovalsReceived\": 0, \"numberOfDeniesReceived\": 0, \"details\": {\"type\": \"PasswordReset\"}}\n"
 
-        let request: WalletApprovalRequest = Mock.decodeJsonType(data: approvalData.data(using: .utf8)!)
+        let request: ApprovalRequest = Mock.decodeJsonType(data: approvalData.data(using: .utf8)!)
         let approvalDispositionRequest = StrikeApi.ApprovalDispositionRequest(
             disposition: .Approve,
             requestID: request.id,
@@ -740,10 +776,10 @@ class StrikeTests: XCTestCase {
     }
     
     func testSignDataForPlainTextApprovalRequest() throws {
-        let approvalData = "{\"id\": \"6a196209-b207-47a8-aff0-b609324c9e0e\", \"walletType\": \"Solana\", \"submitDate\": \"2022-09-10T10:35:20.161+00:00\", \"submitterName\": \"User 1\", \"submitterEmail\": \"authorized1@org4\", \"approvalTimeoutInSeconds\": 18000, \"numberOfDispositionsRequired\": 2, \"numberOfApprovalsReceived\": 1, \"numberOfDeniesReceived\": 0, \"programVersion\": 1, \"details\": {\"type\": \"SignData\", \"base64Data\": \"U29tZSCxbmFyeSDadGE=\", \"signingData\": {\"feePayer\": \"87VXbkJsqdDvXYfDBtS4kW4TcFor7ogofZXbXjT7t7AU\", \"walletProgramId\": \"Hk3CaEtWizNe4tJ8heB1MEsFXuc82PaEgKY3V1eRnFHt\", \"multisigOpAccountAddress\": \"B9k6TF3TqxxErAjm9xbEM1wo6pXL7awUBVwz9GHSvK4d\", \"walletAddress\": \"5u9Q3gR5ZEHG3FYben6b4XnRUgsdV1CGzUp1CGo2xpcp\", \"nonceAccountAddresses\": [\"GG9poSiQMRyZRVR8vSATYZBFcRncamRDyMiumDXDkgHM\"], \"nonceAccountAddressesSlot\": 481, \"initiator\": \"5SrmRzk1CGbHLt8UrNdBXVLtSeje3zW9y9CpfnrS78w\", \"strikeFeeAmount\": 0, \"feeAccountGuidHash\": \"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=\", \"walletGuidHash\": \"RATnHZIZKJRvD0BHwo2on7xqdHNtVMS3U9dqD3o3fLc=\"}}, \"vaultName\": \"Test Organization 4\"}\n"
+        let approvalData = "{\"id\": \"6a196209-b207-47a8-aff0-b609324c9e0e\", \"submitDate\": \"2022-09-10T10:35:20.161+00:00\", \"submitterName\": \"User 1\", \"submitterEmail\": \"authorized1@org4\", \"approvalTimeoutInSeconds\": 18000, \"numberOfDispositionsRequired\": 2, \"numberOfApprovalsReceived\": 1, \"numberOfDeniesReceived\": 0, \"details\": {\"type\": \"SignData\", \"base64Data\": \"U29tZSCxbmFyeSDadGE=\", \"signingData\": {\"feePayer\": \"87VXbkJsqdDvXYfDBtS4kW4TcFor7ogofZXbXjT7t7AU\", \"walletProgramId\": \"Hk3CaEtWizNe4tJ8heB1MEsFXuc82PaEgKY3V1eRnFHt\", \"multisigOpAccountAddress\": \"B9k6TF3TqxxErAjm9xbEM1wo6pXL7awUBVwz9GHSvK4d\", \"walletAddress\": \"5u9Q3gR5ZEHG3FYben6b4XnRUgsdV1CGzUp1CGo2xpcp\", \"nonceAccountAddresses\": [\"GG9poSiQMRyZRVR8vSATYZBFcRncamRDyMiumDXDkgHM\"], \"nonceAccountAddressesSlot\": 481, \"initiator\": \"5SrmRzk1CGbHLt8UrNdBXVLtSeje3zW9y9CpfnrS78w\", \"strikeFeeAmount\": 0, \"feeAccountGuidHash\": \"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=\", \"walletGuidHash\": \"RATnHZIZKJRvD0BHwo2on7xqdHNtVMS3U9dqD3o3fLc=\"}}, \"vaultName\": \"Test Organization 4\"}\n"
 
 
-        let request: WalletApprovalRequest = Mock.decodeJsonType(data: approvalData.data(using: .utf8)!)
+        let request: ApprovalRequest = Mock.decodeJsonType(data: approvalData.data(using: .utf8)!)
         let approvalRequest = StrikeApi.ApprovalDispositionRequest(
             disposition: .Approve,
             requestID: request.id,
@@ -758,9 +794,9 @@ class StrikeTests: XCTestCase {
     }
 
     func testSignDataForPlainTextInitiationRequest() throws {
-        let approvalData = "{\"id\": \"6a196209-b207-47a8-aff0-b609324c9e0e\", \"walletType\": \"Solana\", \"submitDate\": \"2022-09-10T10:35:20.161+00:00\", \"submitterName\": \"User 1\", \"submitterEmail\": \"authorized1@org4\", \"approvalTimeoutInSeconds\": null, \"numberOfDispositionsRequired\": 2, \"numberOfApprovalsReceived\": 0, \"numberOfDeniesReceived\": 0, \"programVersion\": 1, \"details\": {\"type\": \"MultisigOpInitiation\", \"details\": {\"type\": \"SignData\", \"base64Data\": \"U29tZSCxbmFyeSDadGE=\", \"signingData\": {\"feePayer\": \"87VXbkJsqdDvXYfDBtS4kW4TcFor7ogofZXbXjT7t7AU\", \"walletProgramId\": \"Hk3CaEtWizNe4tJ8heB1MEsFXuc82PaEgKY3V1eRnFHt\", \"multisigOpAccountAddress\": \"11111111111111111111111111111111\", \"walletAddress\": \"5u9Q3gR5ZEHG3FYben6b4XnRUgsdV1CGzUp1CGo2xpcp\", \"nonceAccountAddresses\": [\"GqH8ELz24NLWArdzGFa8Y29eLHgfvCpJhnAQjAvycznf\"], \"nonceAccountAddressesSlot\": 479, \"initiator\": \"5SrmRzk1CGbHLt8UrNdBXVLtSeje3zW9y9CpfnrS78w\", \"strikeFeeAmount\": 0, \"feeAccountGuidHash\": \"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=\", \"walletGuidHash\": \"RATnHZIZKJRvD0BHwo2on7xqdHNtVMS3U9dqD3o3fLc=\"}}, \"opAccountCreationInfo\": {\"accountSize\": 3649, \"minBalanceForRentExemption\": 26287920}, \"initiatorIsApprover\": true}, \"vaultName\": \"Test Organization 4\"}\n"
+        let approvalData = "{\"id\": \"6a196209-b207-47a8-aff0-b609324c9e0e\", \"submitDate\": \"2022-09-10T10:35:20.161+00:00\", \"submitterName\": \"User 1\", \"submitterEmail\": \"authorized1@org4\", \"approvalTimeoutInSeconds\": null, \"numberOfDispositionsRequired\": 2, \"numberOfApprovalsReceived\": 0, \"numberOfDeniesReceived\": 0, \"details\": {\"type\": \"MultisigOpInitiation\", \"details\": {\"type\": \"SignData\", \"base64Data\": \"U29tZSCxbmFyeSDadGE=\", \"signingData\": {\"feePayer\": \"87VXbkJsqdDvXYfDBtS4kW4TcFor7ogofZXbXjT7t7AU\", \"walletProgramId\": \"Hk3CaEtWizNe4tJ8heB1MEsFXuc82PaEgKY3V1eRnFHt\", \"multisigOpAccountAddress\": \"11111111111111111111111111111111\", \"walletAddress\": \"5u9Q3gR5ZEHG3FYben6b4XnRUgsdV1CGzUp1CGo2xpcp\", \"nonceAccountAddresses\": [\"GqH8ELz24NLWArdzGFa8Y29eLHgfvCpJhnAQjAvycznf\"], \"nonceAccountAddressesSlot\": 479, \"initiator\": \"5SrmRzk1CGbHLt8UrNdBXVLtSeje3zW9y9CpfnrS78w\", \"strikeFeeAmount\": 0, \"feeAccountGuidHash\": \"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=\", \"walletGuidHash\": \"RATnHZIZKJRvD0BHwo2on7xqdHNtVMS3U9dqD3o3fLc=\"}}, \"opAccountCreationInfo\": {\"accountSize\": 3649, \"minBalanceForRentExemption\": 26287920}, \"initiatorIsApprover\": true}, \"vaultName\": \"Test Organization 4\"}\n"
 
-        let request: WalletApprovalRequest = Mock.decodeJsonType(data: approvalData.data(using: .utf8)!)
+        let request: ApprovalRequest = Mock.decodeJsonType(data: approvalData.data(using: .utf8)!)
         let pk = try Curve25519.Signing.PrivateKey.init(rawRepresentation: "afbdbb77f072edf581050da4f60bdaf543fe4bed493e011bb4f411345940976e".data(using: .hexadecimal)!)
         let initiationRequest = StrikeApi.InitiationRequest(
             disposition: .Approve,
@@ -778,50 +814,10 @@ class StrikeTests: XCTestCase {
         )
     }
     
-    func testSignDataForBalanceAccountCreationApprovalRequest() throws {
-        let approvalData = "{\"id\": \"33d18d6c-7fb7-4325-b0af-4b6da8a05690\", \"walletType\": \"Solana\", \"submitDate\": \"2022-09-09T20:49:47.249+00:00\", \"submitterName\": \"User 1\", \"submitterEmail\": \"authorized1@org5\", \"approvalTimeoutInSeconds\": 18000, \"numberOfDispositionsRequired\": 2, \"numberOfApprovalsReceived\": 1, \"numberOfDeniesReceived\": 0, \"programVersion\": 1, \"details\": {\"type\": \"SignData\", \"base64Data\": \"eyJfdHlwZSI6IkNyZWF0ZUJhbGFuY2VBY2NvdW50IiwicHJvdmlkZXJJZCI6ImJpdGNvaW4iLCJkYXRhIjp7InR5cGUiOiJCYWxhbmNlQWNjb3VudENyZWF0aW9uIiwiYWNjb3VudFNsb3QiOjAsImFjY291bnRJbmZvIjp7ImlkZW50aWZpZXIiOiI3ZDE1MTQ1Ni0yOGNiLTRmZjUtYTZiOC1iOTg4ODVlODdkMTkiLCJuYW1lIjoiQml0Y29pbiBBY2NvdW50IDEiLCJhY2NvdW50VHlwZSI6IkJhbGFuY2VBY2NvdW50IiwiYWRkcmVzcyI6Im14RW1MVWRYYVEza2huRVhyR1ZmQ1dRQnVTRG03Q2VYWEQifSwiYXBwcm92YWxQb2xpY3kiOnsiYXBwcm92YWxzUmVxdWlyZWQiOjEsImFwcHJvdmFsVGltZW91dCI6MzYwMDAwMCwiYXBwcm92ZXJzIjpbeyJzbG90SWQiOjAsInZhbHVlIjp7InB1YmxpY0tleSI6InlYYkdINjJnWUI3dzR6aUMxZXlyS29YM2I4UzMyWkttcXFoRWFDUzF3WFBEdkhvTXdpRmVmZ3Z5TXZmWlFUTXZIQ1pyV1NocDVGWHVMZWFpTUxNUGtSOSIsIm5hbWUiOiJVc2VyIDEiLCJlbWFpbCI6ImF1dGhvcml6ZWQxQG9yZzUiLCJuYW1lSGFzaElzRW1wdHkiOnRydWV9fV19LCJ3aGl0ZWxpc3RFbmFibGVkIjoiT2ZmIiwiZGFwcHNFbmFibGVkIjoiT2ZmIiwiYWRkcmVzc0Jvb2tTbG90IjowLCJzdGFraW5nVmFsaWRhdG9yIjpudWxsLCJzaWduaW5nRGF0YSI6eyJmZWVQYXllciI6IiIsIndhbGxldFByb2dyYW1JZCI6IiIsIm11bHRpc2lnT3BBY2NvdW50QWRkcmVzcyI6IiIsIndhbGxldEFkZHJlc3MiOiIiLCJub25jZUFjY291bnRBZGRyZXNzZXMiOltdLCJub25jZUFjY291bnRBZGRyZXNzZXNTbG90IjowLCJpbml0aWF0b3IiOiIiLCJzdHJpa2VGZWVBbW91bnQiOjAsImZlZUFjY291bnRHdWlkSGFzaCI6IiIsIndhbGxldEd1aWRIYXNoIjoiIn19fQ==\", \"signingData\": {\"feePayer\": \"87VXbkJsqdDvXYfDBtS4kW4TcFor7ogofZXbXjT7t7AU\", \"walletProgramId\": \"GYdjan963vVRh8sHAQeXy8U6aBmsSHuUTYio6R4br7K1\", \"multisigOpAccountAddress\": \"zoUp5YxMz1jm7T2iQ3FbjUCFV2yNQpNrUW2R7UNXZ7E\", \"walletAddress\": \"74KQTHwW3f6fvqrkqE7GeoRJQyGinV6xMdJ6BpPET8rG\", \"nonceAccountAddresses\": [\"EhvNkf9T3ZHnLmtsgLRJ3TmGWe6oWvRQejSTqzG6xaou\"], \"nonceAccountAddressesSlot\": 16224, \"initiator\": \"7nTeukQZH8FSg59VbsCeQqyAojpLjcRvueXLRpxDr3fn\", \"strikeFeeAmount\": 0, \"feeAccountGuidHash\": \"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=\", \"walletGuidHash\": \"OTDldXFSr0Rn49uJ/MIDYqmE1DBHT7S8bIrLSHNo9Yw=\"}}, \"vaultName\": \"Test Organization 5\"}\n"
-
-
-        let request: WalletApprovalRequest = Mock.decodeJsonType(data: approvalData.data(using: .utf8)!)
-        let approvalRequest = StrikeApi.ApprovalDispositionRequest(
-            disposition: .Approve,
-            requestID: request.id,
-            requestType: request.requestType,
-            nonces: [StrikeApi.Nonce("9dNtUVv25bMpyrFyRgrgdmygymYxeCiw8geHfKLVYnyu")],
-            email: "dont care"
-        )
-        XCTAssertEqual(
-            try approvalRequest.signableData(approverPublicKey: "7xQTcWf8hWnYb2DfNHX43qGSmME8TAcvPY6DJ9KPUnTK").toHexString(),
-            "0201040869ab8cb05413af9614f898a1f1fdfbc07e7ad5eb2eb1d0f1c49f448bd179c7156757974e9d4a7a1f6367333182c168c8abaa4616428d182e6e7d77b675458aa2cba3838600fb16cdfe56197da6ebc0e943ed59c03ea18539c79049d5e802a0cc0ecea9219bc5d14e3119b89bdece9afaf3a91e6db985961c16181349c49d094906a7d517192c568ee08a845f73d29788cf035c3145b21ab344d8062ea940000006a7d51718c774c928566398691d5eb68b5eb8a39b4b6d5c73555b21000000000000000000000000000000000000000000000000000000000000000000000000e6f9d82d908d2e9a64f43557fbaefd85806a4b1fcb08454bcb5bab5f2ab8d014802f271d98da48f43a3cbdbfb5623a006de53b3f24771acba31f2f265b789530020603020400040400000007030301052209016e60d6be52226fc9f59faff76a8258b86c5b34eefaaf1fb21b5d1e918d515cd6"
-        )
-    }
-
-    func testSignDataForBalanceAccountCreationInitiationRequest() throws {
-        let approvalData = "{\"id\": \"00c06a34-75b5-48b1-bbb4-fddc8addb8ee\", \"walletType\": \"Solana\", \"submitDate\": \"2022-09-09T20:06:11.425+00:00\", \"submitterName\": \"User 1\", \"submitterEmail\": \"authorized1@org5\", \"approvalTimeoutInSeconds\": null, \"numberOfDispositionsRequired\": 2, \"numberOfApprovalsReceived\": 0, \"numberOfDeniesReceived\": 0, \"programVersion\": 1, \"details\": {\"type\": \"MultisigOpInitiation\", \"details\": {\"type\": \"SignData\", \"base64Data\": \"eyJfdHlwZSI6IkNyZWF0ZUJhbGFuY2VBY2NvdW50IiwicHJvdmlkZXJJZCI6ImJpdGNvaW4iLCJkYXRhIjp7InR5cGUiOiJCYWxhbmNlQWNjb3VudENyZWF0aW9uIiwiYWNjb3VudFNsb3QiOjAsImFjY291bnRJbmZvIjp7ImlkZW50aWZpZXIiOiI1NTczNmMyMy04ZjE4LTRmM2UtYjM2MC05ZmI5MTQ5MjNiOTIiLCJuYW1lIjoiQml0Y29pbiBBY2NvdW50IDEiLCJhY2NvdW50VHlwZSI6IkJhbGFuY2VBY2NvdW50IiwiYWRkcmVzcyI6Im16U2JqOXJpUWtBNUJESzk0SGo5WUJNRnZlQ0pZVHhkdWEifSwiYXBwcm92YWxQb2xpY3kiOnsiYXBwcm92YWxzUmVxdWlyZWQiOjEsImFwcHJvdmFsVGltZW91dCI6MzYwMDAwMCwiYXBwcm92ZXJzIjpbeyJzbG90SWQiOjAsInZhbHVlIjp7InB1YmxpY0tleSI6IjIxQWNqWWRHbmZuTHZuc1BYdkF5TEZrbmVNa052MzljTGdNTU5kU0wyWTg5bVlwYlN5dFoyeUZiV0hFWjZrTGc2OUZKMkZDVDhOYVNVdlkzV2pTMTJCV28iLCJuYW1lIjoiVXNlciAxIiwiZW1haWwiOiJhdXRob3JpemVkMUBvcmc1IiwibmFtZUhhc2hJc0VtcHR5Ijp0cnVlfX1dfSwid2hpdGVsaXN0RW5hYmxlZCI6Ik9mZiIsImRhcHBzRW5hYmxlZCI6Ik9mZiIsImFkZHJlc3NCb29rU2xvdCI6MCwic3Rha2luZ1ZhbGlkYXRvciI6bnVsbCwic2lnbmluZ0RhdGEiOnsiZmVlUGF5ZXIiOiIiLCJ3YWxsZXRQcm9ncmFtSWQiOiIiLCJtdWx0aXNpZ09wQWNjb3VudEFkZHJlc3MiOiIiLCJ3YWxsZXRBZGRyZXNzIjoiIiwibm9uY2VBY2NvdW50QWRkcmVzc2VzIjpbXSwibm9uY2VBY2NvdW50QWRkcmVzc2VzU2xvdCI6MCwiaW5pdGlhdG9yIjoiIiwic3RyaWtlRmVlQW1vdW50IjowLCJmZWVBY2NvdW50R3VpZEhhc2giOiIiLCJ3YWxsZXRHdWlkSGFzaCI6IiJ9fX0=\", \"signingData\": {\"feePayer\": \"87VXbkJsqdDvXYfDBtS4kW4TcFor7ogofZXbXjT7t7AU\", \"walletProgramId\": \"4Kra2q9aGe9n5YAarPWH3BvZSXVBLAZTCQhuPh9VQun1\", \"multisigOpAccountAddress\": \"11111111111111111111111111111111\", \"walletAddress\": \"37jZd3fa6hQ98ufPFA6N7WQvUm6DtsBjnEakGY5pqrB9\", \"nonceAccountAddresses\": [\"Gntfv3uZaqEJTrm2BWy87ZgTPEyPwyEVQGVhdhGvLA5j\"], \"nonceAccountAddressesSlot\": 10462, \"initiator\": \"4Gyit71SY3zUUmDMvAT3Lqbex8wBhWJRx8xpEXd5qq66\", \"strikeFeeAmount\": 0, \"feeAccountGuidHash\": \"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=\", \"walletGuidHash\": \"9KVyRePx9RQkHs8orY2k87NzyoSiLkPsjpVxCIgUlLA=\"}}, \"opAccountCreationInfo\": {\"accountSize\": 3649, \"minBalanceForRentExemption\": 26287920}, \"initiatorIsApprover\": true}, \"vaultName\": \"Test Organization 5\"}\n"
-
-
-        let request: WalletApprovalRequest = Mock.decodeJsonType(data: approvalData.data(using: .utf8)!)
-        let pk = try Curve25519.Signing.PrivateKey.init(rawRepresentation: "5647f96596cf1d7e5b3e8f79401840dee7125aded4b185e66963f0d56c1466bb".data(using: .hexadecimal)!)
-        let initiationRequest = StrikeApi.InitiationRequest(
-            disposition: .Approve,
-            requestID: request.id,
-            initiation: getOpAccountCreationInfo(request)!,
-            requestType: request.requestType,
-            nonces: [StrikeApi.Nonce("6ZY5GcyceDoL9ezZcT2znhnCSacePMtZYUhcXETyrRcb")],
-            email: "dont care",
-            opAccountPrivateKey: pk
-        )
-
-        XCTAssertEqual(
-            try initiationRequest.signableData(approverPublicKey: "4Gyit71SY3zUUmDMvAT3Lqbex8wBhWJRx8xpEXd5qq66").toHexString(),
-            "0301040969ab8cb05413af9614f898a1f1fdfbc07e7ad5eb2eb1d0f1c49f448bd179c715eaed3fd176bbffdb0f461ecd630cda4222a93ebc95765d0355dc0b30379d438c30aae8a6182fd1294d717eacf294e2ed515bfe980cba907006a100928bddfb27eaa0dd6522a309e59454de9c2f37e8cef9bd8d10683b6f035faa9f9504fa88fe1f70fbf53c47a529b7275ea23a1d4c811cd0210f748bd1b70fcf05b6f53baa6006a7d517192c568ee08a845f73d29788cf035c3145b21ab344d8062ea940000006a7d51718c774c928566398691d5eb68b5eb8a39b4b6d5c73555b2100000000000000000000000000000000000000000000000000000000000000000000000031679052f04f2d670da777f48a043ebadc013c519b3a60fe9be19546844002da52a027d3066f2028195e3a2a3b00fb521729f6bbd885c3e941600ef9af8b76180307030305000404000000070200013400000000301f910100000000410e00000000000031679052f04f2d670da777f48a043ebadc013c519b3a60fe9be19546844002da080501040206004c2300000000000000000000000000000000000000000000000000000000000000000000000000000000002000e20ac1082fd5ef74246e6fe2cde37d41a449aee5ee9ba84936db99b37aec714e"
-        )
-    }
-    
     func testBitcoinWithdrawalApproval() throws {
-        let approvalData = "{\"id\":\"77475988-fd42-41c0-8ef6-cba19c1b1251\",\"walletType\":\"Solana\",\"submitDate\":\"2022-09-28T22:58:12.035+00:00\",\"submitterName\":\"User 1\",\"submitterEmail\":\"authorized1@org1\",\"approvalTimeoutInSeconds\":3600,\"numberOfDispositionsRequired\":1,\"numberOfApprovalsReceived\":0,\"numberOfDeniesReceived\":0,\"programVersion\":null,\"details\":{\"type\":\"WithdrawalRequest\",\"account\":{\"identifier\":\"a7c36ae6-7ccf-4051-937b-4dfa34a29736\",\"name\":\"Bitcoin Wallet 1\",\"accountType\":\"BalanceAccount\",\"address\":\"mxUpwv18LoZWg6k7ksGoj3r8geruTcwqZq\"},\"symbolAndAmountInfo\":{\"symbolInfo\":{\"symbol\":\"BTC\",\"symbolDescription\":\"Bitcoin\",\"imageUrl\":\"https://s3.us-east-1.amazonaws.com/strike-public-assets/logos/BTC.png\"},\"amount\":\"0.50010380\",\"nativeAmount\":\"0.50010380\",\"usdEquivalent\":\"31581.55\"},\"destination\":{\"name\":\"Bitcoin Wallet 2\",\"address\":\"mwRPxwxTS9YD2bkUAqKYcHCPMpUoMemhPo\"},\"signingData\":{\"type\":\"bitcoin\",\"childKeyIndex\":0,\"transaction\":{\"version\":1,\"txIns\":[{\"txId\":\"81788c968daae8c6ea30a5041f283a798ad5ab253cb99ef2f0d0b167f937dd77\",\"index\":1,\"amount\":20000000,\"inputScriptHex\":\"76A914BA132C598CAA68EDEE903578AE11B6B03BFDC78588AC\",\"base64HashForSignature\":\"OdGGt+Yh9Fp1wjHVGwpbmVJnjWOdFnZpeC+F9l+HG8g=\"},{\"txId\":\"5b4f03ab2e30fc4b716d4aefc47a6db59cdfca0a788068ce5131278e9d9f3d33\",\"index\":1,\"amount\":20000000,\"inputScriptHex\":\"76A914BA132C598CAA68EDEE903578AE11B6B03BFDC78588AC\",\"base64HashForSignature\":\"AnxjVJFcoqK4y3URV/UMI4F9jIER5bb2cDI+TtkMtMc=\"},{\"txId\":\"bb149f176978a86e83ab12a7aee4c21fd5830963d89af74064762c4f023d35ea\",\"index\":1,\"amount\":20000000,\"inputScriptHex\":\"76A914BA132C598CAA68EDEE903578AE11B6B03BFDC78588AC\",\"base64HashForSignature\":\"m73uZw7PDXkA5VzKxDEqdT+AMT2vwGvVcjzlRyd4a6E=\"}],\"txOuts\":[{\"index\":0,\"amount\":50000000,\"pubKeyScriptHex\":\"76A914AE74F20C5186F642F1396917DECF8246CEFDD13588AC\",\"address\":\"mwRPxwxTS9YD2bkUAqKYcHCPMpUoMemhPo\",\"isChange\":false},{\"index\":1,\"amount\":9989620,\"pubKeyScriptHex\":\"76A914BA132C598CAA68EDEE903578AE11B6B03BFDC78588AC\",\"address\":\"mxUpwv18LoZWg6k7ksGoj3r8geruTcwqZq\",\"isChange\":true}],\"totalFee\":10380}}},\"vaultName\":\"Test Organization 1\"}\n"
+        let approvalData = "{\"id\":\"77475988-fd42-41c0-8ef6-cba19c1b1251\",\"submitDate\":\"2022-09-28T22:58:12.035+00:00\",\"submitterName\":\"User 1\",\"submitterEmail\":\"authorized1@org1\",\"approvalTimeoutInSeconds\":3600,\"numberOfDispositionsRequired\":1,\"numberOfApprovalsReceived\":0,\"numberOfDeniesReceived\":0,\"details\":{\"type\":\"WithdrawalRequest\",\"account\":{\"identifier\":\"a7c36ae6-7ccf-4051-937b-4dfa34a29736\",\"name\":\"Bitcoin Wallet 1\",\"accountType\":\"BalanceAccount\",\"address\":\"mxUpwv18LoZWg6k7ksGoj3r8geruTcwqZq\"},\"symbolAndAmountInfo\":{\"symbolInfo\":{\"symbol\":\"BTC\",\"symbolDescription\":\"Bitcoin\",\"imageUrl\":\"https://s3.us-east-1.amazonaws.com/strike-public-assets/logos/BTC.png\"},\"amount\":\"0.50010380\",\"nativeAmount\":\"0.50010380\",\"usdEquivalent\":\"31581.55\"},\"destination\":{\"name\":\"Bitcoin Wallet 2\",\"address\":\"mwRPxwxTS9YD2bkUAqKYcHCPMpUoMemhPo\"},\"signingData\":{\"type\":\"bitcoin\",\"childKeyIndex\":0,\"transaction\":{\"version\":1,\"txIns\":[{\"txId\":\"81788c968daae8c6ea30a5041f283a798ad5ab253cb99ef2f0d0b167f937dd77\",\"index\":1,\"amount\":20000000,\"inputScriptHex\":\"76A914BA132C598CAA68EDEE903578AE11B6B03BFDC78588AC\",\"base64HashForSignature\":\"OdGGt+Yh9Fp1wjHVGwpbmVJnjWOdFnZpeC+F9l+HG8g=\"},{\"txId\":\"5b4f03ab2e30fc4b716d4aefc47a6db59cdfca0a788068ce5131278e9d9f3d33\",\"index\":1,\"amount\":20000000,\"inputScriptHex\":\"76A914BA132C598CAA68EDEE903578AE11B6B03BFDC78588AC\",\"base64HashForSignature\":\"AnxjVJFcoqK4y3URV/UMI4F9jIER5bb2cDI+TtkMtMc=\"},{\"txId\":\"bb149f176978a86e83ab12a7aee4c21fd5830963d89af74064762c4f023d35ea\",\"index\":1,\"amount\":20000000,\"inputScriptHex\":\"76A914BA132C598CAA68EDEE903578AE11B6B03BFDC78588AC\",\"base64HashForSignature\":\"m73uZw7PDXkA5VzKxDEqdT+AMT2vwGvVcjzlRyd4a6E=\"}],\"txOuts\":[{\"index\":0,\"amount\":50000000,\"pubKeyScriptHex\":\"76A914AE74F20C5186F642F1396917DECF8246CEFDD13588AC\",\"address\":\"mwRPxwxTS9YD2bkUAqKYcHCPMpUoMemhPo\",\"isChange\":false},{\"index\":1,\"amount\":9989620,\"pubKeyScriptHex\":\"76A914BA132C598CAA68EDEE903578AE11B6B03BFDC78588AC\",\"address\":\"mxUpwv18LoZWg6k7ksGoj3r8geruTcwqZq\",\"isChange\":true}],\"totalFee\":10380}}},\"vaultName\":\"Test Organization 1\"}\n"
         
-        let request: WalletApprovalRequest = Mock.decodeJsonType(data: approvalData.data(using: .utf8)!)
+        let request: ApprovalRequest = Mock.decodeJsonType(data: approvalData.data(using: .utf8)!)
         
         let approvalRequest = StrikeApi.ApprovalDispositionRequest(
             disposition: .Approve,
@@ -837,7 +833,7 @@ class StrikeTests: XCTestCase {
 
     }
     
-    func getOpAccountCreationInfo(_ request: WalletApprovalRequest) -> MultisigOpInitiation? {
+    func getOpAccountCreationInfo(_ request: ApprovalRequest) -> MultisigOpInitiation? {
         switch request.details {
         case .multisigOpInitiation(let initiation, _):
             return MultisigOpInitiation(opAccountCreationInfo: initiation.opAccountCreationInfo, initiatorIsApprover: initiation.initiatorIsApprover)
