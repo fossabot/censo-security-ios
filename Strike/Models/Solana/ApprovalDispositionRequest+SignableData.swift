@@ -180,7 +180,7 @@ extension StrikeApi.ApprovalDispositionRequest: SignableData {
         get throws {
             switch requestType {
             case .walletCreation(let request):
-                if request.accountInfo.chainName == "Solana" {
+                if request.accountInfo.chainName == Chain.solana {
                     return request.signingData!
                 } else {
                     throw ApprovalError.invalidRequest(reason: "Invalid signing data for approval")
@@ -249,9 +249,9 @@ extension StrikeApi.ApprovalDispositionRequest: SignableData {
             return [request.jwtToken.data(using: .utf8)!]
         case .walletCreation(let walletCreation):
             switch (walletCreation.accountInfo.chainName) {
-            case "Bitcoin":
+            case .bitcoin:
                 return [try JSONEncoder().encode(requestType)]
-            case "Ethereum":
+            case .ethereum:
                 return [try JSONEncoder().encode(requestType)]
             default:
                 return [try getSolanaSignableData(requestType: requestType, approverPublicKey: approverPublicKey)]

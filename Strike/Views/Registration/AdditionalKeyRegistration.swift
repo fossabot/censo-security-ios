@@ -47,7 +47,7 @@ struct AdditionalKeyRegistration: View {
                             signers: try keysToRegister.map({
                                 StrikeApi.WalletSigner(
                                     publicKey: $0.publicKey,
-                                    walletType: $0.walletType,
+                                    chain: $0.chain,
                                     signature: try privateKeys?.solana.signature(for: Base58.decode($0.publicKey)).base64EncodedString()
                                 )
                             }),
@@ -71,7 +71,7 @@ struct AdditionalKeyRegistration_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
             AdditionalKeyRegistration(user: .sample,
-                                      keysToRegister: [StrikeApi.WalletSigner(publicKey: "", walletType: WalletType.Bitcoin, signature: nil)],
+                                      keysToRegister: [StrikeApi.WalletSigner(publicKey: "", chain: Chain.bitcoin, signature: nil)],
                                       onSuccess: {}
             )
         }

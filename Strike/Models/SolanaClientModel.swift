@@ -49,10 +49,10 @@ enum BooleanSetting: String, Codable {
     }
 }
 
-enum WalletType: String, Codable {
-    case Solana = "Solana"
-    case Bitcoin = "Bitcoin"
-    case Ethereum = "Ethereum"
+enum Chain: String, Codable {
+    case solana = "solana"
+    case bitcoin = "bitcoin"
+    case ethereum = "ethereum"
 }
 
 enum LogoType: String, Codable {
@@ -282,7 +282,7 @@ struct AccountInfo: Codable, Equatable {
     let identifier: String
     let accountType: AccountType
     let address: String?
-    let chainName: String?
+    let chainName: Chain?
 }
 
 struct TransactionInput: Codable, Equatable {

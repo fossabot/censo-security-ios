@@ -79,12 +79,12 @@ struct KeyConfirmationSuccess: View {
                             signers: [
                                 StrikeApi.WalletSigner(
                                     publicKey: privateKeys.solana.encodedPublicKey,
-                                    walletType: WalletType.Solana,
+                                    chain: Chain.solana,
                                     signature: nil
                                 ),
                                 StrikeApi.WalletSigner(
                                     publicKey: privateKeys.bitcoin!.getBase58ExtendedPublicKey(),
-                                    walletType: WalletType.Bitcoin,
+                                    chain: Chain.bitcoin,
                                     signature: nil
                                 )
                                 ],
