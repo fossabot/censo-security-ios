@@ -28,10 +28,10 @@ struct RegistrationView: View {
     private func getKeysToRegister(storedKeys: PublicKeys, remoteKeys: PublicKeys) -> [StrikeApi.WalletSigner]? {
         var keysToRegister: [StrikeApi.WalletSigner] = []
         if storedKeys.bitcoin != nil && remoteKeys.bitcoin == nil {
-            keysToRegister.append(StrikeApi.WalletSigner(publicKey: storedKeys.bitcoin!, walletType: WalletType.Bitcoin, signature: nil))
+            keysToRegister.append(StrikeApi.WalletSigner(publicKey: storedKeys.bitcoin!, chain: Chain.bitcoin, signature: nil))
         }
         if storedKeys.ethereum != nil && remoteKeys.ethereum == nil {
-            keysToRegister.append(StrikeApi.WalletSigner(publicKey: storedKeys.ethereum!, walletType: WalletType.Ethereum, signature: nil))
+            keysToRegister.append(StrikeApi.WalletSigner(publicKey: storedKeys.ethereum!, chain: Chain.ethereum, signature: nil))
         }
         return !keysToRegister.isEmpty ? keysToRegister : nil
     }

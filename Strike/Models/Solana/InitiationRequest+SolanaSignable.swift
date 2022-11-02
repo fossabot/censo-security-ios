@@ -230,7 +230,7 @@ extension StrikeApi.InitiationRequest: SolanaSignable {
         get throws {
             switch requestType {
             case .walletCreation(let request):
-                if request.accountInfo.chainName == "Solana" {
+                if request.accountInfo.chainName == Chain.solana {
                     return request.signingData!
                 } else {
                     throw ApprovalError.invalidRequest(reason: "Invalid signing data for Initiation")

@@ -80,7 +80,7 @@ extension StrikeTests {
                     identifier: "c6055be1-a895-45a6-b0f3-fce261760b89",
                     accountType: AccountType.BalanceAccount,
                     address: nil,
-                    chainName: "Solana"
+                    chainName: Chain.solana
                 ),
                 approvalPolicy: ApprovalPolicy(
                     approvalsRequired: 1,
@@ -120,7 +120,7 @@ extension StrikeTests {
                     identifier: "c6055be1-a895-45a6-b0f3-fce261760b89",
                     accountType: AccountType.BalanceAccount,
                     address: nil,
-                    chainName: "Bitcoin"
+                    chainName: Chain.bitcoin
                 ),
                 approvalPolicy: ApprovalPolicy(
                     approvalsRequired: 1,
@@ -149,7 +149,7 @@ extension StrikeTests {
                     identifier: "c6055be1-a895-45a6-b0f3-fce261760b89",
                     accountType: AccountType.BalanceAccount,
                     address: nil,
-                    chainName: "Ethereum"
+                    chainName: Chain.ethereum
                 ),
                 approvalPolicy: ApprovalPolicy(
                     approvalsRequired: 1,

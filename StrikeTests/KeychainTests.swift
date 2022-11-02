@@ -79,16 +79,16 @@ class KeychainTests: XCTestCase {
         
         XCTAssertEqual(
             StrikeApi.User(id: "", fullName: "", loginName: "", hasApprovalPermission: false, organization: org, useStaticKey: false,
-                           publicKeys: [StrikeApi.PublicKey(key: "F7JuLRBbyGAS9nAhDdfNX1LbckBAmCnKMB2xTdZfQS1n", walletType: WalletType.Solana)]).registeredPublicKeys,
+                           publicKeys: [StrikeApi.PublicKey(key: "F7JuLRBbyGAS9nAhDdfNX1LbckBAmCnKMB2xTdZfQS1n", chain: Chain.solana)]).registeredPublicKeys,
             PublicKeys(solana: "F7JuLRBbyGAS9nAhDdfNX1LbckBAmCnKMB2xTdZfQS1n", bitcoin: nil)
         )
         
         XCTAssertEqual(
             StrikeApi.User(id: "", fullName: "", loginName: "", hasApprovalPermission: false, organization: org, useStaticKey: false,
                            publicKeys: [
-                            StrikeApi.PublicKey(key: "F7JuLRBbyGAS9nAhDdfNX1LbckBAmCnKMB2xTdZfQS1n", walletType: WalletType.Solana),
-                            StrikeApi.PublicKey(key: "xpub6GGm8SWYXzXt4T2giWaP67ajd9d5hnYkbgUFtxyBU9d4Q5hkXPr7JHtPJN5dD6uNVXb7EEpdZeXvG5XwFVWhUj4Q2ufhYH38fuHK9ERTy3d", walletType: WalletType.Bitcoin),
-                            StrikeApi.PublicKey(key: "ABJuLRBbyGAS9nAhDdfNX1LbckBAmCnKMB2xTdZfQScd", walletType: WalletType.Ethereum)
+                            StrikeApi.PublicKey(key: "F7JuLRBbyGAS9nAhDdfNX1LbckBAmCnKMB2xTdZfQS1n", chain: Chain.solana),
+                            StrikeApi.PublicKey(key: "xpub6GGm8SWYXzXt4T2giWaP67ajd9d5hnYkbgUFtxyBU9d4Q5hkXPr7JHtPJN5dD6uNVXb7EEpdZeXvG5XwFVWhUj4Q2ufhYH38fuHK9ERTy3d", chain: Chain.bitcoin),
+                            StrikeApi.PublicKey(key: "ABJuLRBbyGAS9nAhDdfNX1LbckBAmCnKMB2xTdZfQScd", chain: Chain.ethereum)
                            ]).registeredPublicKeys,
             PublicKeys(solana: "F7JuLRBbyGAS9nAhDdfNX1LbckBAmCnKMB2xTdZfQS1n",
                        bitcoin: "xpub6GGm8SWYXzXt4T2giWaP67ajd9d5hnYkbgUFtxyBU9d4Q5hkXPr7JHtPJN5dD6uNVXb7EEpdZeXvG5XwFVWhUj4Q2ufhYH38fuHK9ERTy3d",
@@ -99,9 +99,9 @@ class KeychainTests: XCTestCase {
         XCTAssertNotEqual(
             StrikeApi.User(id: "", fullName: "", loginName: "", hasApprovalPermission: false, organization: org, useStaticKey: false,
                            publicKeys: [
-                            StrikeApi.PublicKey(key: "F7JuLRBbyGAS9nAhDdfNX1LbckBAmCnKMB2xTdZfQS1n", walletType: WalletType.Solana),
-                            StrikeApi.PublicKey(key: "xpub6GGm8SWYXzXt4T2giWaP67ajd9d5hnYkbgUFtxyBU9d4Q5hkXPr7JHtPJN5dD6uNVXb7EEpdZeXvG5XwFVWhUj4Q2ufhYH38fuHK9ERTy3d", walletType: WalletType.Bitcoin),
-                            StrikeApi.PublicKey(key: "ABJuLRBbyGAS9nAhDdfNX1LbckBAmCnKMB2xTdZfQScd", walletType: WalletType.Ethereum)
+                            StrikeApi.PublicKey(key: "F7JuLRBbyGAS9nAhDdfNX1LbckBAmCnKMB2xTdZfQS1n", chain: Chain.solana),
+                            StrikeApi.PublicKey(key: "xpub6GGm8SWYXzXt4T2giWaP67ajd9d5hnYkbgUFtxyBU9d4Q5hkXPr7JHtPJN5dD6uNVXb7EEpdZeXvG5XwFVWhUj4Q2ufhYH38fuHK9ERTy3d", chain: Chain.bitcoin),
+                            StrikeApi.PublicKey(key: "ABJuLRBbyGAS9nAhDdfNX1LbckBAmCnKMB2xTdZfQScd", chain: Chain.ethereum)
                            ]).registeredPublicKeys,
             PublicKeys(solana: "F7JuLRBbyGAS9nAhDdfNX1LbckBAmCnKMB2xTdZfQS1n",
                        bitcoin: "xpub6GGm8SWYXzXt4T2giWaP67ajd9d5hnYkbgUFtxyBU9d4Q5hkXPr7JHtPJN5dD6uNVXb7EEpdZeXvG5XwFVWhUj4Q2ufhYH38fuHK9ERTy3d",

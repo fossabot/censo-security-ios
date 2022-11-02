@@ -192,7 +192,7 @@ extension StrikeApi {
 
     struct PublicKey: Codable {
         let key: String
-        let walletType: WalletType
+        let chain: Chain
     }
     
     struct Organization: Codable {
@@ -207,7 +207,7 @@ extension StrikeApi {
 
     struct WalletSigner: Codable {
         let publicKey: String
-        let walletType: WalletType
+        let chain: Chain
         let signature: String?
     }
     
@@ -341,13 +341,13 @@ extension StrikeApi {
                     return try getNoChainSignature(key: privateKeys.solana, approverPublicKey: approverPublicKey)
                 case .walletCreation(let walletCreation):
                     switch (walletCreation.accountInfo.chainName) {
-                    case "Bitcoin":
+                    case .bitcoin:
                         if let key = privateKeys.bitcoin {
                             return try getNoChainSignature(key: key, approverPublicKey: approverPublicKey)
                         } else {
                             throw ApiError.other("trying to sign bitcoin request but no bitcoin key")
                         }
-                    case "Ethereum":
+                    case .ethereum:
                         if let key = privateKeys.ethereum {
                             return try getNoChainSignature(key: key, approverPublicKey: approverPublicKey)
                         } else {
@@ -476,11 +476,11 @@ extension StrikeApi.User {
         if self.publicKeys.isEmpty {
             return nil
         }
-        if let solanaKey = self.publicKeys.first(where: { $0.walletType == WalletType.Solana }) {
+        if let solanaKey = self.publicKeys.first(where: { $0.chain == Chain.solana }) {
             return PublicKeys(
                 solana: solanaKey.key,
-                bitcoin: self.publicKeys.first(where: { $0.walletType == WalletType.Bitcoin })?.key,
-                ethereum: self.publicKeys.first(where: { $0.walletType == WalletType.Ethereum })?.key
+                bitcoin: self.publicKeys.first(where: { $0.chain == Chain.bitcoin })?.key,
+                ethereum: self.publicKeys.first(where: { $0.chain == Chain.ethereum })?.key
             )
         }
         return nil
