@@ -103,9 +103,8 @@ struct SignInView: View {
     }
 
     private func signIn() {
-        if Keychain.hasPrivateKey(email: username) {
+        if Keychain.hasRootSeed(email: username) {
             isAuthenticating = true
-            Keychain.migrateIfNeeded(for: username)
 
             authProvider.authenticate(.signature(email: username)) { error in
                 isAuthenticating = false

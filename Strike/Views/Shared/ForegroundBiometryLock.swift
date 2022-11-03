@@ -48,13 +48,13 @@ class BiometryProtector: ObservableObject {
         let uuid = UUID()
         let data = uuid.uuidString.data(using: .utf8)!
 
-        Keychain.save(account: Self.keychainAccount, service: Self.keychainService, data: data, synced: false, biometryProtected: true)
+        try? Keychain.save(account: Self.keychainAccount, service: Self.keychainService, data: data, synced: false, biometryProtected: true)
 
         self.uuid = uuid
     }
 
     func validateBiometrics() -> Bool {
-        guard let storedUUIDData = Keychain.load(account: Self.keychainAccount, service: Self.keychainService, synced: false, biometryPrompt: "Identify Yourself"),
+        guard let storedUUIDData = try? Keychain.load(account: Self.keychainAccount, service: Self.keychainService, synced: false, biometryPrompt: "Identify Yourself"),
               let storedUUIDString = String(data: storedUUIDData, encoding: .utf8) else {
             return false
         }

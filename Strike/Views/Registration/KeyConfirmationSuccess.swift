@@ -70,32 +70,16 @@ struct KeyConfirmationSuccess: View {
     private func reload() {
         do {
             let rootSeed = try Mnemonic(phrase: phrase).seed
-            let privateKeys = try PrivateKeys.fromRootSeed(rootSeed: rootSeed)
+            let privateKeys = try PrivateKeys(rootSeed: rootSeed)
+            let signers = try StrikeApi.Signers(privateKeys: privateKeys)
 
             _signers.reload(
                 using: strikeApi.provider.loader(
-                    for: .addWalletSigners(
-                        StrikeApi.Signers(
-                            signers: [
-                                StrikeApi.WalletSigner(
-                                    publicKey: privateKeys.solana.encodedPublicKey,
-                                    chain: Chain.solana,
-                                    signature: nil
-                                ),
-                                StrikeApi.WalletSigner(
-                                    publicKey: privateKeys.bitcoin!.getBase58ExtendedPublicKey(),
-                                    chain: Chain.bitcoin,
-                                    signature: nil
-                                )
-                                ],
-                            userImage: nil
-                         )
-                    )
+                    for: .addWalletSigners(signers)
                 )
             ) { error in
                 do {
                     try Keychain.saveRootSeed(rootSeed, email: user.loginName)
-                    try Keychain.savePrivateKeys(privateKeys, email: user.loginName)
                 } catch {
                     _signers.content = .failure(error)
                 }
@@ -103,6 +87,30 @@ struct KeyConfirmationSuccess: View {
         } catch {
             _signers.content = .failure(error)
         }
+    }
+}
+
+extension StrikeApi.Signers {
+    init(privateKeys: PrivateKeys) throws {
+        self.signers = [
+            StrikeApi.WalletSigner(
+                publicKey: privateKeys.publicKey(for: .solana),
+                chain: .solana,
+                signature: try privateKeys.signature(for: Data(privateKeys.publicKey(for: .solana).base58Bytes), chain: .solana)
+            ),
+            StrikeApi.WalletSigner(
+                publicKey: privateKeys.publicKey(for: .bitcoin),
+                chain: .bitcoin,
+                signature: try privateKeys.signature(for: Data(privateKeys.publicKey(for: .bitcoin).base58Bytes), chain: .solana)
+            ),
+            StrikeApi.WalletSigner(
+                publicKey: privateKeys.publicKey(for: .ethereum),
+                chain: .ethereum,
+                signature: try privateKeys.signature(for: Data(privateKeys.publicKey(for: .ethereum).base58Bytes), chain: .solana)
+            )
+        ]
+
+        self.userImage = nil
     }
 }
 

@@ -11,63 +11,72 @@ import SwiftUI
 struct RegistrationView: View {
     @Environment(\.strikeApi) var strikeApi
 
-    @State private var storedPublicKeys: PublicKeys?
-
     var user: StrikeApi.User
+    var storedPublicKeys: PublicKeys?
     var onReloadUser: () -> Void
     var onProfile: () -> Void
-
-    init(user: StrikeApi.User, onReloadUser: @escaping () -> Void, onProfile: @escaping () -> Void) {
-        self.user = user
-        self.onReloadUser = onReloadUser
-        self.onProfile = onProfile
-        Keychain.migrateIfNeeded(for: user.loginName)
-        self._storedPublicKeys = State(initialValue: Keychain.publicKeys(email: user.loginName))
-    }
-    
-    private func getKeysToRegister(storedKeys: PublicKeys, remoteKeys: PublicKeys) -> [StrikeApi.WalletSigner]? {
-        var keysToRegister: [StrikeApi.WalletSigner] = []
-        if storedKeys.bitcoin != nil && remoteKeys.bitcoin == nil {
-            keysToRegister.append(StrikeApi.WalletSigner(publicKey: storedKeys.bitcoin!, chain: Chain.bitcoin, signature: nil))
-        }
-        if storedKeys.ethereum != nil && remoteKeys.ethereum == nil {
-            keysToRegister.append(StrikeApi.WalletSigner(publicKey: storedKeys.ethereum!, chain: Chain.ethereum, signature: nil))
-        }
-        return !keysToRegister.isEmpty ? keysToRegister : nil
-    }
+    var onReloadPublicKeys: () -> Void
 
     var body: some View {
         switch (storedPublicKeys, user.registeredPublicKeys) {
         case (_, .none):
             KeyGeneration(user: user, onSuccess: onReloadUser, onProfile: onProfile)
-        case (.none, .some(let remotePublicKeys)):
-            KeyRetrieval(user: user, publicKeys: remotePublicKeys) {
-                storedPublicKeys = Keychain.publicKeys(email: user.loginName)
+        case (.none, .complete(let remotePublicKeys)):
+            KeyRetrieval(user: user, solanaPublicKey: remotePublicKeys.solana) {
+                onReloadPublicKeys()
             } onProfile: {
                 onProfile()
             }
-        case (.some(let storedPublicKeys), .some(let remotePublicKeys)) where storedPublicKeys == remotePublicKeys:
+        case (.none, .incomplete(let solanaPublicKey)):
+            KeyRetrieval(user: user, solanaPublicKey: solanaPublicKey) {
+                onReloadPublicKeys()
+            } onProfile: {
+                onProfile()
+            }
+        case (.some, .incomplete):
+            AdditionalKeyRegistration(user: user) {
+                onReloadUser()
+            }
+        case (.some(let storedPublicKeys), .complete(let remotePublicKeys)) where storedPublicKeys == remotePublicKeys:
             ApprovalRequestsView(user: user)
                 .navigationTitle("Approvals")
-        case (.some(let storedKeys), .some(let remoteKeys)):
-            // check if we need to register the bitcoin key
-            if let keysToRegister = self.getKeysToRegister(storedKeys: storedKeys, remoteKeys: remoteKeys) {
-                AdditionalKeyRegistration(
-                    user: user,
-                    keysToRegister: keysToRegister) {
-                    onReloadUser()
-                }
-            } else {
-                Text("Keys do not match, call support")
-            }
+        case (.some, .complete):
+            Text("Keys do not match, call support")
         }
+    }
+}
+
+extension StrikeApi.User {
+    enum RegisteredPublicKeys {
+        case none
+        case incomplete(solanaPublicKey: String)
+        case complete(PublicKeys)
+    }
+
+    var registeredPublicKeys: RegisteredPublicKeys {
+        guard let solana = publicKeys.first(where: { $0.chain == .solana })?.key else {
+            return .none
+        }
+
+        guard let bitcoin = publicKeys.first(where: { $0.chain == .bitcoin })?.key,
+              let ethereum = publicKeys.first(where: { $0.chain == .ethereum })?.key else {
+            return .incomplete(solanaPublicKey: solana)
+        }
+
+        return .complete(
+            PublicKeys(
+                solana: solana,
+                bitcoin: bitcoin,
+                ethereum: ethereum
+            )
+        )
     }
 }
 
 #if DEBUG
 struct RegistrationView_Previews: PreviewProvider {
     static var previews: some View {
-        RegistrationView(user: .sample, onReloadUser: { }, onProfile: {})
+        RegistrationView(user: .sample, storedPublicKeys: nil, onReloadUser: { }, onProfile: {}, onReloadPublicKeys: {})
     }
 }
 #endif

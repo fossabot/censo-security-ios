@@ -38,6 +38,7 @@
 		3D311D57260A3A1A007A0B98 /* MockAuthProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D311D55260A3A1A007A0B98 /* MockAuthProvider.swift */; };
 		3D311DEA260BD14A007A0B98 /* Moya+AuthProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D311DE9260BD14A007A0B98 /* Moya+AuthProvider.swift */; };
 		3D3854222639BD7F00C8693C /* Data+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3854212639BD7F00C8693C /* Data+Hex.swift */; };
+		3D39B3EA2912E89A00948D3A /* PublicKeysStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D39B3E92912E89A00948D3A /* PublicKeysStorage.swift */; };
 		3D3B4BDE262F4E57006E8619 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3D3B4BDD262F4E57006E8619 /* Preview Assets.xcassets */; };
 		3D3D6CEC2616432000FEEE0B /* RecoverPasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3D6CE82616432000FEEE0B /* RecoverPasswordView.swift */; };
 		3D3D6CF12616437400FEEE0B /* AuthProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3D6CF02616437400FEEE0B /* AuthProvider.swift */; };
@@ -69,6 +70,8 @@
 		3D6B530C285107BE00F7F77F /* WrapConversionDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6B530B285107BE00F7F77F /* WrapConversionDetail.swift */; };
 		3D7FFFED27FA0F7D003B3F48 /* DAppTransactionRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7FFFEC27FA0F7D003B3F48 /* DAppTransactionRow.swift */; };
 		3D7FFFEF27FA0F88003B3F48 /* DAppTransactionDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D7FFFEE27FA0F88003B3F48 /* DAppTransactionDetails.swift */; };
+		3D845E0D2910159B000C9E81 /* PrivateKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D845E0C2910159B000C9E81 /* PrivateKeys.swift */; };
+		3D845E0F291015D1000C9E81 /* PublicKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D845E0E291015D1000C9E81 /* PublicKeys.swift */; };
 		3D8CA666272C5E1900C68657 /* Theme.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3D8CA665272C5E1900C68657 /* Theme.xcassets */; };
 		3D952408283D0FB800D42243 /* BalanceAccountWhitelistRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D952407283D0FB800D42243 /* BalanceAccountWhitelistRow.swift */; };
 		3D95240A283D0FC300D42243 /* BalanceAccountWhitelistDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D952409283D0FC300D42243 /* BalanceAccountWhitelistDetails.swift */; };
@@ -118,6 +121,7 @@
 		3DE53CCB28AAC0E500B4F014 /* JWTDecode in Frameworks */ = {isa = PBXBuildFile; productRef = 3DE53CCA28AAC0E500B4F014 /* JWTDecode */; };
 		3DE53CCD28AADEB300B4F014 /* StrikeAuthProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE53CCC28AADEB300B4F014 /* StrikeAuthProvider.swift */; };
 		3DEC0C8F2641B4DB00309A0F /* FactsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DEC0C8E2641B4DB00309A0F /* FactsSection.swift */; };
+		3DED50D229103D1B00904DBA /* Keychain+Storage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DED50D129103D1B00904DBA /* Keychain+Storage.swift */; };
 		4006422F259A422400A8D8D3 /* StrikeApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4006422E259A422400A8D8D3 /* StrikeApi.swift */; };
 		40328E102593ED9900F2EE41 /* StrikeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40328E0F2593ED9900F2EE41 /* StrikeApp.swift */; };
 		40328E142593ED9D00F2EE41 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 40328E132593ED9D00F2EE41 /* Assets.xcassets */; };
@@ -204,6 +208,7 @@
 		3D311D55260A3A1A007A0B98 /* MockAuthProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockAuthProvider.swift; sourceTree = "<group>"; };
 		3D311DE9260BD14A007A0B98 /* Moya+AuthProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Moya+AuthProvider.swift"; sourceTree = "<group>"; };
 		3D3854212639BD7F00C8693C /* Data+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+Hex.swift"; sourceTree = "<group>"; };
+		3D39B3E92912E89A00948D3A /* PublicKeysStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicKeysStorage.swift; sourceTree = "<group>"; };
 		3D3B4BDD262F4E57006E8619 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		3D3D6CE82616432000FEEE0B /* RecoverPasswordView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecoverPasswordView.swift; sourceTree = "<group>"; };
 		3D3D6CF02616437400FEEE0B /* AuthProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthProvider.swift; sourceTree = "<group>"; };
@@ -236,6 +241,8 @@
 		3D6B530B285107BE00F7F77F /* WrapConversionDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WrapConversionDetail.swift; sourceTree = "<group>"; };
 		3D7FFFEC27FA0F7D003B3F48 /* DAppTransactionRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DAppTransactionRow.swift; sourceTree = "<group>"; };
 		3D7FFFEE27FA0F88003B3F48 /* DAppTransactionDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DAppTransactionDetails.swift; sourceTree = "<group>"; };
+		3D845E0C2910159B000C9E81 /* PrivateKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivateKeys.swift; sourceTree = "<group>"; };
+		3D845E0E291015D1000C9E81 /* PublicKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicKeys.swift; sourceTree = "<group>"; };
 		3D8CA665272C5E1900C68657 /* Theme.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Theme.xcassets; sourceTree = "<group>"; };
 		3D952407283D0FB800D42243 /* BalanceAccountWhitelistRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceAccountWhitelistRow.swift; sourceTree = "<group>"; };
 		3D952409283D0FC300D42243 /* BalanceAccountWhitelistDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceAccountWhitelistDetails.swift; sourceTree = "<group>"; };
@@ -283,6 +290,7 @@
 		3DE53C8D28A2BF9500B4F014 /* UpdateApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateApp.swift; sourceTree = "<group>"; };
 		3DE53CCC28AADEB300B4F014 /* StrikeAuthProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrikeAuthProvider.swift; sourceTree = "<group>"; };
 		3DEC0C8E2641B4DB00309A0F /* FactsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FactsSection.swift; sourceTree = "<group>"; };
+		3DED50D129103D1B00904DBA /* Keychain+Storage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Keychain+Storage.swift"; sourceTree = "<group>"; };
 		4006422E259A422400A8D8D3 /* StrikeApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrikeApi.swift; sourceTree = "<group>"; };
 		40328E0C2593ED9900F2EE41 /* Strike.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Strike.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		40328E0F2593ED9900F2EE41 /* StrikeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StrikeApp.swift; sourceTree = "<group>"; };
@@ -467,6 +475,7 @@
 				3D633E152748656500BACCCE /* BiometryCheck.swift */,
 				3DE53C8B28A2B45D00B4F014 /* VersionCheck.swift */,
 				3DE53C8D28A2BF9500B4F014 /* UpdateApp.swift */,
+				3D39B3E92912E89A00948D3A /* PublicKeysStorage.swift */,
 			);
 			path = Root;
 			sourceTree = "<group>";
@@ -599,6 +608,16 @@
 			path = DAppTransaction;
 			sourceTree = "<group>";
 		};
+		3D845E0B29101588000C9E81 /* KeyStorage */ = {
+			isa = PBXGroup;
+			children = (
+				3D845E0C2910159B000C9E81 /* PrivateKeys.swift */,
+				3D845E0E291015D1000C9E81 /* PublicKeys.swift */,
+				3DED50D129103D1B00904DBA /* Keychain+Storage.swift */,
+			);
+			path = KeyStorage;
+			sourceTree = "<group>";
+		};
 		3D88B02D2640647100090749 /* Withdrawal */ = {
 			isa = PBXGroup;
 			children = (
@@ -701,6 +720,7 @@
 				40CB67AC25C1076300DB15D6 /* Configuration.swift */,
 				40328E0F2593ED9900F2EE41 /* StrikeApp.swift */,
 				40CB67D625C1B75A00DB15D6 /* StrikeTheme.swift */,
+				3D845E0B29101588000C9E81 /* KeyStorage */,
 				3D79C8602645C3CD00FE5D9C /* Models */,
 				3D2CE49425F8423800137E05 /* Views */,
 				40A8EDFD25AFA013004A7419 /* Helpers */,
@@ -959,6 +979,7 @@
 				3D11521628217FB5007CD43D /* BalanceAccountSettingsRow.swift in Sources */,
 				6CCDBD5828EF8BBD00BBB5B6 /* AdditionalKeyRegistration.swift in Sources */,
 				3D6334EC2885C299002CEC5A /* PenAndPaperConfirm.swift in Sources */,
+				3D845E0F291015D1000C9E81 /* PublicKeys.swift in Sources */,
 				3DBF9DC326E000CC00D7683E /* EmptyApprovalRequestsList.swift in Sources */,
 				3DB995FB27EB7997005655F0 /* WalletCreationRow.swift in Sources */,
 				3D11A60327580D3F008C03B1 /* DAppScan.swift in Sources */,
@@ -1010,7 +1031,9 @@
 				3DBF9DC526E0020300D7683E /* ApprovalRequestItem.swift in Sources */,
 				3D115204282169E1007CD43D /* WalletConfigPolicyDetails.swift in Sources */,
 				3DB995F627EB71EE005655F0 /* SignerUpdateRow.swift in Sources */,
+				3DED50D229103D1B00904DBA /* Keychain+Storage.swift in Sources */,
 				6C0E3EED27EE5AFE002FEE7C /* InitiationRequest+SolanaSignable.swift in Sources */,
+				3D39B3EA2912E89A00948D3A /* PublicKeysStorage.swift in Sources */,
 				3DDAF32F2639F7010015B54B /* RefreshScrollView.swift in Sources */,
 				3DA5EEE028353C5300D26BAF /* SolanaApprovalRequestType+Language.swift in Sources */,
 				3D6334F02885C299002CEC5A /* PasswordManagerRecovery.swift in Sources */,
@@ -1085,6 +1108,7 @@
 				3D633E162748656500BACCCE /* BiometryCheck.swift in Sources */,
 				3D11A60727581510008C03B1 /* CameraAccessRequired.swift in Sources */,
 				3D3D6D162616449C00FEEE0B /* HelpView.swift in Sources */,
+				3D845E0D2910159B000C9E81 /* PrivateKeys.swift in Sources */,
 				3D115211282176FD007CD43D /* AddressBookUpdateRow.swift in Sources */,
 				6C74FA0C28620130005C8DE1 /* AcceptVaultInvitationDetails.swift in Sources */,
 				3DC2F42D25FAAFD00061BB3A /* MoyaLoader.swift in Sources */,

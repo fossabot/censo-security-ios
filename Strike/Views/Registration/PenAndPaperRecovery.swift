@@ -12,7 +12,7 @@ struct PenAndPaperRecovery: View {
     @Environment(\.presentationMode) var presentationMode
 
     var user: StrikeApi.User
-    var publicKeys: PublicKeys
+    var solanaPublicKey: String
     var onSuccess: () -> Void
 
     @State private var phraseIndex: Int = 0
@@ -135,17 +135,16 @@ struct PenAndPaperRecovery: View {
     private func finish() {
         do {
             let rootSeed = try Mnemonic(phrase: typedPhrase.map({ $0.lowercased().trimmingCharacters(in: .whitespaces) })).seed
-            let privateKeys = try PrivateKeys.fromRootSeed(rootSeed: rootSeed)
+            let privateKeys = try PrivateKeys(rootSeed: rootSeed)
 
-            if privateKeys.solana.encodedPublicKey == publicKeys.solana {
+            if privateKeys.publicKey(for: .solana) == solanaPublicKey {
                 try Keychain.saveRootSeed(rootSeed, email: user.loginName)
-                try Keychain.savePrivateKeys(privateKeys, email: user.loginName)
 
                 showingSuccess = true
             } else {
                 alert = .incorrectPhrase
             }
-        } catch Keychain.KeyError.couldNotSavePrivateKey {
+        } catch Keychain.KeychainError.couldNotSave {
             alert = .couldNotSave
         } catch {
             alert = .incorrectPhrase
@@ -157,7 +156,7 @@ struct PenAndPaperRecovery: View {
 struct PenAndPaperRecovery_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            PenAndPaperRecovery(user: .sample, publicKeys: PublicKeys(solana: "sdfsdf", bitcoin: ""), onSuccess: {})
+            PenAndPaperRecovery(user: .sample, solanaPublicKey: "", onSuccess: {})
         }
     }
 }

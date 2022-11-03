@@ -329,10 +329,14 @@ enum SigningData: Codable, Equatable {
     }
 
     func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: SigningDataCodingKeys.self)
+
         switch self {
         case .bitcoin(let request):
+            try container.encode("bitcoin", forKey: .type)
             try request.encode(to: encoder)
         case .solana(let request):
+            try container.encode("solana", forKey: .type)
             try request.encode(to: encoder)
         }
     }

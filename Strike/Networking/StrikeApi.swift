@@ -127,7 +127,7 @@ enum ApiError: Error, Equatable {
 extension StrikeApi {
     enum Credentials: Encodable {
         case password(email: String, password: String)
-        case signature(email: String, privateKey: Curve25519.Signing.PrivateKey? = nil)
+        case signature(email: String, privateKeys: PrivateKeys? = nil)
 
         enum CodingKeys: String, CodingKey {
             case credentials
@@ -161,11 +161,11 @@ extension StrikeApi {
 
                 let dateString = DateFormatter.iso8601Full.string(from: date)
 
-                let privateKeys = try Keychain.keyInfoForEmail(email: email)
-                let signature = try privateKeys.solana.signature(for: dateString.data(using: .utf8)!).base64EncodedString()
+                let privateKeys = try Keychain.privateKeys(email: email)
+                let signature = try privateKeys.signature(for: dateString.data(using: .utf8)!, chain: .solana)
 
                 try credentialsContainer.encode(signature, forKey: .timestampSignature)
-            case .signature(let email, .some(let privateKey)):
+            case .signature(let email, .some(let privateKeys)):
                 let date = Date()
                 try credentialsContainer.encode("SignatureBased", forKey: .type)
                 try credentialsContainer.encode(email, forKey: .email)
@@ -173,7 +173,7 @@ extension StrikeApi {
 
                 let dateString = DateFormatter.iso8601Full.string(from: date)
 
-                let signature = try privateKey.signature(for: dateString.data(using: .utf8)!).base64EncodedString()
+                let signature = try privateKeys.signature(for: dateString.data(using: .utf8)!, chain: .solana)
 
                 try credentialsContainer.encode(signature, forKey: .timestampSignature)
             }
@@ -208,7 +208,7 @@ extension StrikeApi {
     struct WalletSigner: Codable {
         let publicKey: String
         let chain: Chain
-        let signature: String?
+        let signature: String
     }
     
     struct UserImage: Codable {
@@ -332,78 +332,85 @@ extension StrikeApi {
         func encode(to encoder: Encoder) throws {
             var container = encoder.container(keyedBy: CodingKeys.self)
 
-            let privateKeys = try Keychain.keyInfoForEmail(email: email)
-            let approverPublicKey = privateKeys.solana.encodedPublicKey
+            let privateKeys = try Keychain.privateKeys(email: email)
+            let approverPublicKey = privateKeys.publicKey(for: .solana)
             let signatureInfo: SignatureType = try
             {
                 switch requestType {
                 case .loginApproval, .acceptVaultInvitation, .passwordReset:
-                    return try getNoChainSignature(key: privateKeys.solana, approverPublicKey: approverPublicKey)
+                    let dataToSign = try signableData(approverPublicKey: approverPublicKey)
+                    return .nochain(
+                        NoChainSignature(
+                            signature: try privateKeys.signature(for: dataToSign, chain: .solana),
+                            signedData: dataToSign.base64EncodedString()
+                        )
+                    )
                 case .walletCreation(let walletCreation):
+                    let dataToSign = try signableData(approverPublicKey: approverPublicKey)
+
                     switch (walletCreation.accountInfo.chainName) {
                     case .bitcoin:
-                        if let key = privateKeys.bitcoin {
-                            return try getNoChainSignature(key: key, approverPublicKey: approverPublicKey)
-                        } else {
-                            throw ApiError.other("trying to sign bitcoin request but no bitcoin key")
-                        }
+                        return .nochain(
+                            NoChainSignature(
+                                signature: try privateKeys.signature(for: dataToSign, chain: .bitcoin),
+                                signedData: dataToSign.base64EncodedString()
+                            )
+                        )
                     case .ethereum:
-                        if let key = privateKeys.ethereum {
-                            return try getNoChainSignature(key: key, approverPublicKey: approverPublicKey)
+                        return .nochain(
+                            NoChainSignature(
+                                signature: try privateKeys.signature(for: dataToSign, chain: .ethereum),
+                                signedData: dataToSign.base64EncodedString()
+                            )
+                        )
+                    case .solana,
+                         .none:
+                        if let nonce = nonces.first, let nonceAccountAddress = requestType.nonceAccountAddresses.first {
+                            return .solana(
+                                SolanaSignature(
+                                    signature: try privateKeys.signature(for: dataToSign, chain: .solana),
+                                    nonce: nonce.value,
+                                    nonceAccountAddress: nonceAccountAddress
+                                )
+                            )
                         } else {
-                            throw ApiError.other("trying to sign ethereum request but no ethereum key")
+                            throw ApiError.other("cannot create solana signature with no nonce data")
                         }
-                    default:
-                        return try getSolanaSignatureInfo(privateKeys: privateKeys, approverPublicKey: approverPublicKey)
                     }
                 case .withdrawalRequest(let request):
                     switch (request.signingData) {
                     case .bitcoin(let signingData):
-                        if let bitcoinKey = privateKeys.bitcoin?.derived(at: DerivationNode.notHardened(signingData.childKeyIndex)) {
-                            return SignatureType.bitcoin(
-                                BitcoinSignatures(
-                                    signatures: try signableDataList(approverPublicKey: approverPublicKey).map( { try bitcoinKey.signData(message: $0).base64EncodedString() })
-                                )
+                        let derivationPath = DerivationNode.notHardened(signingData.childKeyIndex)
+                        return .bitcoin(
+                            BitcoinSignatures(
+                                signatures: try signableDataList(approverPublicKey: approverPublicKey).map({
+                                    try privateKeys.signature(for: $0, chain: .bitcoin, derivationPath: derivationPath)
+                                })
                             )
-                        } else {
-                            throw ApiError.other("trying to sign bitcoin request but no bitcoin key")
-                        }
+                        )
                     default:
                         break
                     }
                     fallthrough
                 default:
-                    return try getSolanaSignatureInfo(privateKeys: privateKeys, approverPublicKey: approverPublicKey)
+                    let dataToSign = try signableData(approverPublicKey: approverPublicKey)
+
+                    if let nonce = nonces.first, let nonceAccountAddress = requestType.nonceAccountAddresses.first {
+                        return .solana(
+                            SolanaSignature(
+                                signature: try privateKeys.signature(for: dataToSign, chain: .solana),
+                                nonce: nonce.value,
+                                nonceAccountAddress: nonceAccountAddress
+                            )
+                        )
+                    } else {
+                        throw ApiError.other("cannot create solana signature with no nonce data")
+                    }
                 }
             }()
 
             try container.encode(disposition.rawValue, forKey: .approvalDisposition)
             try container.encode(signatureInfo, forKey: .signatureInfo)
-        }
-        
-        private func getNoChainSignature(key: Curve25519.Signing.PrivateKey, approverPublicKey: String) throws -> SignatureType {
-            let dataToSign = try signableData(approverPublicKey: approverPublicKey)
-            return SignatureType.nochain(NoChainSignature(
-                signature: try key.signature(for: dataToSign).base64EncodedString(),
-                signedData: dataToSign.base64EncodedString()
-            ))
-        }
-        
-        private func getNoChainSignature(key: Secp256k1HierarchicalKey, approverPublicKey: String) throws -> SignatureType {
-            let dataToSign = try signableData(approverPublicKey: approverPublicKey)
-            return SignatureType.nochain(NoChainSignature(
-                signature: try key.signData(message: dataToSign).base64EncodedString(),
-                signedData: dataToSign.base64EncodedString()
-            ))
-        }
-        
-        private func getSolanaSignatureInfo(privateKeys: PrivateKeys, approverPublicKey: String) throws -> SignatureType {
-            let signature = try privateKeys.solana.signature(for: signableData(approverPublicKey: approverPublicKey)).base64EncodedString()
-            if let nonce = nonces.first, let nonceAccountAddress = requestType.nonceAccountAddresses.first {
-                return SignatureType.solana(SolanaSignature(signature: signature, nonce: nonce.value, nonceAccountAddress: nonceAccountAddress))
-            } else {
-                throw ApiError.other("cannot create solana signature with no nonce data")
-            }
         }
     }
     
@@ -446,9 +453,9 @@ extension StrikeApi {
 
             try container.encode(disposition.rawValue, forKey: .approvalDisposition)
 
-            let solanaPrivateKey = try Keychain.keyInfoForEmail(email: email).solana
-            let approverPublicKey = solanaPrivateKey.encodedPublicKey
-            let initiatorSignature = try solanaPrivateKey.signature(for: signableData(approverPublicKey: approverPublicKey)).base64EncodedString()
+            let privateKeys = try Keychain.privateKeys(email: email)
+            let approverPublicKey = privateKeys.publicKey(for: .solana)
+            let initiatorSignature = try privateKeys.signature(for: signableData(approverPublicKey: approverPublicKey), chain: .solana)
             try container.encode(initiatorSignature, forKey: .initiatorSignature)
             try container.encode(try self.opAccountPublicKey.base58EncodedString, forKey: .opAccountAddress)
             let ephemeralSignature = try opAccountPrivateKey.signature(for: signableData(approverPublicKey: approverPublicKey)).base64EncodedString()
@@ -460,7 +467,7 @@ extension StrikeApi {
                         SupplyDappInstructionsTxSignature(
                             nonce: instruction.nonce.value,
                             nonceAccountAddress: instruction.nonceAccountAddress,
-                            signature: try solanaPrivateKey.signature(for: instruction.signableData(approverPublicKey: approverPublicKey)).base64EncodedString()
+                            signature: try privateKeys.signature(for: instruction.signableData(approverPublicKey: approverPublicKey), chain: .solana)
                         )
                     })
                 )
@@ -468,22 +475,6 @@ extension StrikeApi {
                 try container.encode(supplyDappInstructions, forKey: .supplyDappInstructions)
             }
         }
-    }
-}
-
-extension StrikeApi.User {
-    var registeredPublicKeys: PublicKeys? {
-        if self.publicKeys.isEmpty {
-            return nil
-        }
-        if let solanaKey = self.publicKeys.first(where: { $0.chain == Chain.solana }) {
-            return PublicKeys(
-                solana: solanaKey.key,
-                bitcoin: self.publicKeys.first(where: { $0.chain == Chain.bitcoin })?.key,
-                ethereum: self.publicKeys.first(where: { $0.chain == Chain.ethereum })?.key
-            )
-        }
-        return nil
     }
 }
 

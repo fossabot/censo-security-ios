@@ -14,7 +14,6 @@ struct AdditionalKeyRegistration: View {
     @RemoteResult private var signers: StrikeApi.Signers?
 
     var user: StrikeApi.User
-    var keysToRegister: [StrikeApi.WalletSigner]
     var onSuccess: () -> Void
 
     var body: some View {
@@ -38,22 +37,12 @@ struct AdditionalKeyRegistration: View {
 
     private func reload() {
         do {
-            let privateKeys = Keychain.privateKeys(for: user.loginName)
-            
+            let privateKeys = try Keychain.privateKeys(email: user.loginName)
+            let signers = try StrikeApi.Signers(privateKeys: privateKeys)
+
             _signers.reload(
                 using: strikeApi.provider.loader(
-                    for: .addWalletSigners(
-                        StrikeApi.Signers(
-                            signers: try keysToRegister.map({
-                                StrikeApi.WalletSigner(
-                                    publicKey: $0.publicKey,
-                                    chain: $0.chain,
-                                    signature: try privateKeys?.solana.signature(for: Base58.decode($0.publicKey)).base64EncodedString()
-                                )
-                            }),
-                            userImage: nil
-                         )
-                    )
+                    for: .addWalletSigners(signers)
                 )
             ) { error in
                 if error == nil {
@@ -71,7 +60,6 @@ struct AdditionalKeyRegistration_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
             AdditionalKeyRegistration(user: .sample,
-                                      keysToRegister: [StrikeApi.WalletSigner(publicKey: "", chain: Chain.bitcoin, signature: nil)],
                                       onSuccess: {}
             )
         }

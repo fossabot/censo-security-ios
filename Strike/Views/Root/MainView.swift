@@ -36,7 +36,17 @@ struct MainView: View {
             }
         case .success(let user):
             SignedInNavigationView(user: user, onSignOut: onSignOut) { onProfile in
-                RegistrationView(user: user, onReloadUser: reload, onProfile: onProfile)
+                PublicKeysStorage(email: user.loginName) {
+                    ProgressView()
+                } success: { publicKeys, reloadPublicKeys in
+                    RegistrationView(
+                        user: user,
+                        storedPublicKeys: publicKeys,
+                        onReloadUser: reload,
+                        onProfile: onProfile,
+                        onReloadPublicKeys: reloadPublicKeys
+                    )
+                }
             }
         }
     }

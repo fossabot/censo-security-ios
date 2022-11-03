@@ -21,6 +21,8 @@ extension Error {
             return "Strike is upgrading its service, we should be back online shortly. Please retry in a few minutes"
         case BiometryError.required:
             return "Please enable biometry in settings to continue"
+        case Keychain.KeychainError.couldNotLoad:
+            return "Unable to retrieve data from your keychain"
         default:
             return "Something went wrong"
         }
@@ -35,6 +37,8 @@ extension Error {
         case MoyaError.statusCode(let response) where response.statusCode == 418:
             return false
         case BiometryError.required:
+            return false
+        case Keychain.KeychainError.couldNotLoad:
             return false
         default:
             return true

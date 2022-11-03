@@ -12,7 +12,7 @@ struct PasswordManagerRecovery: View {
     @Environment(\.presentationMode) var presentationMode
 
     var user: StrikeApi.User
-    var publicKeys: PublicKeys
+    var solanaPublicKey: String
     var onSuccess: () -> Void
 
     @State private var pastedPhrase: String = ""
@@ -100,17 +100,16 @@ struct PasswordManagerRecovery: View {
 
         do {
             let rootSeed = try Mnemonic(phrase: pastedWords).seed
-            let privateKeys = try PrivateKeys.fromRootSeed(rootSeed: rootSeed)
+            let privateKeys = try PrivateKeys(rootSeed: rootSeed)
             
-            if privateKeys.solana.encodedPublicKey == publicKeys.solana {
+            if privateKeys.publicKey(for: .solana) == solanaPublicKey {
                 try Keychain.saveRootSeed(rootSeed, email: user.loginName)
-                try Keychain.savePrivateKeys(privateKeys, email: user.loginName)
 
                 showingSuccess = true
             } else {
                 incorrectPhrase = true
             }
-        } catch Keychain.KeyError.couldNotSavePrivateKey {
+        } catch Keychain.KeychainError.couldNotSave {
             showingKeySaveErrorAlert = true
         } catch {
             incorrectPhrase = true
@@ -122,7 +121,7 @@ struct PasswordManagerRecovery: View {
 struct PasswordManagerRecovery_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            PasswordManagerRecovery(user: .sample, publicKeys: PublicKeys(solana: "", bitcoin: ""), onSuccess: {})
+            PasswordManagerRecovery(user: .sample, solanaPublicKey: "", onSuccess: {})
         }
     }
 }

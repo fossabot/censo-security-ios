@@ -37,7 +37,7 @@ public struct Secp256k1HierarchicalKey {
         self.privateKey = privateKey
     }
     
-    public func derived(at node:DerivationNode) -> Secp256k1HierarchicalKey {
+    public func derived(at node: DerivationNode) -> Secp256k1HierarchicalKey {
         return Secp256k1HierarchicalKey(privateKey: self.privateKey.derived(at: node))
     }
     

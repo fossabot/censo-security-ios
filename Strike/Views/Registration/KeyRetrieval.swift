@@ -33,7 +33,7 @@ struct ProfileButton: View {
 
 struct KeyRetrieval: View {
     var user: StrikeApi.User
-    var publicKeys: PublicKeys
+    var solanaPublicKey: String
     var onSuccess: () -> Void
     var onProfile: () -> Void
 
@@ -58,7 +58,7 @@ struct KeyRetrieval: View {
                 .padding()
 
             NavigationLink {
-                PasswordManagerRecovery(user: user, publicKeys: publicKeys, onSuccess: onSuccess)
+                PasswordManagerRecovery(user: user, solanaPublicKey: solanaPublicKey, onSuccess: onSuccess)
             } label: {
                 Text("Password Manager")
                     .frame(maxWidth: .infinity)
@@ -67,7 +67,7 @@ struct KeyRetrieval: View {
             .padding([.top, .bottom])
 
             NavigationLink {
-                PenAndPaperRecovery(user: user, publicKeys: publicKeys, onSuccess: onSuccess)
+                PenAndPaperRecovery(user: user, solanaPublicKey: solanaPublicKey, onSuccess: onSuccess)
             } label: {
                 Text("Pen and Paper")
                     .frame(maxWidth: .infinity)
@@ -86,7 +86,7 @@ struct KeyRetrieval: View {
 struct KeyRetrieval_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            KeyRetrieval(user: .sample, publicKeys: PublicKeys(solana: "", bitcoin: ""), onSuccess: {}, onProfile: {})
+            KeyRetrieval(user: .sample, solanaPublicKey: "", onSuccess: {}, onProfile: {})
         }
     }
 }

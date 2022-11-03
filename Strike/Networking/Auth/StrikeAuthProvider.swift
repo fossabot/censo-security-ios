@@ -67,13 +67,13 @@ extension StrikeAuthProvider {
     static private let credentialsService = "com.strikeprotocols.credentials"
 
     var storedJWTToken: JWTToken? {
-        guard let tokenData = Keychain.load(account: Self.credentialsService, service: Self.credentialsService) else {
-            return nil
-        }
-
-        let decoder = JSONDecoder()
-
         do {
+            guard let tokenData = try Keychain.load(account: Self.credentialsService, service: Self.credentialsService) else {
+                return nil
+            }
+
+            let decoder = JSONDecoder()
+
             return try decoder.decode(JWTToken.self, from: tokenData)
         } catch {
             return nil
@@ -85,7 +85,8 @@ extension StrikeAuthProvider {
         let encoder = JSONEncoder()
         do {
             let data = try encoder.encode(jwtToken)
-            return Keychain.save(account: Self.credentialsService, service: Self.credentialsService, data: data)
+            try Keychain.save(account: Self.credentialsService, service: Self.credentialsService, data: data)
+            return true
         } catch {
             return false
         }

@@ -97,18 +97,17 @@ struct PasswordManagerSignInRecovery: View {
         }
         do {
             let rootSeed = try Mnemonic(phrase: pastedWords).seed
-            let privateKeys = try PrivateKeys.fromRootSeed(rootSeed: rootSeed)
+            let privateKeys = try PrivateKeys(rootSeed: rootSeed)
 
             signingIn = true
 
-            authProvider.authenticate(.signature(email: email, privateKey: privateKeys.solana)) { error in
+            authProvider.authenticate(.signature(email: email, privateKeys: privateKeys)) { error in
                 signingIn = false
 
                 if let _ = error {
                     showingSignInError = true
                 } else {
                     try? Keychain.saveRootSeed(rootSeed, email: email)
-                    try? Keychain.savePrivateKeys(privateKeys, email: email)
                 }
             }
         } catch {

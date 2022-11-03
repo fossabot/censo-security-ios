@@ -8,9 +8,6 @@
 import SwiftUI
 import LocalAuthentication
 
-private let keychainAccount = "_global"
-private let keychainService = "_tempBiometry"
-
 struct BiometryCheck<V>: ViewModifier where V : View {
     @State private var biometryEnabled = LAContext().canEvaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, error: nil)
 
@@ -39,15 +36,11 @@ struct BiometryCheck<V>: ViewModifier where V : View {
         .onAppear {
             DispatchQueue.main.async {
                 if !permissionAsked {
-                    let uuid = UUID()
-                    let data = uuid.uuidString.data(using: .utf8)!
-
-                    Keychain.save(account: keychainAccount, service: keychainService, data: data, biometryProtected: true)
-
-                    if let storedUUIDData = Keychain.load(account: keychainAccount, service: keychainService, synced: false, biometryPrompt: "Identify Yourself"), let storedUUIDString = String(data: storedUUIDData, encoding: .utf8), UUID(uuidString: storedUUIDString) == uuid {
-                        permissionAsked = true
-                    } else {
-                        biometryEnabled = false
+                    LAContext().evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: "Identify Yourself") { granted, error in
+                        DispatchQueue.main.async {
+                            permissionAsked = error != nil
+                            biometryEnabled = granted
+                        }
                     }
                 }
             }
