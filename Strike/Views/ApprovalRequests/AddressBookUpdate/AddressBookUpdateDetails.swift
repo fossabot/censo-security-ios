@@ -17,6 +17,7 @@ struct AddressBookUpdateDetails: View {
             FactList {
                 Fact("Name", update.entry.value.name)
                 Fact("Address", update.entry.value.address.masked())
+                Fact("Chain", update.chain.rawValue.capitalized)
             }
         }
     }

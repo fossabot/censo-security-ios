@@ -230,7 +230,7 @@ extension StrikeApi.InitiationRequest: SolanaSignable {
         get throws {
             switch requestType {
             case .walletCreation(let request):
-                if request.accountInfo.chainName == Chain.solana {
+                if request.accountInfo.chain == Chain.solana {
                     return request.signingData!
                 } else {
                     throw ApprovalError.invalidRequest(reason: "Invalid signing data for Initiation")
@@ -259,7 +259,11 @@ extension StrikeApi.InitiationRequest: SolanaSignable {
             case .balanceAccountAddressWhitelistUpdate(let request):
                 return request.signingData
             case .addressBookUpdate(let request):
-                return request.signingData
+                if request.chain == Chain.solana {
+                    return request.signingData
+                } else {
+                    throw ApprovalError.invalidRequest(reason: "Invalid signing data for Initiation")
+                }
             case .dAppBookUpdate(let request):
                 return request.signingData
             case .walletConfigPolicyUpdate(let request):

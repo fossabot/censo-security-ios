@@ -24,7 +24,7 @@ extension SolanaApprovalRequestType {
         case .signersUpdate:
             return "Add User"
         case .walletCreation(let walletCreation) where walletCreation.accountInfo.accountType == .BalanceAccount:
-            return "Add \(walletCreation.accountInfo.chainName?.rawValue.capitalized ?? "Solana") Wallet"
+            return "Add \(walletCreation.accountInfo.chain?.rawValue.capitalized ?? "Solana") Wallet"
         case .walletCreation:
             return "Add Wallet"
         case .balanceAccountNameUpdate:

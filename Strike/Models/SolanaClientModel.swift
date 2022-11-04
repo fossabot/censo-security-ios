@@ -134,7 +134,9 @@ enum SolanaApprovalRequestType: Codable, Equatable {
             self = .balanceAccountSettingsUpdate(try BalanceAccountSettingsUpdate(from: decoder))
         case "BalanceAccountAddressWhitelistUpdate":
             self = .balanceAccountAddressWhitelistUpdate(try BalanceAccountAddressWhitelistUpdate(from: decoder))
-        case "AddressBookUpdate":
+        case "CreateAddressBookEntry":
+            self = .addressBookUpdate(try AddressBookUpdate(from: decoder))
+        case "DeleteAddressBookEntry":
             self = .addressBookUpdate(try AddressBookUpdate(from: decoder))
         case "DAppBookUpdate":
             self = .dAppBookUpdate(try DAppBookUpdate(from: decoder))
@@ -186,7 +188,6 @@ enum SolanaApprovalRequestType: Codable, Equatable {
             try container.encode("BalanceAccountAddressWhitelistUpdate", forKey: .type)
             try balanceAccountAddressWhitelistUpdate.encode(to: encoder)
         case .addressBookUpdate(let addressBookUpdate):
-            try container.encode("AddressBookUpdate", forKey: .type)
             try addressBookUpdate.encode(to: encoder)
         case .dAppBookUpdate(let dAppBookUpdate):
             try container.encode("DAppBookUpdate", forKey: .type)
@@ -282,7 +283,7 @@ struct AccountInfo: Codable, Equatable {
     let identifier: String
     let accountType: AccountType
     let address: String?
-    let chainName: Chain?
+    let chain: Chain?
 }
 
 struct TransactionInput: Codable, Equatable {
@@ -546,52 +547,70 @@ struct AddressBookUpdate: Codable, Equatable  {
         case remove
     }
 
+    var chain: Chain
     var change: Change
     var entry: SlotDestinationInfo
     var signingData: SolanaSigningData
 
-    init(change: Change, entry: SlotDestinationInfo, signingData: SolanaSigningData) {
+    init(chain: Chain, change: Change, entry: SlotDestinationInfo, signingData: SolanaSigningData) {
+        self.chain = chain
         self.change = change
         self.entry = entry
         self.signingData = signingData
     }
 
     enum CodingKeys: String, CodingKey {
-        case entriesToAdd
-        case entriesToRemove
+        case type
+        case chain
+        case name
+        case address
+        case slotId
         case signingData
     }
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        let entriesToAdd = try container.decode([SlotDestinationInfo].self, forKey: .entriesToAdd)
-        let entriesToRemove = try container.decode([SlotDestinationInfo].self, forKey: .entriesToRemove)
-
-        if entriesToAdd.count == 1 && entriesToRemove.count == 0 {
-            self.change = .add
-            self.entry = entriesToAdd[0]
-        } else if entriesToAdd.count == 0 && entriesToRemove.count == 1 {
-            self.change = .remove
-            self.entry = entriesToRemove[0]
-        } else {
-            throw DecodingError.dataCorruptedError(forKey: .entriesToAdd, in: container, debugDescription: "Only 1 entry is accepted for either added or removed")
+        
+        self.chain = try container.decode(Chain.self, forKey: .chain)
+        
+        let type = try container.decode(String.self, forKey: .type)
+        switch type {
+        case "CreateAddressBookEntry":
+            self.change = Change.add
+        case "DeleteAddressBookEntry":
+            self.change = Change.remove
+        default:
+            throw DecodingError.dataCorruptedError(forKey: .type, in: container, debugDescription: "Invalid address book change type")
         }
+        
+        self.entry = SlotDestinationInfo(
+            slotId: try container.decode(UInt8.self, forKey: .slotId),
+            value: DestinationAddress(
+                name: try container.decode(String.self, forKey: .name),
+                subName: nil,
+                address: try container.decode(String.self, forKey: .address),
+                tag: nil
+            )
+        )
 
         self.signingData = try container.decode(SolanaSigningData.self, forKey: .signingData)
     }
 
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(signingData, forKey: .signingData)
-
         switch change {
         case .add:
-            try container.encode([SlotDestinationInfo](), forKey: .entriesToRemove)
-            try container.encode([entry], forKey: .entriesToAdd)
+            try container.encode("CreateAddressBookEntry", forKey: .type)
         case .remove:
-            try container.encode([entry], forKey: .entriesToRemove)
-            try container.encode([SlotDestinationInfo](), forKey: .entriesToAdd)
+            try container.encode("DeleteAddressBookEntry", forKey: .type)
         }
+
+        try container.encode(chain, forKey: .chain)
+        try container.encode(entry.slotId, forKey: .slotId)
+        try container.encode(entry.value.name, forKey: .name)
+        try container.encode(entry.value.address, forKey: .address)
+        
+        try container.encode(signingData, forKey: .signingData)
     }
 }
 
@@ -901,7 +920,7 @@ extension AccountInfo {
             identifier: "identifier",
             accountType: AccountType.BalanceAccount,
             address: "83746gfd8bj7",
-            chainName: nil
+            chain: nil
         )
     }
 }
