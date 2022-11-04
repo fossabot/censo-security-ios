@@ -50,7 +50,7 @@ struct WalletCreationRow_Previews: PreviewProvider {
 
 extension WalletCreation {
     static var sample: Self {
-        WalletCreation(accountSlot: 1, accountInfo: AccountInfo(name: "Rainbows", identifier: "dffdg", accountType: .BalanceAccount, address: nil, chainName: nil), approvalPolicy: ApprovalPolicy(approvalsRequired: 3, approvalTimeout: 4000000, approvers: [SlotSignerInfo(slotId: 3, value: SignerInfo(publicKey: "dsfgsfdg4534gf4", name: "John Q", email: "johnny@crypto.com", nameHashIsEmpty: false))]), whitelistEnabled: .On, dappsEnabled: .On, addressBookSlot: 4, signingData: .sample)
+        WalletCreation(accountSlot: 1, accountInfo: AccountInfo(name: "Rainbows", identifier: "dffdg", accountType: .BalanceAccount, address: nil, chain: nil), approvalPolicy: ApprovalPolicy(approvalsRequired: 3, approvalTimeout: 4000000, approvers: [SlotSignerInfo(slotId: 3, value: SignerInfo(publicKey: "dsfgsfdg4534gf4", name: "John Q", email: "johnny@crypto.com", nameHashIsEmpty: false))]), whitelistEnabled: .On, dappsEnabled: .On, addressBookSlot: 4, signingData: .sample)
     }
 }
 

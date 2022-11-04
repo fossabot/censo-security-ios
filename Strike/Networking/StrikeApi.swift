@@ -338,45 +338,11 @@ extension StrikeApi {
             {
                 switch requestType {
                 case .loginApproval, .acceptVaultInvitation, .passwordReset:
-                    let dataToSign = try signableData(approverPublicKey: approverPublicKey)
-                    return .nochain(
-                        NoChainSignature(
-                            signature: try privateKeys.signature(for: dataToSign, chain: .solana),
-                            signedData: dataToSign.base64EncodedString()
-                        )
-                    )
+                    return try offChainSign(chain: .solana, privateKeys: privateKeys, approverPublicKey: approverPublicKey)
                 case .walletCreation(let walletCreation):
-                    let dataToSign = try signableData(approverPublicKey: approverPublicKey)
-
-                    switch (walletCreation.accountInfo.chainName) {
-                    case .bitcoin:
-                        return .nochain(
-                            NoChainSignature(
-                                signature: try privateKeys.signature(for: dataToSign, chain: .bitcoin),
-                                signedData: dataToSign.base64EncodedString()
-                            )
-                        )
-                    case .ethereum:
-                        return .nochain(
-                            NoChainSignature(
-                                signature: try privateKeys.signature(for: dataToSign, chain: .ethereum),
-                                signedData: dataToSign.base64EncodedString()
-                            )
-                        )
-                    case .solana,
-                         .none:
-                        if let nonce = nonces.first, let nonceAccountAddress = requestType.nonceAccountAddresses.first {
-                            return .solana(
-                                SolanaSignature(
-                                    signature: try privateKeys.signature(for: dataToSign, chain: .solana),
-                                    nonce: nonce.value,
-                                    nonceAccountAddress: nonceAccountAddress
-                                )
-                            )
-                        } else {
-                            throw ApiError.other("cannot create solana signature with no nonce data")
-                        }
-                    }
+                    return try sign(chain: walletCreation.accountInfo.chain ?? Chain.solana, privateKeys: privateKeys, approverPublicKey: approverPublicKey)
+                case .addressBookUpdate(let request):
+                    return try sign(chain: request.chain, privateKeys: privateKeys, approverPublicKey: approverPublicKey)
                 case .withdrawalRequest(let request):
                     switch (request.signingData) {
                     case .bitcoin(let signingData):
@@ -393,24 +359,45 @@ extension StrikeApi {
                     }
                     fallthrough
                 default:
-                    let dataToSign = try signableData(approverPublicKey: approverPublicKey)
-
-                    if let nonce = nonces.first, let nonceAccountAddress = requestType.nonceAccountAddresses.first {
-                        return .solana(
-                            SolanaSignature(
-                                signature: try privateKeys.signature(for: dataToSign, chain: .solana),
-                                nonce: nonce.value,
-                                nonceAccountAddress: nonceAccountAddress
-                            )
-                        )
-                    } else {
-                        throw ApiError.other("cannot create solana signature with no nonce data")
-                    }
+                    return try sign(chain: Chain.solana, privateKeys: privateKeys, approverPublicKey: approverPublicKey)
                 }
             }()
 
             try container.encode(disposition.rawValue, forKey: .approvalDisposition)
             try container.encode(signatureInfo, forKey: .signatureInfo)
+        }
+        
+        private func offChainSign(chain: Chain, privateKeys: PrivateKeys, approverPublicKey: String) throws -> SignatureType {
+            let dataToSign = try signableData(approverPublicKey: approverPublicKey)
+            return .nochain(
+                NoChainSignature(
+                    signature: try privateKeys.signature(for: dataToSign, chain: chain),
+                    signedData: dataToSign.base64EncodedString()
+                )
+            )
+        }
+        
+        private func sign(chain: Chain, privateKeys: PrivateKeys, approverPublicKey: String) throws -> SignatureType {
+            let dataToSign = try signableData(approverPublicKey: approverPublicKey)
+            
+            switch (chain) {
+            case .bitcoin:
+                return try offChainSign(chain: chain, privateKeys: privateKeys, approverPublicKey: approverPublicKey)
+            case .ethereum:
+                return try offChainSign(chain: chain, privateKeys: privateKeys, approverPublicKey: approverPublicKey)
+            case .solana:
+                if let nonce = nonces.first, let nonceAccountAddress = requestType.nonceAccountAddresses.first {
+                    return .solana(
+                        SolanaSignature(
+                            signature: try privateKeys.signature(for: dataToSign, chain: .solana),
+                            nonce: nonce.value,
+                            nonceAccountAddress: nonceAccountAddress
+                        )
+                    )
+                } else {
+                    throw ApiError.other("cannot create solana signature with no nonce data")
+                }
+            }
         }
     }
     

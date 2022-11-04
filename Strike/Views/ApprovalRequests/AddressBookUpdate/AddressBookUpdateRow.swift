@@ -41,7 +41,7 @@ struct AddressBookUpdateRow_Previews: PreviewProvider {
 
 extension AddressBookUpdate {
     static var sample: Self {
-        AddressBookUpdate(change: .add, entry: .sample, signingData: .sample)
+        AddressBookUpdate(chain: Chain.solana, change: .add, entry: .sample, signingData: .sample)
     }
 }
 

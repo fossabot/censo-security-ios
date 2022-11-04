@@ -80,7 +80,7 @@ extension StrikeTests {
                     identifier: "c6055be1-a895-45a6-b0f3-fce261760b89",
                     accountType: AccountType.BalanceAccount,
                     address: nil,
-                    chainName: Chain.solana
+                    chain: Chain.solana
                 ),
                 approvalPolicy: ApprovalPolicy(
                     approvalsRequired: 1,
@@ -120,7 +120,7 @@ extension StrikeTests {
                     identifier: "c6055be1-a895-45a6-b0f3-fce261760b89",
                     accountType: AccountType.BalanceAccount,
                     address: nil,
-                    chainName: Chain.bitcoin
+                    chain: Chain.bitcoin
                 ),
                 approvalPolicy: ApprovalPolicy(
                     approvalsRequired: 1,
@@ -149,7 +149,7 @@ extension StrikeTests {
                     identifier: "c6055be1-a895-45a6-b0f3-fce261760b89",
                     accountType: AccountType.BalanceAccount,
                     address: nil,
-                    chainName: Chain.ethereum
+                    chain: Chain.ethereum
                 ),
                 approvalPolicy: ApprovalPolicy(
                     approvalsRequired: 1,
@@ -177,7 +177,7 @@ extension StrikeTests {
                     identifier: "c6055be1-a895-45a6-b0f3-fce261760b89",
                     accountType: AccountType.BalanceAccount,
                     address: "oRYGxVHXEqpLaH9QWxX8yRMzLsmPRXyfNmop2QrPQKY",
-                    chainName: nil
+                    chain: nil
                 ),
                 symbolAndAmountInfo: SymbolAndAmountInfo(
                     symbolInfo: SymbolInfo(
@@ -221,7 +221,7 @@ extension StrikeTests {
                     identifier: "5fb4556a-6de5-4a80-ac0e-6def9826384f",
                     accountType: AccountType.BalanceAccount,
                     address: "HT8kqgLxH5BsyA6Ah3oaAKG8SNAgzgRNH4uMfcAnUXTZ",
-                    chainName: nil
+                    chain: nil
                 ),
                 symbolAndAmountInfo: SymbolAndAmountInfo(
                     symbolInfo: SymbolInfo(
@@ -265,7 +265,7 @@ extension StrikeTests {
                     identifier: "9826889c-df77-4c5b-b4ad-9bde935e6c52",
                     accountType: AccountType.BalanceAccount,
                     address: "F8MQFSzgGtddamGjNNoFuUfrZNZkV84icnXwyMVo7Aa3",
-                    chainName: nil
+                    chain: nil
                 ),
                 symbolAndAmountInfo: SymbolAndAmountInfo(
                     symbolInfo: SymbolInfo(
@@ -315,7 +315,7 @@ extension StrikeTests {
                     identifier: "707399af-d2e7-4668-805f-bb5b970d8a9b",
                     accountType: AccountType.BalanceAccount,
                     address: "GQcSdA3q2Wokxc7V9UschxddDanMnLzhqq9Aji21hovQ",
-                    chainName: nil
+                    chain: nil
                 ),
                 symbolAndAmountInfo: SymbolAndAmountInfo(
                     symbolInfo: SymbolInfo(
@@ -359,7 +359,7 @@ extension StrikeTests {
                     identifier: "c2a6711d-8430-429f-816a-876eb62dd19e",
                     accountType: AccountType.BalanceAccount,
                     address: "7dMB51drmhKy9qQ8GjFPsaRDnadGCvn4iLWedqajbmUg",
-                    chainName: nil
+                    chain: nil
                 ),
                 symbolAndAmountInfo: SymbolAndAmountInfo(
                     symbolInfo: SymbolInfo(
@@ -398,6 +398,7 @@ extension StrikeTests {
     func getAddAddressBookEntry(nonceAccountAddresses: [String]) -> SolanaApprovalRequestType {
         return .addressBookUpdate(
             AddressBookUpdate(
+                chain: Chain.solana,
                 change: .add,
                 entry: SlotDestinationInfo(
                     slotId: 0,
@@ -451,7 +452,7 @@ extension StrikeTests {
                     identifier: "c6055be1-a895-45a6-b0f3-fce261760b89",
                     accountType: AccountType.BalanceAccount,
                     address: "oRYGxVHXEqpLaH9QWxX8yRMzLsmPRXyfNmop2QrPQKY",
-                    chainName: nil
+                    chain: nil
                 ),
                 change: .whitelistEnabled(true),
                 signingData: SolanaSigningData(
@@ -533,7 +534,7 @@ extension StrikeTests {
                     identifier: "1ac4a7fc-d2f8-4c32-8707-7496ee958933",
                     accountType: AccountType.BalanceAccount,
                     address: "5743aqK2n9xnTSmFcbzTmfpdtcNeWdJsCxTxrCcNXUFH",
-                    chainName: nil
+                    chain: nil
                 ),
                 approvalPolicy: ApprovalPolicy(
                     approvalsRequired: 2,
@@ -572,7 +573,7 @@ extension StrikeTests {
                     identifier: "b645a5d9-227f-4a9f-9331-52af64bf1989",
                     accountType: AccountType.BalanceAccount,
                     address: "DcvZ2k6ygvvu2Z5ihrSxRZL7bHJ38gPRgpCie8GzztTP",
-                    chainName: nil
+                    chain: nil
                 ),
                 newAccountName: "New Name",
                 signingData: SolanaSigningData(
@@ -598,7 +599,7 @@ extension StrikeTests {
                     identifier: "4d2eecc1-cbe1-4c36-a4ae-1f777a739eb3",
                     accountType: AccountType.BalanceAccount,
                     address: "HvZFxso1tq9FLD1Gh2ACGNsR5pQBgjVC8uo21Cc9ytzg",
-                    chainName: nil
+                    chain: nil
                 ),
                 destinations: [
                     SlotDestinationInfo(
@@ -633,7 +634,7 @@ extension StrikeTests {
                     identifier: "f8d0a964-ea88-4843-973a-70e3a6ff8ab8",
                     accountType: AccountType.BalanceAccount,
                     address: "BRZxhTAUTwMokJyCMpuJcGtNdi8j8hApkwDWserqRFKr",
-                    chainName: nil
+                    chain: nil
                 ),
                 dappInfo: SolanaDApp(
                     address: "H2ZSeYCg4MwnCYh73biZJfwMSJ6KuugoH8JLf775cUns",
