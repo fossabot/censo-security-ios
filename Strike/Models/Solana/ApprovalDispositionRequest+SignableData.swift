@@ -195,7 +195,7 @@ extension StrikeApi.ApprovalDispositionRequest: SignableData {
                 return request.signingData
             case .addressBookUpdate(let request):
                 if request.chain == Chain.solana {
-                    return request.signingData
+                    return request.signingData!
                 } else {
                     throw ApprovalError.invalidRequest(reason: "Invalid signing data for approval")
                 }

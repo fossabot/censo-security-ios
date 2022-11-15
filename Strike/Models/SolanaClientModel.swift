@@ -550,9 +550,9 @@ struct AddressBookUpdate: Codable, Equatable  {
     var chain: Chain
     var change: Change
     var entry: SlotDestinationInfo
-    var signingData: SolanaSigningData
+    var signingData: SolanaSigningData?
 
-    init(chain: Chain, change: Change, entry: SlotDestinationInfo, signingData: SolanaSigningData) {
+    init(chain: Chain, change: Change, entry: SlotDestinationInfo, signingData: SolanaSigningData?) {
         self.chain = chain
         self.change = change
         self.entry = entry
@@ -593,7 +593,7 @@ struct AddressBookUpdate: Codable, Equatable  {
             )
         )
 
-        self.signingData = try container.decode(SolanaSigningData.self, forKey: .signingData)
+        self.signingData = try container.decodeIfPresent(SolanaSigningData.self, forKey: .signingData)
     }
 
     func encode(to encoder: Encoder) throws {
@@ -757,7 +757,7 @@ extension SolanaApprovalRequestType {
         case .dAppTransactionRequest(let request):
             return request.signingData.nonceAccountAddresses
         case .addressBookUpdate(let request):
-            return request.signingData.nonceAccountAddresses
+            return request.signingData?.nonceAccountAddresses ?? []
         case .walletCreation(let request):
             return request.signingData?.nonceAccountAddresses ?? []
         case .balanceAccountNameUpdate(let request):
@@ -802,7 +802,7 @@ extension SolanaApprovalRequestType {
         case .dAppTransactionRequest(let request):
             return request.signingData.nonceAccountAddressesSlot
         case .addressBookUpdate(let request):
-            return request.signingData.nonceAccountAddressesSlot
+            return request.signingData?.nonceAccountAddressesSlot ?? 0
         case .walletCreation(let request):
             return request.signingData?.nonceAccountAddressesSlot ?? 0
         case .balanceAccountNameUpdate(let request):
