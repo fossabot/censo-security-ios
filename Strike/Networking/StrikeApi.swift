@@ -18,6 +18,7 @@ struct StrikeApi {
 
         case verifyUser
         case walletSigners
+        case userDevices
         case addWalletSigners(Signers)
         case approvalRequests
         case registerApprovalDisposition(ApprovalDispositionRequest)
@@ -188,6 +189,7 @@ extension StrikeApi {
         let organization: Organization
         let useStaticKey: Bool
         let publicKeys: [PublicKey]
+        let deviceKey: String?
     }
 
     struct PublicKey: Codable {
@@ -217,9 +219,18 @@ extension StrikeApi {
         let signature: String
     }
     
+    enum DeviceType: String, Codable {
+        case ios = "ios"
+    }
+    
+    struct UserDevice: Codable {
+        let publicKey: String
+        let deviceType: DeviceType
+        let userImage: UserImage
+    }
+    
     struct Signers: Codable {
         let signers: [WalletSigner]
-        let userImage: UserImage?
     }
 
     struct ConnectedWallet: Codable {
@@ -534,6 +545,8 @@ extension StrikeApi.Target: Moya.TargetType {
             return "v1/login"
         case .verifyUser:
             return "v1/users"
+        case .userDevices:
+            return "v1/user-devices"
         case .walletSigners:
             return "v1/wallet-signers"
         case .addWalletSigners:
@@ -572,6 +585,7 @@ extension StrikeApi.Target: Moya.TargetType {
              .initiateRequest,
              .resetPassword,
              .registerPushToken,
+             .userDevices,
              .login:
             return .post
         case .unregisterPushToken:
@@ -607,6 +621,8 @@ extension StrikeApi.Target: Moya.TargetType {
             #endif
         case .unregisterPushToken:
             return .requestPlain
+        case .userDevices:
+            return .requestPlain
         case .connectDApp(let code):
             return .requestJSONEncodable([
                 "uri": code
@@ -636,7 +652,8 @@ extension StrikeApi.Target: Moya.TargetType {
         default:
             return [
                 "Content-Type": "application/json",
-                "X-IsApi": "true"
+                "X-IsApi": "true",
+                //"X-Strike-Device-Identifier": "TBD"
             ]
         }
     }

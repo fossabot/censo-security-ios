@@ -109,8 +109,6 @@ extension StrikeApi.Signers {
                 signature: try privateKeys.signature(for: Data(privateKeys.publicKey(for: .ethereum).base58Bytes), chain: .solana)
             )
         ]
-
-        self.userImage = nil
     }
 }
 

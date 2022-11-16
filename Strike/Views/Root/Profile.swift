@@ -138,7 +138,8 @@ extension StrikeApi.User {
                 name: "Hollywood Securities"
             ),
             useStaticKey: false,
-            publicKeys: []
+            publicKeys: [],
+            deviceKey: nil
         )
     }
 }
