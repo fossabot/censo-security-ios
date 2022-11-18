@@ -188,7 +188,9 @@ extension StrikeTests {
                         nftMetadata: nil
                     ),
                     amount: "0.500000000",
-                    usdEquivalent: "17.75"
+                    usdEquivalent: "17.75",
+                    fee: nil,
+                    replacementFee: nil
                 ),
                 destination: DestinationAddress(
                     name: "My External Sol address",
@@ -232,7 +234,9 @@ extension StrikeTests {
                         nftMetadata: nil
                     ),
                     amount: "0.000500",
-                    usdEquivalent: nil
+                    usdEquivalent: nil,
+                    fee: nil,
+                    replacementFee: nil
                 ),
                 destination: DestinationAddress(
                     name: "Org1 Sol Wallet",
@@ -276,7 +280,9 @@ extension StrikeTests {
                         nftMetadata: nil
                     ),
                     amount: "500.000000",
-                    usdEquivalent: "500.00"
+                    usdEquivalent: "500.00",
+                    fee: nil,
+                    replacementFee: nil
                 ),
                 destination: DestinationAddress(
                     name: "USDC Redemption Address",
@@ -326,7 +332,9 @@ extension StrikeTests {
                         nftMetadata: nil
                     ),
                     amount: "0.500000000",
-                    usdEquivalent: "44.39"
+                    usdEquivalent: "44.39",
+                    fee: nil,
+                    replacementFee: nil
                 ),
                 destinationSymbolInfo: SymbolInfo(
                     symbol: "wSOL",
@@ -370,7 +378,9 @@ extension StrikeTests {
                         nftMetadata: nil
                     ),
                     amount: "0.300000000",
-                    usdEquivalent: "26.63"
+                    usdEquivalent: "26.63",
+                    fee: nil,
+                    replacementFee: nil
                 ),
                 destinationSymbolInfo: SymbolInfo(
                     symbol: "SOL",
