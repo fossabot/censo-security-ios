@@ -12,7 +12,11 @@ extension SolanaApprovalRequestType {
     var header: String {
         switch self {
         case .withdrawalRequest(let request):
-            return "Send \(request.symbolAndAmountInfo.formattedAmount) \(request.symbolAndAmountInfo.symbolInfo.symbol)"
+            if (request.symbolAndAmountInfo.replacementFee == nil) {
+                return "Send \(request.symbolAndAmountInfo.formattedAmount) \(request.symbolAndAmountInfo.symbolInfo.symbol)"
+            } else {
+                return "Bump Fee"
+            }
         case .unknown:
             return "Unknown"
         case .conversionRequest(let request):
@@ -72,6 +76,12 @@ extension SolanaApprovalRequestType {
             return update.accountInfo.name.toWalletName()
         case .balanceAccountNameUpdate(let update):
             return "\(update.accountInfo.name.toWalletName()) → \(update.newAccountName.toWalletName())"
+        case .withdrawalRequest(let request):
+            if (request.symbolAndAmountInfo.replacementFee == nil) {
+                return nil
+            } else {
+                return "for sending"
+            }
         default:
             return nil
         }
@@ -80,8 +90,12 @@ extension SolanaApprovalRequestType {
     var subHeader: String? {
         switch self {
         case .withdrawalRequest(let request):
-            return request.symbolAndAmountInfo.formattedUSDEquivalent.flatMap {
-                "\($0) USD equivalent"
+            if (request.symbolAndAmountInfo.replacementFee == nil) {
+                return request.symbolAndAmountInfo.formattedUSDEquivalent.flatMap {
+                    "\($0) USD equivalent"
+                }
+            } else {
+                return nil
             }
         case .conversionRequest(let request):
             return request.symbolAndAmountInfo.formattedUSDEquivalent.flatMap {

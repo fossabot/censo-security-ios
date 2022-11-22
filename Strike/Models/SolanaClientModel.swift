@@ -276,6 +276,14 @@ struct SymbolAndAmountInfo: Codable, Equatable {
     let symbolInfo: SymbolInfo
     let amount: String
     let usdEquivalent: String?
+    let fee: Fee?
+    let replacementFee: Fee?
+}
+
+struct Fee: Codable, Equatable {
+    let symbolInfo: SymbolInfo
+    let amount: String
+    let usdEquivalent: String?
 }
 
 struct AccountInfo: Codable, Equatable {
@@ -872,6 +880,21 @@ extension ApprovalRequest {
             details: .approval(.conversionRequest(.sample))
         )
     }
+    
+    static var feeBump: Self {
+        ApprovalRequest(
+            id: "id",
+            submitterName: "John Q",
+            submitterEmail: "johnq@gmail.com",
+            submitDate: Date(),
+            approvalTimeoutInSeconds: 40000,
+            numberOfDispositionsRequired: 3,
+            numberOfApprovalsReceived: 1,
+            numberOfDeniesReceived: 1,
+            vaultName: "Test Vault",
+            details: .approval(.withdrawalRequest(.feeBump))
+        )
+    }
 }
 
 extension WithdrawalRequest {
@@ -879,6 +902,15 @@ extension WithdrawalRequest {
         WithdrawalRequest(
             account: .sample,
             symbolAndAmountInfo: .sample,
+            destination: .sample,
+            signingData: .solana(.sample)
+        )
+    }
+    
+    static var feeBump: Self {
+        WithdrawalRequest(
+            account: .sample,
+            symbolAndAmountInfo: .feeBump,
             destination: .sample,
             signingData: .solana(.sample)
         )
@@ -930,7 +962,31 @@ extension SymbolAndAmountInfo {
         SymbolAndAmountInfo(
             symbolInfo: .sample,
             amount: "234325.000564",
-            usdEquivalent: "2353453"
+            usdEquivalent: "2353453",
+            fee: Fee(
+                symbolInfo: .sample,
+                amount: "0.0000123",
+                usdEquivalent: "10.12"
+            ),
+            replacementFee: nil
+        )
+    }
+    
+    static var feeBump: Self {
+        SymbolAndAmountInfo(
+            symbolInfo: .sample,
+            amount: "234325.000564",
+            usdEquivalent: "2353453",
+            fee: Fee(
+                symbolInfo: .sample,
+                amount: "0.0000123",
+                usdEquivalent: "10.12"
+            ),
+            replacementFee: Fee(
+                symbolInfo: .sample,
+                amount: "0.0000246",
+                usdEquivalent: "20.24"
+            )
         )
     }
 }

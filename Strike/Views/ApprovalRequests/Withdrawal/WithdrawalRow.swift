@@ -23,25 +23,37 @@ struct WithdrawalRow: View {
                 .minimumScaleFactor(0.25)
                 .foregroundColor(Color.white)
                 .padding(EdgeInsets(top: 15, leading: 20, bottom: 0, trailing: 20))
-
-            if let usdEquivalent = withdrawal.symbolAndAmountInfo.formattedUSDEquivalent {
-                Text("\(usdEquivalent) USD equivalent")
+            
+            if (withdrawal.symbolAndAmountInfo.replacementFee != nil) {
+                Text("for sending \(withdrawal.symbolAndAmountInfo.formattedAmount) \(withdrawal.symbolAndAmountInfo.symbolInfo.symbol)")
                     .font(.caption)
-                    .foregroundColor(Color.white.opacity(0.5))
-                    .padding(EdgeInsets(top: 2, leading: 20, bottom: 0, trailing: 20))
+                    .bold()
+                    .lineLimit(1)
+                    .allowsTightening(true)
+                    .minimumScaleFactor(0.25)
+                    .foregroundColor(Color.white)
+                    .padding(EdgeInsets(top: 15, leading: 20, bottom: 0, trailing: 20))
+                
+            } else {
+                if let usdEquivalent = withdrawal.symbolAndAmountInfo.formattedUSDEquivalent {
+                    Text("\(usdEquivalent) USD equivalent")
+                        .font(.caption)
+                        .foregroundColor(Color.white.opacity(0.5))
+                        .padding(EdgeInsets(top: 2, leading: 20, bottom: 0, trailing: 20))
+                }
             }
-
+            
             HStack(spacing: 0) {
                 AccountDetail(name: withdrawal.account.name)
                     .padding(10)
                     .frame(maxWidth: .infinity, maxHeight: 40)
                     .roundedCell()
-
+                
                 Text("→")
                     .font(.body)
                     .foregroundColor(Color.white)
                     .frame(width: 20, height: 20)
-
+                
                 AccountDetail(name: withdrawal.destination.name)
                     .padding(10)
                     .frame(maxWidth: .infinity, maxHeight: 40)
@@ -53,27 +65,45 @@ struct WithdrawalRow: View {
     }
 }
 
+func formatUSDEquivalent(usdEquivalent: String?) -> String? {
+    guard let amount = usdEquivalent, let decimalValue = Decimal(string: amount) else {
+        return nil
+    }
+    
+    return NumberFormatter.usdFormatter.string(from: NSDecimalNumber(decimal: decimalValue))
+}
+
+func formatAmount(amount: String) -> String {
+    var split = amount.split(separator: ".").map { String($0) }
+    
+    guard let wholePart = Int(split.removeFirst()) else {
+        return amount
+    }
+    
+    let wholePartString = NumberFormatter.separatorFormatter.string(from: NSNumber(integerLiteral: wholePart)) ?? "0"
+    
+    split.insert(wholePartString, at: 0)
+    
+    return split.joined(separator: ".")
+}
+    
 extension SymbolAndAmountInfo {
     var formattedUSDEquivalent: String? {
-        guard let amount = usdEquivalent, let decimalValue = Decimal(string: amount) else {
-            return nil
-        }
-
-        return NumberFormatter.usdFormatter.string(from: NSDecimalNumber(decimal: decimalValue))
+        return formatUSDEquivalent(usdEquivalent: usdEquivalent)
     }
 
     var formattedAmount: String {
-        var split = amount.split(separator: ".").map { String($0) }
+        return formatAmount(amount: amount)
+    }
+}
 
-        guard let wholePart = Int(split.removeFirst()) else {
-            return amount
-        }
+extension Fee {
+    var formattedUSDEquivalent: String? {
+        return formatUSDEquivalent(usdEquivalent: usdEquivalent)
+    }
 
-        let wholePartString = NumberFormatter.separatorFormatter.string(from: NSNumber(integerLiteral: wholePart)) ?? "0"
-
-        split.insert(wholePartString, at: 0)
-
-        return split.joined(separator: ".")
+    var formattedAmount: String {
+        return formatAmount(amount: amount)
     }
 }
 
@@ -107,6 +137,7 @@ extension NumberFormatter {
 struct WithdrawalRow_Previews: PreviewProvider {
     static var previews: some View {
         WithdrawalRow(requestType: .withdrawalRequest(.sample), withdrawal: .sample)
+        WithdrawalRow(requestType: .withdrawalRequest(.feeBump), withdrawal: .feeBump)
     }
 }
 #endif
