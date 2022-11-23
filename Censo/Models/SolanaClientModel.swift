@@ -317,9 +317,15 @@ struct BitcoinTransaction: Codable, Equatable {
     let totalFee: Int64
 }
 
+struct EthereumTransaction: Codable, Equatable {
+    let safeNonce: UInt64
+    let chainId: UInt64
+}
+
 enum SigningData: Codable, Equatable {
     case bitcoin(BitcoinSigningData)
     case solana(SolanaSigningData)
+    case ethereum(EthereumSigningData)
 
     enum SigningDataCodingKeys: String, CodingKey {
         case type
@@ -332,6 +338,8 @@ enum SigningData: Codable, Equatable {
         switch type {
         case "bitcoin":
             self = .bitcoin(try BitcoinSigningData(from: decoder))
+        case "ethereum":
+            self = .ethereum(try EthereumSigningData(from: decoder))
         default:
             self = .solana(try SolanaSigningData(from: decoder))
         }
@@ -344,6 +352,9 @@ enum SigningData: Codable, Equatable {
         case .bitcoin(let request):
             try container.encode("bitcoin", forKey: .type)
             try request.encode(to: encoder)
+        case .ethereum(let request):
+            try container.encode("ethereum", forKey: .type)
+            try request.encode(to: encoder)
         case .solana(let request):
             try container.encode("solana", forKey: .type)
             try request.encode(to: encoder)
@@ -355,6 +366,10 @@ enum SigningData: Codable, Equatable {
 struct BitcoinSigningData: Codable, Equatable {
     let childKeyIndex: UInt32
     let transaction: BitcoinTransaction
+}
+
+struct EthereumSigningData: Codable, Equatable {
+    let transaction: EthereumTransaction
 }
 
 struct SolanaSigningData: Codable, Equatable {
@@ -689,10 +704,15 @@ struct BitcoinSignatures: Codable, Equatable  {
     let signatures: [String]
 }
 
+struct EthereumSignature: Codable, Equatable {
+    let signature: String
+}
+
 enum SignatureType: Codable, Equatable {
     case nochain(NoChainSignature)
     case solana(SolanaSignature)
     case bitcoin(BitcoinSignatures)
+    case ethereum(EthereumSignature)
     case unknown
 
     enum DetailsCodingKeys: String, CodingKey {
@@ -709,6 +729,8 @@ enum SignatureType: Codable, Equatable {
             self = .solana(try SolanaSignature(from: decoder))
         case "bitcoin":
             self = .bitcoin(try BitcoinSignatures(from: decoder))
+        case "ethereum":
+            self = .ethereum(try EthereumSignature(from: decoder))
         default:
             self = .unknown
         }
@@ -725,6 +747,9 @@ enum SignatureType: Codable, Equatable {
             try request.encode(to: encoder)
         case .bitcoin(let request):
             try container.encode("bitcoin", forKey: .type)
+            try request.encode(to: encoder)
+        case .ethereum(let request):
+            try container.encode("ethereum", forKey: .type)
             try request.encode(to: encoder)
         case .unknown:
             try container.encode("unknown", forKey: .type)

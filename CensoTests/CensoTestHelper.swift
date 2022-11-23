@@ -405,6 +405,17 @@ extension CensoTests {
         )
     }
     
+    func getEthereumWithdrawalRequest() -> SolanaApprovalRequestType {
+        return .withdrawalRequest(
+            WithdrawalRequest(
+                account: AccountInfo(name: "Account", identifier: "account-id", accountType: AccountType.BalanceAccount, address: "0xe0901cabfdaf6f08e095191ff2e18cbff6500886", chain: Chain.ethereum),
+                symbolAndAmountInfo: SymbolAndAmountInfo(symbolInfo: SymbolInfo.init(symbol: "ETH", symbolDescription: "Ethereum", tokenMintAddress: nil, imageUrl: nil, nftMetadata: nil), amount: "0.500000000000000000", usdEquivalent: nil, fee: nil, replacementFee: nil),
+                destination: DestinationAddress.init(name: "Destination", subName: nil, address: "0xa2ab6bd95c0aa126570ca853e8b0043c863967f3", tag: nil),
+                signingData: .ethereum(EthereumSigningData(transaction: EthereumTransaction(safeNonce: 0, chainId: 31337)))
+            )
+        )
+    }
+ 
     func getAddAddressBookEntry(nonceAccountAddresses: [String]) -> SolanaApprovalRequestType {
         return .addressBookUpdate(
             AddressBookUpdate(
@@ -719,31 +730,4 @@ extension CensoTests {
             minBalanceForRentExemption: minBalanceForRentExemption
         )
     }
-}
-
-extension String {
-    enum ExtendedEncoding {
-        case hexadecimal
-    }
-
-    func data(using encoding:ExtendedEncoding) -> Data? {
-        switch encoding {
-        case .hexadecimal:
-            let hexStr = self.dropFirst(self.hasPrefix("0x") ? 2 : 0)
-
-            var newData = Data(capacity: hexStr.count/2)
-
-            var indexIsEven = true
-            for i in hexStr.indices {
-                if indexIsEven {
-                    let byteRange = i...hexStr.index(after: i)
-                    guard let byte = UInt8(hexStr[byteRange], radix: 16) else { return nil }
-                    newData.append(byte)
-                }
-                indexIsEven.toggle()
-            }
-            return newData
-        }
-    }
-
 }

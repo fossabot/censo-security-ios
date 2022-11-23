@@ -69,49 +69,49 @@ extension CensoApi.ApprovalDispositionRequest: SignableData {
             }
             switch requestType {
             case .walletCreation(let request):
-                return try Data(
+                return Data(
                     [opCode] +
                     commonBytes +
                     request.combinedBytes
                 )
             case .balanceAccountNameUpdate(let request):
-                return try Data(
+                return Data(
                     [opCode] +
                     commonBytes +
                     request.combinedBytes
                 )
             case .balanceAccountSettingsUpdate(let request):
-                return try Data(
+                return Data(
                     [opCode] +
                     commonBytes +
                     request.combinedBytes
                 )
             case .balanceAccountPolicyUpdate(let request):
-                return try Data(
+                return Data(
                     [opCode] +
                     commonBytes +
                     request.combinedBytes
                 )
             case .balanceAccountAddressWhitelistUpdate(let request):
-                return try Data(
+                return Data(
                     [opCode] +
                     commonBytes +
                     request.combinedBytes
                 )
             case .walletConfigPolicyUpdate(let request):
-                return try Data(
+                return Data(
                     [opCode] +
                     commonBytes +
                     request.approvalPolicy.combinedBytes
                 )
             case .addressBookUpdate(let request):
-                return try Data(
+                return Data(
                     [opCode] +
                     commonBytes +
                     request.combinedBytes
                 )
             case .dAppBookUpdate(let request):
-                return try Data(
+                return Data(
                     [opCode] +
                     commonBytes +
                     request.combinedBytes
@@ -273,6 +273,8 @@ extension CensoApi.ApprovalDispositionRequest: SignableData {
             switch request.signingData {
             case .bitcoin(let signingData):
                 return signingData.transaction.txIns.map( {Data(base64Encoded: $0.base64HashForSignature)!} )
+            case .ethereum(let signingData):
+                return [try ethereumWithdrawalSignableData(request: request, signingData: signingData)]
             default:
                 break
             }
@@ -280,6 +282,15 @@ extension CensoApi.ApprovalDispositionRequest: SignableData {
         default:
             return [try getSolanaSignableData(requestType: requestType, approverPublicKey: approverPublicKey)]
         }
+    }
+    
+    private func ethereumWithdrawalSignableData(request: WithdrawalRequest, signingData: EthereumSigningData) throws -> Data {
+        var safeTransaction = Data()
+        safeTransaction.append(contentsOf: [0x19, 0x1])
+        safeTransaction.append(domainHash(chainId: signingData.transaction.chainId, verifyingContract: request.account.address!))
+        safeTransaction.append(withdrawalMessageHash(destinationAddress: request.destination.address, amount: try request.symbolAndAmountInfo.fundamentalAmountBignum, nonce: signingData.transaction.safeNonce))
+        
+        return Crypto.sha3keccak256(data: safeTransaction)
     }
     
     private func getSolanaSignableData(requestType: SolanaApprovalRequestType, approverPublicKey: String) throws -> Data {
@@ -325,6 +336,12 @@ extension SymbolAndAmountInfo {
 
                 return NSDecimalNumber(decimal: decimal * pow(10, decimals)).uint64Value
             }
+        }
+    }
+    
+    var fundamentalAmountBignum: Bignum {
+        get throws {
+            return Bignum(number: amount.replacingOccurrences(of: ".", with: ""), withBase: 10)
         }
     }
 }

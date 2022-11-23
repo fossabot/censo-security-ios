@@ -365,6 +365,15 @@ extension CensoApi {
                                 })
                             )
                         )
+                    case .ethereum:
+                        return .ethereum(
+                            EthereumSignature(
+                                signature: try privateKeys.signature(
+                                    for: signableData(approverPublicKey: approverPublicKey),
+                                    chain: .solana
+                                )
+                            )
+                        )
                     default:
                         break
                     }

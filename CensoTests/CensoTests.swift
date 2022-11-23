@@ -850,6 +850,24 @@ class CensoTests: XCTestCase {
         )
     }
     
+    func testEthereumWithdrawalApproval() throws {
+        let request = getApprovalRequest(getEthereumWithdrawalRequest())
+        let approvalRequest = StrikeApi.ApprovalDispositionRequest(
+            disposition: .Approve,
+            requestID: request.id,
+            requestType: request.requestType,
+            nonces: [],
+            email: "dont care"
+        )
+        
+        let signableData = try approvalRequest.signableData(approverPublicKey: "7AH35qStXtrUgRkmqDmhjufNHjF74R1A9cCKT3C3HaAR")
+        
+        XCTAssertEqual(
+            signableData.hexEncodedString(),
+            "135b4be7cb5b0cc080c32b361047a720c8eda961c1eed152d8f7d8f70b2b8b90"
+        )
+    }
+    
     func getOpAccountCreationInfo(_ request: ApprovalRequest) -> MultisigOpInitiation? {
         switch request.details {
         case .multisigOpInitiation(let initiation, _):
