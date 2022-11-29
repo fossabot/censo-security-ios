@@ -416,6 +416,17 @@ extension CensoTests {
         )
     }
  
+    func getERC20WithdrawalRequest() -> SolanaApprovalRequestType {
+        return .withdrawalRequest(
+            WithdrawalRequest(
+                account: AccountInfo(name: "Account", identifier: "account-id", accountType: AccountType.BalanceAccount, address: "0xbd877c3ab388239f3bddba430b3147853d9e1412", chain: Chain.ethereum),
+                symbolAndAmountInfo: SymbolAndAmountInfo(symbolInfo: SymbolInfo.init(symbol: "DAI", symbolDescription: "Dai", tokenMintAddress: "0xf2b63A9F00eEAc103546EF9184603FF0fDc897C2", imageUrl: nil, nftMetadata: nil), amount: "2.50000000", usdEquivalent: nil, fee: nil, replacementFee: nil),
+                destination: DestinationAddress.init(name: "Destination", subName: nil, address: "0x23268677A3ab336761865839eB6c9EC876Af4cD0", tag: nil),
+                signingData: .ethereum(EthereumSigningData(transaction: EthereumTransaction(safeNonce: 0, chainId: 31337)))
+            )
+        )
+    }
+
     func getAddAddressBookEntry(nonceAccountAddresses: [String]) -> SolanaApprovalRequestType {
         return .addressBookUpdate(
             AddressBookUpdate(
