@@ -185,7 +185,8 @@ extension CensoTests {
                         symbolDescription: "Solana",
                         tokenMintAddress: "11111111111111111111111111111111",
                         imageUrl: nil,
-                        nftMetadata: nil
+                        nftMetadata: nil,
+                        ethTokenInfo: nil
                     ),
                     amount: "0.500000000",
                     usdEquivalent: "17.75",
@@ -231,7 +232,8 @@ extension CensoTests {
                         symbolDescription: "Test SPL token",
                         tokenMintAddress: "AZ6C941cFEv7EWUsPeeYYEK278Lw5wK4AVR6Mngdt9fr",
                         imageUrl: nil,
-                        nftMetadata: nil
+                        nftMetadata: nil,
+                        ethTokenInfo: nil
                     ),
                     amount: "0.000500",
                     usdEquivalent: nil,
@@ -277,7 +279,8 @@ extension CensoTests {
                         symbolDescription: "USD Coin",
                         tokenMintAddress: "ALmJ9wWY2o1FiLcSDuvHN3xH5UHLkYsVbz2JWD37MuUY",
                         imageUrl: nil,
-                        nftMetadata: nil
+                        nftMetadata: nil,
+                        ethTokenInfo: nil
                     ),
                     amount: "500.000000",
                     usdEquivalent: "500.00",
@@ -295,7 +298,8 @@ extension CensoTests {
                     symbolDescription: "US Dollar",
                     tokenMintAddress: "11111111111111111111111111111111",
                     imageUrl: nil,
-                    nftMetadata: nil
+                    nftMetadata: nil,
+                    ethTokenInfo: nil
                 ),
                 signingData: SolanaSigningData(
                     feePayer: "FBiyhqgyrv6iRejRgL9tDYxB2jtEB4RH9pnPK2CN5J4m",
@@ -329,7 +333,8 @@ extension CensoTests {
                         symbolDescription: "Solana",
                         tokenMintAddress: "11111111111111111111111111111111",
                         imageUrl: nil,
-                        nftMetadata: nil
+                        nftMetadata: nil,
+                        ethTokenInfo: nil
                     ),
                     amount: "0.500000000",
                     usdEquivalent: "44.39",
@@ -341,7 +346,8 @@ extension CensoTests {
                     symbolDescription: "Wrapped SOL",
                     tokenMintAddress: "11111111111111111111111111111111",
                     imageUrl: nil,
-                    nftMetadata: nil
+                    nftMetadata: nil,
+                    ethTokenInfo: nil
                 ),
                 signingData: SolanaSigningData(
                     feePayer: "87VXbkJsqdDvXYfDBtS4kW4TcFor7ogofZXbXjT7t7AU",
@@ -375,7 +381,8 @@ extension CensoTests {
                         symbolDescription: "Wrapped SOL",
                         tokenMintAddress: "11111111111111111111111111111111",
                         imageUrl: nil,
-                        nftMetadata: nil
+                        nftMetadata: nil,
+                        ethTokenInfo: nil
                     ),
                     amount: "0.300000000",
                     usdEquivalent: "26.63",
@@ -387,7 +394,8 @@ extension CensoTests {
                     symbolDescription: "Solana",
                     tokenMintAddress: "11111111111111111111111111111111",
                     imageUrl: nil,
-                    nftMetadata: nil
+                    nftMetadata: nil,
+                    ethTokenInfo: nil
                 ),
                 signingData: SolanaSigningData(
                     feePayer: "87VXbkJsqdDvXYfDBtS4kW4TcFor7ogofZXbXjT7t7AU",
@@ -409,7 +417,7 @@ extension CensoTests {
         return .withdrawalRequest(
             WithdrawalRequest(
                 account: AccountInfo(name: "Account", identifier: "account-id", accountType: AccountType.BalanceAccount, address: "0xe0901cabfdaf6f08e095191ff2e18cbff6500886", chain: Chain.ethereum),
-                symbolAndAmountInfo: SymbolAndAmountInfo(symbolInfo: SymbolInfo.init(symbol: "ETH", symbolDescription: "Ethereum", tokenMintAddress: nil, imageUrl: nil, nftMetadata: nil), amount: "0.500000000000000000", usdEquivalent: nil, fee: nil, replacementFee: nil),
+                symbolAndAmountInfo: SymbolAndAmountInfo(symbolInfo: SymbolInfo.init(symbol: "ETH", symbolDescription: "Ethereum", tokenMintAddress: nil, imageUrl: nil, nftMetadata: nil, ethTokenInfo: nil), amount: "0.500000000000000000", usdEquivalent: nil, fee: nil, replacementFee: nil),
                 destination: DestinationAddress.init(name: "Destination", subName: nil, address: "0xa2ab6bd95c0aa126570ca853e8b0043c863967f3", tag: nil),
                 signingData: .ethereum(EthereumSigningData(transaction: EthereumTransaction(safeNonce: 0, chainId: 31337)))
             )
@@ -420,7 +428,7 @@ extension CensoTests {
         return .withdrawalRequest(
             WithdrawalRequest(
                 account: AccountInfo(name: "Account", identifier: "account-id", accountType: AccountType.BalanceAccount, address: "0xbd877c3ab388239f3bddba430b3147853d9e1412", chain: Chain.ethereum),
-                symbolAndAmountInfo: SymbolAndAmountInfo(symbolInfo: SymbolInfo.init(symbol: "DAI", symbolDescription: "Dai", tokenMintAddress: "0xf2b63A9F00eEAc103546EF9184603FF0fDc897C2", imageUrl: nil, nftMetadata: nil), amount: "2.50000000", usdEquivalent: nil, fee: nil, replacementFee: nil),
+                symbolAndAmountInfo: SymbolAndAmountInfo(symbolInfo: SymbolInfo.init(symbol: "DAI", symbolDescription: "Dai", tokenMintAddress: "0xf2b63A9F00eEAc103546EF9184603FF0fDc897C2", imageUrl: nil, nftMetadata: nil, ethTokenInfo: nil), amount: "2.50000000", usdEquivalent: nil, fee: nil, replacementFee: nil),
                 destination: DestinationAddress.init(name: "Destination", subName: nil, address: "0x23268677A3ab336761865839eB6c9EC876Af4cD0", tag: nil),
                 signingData: .ethereum(EthereumSigningData(transaction: EthereumTransaction(safeNonce: 0, chainId: 31337)))
             )
