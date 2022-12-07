@@ -11,6 +11,7 @@ struct PasswordManagerConfirm: View {
     @Environment(\.presentationMode) var presentationMode
 
     var user: CensoApi.User
+    var deviceKey: DeviceKey
     var phrase: [String]
     var onSuccess: () -> Void
 
@@ -77,7 +78,7 @@ struct PasswordManagerConfirm: View {
         }
 
         NavigationLink(isActive: .constant(showingSuccess)) {
-            KeyConfirmationSuccess(user: user, phrase: phrase, onSuccess: onSuccess)
+            KeyConfirmationSuccess(user: user, deviceKey: deviceKey, phrase: phrase, onSuccess: onSuccess)
         } label: {
             EmptyView()
         }
@@ -88,7 +89,7 @@ struct PasswordManagerConfirm: View {
 struct PasswordManagerConfirm_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            PasswordManagerConfirm(user: .sample, phrase: [], onSuccess: {})
+            PasswordManagerConfirm(user: .sample, deviceKey: .sample, phrase: [], onSuccess: {})
         }
     }
 }

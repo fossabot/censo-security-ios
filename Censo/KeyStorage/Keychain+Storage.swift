@@ -16,49 +16,53 @@ extension JSONEncoder {
 }
 
 extension Keychain {
-    static private let rootSeedService = "com.censocustody.root-seed-biometry"
+    static private let rootSeedService = "com.censocustody.root-seed-encrypted"
     static private let publicKeyService = "com.censocustody.public-key"
 
     enum KeyError: Error {
         case noPrivateKeys
     }
 
-    static func privateKeys(email: String) throws -> PrivateKeys {
-        guard let rootSeed = try load(account: email, service: rootSeedService)?.bytes else {
+    static func privateKeys(email: String, deviceKey: DeviceKey) throws -> PrivateKeys {
+        guard let encryptedRootSeed = try load(account: email, service: rootSeedService) else {
             throw KeyError.noPrivateKeys
         }
+
+        let rootSeed = try deviceKey.decrypt(data: encryptedRootSeed).bytes
 
         return try PrivateKeys(rootSeed: rootSeed)
     }
 
-    static func publicKeys(email: String) throws -> PublicKeys? {
+    static func encryptedRootSeed(email: String) throws -> Data? {
+        try load(account: email, service: rootSeedService)
+    }
+
+    static func publicKeys(email: String, deviceKey: DeviceKey) throws -> PublicKeys? {
         let email = email.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
 
-        // MIGRATION FOR OLD USERS
-        let oldPrivateKeyService = "com.censocustody.private-key"
-        let oldRootSeedService = "com.censocustody.root-seed"
-        let oldPrivateKeyBiometryService = "com.censocustody.private-key-biometry"
+        // BEGIN MIGRATION
 
-        if let oldRootSeed = try load(account: email, service: oldRootSeedService) {
-            try saveRootSeed(oldRootSeed.bytes, email: email)
+        let oldRootSeedService = "com.censocustody.root-seed-biometry"
+        if contains(account: email, service: oldRootSeedService) {
+            if let rootSeed = try load(account: email, service: oldRootSeedService) {
+                try saveRootSeed(rootSeed.bytes, email: email, deviceKey: deviceKey)
+                clear(account: email, service: oldRootSeedService)
+            }
         }
 
-        // CLEAR OLD ENTRIES
-        clear(account: email, service: oldPrivateKeyService)
-        clear(account: email, service: oldRootSeedService)
-        clear(account: email, service: oldPrivateKeyBiometryService)
+        // END MIGRATION
 
         // IF ALL KEYS ARE PRESENT
         if let publicKeysData = try load(account: email, service: publicKeyService),
-           let publicKeys = try? JSONDecoder.keyChainDecoder.decode(PublicKeys.self, from: publicKeysData),
-           hasRootSeed(email: email) {
+           let publicKeys = try? JSONDecoder.keyChainDecoder.decode(PublicKeys.self, from: publicKeysData) {
             return publicKeys
         }
 
-        guard let rootSeed = try load(account: email, service: rootSeedService)?.bytes else {
+        guard let encryptedRootSeed = try load(account: email, service: rootSeedService) else {
             return nil
         }
 
+        let rootSeed = try deviceKey.decrypt(data: encryptedRootSeed).bytes
         let privateKeys = try PrivateKeys(rootSeed: rootSeed)
 
         if let publicKeysData = try? JSONEncoder.keyChainEncoder.encode(privateKeys.publicKeys) {
@@ -68,10 +72,11 @@ extension Keychain {
         return privateKeys.publicKeys
     }
 
-    static func saveRootSeed(_ rootSeed: [UInt8], email: String) throws {
+    static func saveRootSeed(_ rootSeed: [UInt8], email: String, deviceKey: DeviceKey) throws {
         let email = email.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
+        let encryptedData = try deviceKey.encrypt(data: Data(rootSeed))
 
-        try save(account: email, service: rootSeedService, data: Data(rootSeed), biometryProtected: true)
+        try save(account: email, service: rootSeedService, data: encryptedData, biometryProtected: false)
 
         let privateKeys = try PrivateKeys(rootSeed: rootSeed)
         let publicKeys = privateKeys.publicKeys
@@ -80,8 +85,9 @@ extension Keychain {
             try save(account: email, service: publicKeyService, data: publicKeysData)
         }
     }
+}
 
-    static func hasRootSeed(email: String) -> Bool {
-        contains(account: email, service: rootSeedService)
-    }
+struct StoredKeys: Codable {
+    var encryptedRootSeed: Data
+    var publicKeys: PublicKeys
 }

@@ -10,27 +10,21 @@ import SwiftUI
 
 struct BalanceAccountWhitelistDetails: View {
     var request: ApprovalRequest
-    var update: BalanceAccountAddressWhitelistUpdate
+    var update: EthereumWalletWhitelistUpdate
     var user: CensoApi.User
 
     var body: some View {
         VStack(alignment: .center, spacing: 10) {
             FactsSection(title: "Whitelisted Addresses") {
                 if update.destinations.count > 0 {
-                    for destination in update.destinations.sorted(by: { $0.destinationName < $1.destinationName }) {
-                        Fact(destination.destinationName, destination.value.address.masked())
+                    for destination in update.destinations.sorted(by: { $0.name < $1.name }) {
+                        Fact(destination.name, destination.address.masked())
                     }
                 } else {
                     Fact("No whitelisted addresses", "")
                 }
             }
         }
-    }
-}
-
-extension SlotDestinationInfo {
-    var destinationName: String {
-        value.name
     }
 }
 
@@ -42,7 +36,7 @@ struct BalanceAccountWhitelistDetails_Previews: PreviewProvider {
         let timerPublisher = Timer.TimerPublisher(interval: 1, runLoop: .current, mode: .default).autoconnect()
 
         NavigationView {
-            ApprovalRequestDetails(user: .sample, request: .sample, timerPublisher: timerPublisher) {
+            ApprovalRequestDetails(deviceSigner: DeviceSigner(deviceKey: .sample, encryptedRootSeed: Data()), user: .sample, request: .sample, timerPublisher: timerPublisher) {
                 BalanceAccountWhitelistDetails(request: .sample, update: .sample, user: .sample)
             }
         }

@@ -10,7 +10,7 @@ import Foundation
 import SwiftUI
 
 struct PasswordResetDetails: View {
-    var requestType: SolanaApprovalRequestType
+    var requestType: ApprovalRequestType
 
     var body: some View {
         VStack(alignment: .center, spacing: 10) {
@@ -26,7 +26,7 @@ struct PasswordResetDetails_Previews: PreviewProvider {
         let timerPublisher = Timer.TimerPublisher(interval: 1, runLoop: .current, mode: .default).autoconnect()
 
         NavigationView {
-            ApprovalRequestDetails(user: .sample, request: .sample, timerPublisher: timerPublisher) {
+            ApprovalRequestDetails(deviceSigner: DeviceSigner(deviceKey: .sample, encryptedRootSeed: Data()), user: .sample, request: .sample, timerPublisher: timerPublisher) {
                 PasswordResetDetails(requestType: .passwordReset(.sample))
             }
         }

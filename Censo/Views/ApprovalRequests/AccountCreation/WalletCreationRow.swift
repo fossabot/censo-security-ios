@@ -9,7 +9,7 @@ import Foundation
 import SwiftUI
 
 struct WalletCreationRow: View {
-    var requestType: SolanaApprovalRequestType
+    var requestType: ApprovalRequestType
     var accountCreation: WalletCreation
 
     var body: some View {
@@ -44,13 +44,13 @@ extension AccountType: CustomStringConvertible {
 #if DEBUG
 struct WalletCreationRow_Previews: PreviewProvider {
     static var previews: some View {
-        WalletCreationRow(requestType: .walletCreation(.sample), accountCreation: .sample)
+        WalletCreationRow(requestType: .ethereumWalletCreation(.sample), accountCreation: EthereumWalletCreation.sample)
     }
 }
 
-extension WalletCreation {
+extension EthereumWalletCreation {
     static var sample: Self {
-        WalletCreation(accountSlot: 1, accountInfo: AccountInfo(name: "Rainbows", identifier: "dffdg", accountType: .BalanceAccount, address: nil, chain: nil), approvalPolicy: ApprovalPolicy(approvalsRequired: 3, approvalTimeout: 4000000, approvers: [SlotSignerInfo(slotId: 3, value: SignerInfo(publicKey: "dsfgsfdg4534gf4", name: "John Q", email: "johnny@crypto.com", nameHashIsEmpty: false))]), whitelistEnabled: .On, dappsEnabled: .On, addressBookSlot: 4, signingData: .sample)
+        EthereumWalletCreation(accountSlot: 1, accountInfo: AccountInfo(name: "Rainbows", identifier: "dffdg", accountType: .BalanceAccount, address: "", chain: .ethereum), approvalPolicy: ApprovalPolicy(approvalsRequired: 3, approvalTimeout: 4000000, approvers: [SignerInfo(publicKey: "dsfgsfdg4534gf4", name: "John Q", email: "johnny@crypto.com", nameHashIsEmpty: false)]), whitelistEnabled: .On, dappsEnabled: .On, addressBookSlot: 4)
     }
 }
 

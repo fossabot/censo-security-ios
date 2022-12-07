@@ -10,7 +10,7 @@ import SwiftUI
 
 
 struct AddressBookUpdateRow: View {
-    var requestType: SolanaApprovalRequestType
+    var requestType: ApprovalRequestType
     var update: AddressBookUpdate
 
     var body: some View {
@@ -24,7 +24,7 @@ struct AddressBookUpdateRow: View {
                 .foregroundColor(Color.white)
                 .padding(EdgeInsets(top: 15, leading: 20, bottom: 0, trailing: 20))
 
-            Text(update.entry.value.name)
+            Text(update.entry.name)
                 .font(.title3)
                 .foregroundColor(Color.white.opacity(0.8))
                 .padding(EdgeInsets(top: 2, leading: 20, bottom: 20, trailing: 20))
@@ -41,17 +41,7 @@ struct AddressBookUpdateRow_Previews: PreviewProvider {
 
 extension AddressBookUpdate {
     static var sample: Self {
-        AddressBookUpdate(chain: Chain.solana, change: .add, entry: .sample, signingData: .sample)
-    }
-}
-
-extension SlotDestinationInfo {
-    static var sample: Self {
-        SlotDestinationInfo(slotId: 7, value: .sample)
-    }
-
-    static var sample2: Self {
-        SlotDestinationInfo(slotId: 8, value: .sample2)
+        AddressBookUpdate(change: .add, entry: AddressBookEntry(chain: .ethereum, name: "Sample", address: "SAMPLEADDRESS"))
     }
 }
 

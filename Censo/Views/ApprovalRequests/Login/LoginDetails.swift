@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct LoginDetails: View {
-    var requestType: SolanaApprovalRequestType
+    var requestType: ApprovalRequestType
     var login: LoginApproval
 
     var body: some View {
@@ -29,7 +29,7 @@ struct LoginDetails_Previews: PreviewProvider {
         let timerPublisher = Timer.TimerPublisher(interval: 1, runLoop: .current, mode: .default).autoconnect()
 
         NavigationView {
-            ApprovalRequestDetails(user: .sample, request: .sample, timerPublisher: timerPublisher) {
+            ApprovalRequestDetails(deviceSigner: DeviceSigner(deviceKey: .sample, encryptedRootSeed: Data()), user: .sample, request: .sample, timerPublisher: timerPublisher) {
                 LoginDetails(requestType: .loginApproval(.sample), login: .sample)
             }
         }

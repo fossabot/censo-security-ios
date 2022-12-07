@@ -17,6 +17,7 @@ struct ApprovalRequestRow<Row, Detail>: View where Row : View, Detail: View {
     @State private var alert: AlertType? = nil
     @State private var navigated = false
 
+    var deviceSigner: DeviceSigner
     var user: CensoApi.User
     var request: ApprovalRequest
     var timerPublisher: Publishers.Autoconnect<Timer.TimerPublisher>
@@ -25,8 +26,8 @@ struct ApprovalRequestRow<Row, Detail>: View where Row : View, Detail: View {
     @ViewBuilder var detail: () -> Detail
     
     var titleVaultName: String? {
-        switch request.requestType {
-        case .acceptVaultInvitation:
+        switch request.details {
+        case .vaultInvitation:
             return nil
         default:
             return request.vaultName?.toVaultName()
@@ -60,7 +61,7 @@ struct ApprovalRequestRow<Row, Detail>: View where Row : View, Detail: View {
 
             HStack(spacing: 0) {
                 Button {
-                    switch request.requestType {
+                    switch request.details {
                     case .loginApproval:
                         approve()
                     default:
@@ -79,7 +80,7 @@ struct ApprovalRequestRow<Row, Detail>: View where Row : View, Detail: View {
                     case .confirmation:
                         return Alert(
                             title: Text("Are you sure?"),
-                            message: Text("You are about to approve the following request:\n \(request.requestType.header)"),
+                            message: Text("You are about to approve the following request:\n \(request.details.header)"),
                             primaryButton: Alert.Button.default(Text("Confirm"), action: approve),
                             secondaryButton: Alert.Button.cancel(Text("Cancel"))
                         )
@@ -103,6 +104,7 @@ struct ApprovalRequestRow<Row, Detail>: View where Row : View, Detail: View {
 
             NavigationLink(isActive: $navigated) {
                 ApprovalRequestDetails(
+                    deviceSigner: deviceSigner,
                     user: user,
                     request: request,
                     timerPublisher: timerPublisher,
@@ -121,43 +123,33 @@ struct ApprovalRequestRow<Row, Detail>: View where Row : View, Detail: View {
     private func approve() {
         isLoading = true
 
-        censoApi.provider.requestWithNonces(
-            accountAddresses: request.requestType.nonceAccountAddresses,
-            accountAddressesSlot: request.requestType.nonceAccountAddressesSlot
-        ) { nonces in
-            switch request.details {
-            case .approval(let requestType):
-                return .registerApprovalDisposition(
-                    CensoApi.ApprovalDispositionRequest(
-                        disposition: .Approve,
-                        requestID: request.id,
-                        requestType: requestType,
-                        nonces: nonces,
-                        email: user.loginName
-                    )
-                )
-            case .multisigOpInitiation(let initiation, let requestType):
-                return .initiateRequest(
-                    CensoApi.InitiationRequest(
-                        disposition: .Approve,
-                        requestID: request.id,
-                        initiation: initiation,
-                        requestType: requestType,
-                        nonces: nonces,
-                        email: user.loginName,
-                        opAccountPrivateKey: Curve25519.Signing.PrivateKey()
-                    )
-                )
+        Task {
+            defer {
+                isLoading = false
             }
-        } completion: { result in
-            isLoading = false
 
-            switch result {
-            case .failure(let error):
-                print(error)
-                alert = .error(error)
-            case .success:
-                onStatusChange?()
+            do {
+                let request = ApprovalDispositionRequest(disposition: .Approve, request: request)
+
+                _ = try await censoApi.provider.request(
+                    .registerApprovalDisposition(
+                        CensoApi.ApprovalDispositionPayload(
+                            dispositionRequest: request,
+                            deviceSigner: deviceSigner,
+                            apiProvider: censoApi.provider
+                        ),
+                        devicePublicKey: try deviceSigner.devicePublicKey()
+                    )
+                )
+
+                await MainActor.run {
+                    onStatusChange?()
+                }
+            } catch {
+                await MainActor.run {
+                    print(error)
+                    alert = .error(error)
+                }
             }
         }
     }
@@ -200,11 +192,17 @@ struct ApprovalRequestRow_Preivews: PreviewProvider {
     static var previews: some View {
         let timerPublisher = Timer.TimerPublisher(interval: 1, runLoop: .current, mode: .default).autoconnect()
 
-        ApprovalRequestRow(user: .sample, request: .sample, timerPublisher: timerPublisher) {
-            WithdrawalRow(requestType: .withdrawalRequest(.sample), withdrawal: .sample)
+        ApprovalRequestRow(deviceSigner: .init(deviceKey: .sample, encryptedRootSeed: Data()), user: .sample, request: .sample, timerPublisher: timerPublisher) {
+            WithdrawalRow(requestType: .ethereumWithdrawalRequest(.sample), withdrawal: EthereumWithdrawalRequest.sample)
         } detail: {
-            WithdrawalDetails(request: .sample, withdrawal: .sample)
+            WithdrawalDetails(request: .sample, withdrawal: EthereumWithdrawalRequest.sample)
         }
+    }
+}
+
+extension EthereumWithdrawalRequest {
+    static var sample: Self {
+        EthereumWithdrawalRequest(account: .sample, symbolAndAmountInfo: .sample, tokenInfo: nil, destination: .sample, signingData: .sample)
     }
 }
 #endif

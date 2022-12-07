@@ -22,8 +22,8 @@ struct RootView: View {
     @ObservedObject var authProvider: CensoAuthProvider
 
     var body: some View {
-        if authProvider.isAuthenticated {
-            MainView(onSignOut: signOut)
+        if let jwtToken = authProvider.storedJWTToken {
+            MainView(email: jwtToken.email, onSignOut: signOut)
                 .environment(\.censoApi, CensoApi(authProvider: authProvider))
                 .onFirstTimeAppear(perform: registerForRemoteNotifications)
                 .foregroundBiometryProtected(onFailure: signOut)

@@ -10,8 +10,8 @@ import SwiftUI
 
 
 struct BalanceAccountNameRow: View {
-    var requestType: SolanaApprovalRequestType
-    var update: BalanceAccountNameUpdate
+    var requestType: ApprovalRequestType
+    var update: EthereumWalletNameUpdate
 
     var body: some View {
         VStack(spacing: 8) {
@@ -24,7 +24,7 @@ struct BalanceAccountNameRow: View {
                 .foregroundColor(Color.white)
                 .padding(EdgeInsets(top: 15, leading: 20, bottom: 0, trailing: 20))
 
-            Text("\(update.accountInfo.name.toWalletName()) → \(update.newAccountName.toWalletName())")
+            Text("\(update.account.name.toWalletName()) → \(update.newAccountName.toWalletName())")
                 .font(.title3)
                 .lineLimit(1)
                 .allowsTightening(true)
@@ -37,13 +37,13 @@ struct BalanceAccountNameRow: View {
 #if DEBUG
 struct BalanceAccountNameRow_Previews: PreviewProvider {
     static var previews: some View {
-        BalanceAccountNameRow(requestType: .balanceAccountNameUpdate(.sample), update: .sample)
+        BalanceAccountNameRow(requestType: .ethereumWalletNameUpdate(.sample), update: EthereumWalletNameUpdate.sample)
     }
 }
 
-extension BalanceAccountNameUpdate {
+extension EthereumWalletNameUpdate {
     static var sample: Self {
-        BalanceAccountNameUpdate(accountInfo: .sample, newAccountName: "My Wallet", signingData: .sample)
+        EthereumWalletNameUpdate(account: .sample, newAccountName: "My Wallet", signingData: .sample)
     }
 }
 #endif

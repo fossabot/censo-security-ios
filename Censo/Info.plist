@@ -56,10 +56,6 @@
 		<string>$(RAYGUN_API_KEY)</string>
 		<key>RAYGUN_ENABLED</key>
 		<string>$(RAYGUN_ENABLED)</string>
-		<key>SOLANA_COMMITMENT</key>
-		<string>$(SOLANA_COMMITMENT)</string>
-		<key>SOLANA_RPC_URL</key>
-		<string>$(SOLANA_RPC_URL)</string>
 		<key>CENSO_AUTH_BASE_URL</key>
 		<string>$(CENSO_AUTH_BASE_URL)</string>
 	</dict>
@@ -70,7 +66,7 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>Access to camera is required to scan QR codes</string>
+	<string>Access to camera is required to capture your photo for registration</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Censo uses Face ID to verify identity</string>
 	<key>UIApplicationSceneManifest</key>

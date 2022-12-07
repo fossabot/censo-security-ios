@@ -7,20 +7,23 @@
 
 import SwiftUI
 
+typealias KeyStore = (publicKeys: PublicKeys, encryptedRootSeed: Data)
+
 struct PublicKeysStorage<Loading, Success>: View where Loading : View, Success : View {
     enum Storage {
         case idle
         case loading
         case failure(Error)
-        case success(PublicKeys?)
+        case success(KeyStore?)
     }
 
     @State private var storage: Storage = .idle
 
     var email: String
+    var deviceKey: DeviceKey
 
     @ViewBuilder var loading: () -> Loading
-    @ViewBuilder var success: (PublicKeys?, @escaping () -> Void) -> Success
+    @ViewBuilder var success: (KeyStore?, @escaping () -> Void) -> Success
 
     var body: some View {
         switch storage {
@@ -31,8 +34,8 @@ struct PublicKeysStorage<Loading, Success>: View where Loading : View, Success :
             loading()
         case .failure(let error):
             RetryView(error: error, action: reload)
-        case .success(let publicKeys):
-            success(publicKeys, reload)
+        case .success(let keyStore):
+            success(keyStore, reload)
         }
     }
 
@@ -40,8 +43,12 @@ struct PublicKeysStorage<Loading, Success>: View where Loading : View, Success :
         storage = .loading
 
         do {
-            let publicKeys = try Keychain.publicKeys(email: email)
-            storage = .success(publicKeys)
+            if let publicKeys = try Keychain.publicKeys(email: email, deviceKey: deviceKey),
+               let encryptedRootSeed = try Keychain.encryptedRootSeed(email: email) {
+                storage = .success((publicKeys, encryptedRootSeed))
+            } else {
+                storage = .success(nil)
+            }
         } catch {
             storage = .failure(error)
         }

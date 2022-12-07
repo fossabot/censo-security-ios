@@ -7,7 +7,7 @@
 import SwiftUI
 
 struct PasswordResetRow: View {
-    var requestType: SolanaApprovalRequestType
+    var requestType: ApprovalRequestType
     var email: String
 
     var body: some View {

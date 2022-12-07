@@ -13,6 +13,7 @@ struct KeyRetrievalSignInRecovery: View {
 
     var email: String
     var authProvider: CensoAuthProvider
+    var deviceKey: DeviceKey
 
     var body: some View {
         VStack {
@@ -35,7 +36,7 @@ struct KeyRetrievalSignInRecovery: View {
                 .padding()
 
             NavigationLink {
-                PasswordManagerSignInRecovery(email: email, authProvider: authProvider)
+                PasswordManagerSignInRecovery(email: email, authProvider: authProvider, deviceKey: deviceKey)
             } label: {
                 Text("Password Manager")
                     .frame(maxWidth: .infinity)
@@ -44,7 +45,7 @@ struct KeyRetrievalSignInRecovery: View {
             .padding([.top, .bottom])
 
             NavigationLink {
-                PenAndPaperSignInRecovery(email: email, authProvider: authProvider)
+                PenAndPaperSignInRecovery(email: email, authProvider: authProvider, deviceKey: deviceKey)
             } label: {
                 Text("Pen and Paper")
                     .frame(maxWidth: .infinity)
@@ -63,7 +64,7 @@ struct KeyRetrievalSignInRecovery: View {
 struct KeyRetrievalSignInRecovery_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            KeyRetrievalSignInRecovery(email: "", authProvider: CensoAuthProvider())
+            KeyRetrievalSignInRecovery(email: "", authProvider: CensoAuthProvider(), deviceKey: .sample)
         }
     }
 }

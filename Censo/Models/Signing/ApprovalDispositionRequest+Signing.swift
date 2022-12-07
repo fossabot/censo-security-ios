@@ -1,0 +1,126 @@
+//
+//  ApprovalDispositionRequest+Signing.swift
+//  Censo
+//
+//  Created by Ata Namvari on 2023-01-30.
+//
+
+import Foundation
+import Moya
+import CryptoKit
+
+struct DeviceSigner {
+    private var deviceKey: DeviceKey
+    private var encryptedRootSeed: Data
+
+    init(deviceKey: DeviceKey, encryptedRootSeed: Data) {
+        self.deviceKey = deviceKey
+        self.encryptedRootSeed = encryptedRootSeed
+    }
+
+    func deviceSignature(for data: Data) throws -> Data {
+        try deviceKey.signature(for: data)
+    }
+
+    func privateKeys() throws -> PrivateKeys {
+        let rootSeed = try deviceKey.decrypt(data: encryptedRootSeed)
+        return try PrivateKeys(rootSeed: rootSeed.bytes)
+    }
+
+    func devicePublicKey() throws -> String {
+        try deviceKey.publicExternalRepresentation().base58String
+    }
+}
+
+extension ApprovalDispositionRequest {
+    func signatureInfos(using deviceSigner: DeviceSigner, apiProvider: MoyaProvider<CensoApi.Target>) async throws -> [SignatureInfo]  {
+        switch request.details {
+        case .loginApproval(let request):
+            let dataToSign = request.jwtToken.data(using: .utf8)!
+
+            return [
+                .offchain(
+                    OffChainSignature(
+                        signature: try deviceSigner.deviceSignature(for: dataToSign).base64EncodedString(),
+                        signedData: dataToSign.base64EncodedString()
+                    )
+                )
+            ]
+        case .passwordReset:
+            let dataToSign = request.id.data(using: .utf8)!
+
+            return [
+                .offchain(
+                    OffChainSignature(
+                        signature: try deviceSigner.deviceSignature(for: dataToSign).base64EncodedString(),
+                        signedData: dataToSign.base64EncodedString()
+                    )
+                )
+            ]
+        case .vaultInvitation(let request):
+            let dataToSign = request.vaultName.data(using: .utf8)!
+
+            return [
+                .offchain(
+                    OffChainSignature(
+                        signature: try deviceSigner.deviceSignature(for: dataToSign).base64EncodedString(),
+                        signedData: dataToSign.base64EncodedString()
+                    )
+                )
+            ]
+        case .ethereumWalletCreation,
+             .bitcoinWalletCreation,
+             .addressBookUpdate,
+             .vaultPolicyUpdate:
+            let detailsJSONData = try JSONEncoder().encode(request.details)
+            let dataToSign = Data(SHA256.hash(data: detailsJSONData))
+
+            return [
+                .offchain(
+                    OffChainSignature(
+                        signature: try deviceSigner.deviceSignature(for: dataToSign).base64EncodedString(),
+                        signedData: detailsJSONData.base64EncodedString()
+                    )
+                )
+            ]
+        case .ethereumWithdrawalRequest(let request as EthereumSignable),
+             .ethereumWalletNameUpdate(let request as EthereumSignable),
+             .ethereumTransferPolicyUpdate(let request as EthereumSignable),
+             .ethereumWalletSettingsUpdate(let request as EthereumSignable),
+             .ethereumWalletWhitelistUpdate(let request as EthereumSignable),
+             .ethereumDAppTransactionRequest(let request as EthereumSignable):
+            let dataToSign = try request.signableData()
+            let privateKeys = try deviceSigner.privateKeys()
+
+            return [
+                .ethereum(
+                    EthereumSignature(
+                        signature: try privateKeys.signature(for: dataToSign, chain: .ethereum)
+                    )
+                )
+            ]
+        case .bitcoinWithdrawalRequest(let request as BitcoinSignable):
+            let dataArrayToSign = try request.signableDataList()
+            let derivationPath = DerivationNode.notHardened(request.signingData.childKeyIndex)
+            let privateKeys = try deviceSigner.privateKeys()
+
+            return [
+                .bitcoin(
+                    BitcoinSignatures(
+                        signatures: try dataArrayToSign.map { data in
+                            try privateKeys.signature(for: data, chain: .bitcoin, derivationPath: derivationPath)
+                        }
+                    )
+                )
+            ]
+        }
+    }
+}
+
+extension CensoApi.ApprovalDispositionPayload {
+    init(dispositionRequest: ApprovalDispositionRequest, deviceSigner: DeviceSigner, apiProvider: MoyaProvider<CensoApi.Target>) async throws {
+        self.approvalDisposition = dispositionRequest.disposition
+        self.requestID = dispositionRequest.request.id
+        self.signatures = try await dispositionRequest.signatureInfos(using: deviceSigner, apiProvider: apiProvider)
+    }
+}

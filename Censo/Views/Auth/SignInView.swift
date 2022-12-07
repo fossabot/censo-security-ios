@@ -103,10 +103,10 @@ struct SignInView: View {
     }
 
     private func signIn() {
-        if Keychain.hasRootSeed(email: username) {
+        if let key = SecureEnclaveWrapper.deviceKey(email: username) {
             isAuthenticating = true
 
-            authProvider.authenticate(.signature(email: username)) { error in
+            authProvider.authenticate(.signature(email: username, deviceKey: key)) { error in
                 isAuthenticating = false
 
                 if let error = error {
@@ -171,17 +171,6 @@ struct PasswordView: View {
                         .foregroundColor(Color.black)
                         .accentColor(Color.Censo.blue)
                         .textFieldStyle(LightRoundedTextFieldStyle())
-
-                        HStack {
-                            Spacer()
-
-                            NavigationLink {
-                                KeyRetrievalSignInRecovery(email: username, authProvider: authProvider)
-                            } label: {
-                                Text("Forgot password?")
-                            }
-                            .foregroundColor(.Censo.blue)
-                        }
                     }
                     .padding(35)
                     .background(

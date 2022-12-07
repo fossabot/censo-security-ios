@@ -14,6 +14,7 @@ struct PenAndPaper: View {
     @State private var pagesVisited: Set<Int> = [0]
 
     var user: CensoApi.User
+    var deviceKey: DeviceKey
     var phrase: [String]
     var onSuccess: () -> Void
 
@@ -105,7 +106,7 @@ struct PenAndPaper: View {
             .padding()
 
             NavigationLink {
-                PenAndPaperConfirm(user: user, phrase: phrase, onSuccess: onSuccess)
+                PenAndPaperConfirm(user: user, deviceKey: deviceKey, phrase: phrase, onSuccess: onSuccess)
             } label: {
                 Text("I saved the recovery phrase →")
                     .frame(maxWidth: .infinity)
@@ -126,7 +127,7 @@ struct PenAndPaper: View {
 struct PenAndPaper_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            PenAndPaper(user: .sample, phrase: ["these", "are", "test", "words", "they", "go", "on", "and", "on", "until", "there", "is", "no", "more", "these", "are", "test", "words", "they", "go", "on", "and", "on", "until"], onSuccess: {})
+            PenAndPaper(user: .sample, deviceKey: .sample, phrase: ["these", "are", "test", "words", "they", "go", "on", "and", "on", "until", "there", "is", "no", "more", "these", "are", "test", "words", "they", "go", "on", "and", "on", "until"], onSuccess: {})
         }
     }
 }

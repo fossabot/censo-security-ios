@@ -15,9 +15,9 @@ struct AddressBookUpdateDetails: View {
     var body: some View {
         VStack(alignment: .center, spacing: 10) {
             FactList {
-                Fact("Name", update.entry.value.name)
-                Fact("Address", update.entry.value.address.masked())
-                Fact("Chain", update.chain.rawValue.capitalized)
+                Fact("Name", update.entry.name)
+                Fact("Address", update.entry.address.masked())
+                Fact("Chain", update.entry.chain.rawValue.capitalized)
             }
         }
     }
@@ -32,7 +32,7 @@ struct AddressBookUpdateDetails_Previews: PreviewProvider {
         let timerPublisher = Timer.TimerPublisher(interval: 1, runLoop: .current, mode: .default).autoconnect()
 
         NavigationView {
-            ApprovalRequestDetails(user: .sample, request: .sample, timerPublisher: timerPublisher) {
+            ApprovalRequestDetails(deviceSigner: DeviceSigner(deviceKey: .sample, encryptedRootSeed: Data()), user: .sample, request: .sample, timerPublisher: timerPublisher) {
                 AddressBookUpdateDetails(request: .sample, update: .sample)
             }
         }

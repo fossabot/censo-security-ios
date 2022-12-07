@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct LoginRow: View {
-    var requestType: SolanaApprovalRequestType
+    var requestType: ApprovalRequestType
     var login: LoginApproval
 
     var body: some View {

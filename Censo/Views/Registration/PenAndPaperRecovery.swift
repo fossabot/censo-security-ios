@@ -12,7 +12,8 @@ struct PenAndPaperRecovery: View {
     @Environment(\.presentationMode) var presentationMode
 
     var user: CensoApi.User
-    var solanaPublicKey: String
+    var registeredPublicKeys: [CensoApi.PublicKey]
+    var deviceKey: DeviceKey
     var onSuccess: () -> Void
 
     @State private var phraseIndex: Int = 0
@@ -137,8 +138,8 @@ struct PenAndPaperRecovery: View {
             let rootSeed = try Mnemonic(phrase: typedPhrase.map({ $0.lowercased().trimmingCharacters(in: .whitespaces) })).seed
             let privateKeys = try PrivateKeys(rootSeed: rootSeed)
 
-            if privateKeys.publicKey(for: .solana) == solanaPublicKey {
-                try Keychain.saveRootSeed(rootSeed, email: user.loginName)
+            if privateKeys.publicKeys.matches(anyOf: registeredPublicKeys) {
+                try Keychain.saveRootSeed(rootSeed, email: user.loginName, deviceKey: deviceKey)
 
                 showingSuccess = true
             } else {
@@ -152,11 +153,28 @@ struct PenAndPaperRecovery: View {
     }
 }
 
+extension PublicKeys {
+    func matches(anyOf registeredPublicKeys: [CensoApi.PublicKey]) -> Bool {
+        guard let anyKey = registeredPublicKeys.first else {
+            return false
+        }
+
+        switch anyKey.chain {
+        case .ethereum:
+            return ethereum == anyKey.key
+        case .bitcoin:
+            return bitcoin == anyKey.key
+        case .censo:
+            return censo == anyKey.key
+        }
+    }
+}
+
 #if DEBUG
 struct PenAndPaperRecovery_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            PenAndPaperRecovery(user: .sample, solanaPublicKey: "", onSuccess: {})
+            PenAndPaperRecovery(user: .sample, registeredPublicKeys: [], deviceKey: .sample, onSuccess: {})
         }
     }
 }

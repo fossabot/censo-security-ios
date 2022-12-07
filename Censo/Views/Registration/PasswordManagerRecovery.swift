@@ -12,7 +12,8 @@ struct PasswordManagerRecovery: View {
     @Environment(\.presentationMode) var presentationMode
 
     var user: CensoApi.User
-    var solanaPublicKey: String
+    var registeredPublicKeys: [CensoApi.PublicKey]
+    var deviceKey: DeviceKey
     var onSuccess: () -> Void
 
     @State private var pastedPhrase: String = ""
@@ -102,8 +103,8 @@ struct PasswordManagerRecovery: View {
             let rootSeed = try Mnemonic(phrase: pastedWords).seed
             let privateKeys = try PrivateKeys(rootSeed: rootSeed)
             
-            if privateKeys.publicKey(for: .solana) == solanaPublicKey {
-                try Keychain.saveRootSeed(rootSeed, email: user.loginName)
+            if privateKeys.publicKeys.matches(anyOf: registeredPublicKeys) {
+                try Keychain.saveRootSeed(rootSeed, email: user.loginName, deviceKey: deviceKey)
 
                 showingSuccess = true
             } else {
@@ -121,7 +122,7 @@ struct PasswordManagerRecovery: View {
 struct PasswordManagerRecovery_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            PasswordManagerRecovery(user: .sample, solanaPublicKey: "", onSuccess: {})
+            PasswordManagerRecovery(user: .sample, registeredPublicKeys: [], deviceKey: .sample, onSuccess: {})
         }
     }
 }

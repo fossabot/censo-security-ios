@@ -10,8 +10,8 @@ import SwiftUI
 
 
 struct BalanceAccountSettingsRow: View {
-    var requestType: SolanaApprovalRequestType
-    var update: BalanceAccountSettingsUpdate
+    var requestType: ApprovalRequestType
+    var update: EthereumWalletSettingsUpdate
 
     var body: some View {
         VStack(spacing: 8) {
@@ -35,13 +35,7 @@ struct BalanceAccountSettingsRow: View {
 #if DEBUG
 struct BalanceAccountSettingsRow_Previews: PreviewProvider {
     static var previews: some View {
-        BalanceAccountSettingsRow(requestType: .balanceAccountSettingsUpdate(.sample), update: .sample)
-    }
-}
-
-extension BalanceAccountSettingsUpdate {
-    static var sample: Self {
-        BalanceAccountSettingsUpdate(account: .sample, change: .whitelistEnabled(true), signingData: .sample)
+        BalanceAccountSettingsRow(requestType: .ethereumWalletSettingsUpdate(.sample), update: EthereumWalletSettingsUpdate.sample)
     }
 }
 #endif

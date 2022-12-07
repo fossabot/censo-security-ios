@@ -12,34 +12,41 @@ struct RegistrationView: View {
     @Environment(\.censoApi) var censoApi
 
     var user: CensoApi.User
-    var storedPublicKeys: PublicKeys?
+    var deviceKey: DeviceKey
+    var keyStore: KeyStore?
     var onReloadUser: () -> Void
     var onProfile: () -> Void
     var onReloadPublicKeys: () -> Void
 
     var body: some View {
-        switch (storedPublicKeys, user.registeredPublicKeys) {
+        switch (keyStore, user.registeredPublicKeys) {
         case (_, .none):
-            KeyGeneration(user: user, onSuccess: onReloadUser, onProfile: onProfile)
-        case (.none, .complete(let remotePublicKeys)):
-            KeyRetrieval(user: user, solanaPublicKey: remotePublicKeys.solana) {
+            KeyGeneration(user: user, deviceKey: deviceKey, onSuccess: onReloadUser, onProfile: onProfile)
+        case (.none, .complete):
+            KeyRetrieval(user: user, registeredPublicKeys: user.publicKeys, deviceKey: deviceKey) {
                 onReloadPublicKeys()
             } onProfile: {
                 onProfile()
             }
-        case (.none, .incomplete(let solanaPublicKey)):
-            KeyRetrieval(user: user, solanaPublicKey: solanaPublicKey) {
+        case (.none, .incomplete(let publicKeys)):
+            KeyRetrieval(user: user, registeredPublicKeys: publicKeys, deviceKey: deviceKey) {
                 onReloadPublicKeys()
             } onProfile: {
                 onProfile()
             }
-        case (.some, .incomplete):
-            AdditionalKeyRegistration(user: user) {
+        case (.some((let storedPublicKeys, _)), .incomplete):
+            AdditionalKeyRegistration(user: user, publicKeys: storedPublicKeys, deviceKey: deviceKey) {
                 onReloadUser()
             }
-        case (.some(let storedPublicKeys), .complete(let remotePublicKeys)) where storedPublicKeys == remotePublicKeys:
-            ApprovalRequestsView(user: user)
-                .navigationTitle("Approvals")
+        case (.some((let storedPublicKeys, let encryptedRootSeed)), .complete(let remotePublicKeys)) where storedPublicKeys == remotePublicKeys:
+            ApprovalRequestsView(
+                deviceSigner: DeviceSigner(
+                    deviceKey: deviceKey,
+                    encryptedRootSeed: encryptedRootSeed
+                ),
+                user: user
+            )
+            .navigationTitle("Approvals")
         case (.some, .complete):
             Text("Keys do not match, call support")
         }
@@ -49,24 +56,23 @@ struct RegistrationView: View {
 extension CensoApi.User {
     enum RegisteredPublicKeys {
         case none
-        case incomplete(solanaPublicKey: String)
+        case incomplete([CensoApi.PublicKey])
         case complete(PublicKeys)
     }
 
     var registeredPublicKeys: RegisteredPublicKeys {
-        guard let solana = publicKeys.first(where: { $0.chain == .solana })?.key else {
+        guard publicKeys.count > 0 else {
             return .none
         }
 
         guard let bitcoin = publicKeys.first(where: { $0.chain == .bitcoin })?.key,
               let ethereum = publicKeys.first(where: { $0.chain == .ethereum })?.key,
               let censo = publicKeys.first(where: { $0.chain == .censo })?.key else {
-            return .incomplete(solanaPublicKey: solana)
+            return .incomplete(publicKeys)
         }
 
         return .complete(
             PublicKeys(
-                solana: solana,
                 bitcoin: bitcoin,
                 ethereum: ethereum,
                 censo: censo
@@ -78,7 +84,7 @@ extension CensoApi.User {
 #if DEBUG
 struct RegistrationView_Previews: PreviewProvider {
     static var previews: some View {
-        RegistrationView(user: .sample, storedPublicKeys: nil, onReloadUser: { }, onProfile: {}, onReloadPublicKeys: {})
+        RegistrationView(user: .sample, deviceKey: .sample, keyStore: nil, onReloadUser: { }, onProfile: {}, onReloadPublicKeys: {})
     }
 }
 #endif

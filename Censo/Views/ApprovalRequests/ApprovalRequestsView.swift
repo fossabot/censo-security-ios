@@ -15,6 +15,7 @@ struct ApprovalRequestsView: View {
 
     @RemoteResult private var approvalRequests: [GracefullyDecoded<ApprovalRequest>]?
 
+    var deviceSigner: DeviceSigner
     var user: CensoApi.User
 
     private let appForegroundedPublisher = NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification)
@@ -28,7 +29,7 @@ struct ApprovalRequestsView: View {
         case .loading:
             ProgressView("Fetching requests...")
         case .success(let requests):
-            ApprovalRequestsList(user: user, requests: requests.compactMap(\.underlying), onStatusChange: reload, onRefresh: refresh)
+            ApprovalRequestsList(deviceSigner: deviceSigner, user: user, requests: requests.compactMap(\.underlying), onStatusChange: reload, onRefresh: refresh)
                 .onAppear(perform: approvalRequestsDidAppear)
                 .onReceive(appForegroundedPublisher) { _ in
                     approvalRequestsDidAppear()
@@ -75,7 +76,7 @@ struct ApprovalRequestsView: View {
 struct ApprovalRequestsView_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            ApprovalRequestsView(user: .sample)
+            ApprovalRequestsView(deviceSigner: DeviceSigner(deviceKey: .sample, encryptedRootSeed: Data()), user: .sample)
                 .navigationTitle("Approvals")
                 .background(Color.Censo.primaryBackground.ignoresSafeArea())
         }

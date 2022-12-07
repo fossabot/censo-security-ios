@@ -18,6 +18,7 @@ struct PasswordManagerSignInRecovery: View {
 
     var email: String
     var authProvider: CensoAuthProvider
+    var deviceKey: DeviceKey
 
     var body: some View {
         ZStack {
@@ -90,17 +91,16 @@ struct PasswordManagerSignInRecovery: View {
         }
         do {
             let rootSeed = try Mnemonic(phrase: pastedWords).seed
-            let privateKeys = try PrivateKeys(rootSeed: rootSeed)
 
             signingIn = true
 
-            authProvider.authenticate(.signature(email: email, privateKeys: privateKeys)) { error in
+            authProvider.authenticate(.signature(email: email, deviceKey: deviceKey)) { error in
                 signingIn = false
 
                 if let _ = error {
                     showingSignInError = true
                 } else {
-                    try? Keychain.saveRootSeed(rootSeed, email: email)
+                    try? Keychain.saveRootSeed(rootSeed, email: email, deviceKey: deviceKey)
                 }
             }
         } catch {
@@ -113,7 +113,7 @@ struct PasswordManagerSignInRecovery: View {
 struct PasswordManagerSignInRecovery_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            PasswordManagerSignInRecovery(email: "", authProvider: CensoAuthProvider())
+            PasswordManagerSignInRecovery(email: "", authProvider: CensoAuthProvider(), deviceKey: .sample)
         }
     }
 }

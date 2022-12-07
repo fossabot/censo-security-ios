@@ -13,6 +13,7 @@ class CensoAuthProvider: ObservableObject {
     private let apiProvider = MoyaProvider<CensoApi.Target>()
 
     struct JWTToken: Codable {
+        var email: String
         var token: String
         var expiration: Date
 
@@ -22,6 +23,7 @@ class CensoAuthProvider: ObservableObject {
 
         enum JWTError: Error {
             case noExpirationClaim
+            case noEmailInBody
         }
 
         enum CodingKeys: String, CodingKey {
@@ -39,6 +41,12 @@ class CensoAuthProvider: ObservableObject {
                 self.expiration = expiration
             } else {
                 throw JWTError.noExpirationClaim
+            }
+
+            if let email = decodedJWT.body["email"] as? String {
+                self.email = email
+            } else {
+                throw JWTError.noEmailInBody
             }
         }
 

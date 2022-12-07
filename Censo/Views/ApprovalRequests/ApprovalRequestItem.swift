@@ -12,109 +12,122 @@ import Alamofire
 
 
 struct ApprovalRequestItem: View {
+    var deviceSigner: DeviceSigner
     var user: CensoApi.User
     var request: ApprovalRequest
     var onStatusChange: (() -> Void)?
     var timerPublisher: Publishers.Autoconnect<Timer.TimerPublisher>
 
     var body: some View {
-        switch request.requestType {
-        case .unknown:
-            UnknownRequestRow(request: request, timerPublisher: timerPublisher)
-        case .withdrawalRequest(let withdrawal):
-            ApprovalRequestRow(user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
-                WithdrawalRow(requestType: request.requestType, withdrawal: withdrawal)
+        switch request.details {
+        case .bitcoinWithdrawalRequest(let withdrawal as WithdrawalRequest),
+             .ethereumWithdrawalRequest(let withdrawal as WithdrawalRequest):
+            ApprovalRequestRow(deviceSigner: deviceSigner, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
+                WithdrawalRow(requestType: request.details, withdrawal: withdrawal)
             } detail: {
                 WithdrawalDetails(request: request, withdrawal: withdrawal)
             }
-        case .conversionRequest(let conversion):
-            ApprovalRequestRow(user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
-                ConversionRow(requestType: request.requestType, conversion: conversion)
-            } detail: {
-                ConversionDetails(request: request, conversion: conversion)
-            }
-        case .signersUpdate(let signersUpdate):
-            ApprovalRequestRow(user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
-                SignerUpdateRow(requestType: request.requestType, signersUpdate: signersUpdate)
-            } detail: {
-                SignerUpdateDetails(request: request, signersUpdate: signersUpdate)
-            }
-        case .walletCreation(let walletCreation):
-            ApprovalRequestRow(user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
-                WalletCreationRow(requestType: request.requestType, accountCreation: walletCreation)
+        case .bitcoinWalletCreation(let walletCreation as WalletCreation),
+             .ethereumWalletCreation(let walletCreation as WalletCreation):
+            ApprovalRequestRow(deviceSigner: deviceSigner, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
+                WalletCreationRow(requestType: request.details, accountCreation: walletCreation)
             } detail: {
                 WalletCreationDetails(request: request, accountCreation: walletCreation)
             }
-        case .dAppTransactionRequest(let dAppTransactionRequest):
-            ApprovalRequestRow(user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
-                DAppTransactionRow(requestType: request.requestType, transactionRequest: dAppTransactionRequest)
+        case .ethereumDAppTransactionRequest(let dAppTransactionRequest):
+            ApprovalRequestRow(deviceSigner: deviceSigner, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
+                DAppTransactionRow(requestType: request.details, transactionRequest: dAppTransactionRequest)
             } detail: {
                 DAppTransactionDetails(request: request, transactionRequest: dAppTransactionRequest)
             }
-        case .balanceAccountNameUpdate(let balanceAccountNameUpdate): // 3
-            ApprovalRequestRow(user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
-                BalanceAccountNameRow(requestType: request.requestType, update: balanceAccountNameUpdate)
+        case .ethereumWalletNameUpdate(let walletNameUpdate): // 3
+            ApprovalRequestRow(deviceSigner: deviceSigner, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
+                BalanceAccountNameRow(requestType: request.details, update: walletNameUpdate)
             } detail: {
-                BalanceAccountNameDetails(request: request, update: balanceAccountNameUpdate)
+                BalanceAccountNameDetails(request: request, update: walletNameUpdate)
             }
-        case .balanceAccountPolicyUpdate(let balanceAccountPolicyUpdate): // 2
-            ApprovalRequestRow(user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
-                BalanceAccountPolicyRow(requestType: request.requestType, update: balanceAccountPolicyUpdate)
+//        case .ethereumTransferPolicyUpdate(let balanceAccountPolicyUpdate): // 2
+//            ApprovalRequestRow(user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
+//                BalanceAccountPolicyRow(requestType: request.requestType, update: balanceAccountPolicyUpdate)
+//            } detail: {
+//                BalanceAccountPolicyDetails(request: request, update: balanceAccountPolicyUpdate, user: user)
+//            }
+        case .ethereumWalletSettingsUpdate(let walletSettingsUpdate): // 5
+            ApprovalRequestRow(deviceSigner: deviceSigner, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
+                BalanceAccountSettingsRow(requestType: request.details, update: walletSettingsUpdate)
             } detail: {
-                BalanceAccountPolicyDetails(request: request, update: balanceAccountPolicyUpdate, user: user)
-            }
-        case .balanceAccountSettingsUpdate(let balanceAccountSettingsUpdate): // 5
-            ApprovalRequestRow(user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
-                BalanceAccountSettingsRow(requestType: request.requestType, update: balanceAccountSettingsUpdate)
-            } detail: {
-                BalanceAccountSettingsDetails(request: request, update: balanceAccountSettingsUpdate, user: user)
+                BalanceAccountSettingsDetails(request: request, update: walletSettingsUpdate, user: user)
             }
         case .addressBookUpdate(let addressBookUpdate): // 4 - remove whitelist
-            ApprovalRequestRow(user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
-                AddressBookUpdateRow(requestType: request.requestType, update: addressBookUpdate)
+            ApprovalRequestRow(deviceSigner: deviceSigner, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
+                AddressBookUpdateRow(requestType: request.details, update: addressBookUpdate)
             } detail: {
                 AddressBookUpdateDetails(request: request, update: addressBookUpdate)
             }
-        case .dAppBookUpdate(let dAppBookUpdate):
-            UnknownRequestRow(request: request, timerPublisher: timerPublisher)
-        case .walletConfigPolicyUpdate(let walletConfigPolicyUpdate): // 1
-            ApprovalRequestRow(user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
-                WalletConfigPolicyRow(requestType: request.requestType, update: walletConfigPolicyUpdate)
+//        case .dAppBookUpdate(let dAppBookUpdate):
+//            UnknownRequestRow(request: request, timerPublisher: timerPublisher)
+//        case .ethereumWalletConfigPolicyUpdate(let walletConfigPolicyUpdate): // 1
+//            ApprovalRequestRow(user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
+//                WalletConfigPolicyRow(requestType: request.requestType, update: walletConfigPolicyUpdate)
+//            } detail: {
+//                WalletConfigPolicyDetails(request: request, update: walletConfigPolicyUpdate)
+//            }
+//        case .solanaWrapConversionRequest(let wrapConversionRequest):
+//            ApprovalRequestRow(user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
+//                WrapConversionRow(requestType: request.details, conversion: wrapConversionRequest)
+//            } detail: {
+//                WrapConversionDetail(request: request, conversion: wrapConversionRequest)
+//            }
+        case .ethereumWalletWhitelistUpdate(let walletWhitelistUpdate):
+            ApprovalRequestRow(deviceSigner: deviceSigner, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
+                BalanceAccountWhitelistRow(requestType: request.details, update: walletWhitelistUpdate)
             } detail: {
-                WalletConfigPolicyDetails(request: request, update: walletConfigPolicyUpdate)
-            }
-        case .wrapConversionRequest(let wrapConversionRequest):
-            ApprovalRequestRow(user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
-                WrapConversionRow(requestType: request.requestType, conversion: wrapConversionRequest)
-            } detail: {
-                WrapConversionDetail(request: request, conversion: wrapConversionRequest)
-            }
-        case .balanceAccountAddressWhitelistUpdate(let balanceAccountAddressWhitelistUpdate):
-            ApprovalRequestRow(user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
-                BalanceAccountWhitelistRow(requestType: request.requestType, update: balanceAccountAddressWhitelistUpdate)
-            } detail: {
-                BalanceAccountWhitelistDetails(request: request, update: balanceAccountAddressWhitelistUpdate, user: user)
+                BalanceAccountWhitelistDetails(request: request, update: walletWhitelistUpdate, user: user)
             }
         case .loginApproval(let login):
-            ApprovalRequestRow(user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
-                LoginRow(requestType: request.requestType, login: login)
+            ApprovalRequestRow(deviceSigner: deviceSigner, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
+                LoginRow(requestType: request.details, login: login)
             } detail: {
-                LoginDetails(requestType: request.requestType, login: login)
+                LoginDetails(requestType: request.details, login: login)
             }
-        case .acceptVaultInvitation(let acceptVaultInvitation):
-            ApprovalRequestRow(user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
-                AcceptVaultInvitationRow(requestType: request.requestType, acceptVaultInvitation: acceptVaultInvitation)
+        case .vaultInvitation(let acceptVaultInvitation):
+            ApprovalRequestRow(deviceSigner: deviceSigner, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
+                AcceptVaultInvitationRow(requestType: request.details, acceptVaultInvitation: acceptVaultInvitation)
             } detail: {
-                AcceptVaultInvitationDetails(requestType: request.requestType, acceptVaultInvitation: acceptVaultInvitation)
+                AcceptVaultInvitationDetails(requestType: request.details, acceptVaultInvitation: acceptVaultInvitation)
             }
         case .passwordReset:
-            ApprovalRequestRow(user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
-                PasswordResetRow(requestType: request.requestType, email: request.submitterEmail)
+            ApprovalRequestRow(deviceSigner: deviceSigner, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
+                PasswordResetRow(requestType: request.details, email: request.submitterEmail)
             } detail: {
-                PasswordResetDetails(requestType: request.requestType)
+                PasswordResetDetails(requestType: request.details)
             }
-        case .signData:
+        default:
             UnknownRequestRow(request: request, timerPublisher: timerPublisher)
         }
     }
 }
+
+protocol WithdrawalRequest {
+    var account: AccountInfo { get }
+    var symbolAndAmountInfo: SymbolAndAmountInfo { get }
+    var destination: DestinationAddress { get }
+}
+
+extension BitcoinWithdrawalRequest: WithdrawalRequest {}
+
+extension EthereumWithdrawalRequest: WithdrawalRequest {}
+
+protocol WalletCreation {
+    var accountSlot: UInt8 { get }
+    var accountInfo: AccountInfo { get }
+    var approvalPolicy: ApprovalPolicy { get }
+    var whitelistEnabled: BooleanSetting { get }
+    var dappsEnabled: BooleanSetting { get }
+    var addressBookSlot: UInt8 { get }
+}
+
+extension BitcoinWalletCreation: WalletCreation {}
+
+extension EthereumWalletCreation: WalletCreation {}
+

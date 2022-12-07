@@ -10,8 +10,8 @@ import SwiftUI
 
 
 struct BalanceAccountWhitelistRow: View {
-    var requestType: SolanaApprovalRequestType
-    var update: BalanceAccountAddressWhitelistUpdate
+    var requestType: ApprovalRequestType
+    var update: EthereumWalletWhitelistUpdate
 
     var body: some View {
         VStack(spacing: 8) {
@@ -24,7 +24,7 @@ struct BalanceAccountWhitelistRow: View {
                 .foregroundColor(Color.white)
                 .padding(EdgeInsets(top: 15, leading: 20, bottom: 0, trailing: 20))
             
-            Text(update.accountInfo.name.toWalletName())
+            Text(update.account.name.toWalletName())
                 .font(.title3)
                 .foregroundColor(Color.white.opacity(0.8))
                 .padding(EdgeInsets(top: 2, leading: 20, bottom: 20, trailing: 20))
@@ -35,13 +35,13 @@ struct BalanceAccountWhitelistRow: View {
 #if DEBUG
 struct BalanceAccountWhitelistRow_Previews: PreviewProvider {
     static var previews: some View {
-        BalanceAccountWhitelistRow(requestType: .balanceAccountAddressWhitelistUpdate(.sample), update: .sample)
+        BalanceAccountWhitelistRow(requestType: .ethereumWalletWhitelistUpdate(.sample), update: .sample)
     }
 }
 
-extension BalanceAccountAddressWhitelistUpdate {
+extension EthereumWalletWhitelistUpdate {
     static var sample: Self {
-        BalanceAccountAddressWhitelistUpdate(accountInfo: .sample, destinations: [.sample, .sample], signingData: .sample)
+        EthereumWalletWhitelistUpdate(account: .sample, destinations: [.sample, .sample], signingData: .sample)
     }
 }
 #endif

@@ -10,7 +10,7 @@ import SwiftUI
 
 struct BalanceAccountNameDetails: View {
     var request: ApprovalRequest
-    var update: BalanceAccountNameUpdate
+    var update: EthereumWalletNameUpdate
 
     var body: some View {
         VStack(alignment: .center, spacing: 10) {
@@ -27,7 +27,7 @@ struct BalanceAccountNameDetails_Previews: PreviewProvider {
         let timerPublisher = Timer.TimerPublisher(interval: 1, runLoop: .current, mode: .default).autoconnect()
 
         NavigationView {
-            ApprovalRequestDetails(user: .sample, request: .sample, timerPublisher: timerPublisher) {
+            ApprovalRequestDetails(deviceSigner: DeviceSigner(deviceKey: .sample, encryptedRootSeed: Data()), user: .sample, request: .sample, timerPublisher: timerPublisher) {
                 BalanceAccountNameDetails(request: .sample, update: .sample)
             }
         }

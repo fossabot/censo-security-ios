@@ -10,7 +10,7 @@ import SwiftUI
 
 
 struct WithdrawalRow: View {
-    var requestType: SolanaApprovalRequestType
+    var requestType: ApprovalRequestType
     var withdrawal: WithdrawalRequest
 
     var body: some View {
@@ -136,8 +136,8 @@ extension NumberFormatter {
 #if DEBUG
 struct WithdrawalRow_Previews: PreviewProvider {
     static var previews: some View {
-        WithdrawalRow(requestType: .withdrawalRequest(.sample), withdrawal: .sample)
-        WithdrawalRow(requestType: .withdrawalRequest(.feeBump), withdrawal: .feeBump)
+        WithdrawalRow(requestType: .ethereumWithdrawalRequest(.sample), withdrawal: EthereumWithdrawalRequest.sample)
+        WithdrawalRow(requestType: .ethereumWithdrawalRequest(.sample), withdrawal: EthereumWithdrawalRequest.sample)
     }
 }
 #endif

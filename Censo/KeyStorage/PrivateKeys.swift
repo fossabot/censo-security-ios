@@ -9,12 +9,10 @@ import Foundation
 import CryptoKit
 
 struct PrivateKeys {
-    fileprivate let solanaPublicKey: String
     fileprivate let bitcoinPublicKey: String
     fileprivate let ethereumPublicKey: String
     fileprivate let censoPublicKey: String
 
-    fileprivate let solanaSignature: (Data) throws -> String
     fileprivate let bitcoinSignature: (Data, DerivationNode?) throws -> String
     fileprivate let ethereumSignature: (Data) throws -> String
     fileprivate let censoSignature: (Data) throws -> String
@@ -23,7 +21,6 @@ struct PrivateKeys {
 extension PrivateKeys {
     var publicKeys: PublicKeys {
         PublicKeys(
-            solana: solanaPublicKey,
             bitcoin: bitcoinPublicKey,
             ethereum: ethereumPublicKey,
             censo: censoPublicKey
@@ -33,30 +30,17 @@ extension PrivateKeys {
 
 extension PrivateKeys {
     init(rootSeed: [UInt8]) throws {
-        let solanaPrivateKey = try Ed25519HierachicalPrivateKey.fromRootSeed(rootSeed: rootSeed).privateKey
         let bitcoinPrivateKey = try Secp256k1HierarchicalKey.fromRootSeed(rootSeed: rootSeed, derivationPath: Secp256k1HierarchicalKey.bitcoinDerivationPath)
         let ethereumPrivateKey = try Secp256k1HierarchicalKey.fromRootSeed(rootSeed: rootSeed, derivationPath: Secp256k1HierarchicalKey.ethereumDerivationPath)
         let censoPrivateKey = try Secp256k1HierarchicalKey.fromRootSeed(rootSeed: rootSeed, derivationPath: Secp256k1HierarchicalKey.censoDerivationPath)
 
-        try solanaPrivateKey.verify()
         try bitcoinPrivateKey.verify()
         try ethereumPrivateKey.verify()
         try censoPrivateKey.verify()
 
-        self.solanaPublicKey = solanaPrivateKey.base58EncodedPublicKey
         self.bitcoinPublicKey = bitcoinPrivateKey.getBase58ExtendedPublicKey()
         self.ethereumPublicKey = ethereumPrivateKey.getBase58UncompressedPublicKey()
         self.censoPublicKey = censoPrivateKey.getBase58UncompressedPublicKey()
-
-        self.solanaSignature = {
-            let signature = try solanaPrivateKey.signature(for: $0)
-
-            if solanaPrivateKey.publicKey.isValidSignature(signature, for: $0) {
-                return signature.base64EncodedString()
-            } else {
-                throw PrivateKeyError.badKey
-            }
-        }
 
         self.bitcoinSignature = {
             if let derivationNode = $1 {
@@ -102,8 +86,6 @@ extension PrivateKeys {
 
     func publicKey(for chain: Chain) -> String {
         switch chain {
-        case .solana:
-            return solanaPublicKey
         case .bitcoin:
             return bitcoinPublicKey
         case .ethereum:
@@ -115,8 +97,6 @@ extension PrivateKeys {
 
     func signature(for data: Data, chain: Chain, derivationPath: DerivationNode? = nil) throws -> String {
         switch chain {
-        case .solana:
-            return try solanaSignature(data)
         case .bitcoin:
             return try bitcoinSignature(data, derivationPath)
         case .ethereum:

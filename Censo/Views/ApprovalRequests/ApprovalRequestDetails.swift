@@ -19,14 +19,16 @@ struct ApprovalRequestDetails<Content>: View where Content : View {
     @State private var isComposingMail = false
     @State private var timeRemaining: DateComponents = DateComponents()
 
+    var deviceSigner: DeviceSigner
     var user: CensoApi.User
     var request: ApprovalRequest
     var timerPublisher: Publishers.Autoconnect<Timer.TimerPublisher>
     var onStatusChange: (() -> Void)?
     @ViewBuilder var content: () -> Content
+
     var statusTitle: String {
-        switch request.requestType {
-        case .acceptVaultInvitation:
+        switch request.details {
+        case .vaultInvitation:
             return ""
         default:
             return "STATUS"
@@ -38,7 +40,7 @@ struct ApprovalRequestDetails<Content>: View where Content : View {
             ScrollView(.vertical) {
                 VStack(alignment: .center, spacing: 15) {
                     VStack(alignment: .center, spacing: 0) {
-                        Text(request.requestType.header)
+                        Text(request.details.header)
                             .font(.title)
                             .bold()
                             .lineLimit(1)
@@ -48,7 +50,7 @@ struct ApprovalRequestDetails<Content>: View where Content : View {
                             .foregroundColor(Color.white)
                             .padding(.top, 20)
 
-                        if let header2 = request.requestType.header2 {
+                        if let header2 = request.details.header2 {
                             Text(header2)
                                 .font(.title2)
                                 .lineLimit(1)
@@ -59,7 +61,7 @@ struct ApprovalRequestDetails<Content>: View where Content : View {
                                 .padding(.top, 5)
                         }
                         
-                        if let subHeader = request.requestType.subHeader {
+                        if let subHeader = request.details.subHeader {
                             Text(subHeader)
                                 .font(.caption)
                                 .foregroundColor(Color.white.opacity(0.5))
@@ -75,8 +77,8 @@ struct ApprovalRequestDetails<Content>: View where Content : View {
                             Fact("Vault Name", vaultName)
                         }
 
-                        switch request.requestType {
-                        case .acceptVaultInvitation:
+                        switch request.details {
+                        case .vaultInvitation:
                             Fact("Invited By", request.submitterName)
                             Fact("Invited By Email", request.submitterEmail) {
                                 isComposingMail = true
@@ -108,20 +110,20 @@ struct ApprovalRequestDetails<Content>: View where Content : View {
 
             VStack(alignment: .center, spacing: 15) {
                 Button {
-                    switch request.requestType {
+                    switch request.details {
                     case .loginApproval:
                         ignore()
                     default:
                         alert = .ignoreConfirmation
                     }
                 } label: {
-                    Text(request.details.ignoreCaption.capitalized)
+                    Text(request.ignoreCaption.capitalized)
                         .loadingIndicator(when: action == .ignoring)
                 }
                 .buttonStyle(DestructiveButtonStyle())
 
                 Button {
-                    switch request.requestType {
+                    switch request.details {
                     case .loginApproval:
                         approve()
                     default:
@@ -149,14 +151,14 @@ struct ApprovalRequestDetails<Content>: View where Content : View {
             case .approveConfirmation:
                 return Alert(
                     title: Text("Are you sure?"),
-                    message: Text("You are about to approve the following request:\n \(request.requestType.header)"),
+                    message: Text("You are about to approve the following request:\n \(request.details.header)"),
                     primaryButton: Alert.Button.default(Text("Confirm"), action: approve),
                     secondaryButton: Alert.Button.cancel(Text("Cancel"))
                 )
             case .ignoreConfirmation:
                 return Alert(
                     title: Text("Are you sure?"),
-                    message: Text("You are about to \(request.details.ignoreCaption) the following request:\n \(request.requestType.header)"),
+                    message: Text("You are about to \(request.ignoreCaption) the following request:\n \(request.details.header)"),
                     primaryButton: Alert.Button.default(Text("Confirm"), action: ignore),
                     secondaryButton: Alert.Button.cancel(Text("Cancel"))
                 )
@@ -202,43 +204,33 @@ struct ApprovalRequestDetails<Content>: View where Content : View {
     private func approve() {
         action = .approving
 
-        censoApi.provider.requestWithNonces(
-            accountAddresses: request.requestType.nonceAccountAddresses,
-            accountAddressesSlot: request.requestType.nonceAccountAddressesSlot
-        ) { nonces in
-            switch request.details {
-            case .approval(let requestType):
-                return .registerApprovalDisposition(
-                    CensoApi.ApprovalDispositionRequest(
-                        disposition: .Approve,
-                        requestID: request.id,
-                        requestType: requestType,
-                        nonces: nonces,
-                        email: user.loginName
-                    )
-                )
-            case .multisigOpInitiation(let initiation, let requestType):
-                return .initiateRequest(
-                    CensoApi.InitiationRequest(
-                        disposition: .Approve,
-                        requestID: request.id,
-                        initiation: initiation,
-                        requestType: requestType,
-                        nonces: nonces,
-                        email: user.loginName,
-                        opAccountPrivateKey: Curve25519.Signing.PrivateKey()
-                    )
-                )
+        Task {
+            defer {
+                action = .none
             }
-        } completion: { result in
-            action = .none
 
-            switch result {
-            case .failure(let error):
-                print(error)
-                alert = .approveError(error)
-            case .success:
-                onStatusChange?()
+            do {
+                let request = ApprovalDispositionRequest(disposition: .Approve, request: request)
+
+                _ = try await censoApi.provider.request(
+                    .registerApprovalDisposition(
+                        CensoApi.ApprovalDispositionPayload(
+                            dispositionRequest: request,
+                            deviceSigner: deviceSigner,
+                            apiProvider: censoApi.provider
+                        ),
+                        devicePublicKey: try deviceSigner.devicePublicKey()
+                    )
+                )
+
+                await MainActor.run {
+                    onStatusChange?()
+                }
+            } catch {
+                await MainActor.run {
+                    print(error)
+                    alert = .approveError(error)
+                }
             }
         }
     }
@@ -246,43 +238,33 @@ struct ApprovalRequestDetails<Content>: View where Content : View {
     private func ignore() {
         action = .ignoring
 
-        censoApi.provider.requestWithNonces(
-            accountAddresses: request.requestType.nonceAccountAddresses,
-            accountAddressesSlot: request.requestType.nonceAccountAddressesSlot
-        ) { nonces in
-            switch request.details {
-            case .approval(let requestType):
-                return .registerApprovalDisposition(
-                    CensoApi.ApprovalDispositionRequest(
-                        disposition: .Deny,
-                        requestID: request.id,
-                        requestType: requestType,
-                        nonces: nonces,
-                        email: user.loginName
-                    )
-                )
-            case .multisigOpInitiation(let initiation, let requestType):
-                return .initiateRequest(
-                    CensoApi.InitiationRequest(
-                        disposition: .Deny,
-                        requestID: request.id,
-                        initiation: initiation,
-                        requestType: requestType,
-                        nonces: nonces,
-                        email: user.loginName,
-                        opAccountPrivateKey: Curve25519.Signing.PrivateKey()
-                    )
-                )
+        Task {
+            defer {
+                action = .none
             }
-        } completion: { result in
-            action = .none
 
-            switch result {
-            case .failure(let error):
-                print(error)
-                alert = .ignoreError(error)
-            case .success:
-                onStatusChange?()
+            do {
+                let request = ApprovalDispositionRequest(disposition: .Deny, request: request)
+
+                _ = try await censoApi.provider.request(
+                    .registerApprovalDisposition(
+                        CensoApi.ApprovalDispositionPayload(
+                            dispositionRequest: request,
+                            deviceSigner: deviceSigner,
+                            apiProvider: censoApi.provider
+                        ),
+                        devicePublicKey: try deviceSigner.devicePublicKey()
+                    )
+                )
+
+                await MainActor.run {
+                    onStatusChange?()
+                }
+            } catch {
+                await MainActor.run {
+                    print(error)
+                    alert = .ignoreError(error)
+                }
             }
         }
     }
@@ -317,14 +299,9 @@ extension ApprovalRequestDetails {
     }
 }
 
-extension SolanaApprovalRequestDetails {
+extension ApprovalRequest {
     var ignoreCaption: String {
-        switch self {
-        case .multisigOpInitiation:
-            return "cancel"
-        case .approval:
-            return "deny"
-        }
+        return "deny"
     }
 }
 
@@ -335,8 +312,8 @@ struct ApprovalRequestDetails_Previews: PreviewProvider {
         let timerPublisher = Timer.TimerPublisher(interval: 1, runLoop: .current, mode: .default).autoconnect()
 
         NavigationView {
-            ApprovalRequestDetails(user: .sample, request: .sample, timerPublisher: timerPublisher) {
-                WithdrawalDetails(request: .sample, withdrawal: .sample)
+            ApprovalRequestDetails(deviceSigner: DeviceSigner(deviceKey: .sample, encryptedRootSeed: Data()), user: .sample, request: .sample, timerPublisher: timerPublisher) {
+                WithdrawalDetails(request: .sample, withdrawal: EthereumWithdrawalRequest.sample)
             }
         }
     }

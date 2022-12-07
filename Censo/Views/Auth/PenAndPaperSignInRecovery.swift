@@ -19,6 +19,7 @@ struct PenAndPaperSignInRecovery: View {
 
     var email: String
     var authProvider: CensoAuthProvider
+    var deviceKey: DeviceKey
 
     enum AlertType: Int, Identifiable {
         var id: Int { rawValue }
@@ -129,17 +130,16 @@ struct PenAndPaperSignInRecovery: View {
     private func finish() {
         do {
             let rootSeed = try Mnemonic(phrase: typedPhrase.map({ $0.lowercased().trimmingCharacters(in: .whitespaces) })).seed
-            let privateKeys = try PrivateKeys(rootSeed: rootSeed)
 
             signingIn = true
 
-            authProvider.authenticate(.signature(email: email, privateKeys: privateKeys)) { error in
+            authProvider.authenticate(.signature(email: email, deviceKey: deviceKey)) { error in
                 signingIn = false
 
                 if let _ = error {
                     alert = .couldNotSignIn
                 } else {
-                    try? Keychain.saveRootSeed(rootSeed, email: email)
+                    try? Keychain.saveRootSeed(rootSeed, email: email, deviceKey: deviceKey)
                 }
             }
         } catch {
@@ -152,7 +152,7 @@ struct PenAndPaperSignInRecovery: View {
 struct PenAndPaperSignInRecovery_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            PenAndPaperSignInRecovery(email: "", authProvider: CensoAuthProvider())
+            PenAndPaperSignInRecovery(email: "", authProvider: CensoAuthProvider(), deviceKey: .sample)
         }
     }
 }

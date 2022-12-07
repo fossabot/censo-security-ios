@@ -11,6 +11,7 @@ struct PasswordManager: View {
     @Environment(\.presentationMode) var presentationMode
 
     var user: CensoApi.User
+    var deviceKey: DeviceKey
     var phrase: [String]
     var onSuccess: () -> Void
 
@@ -72,7 +73,7 @@ struct PasswordManager: View {
             Spacer()
 
             NavigationLink {
-                PasswordManagerConfirm(user: user, phrase: phrase, onSuccess: onSuccess)
+                PasswordManagerConfirm(user: user, deviceKey: deviceKey, phrase: phrase, onSuccess: onSuccess)
             } label: {
                 Text("I saved the phrase →")
                     .frame(maxWidth: .infinity)
@@ -96,7 +97,7 @@ struct PasswordManager: View {
 struct PasswordManager_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            PasswordManager(user: .sample, phrase: [], onSuccess: {})
+            PasswordManager(user: .sample, deviceKey: .sample, phrase: [], onSuccess: {})
         }
     }
 }

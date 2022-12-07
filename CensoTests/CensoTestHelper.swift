@@ -13,7 +13,7 @@ import CryptoKit
 
 extension CensoTests {
 
-    func getSignersUpdateRequestForApproval(nonceAccountAddresses: [String]) ->  SolanaApprovalRequestType {
+    func getSignersUpdateRequestForApproval(nonceAccountAddresses: [String]) ->  ApprovalRequestType {
         return
             .signersUpdate(
             SignersUpdate(
@@ -40,7 +40,7 @@ extension CensoTests {
         )
     }
 
-    func getSignersUpdateRequest(nonceAccountAddresses: [String]) ->  SolanaApprovalRequestType {
+    func getSignersUpdateRequest(nonceAccountAddresses: [String]) ->  ApprovalRequestType {
         return
             .signersUpdate(
             SignersUpdate(
@@ -71,7 +71,7 @@ extension CensoTests {
         return getApprovalRequest(getSignersUpdateRequest(nonceAccountAddresses: nonceAccountAddresses))
     }
         
-    func getSolanaWalletCreationRequest(nonceAccountAddresses: [String]) -> SolanaApprovalRequestType {
+    func getSolanaWalletCreationRequest(nonceAccountAddresses: [String]) -> ApprovalRequestType {
         return .walletCreation(
             WalletCreation(
                 accountSlot: 0,
@@ -111,7 +111,7 @@ extension CensoTests {
         )
     }
     
-    func getBitcoinWalletCreationRequest() -> SolanaApprovalRequestType {
+    func getBitcoinWalletCreationRequest() -> ApprovalRequestType {
         return .walletCreation(
             WalletCreation(
                 accountSlot: 0,
@@ -140,7 +140,7 @@ extension CensoTests {
         )
     }
     
-    func getEthereumWalletCreationRequest() -> SolanaApprovalRequestType {
+    func getEthereumWalletCreationRequest() -> ApprovalRequestType {
         return .walletCreation(
             WalletCreation(
                 accountSlot: 0,
@@ -169,7 +169,7 @@ extension CensoTests {
         )
     }
  
-    func getSolWithdrawalRequest(nonceAccountAddresses: [String]) -> SolanaApprovalRequestType {
+    func getSolWithdrawalRequest(nonceAccountAddresses: [String]) -> ApprovalRequestType {
         return .withdrawalRequest(
             WithdrawalRequest(
                 account: AccountInfo(
@@ -217,7 +217,7 @@ extension CensoTests {
     }
 
     
-    func getSplWithdrawalRequest(nonceAccountAddresses: [String]) -> SolanaApprovalRequestType {
+    func getSplWithdrawalRequest(nonceAccountAddresses: [String]) -> ApprovalRequestType {
         return .withdrawalRequest(
             WithdrawalRequest(
                 account: AccountInfo(
@@ -265,7 +265,7 @@ extension CensoTests {
     }
 
 
-    func getConversionRequest(nonceAccountAddresses: [String]) -> SolanaApprovalRequestType {
+    func getConversionRequest(nonceAccountAddresses: [String]) -> ApprovalRequestType {
         return .conversionRequest(
             ConversionRequest(
                 account: AccountInfo(
@@ -320,7 +320,7 @@ extension CensoTests {
         )
     }
     
-    func getWrapConversionRequest(nonceAccountAddresses: [String]) -> SolanaApprovalRequestType {
+    func getWrapConversionRequest(nonceAccountAddresses: [String]) -> ApprovalRequestType {
         return .wrapConversionRequest(
             WrapConversionRequest(
                 account: AccountInfo(
@@ -369,7 +369,7 @@ extension CensoTests {
         )
     }
     
-    func getUnwrapConversionRequest(nonceAccountAddresses: [String]) -> SolanaApprovalRequestType {
+    func getUnwrapConversionRequest(nonceAccountAddresses: [String]) -> ApprovalRequestType {
         return .wrapConversionRequest(
             WrapConversionRequest(
                 account: AccountInfo(
@@ -418,7 +418,7 @@ extension CensoTests {
         )
     }
     
-    func getEthereumWithdrawalRequest() -> SolanaApprovalRequestType {
+    func getEthereumWithdrawalRequest() -> ApprovalRequestType {
         return .withdrawalRequest(
             WithdrawalRequest(
                 account: AccountInfo(name: "Account", identifier: "account-id", accountType: AccountType.BalanceAccount, address: "0xe0901cabfdaf6f08e095191ff2e18cbff6500886", chain: Chain.ethereum),
@@ -429,7 +429,7 @@ extension CensoTests {
         )
     }
  
-    func getERC20WithdrawalRequest() -> SolanaApprovalRequestType {
+    func getERC20WithdrawalRequest() -> ApprovalRequestType {
         return .withdrawalRequest(
             WithdrawalRequest(
                 account: AccountInfo(name: "Account", identifier: "account-id", accountType: AccountType.BalanceAccount, address: "0xbd877c3ab388239f3bddba430b3147853d9e1412", chain: Chain.ethereum),
@@ -440,7 +440,7 @@ extension CensoTests {
         )
     }
 
-    func getAddAddressBookEntry(nonceAccountAddresses: [String]) -> SolanaApprovalRequestType {
+    func getAddAddressBookEntry(nonceAccountAddresses: [String]) -> ApprovalRequestType {
         return .addressBookUpdate(
             AddressBookUpdate(
                 chain: Chain.solana,
@@ -464,7 +464,7 @@ extension CensoTests {
         )
     }
     
-    func getAddDAppBookEntry(nonceAccountAddresses: [String]) -> SolanaApprovalRequestType {
+    func getAddDAppBookEntry(nonceAccountAddresses: [String]) -> ApprovalRequestType {
         return .dAppBookUpdate(
             DAppBookUpdate(
                 entriesToAdd: [
@@ -489,7 +489,7 @@ extension CensoTests {
         )
     }
     
-    func getBalanceAccountSettingsUpdate(nonceAccountAddresses: [String]) -> SolanaApprovalRequestType {
+    func getBalanceAccountSettingsUpdate(nonceAccountAddresses: [String]) -> ApprovalRequestType {
         return .balanceAccountSettingsUpdate(
             BalanceAccountSettingsUpdate(
                 account: AccountInfo(
@@ -515,7 +515,7 @@ extension CensoTests {
         )
     }
     
-    func getRemoveDAppBookEntry(nonceAccountAddresses: [String]) -> SolanaApprovalRequestType {
+    func getRemoveDAppBookEntry(nonceAccountAddresses: [String]) -> ApprovalRequestType {
         return .dAppBookUpdate(
             DAppBookUpdate(
                 entriesToAdd: [],
@@ -540,7 +540,7 @@ extension CensoTests {
         )
     }
     
-    func getWalletConfigPolicyUpdate(nonceAccountAddresses: [String]) -> SolanaApprovalRequestType {
+    func getWalletConfigPolicyUpdate(nonceAccountAddresses: [String]) -> ApprovalRequestType {
         return .walletConfigPolicyUpdate(
             WalletConfigPolicyUpdate(
                 approvalPolicy: ApprovalPolicy(
@@ -571,7 +571,7 @@ extension CensoTests {
         )
     }
     
-    func getBalanceAccountPolicyUpdate(nonceAccountAddresses: [String]) -> SolanaApprovalRequestType {
+    func getBalanceAccountPolicyUpdate(nonceAccountAddresses: [String]) -> ApprovalRequestType {
         return .balanceAccountPolicyUpdate(
             BalanceAccountPolicyUpdate(
                 accountInfo: AccountInfo(
@@ -610,7 +610,7 @@ extension CensoTests {
         )
     }
     
-    func getBalanceAccountNameUpdate(nonceAccountAddresses: [String]) -> SolanaApprovalRequestType {
+    func getBalanceAccountNameUpdate(nonceAccountAddresses: [String]) -> ApprovalRequestType {
         return .balanceAccountNameUpdate(
             BalanceAccountNameUpdate(
                 accountInfo: AccountInfo(
@@ -636,7 +636,7 @@ extension CensoTests {
         )
     }
     
-    func getBalanceAccountAddressWhitelistUpdate(nonceAccountAddresses: [String]) -> SolanaApprovalRequestType {
+    func getBalanceAccountAddressWhitelistUpdate(nonceAccountAddresses: [String]) -> ApprovalRequestType {
         return .balanceAccountAddressWhitelistUpdate(
             BalanceAccountAddressWhitelistUpdate(
                 accountInfo: AccountInfo(
@@ -671,7 +671,7 @@ extension CensoTests {
         )
     }
     
-    func getDAppTransactionRequest(nonceAccountAddresses: [String]) -> SolanaApprovalRequestType {
+    func getDAppTransactionRequest(nonceAccountAddresses: [String]) -> ApprovalRequestType {
         return .dAppTransactionRequest(
             DAppTransactionRequest(
                 account: AccountInfo(
@@ -713,12 +713,12 @@ extension CensoTests {
         )
     }
     
-    func getLoginApproval(_ jwtToken: String, email: String, name: String) -> SolanaApprovalRequestType {
+    func getLoginApproval(_ jwtToken: String, email: String, name: String) -> ApprovalRequestType {
         return .loginApproval(LoginApproval(jwtToken: jwtToken, email: email, name: name))
     }
     
     
-    func getApprovalRequest(_ requestType: SolanaApprovalRequestType) -> ApprovalRequest {
+    func getApprovalRequest(_ requestType: ApprovalRequestType) -> ApprovalRequest {
         return ApprovalRequest(
             id: "1",
             submitterName: "",
@@ -734,7 +734,7 @@ extension CensoTests {
         )
     }
 
-    func getWalletInitiationRequest(_ requestType: SolanaApprovalRequestType, initiation: MultisigOpInitiation) -> ApprovalRequest {
+    func getWalletInitiationRequest(_ requestType: ApprovalRequestType, initiation: MultisigOpInitiation) -> ApprovalRequest {
         return ApprovalRequest(
             id: "1",
             submitterName: "",

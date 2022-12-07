@@ -46,7 +46,7 @@ class CensoTests: XCTestCase {
             opAccountCreationInfo: getOpAccountCreationInfo(accountSize: 3649, minBalanceForRentExemption: 26287920),
             initiatorIsApprover: true
         )
-        let requestType: SolanaApprovalRequestType = getSignersUpdateRequest(nonceAccountAddresses: ["BEhPWZKJoFDHaaJ7qTqZ6cfkR1YKDssHwttBYnp9kZir"])
+        let requestType: ApprovalRequestType = getSignersUpdateRequest(nonceAccountAddresses: ["BEhPWZKJoFDHaaJ7qTqZ6cfkR1YKDssHwttBYnp9kZir"])
         let request = getWalletInitiationRequest(requestType, initiation: initiation)
         let pk = try Curve25519.Signing.PrivateKey.init(rawRepresentation: "e754f36891ada48a4cfc71ee4673aa2c77ceaa47da3021e4b64cf56bc91df5d8".data(using: .hexadecimal)!)
         let initiationRequest = CensoApi.InitiationRequest(
@@ -93,7 +93,7 @@ class CensoTests: XCTestCase {
         let signableData = try approvalRequest.signableData(approverPublicKey: "7AH35qStXtrUgRkmqDmhjufNHjF74R1A9cCKT3C3HaAR")
         
         XCTAssertEqual(
-            try JSONDecoder().decode(SolanaApprovalRequestType.self, from: signableData),
+            try JSONDecoder().decode(ApprovalRequestType.self, from: signableData),
             approvalRequest.requestType
         )
     }
@@ -111,7 +111,7 @@ class CensoTests: XCTestCase {
         let signableData = try approvalRequest.signableData(approverPublicKey: "7AH35qStXtrUgRkmqDmhjufNHjF74R1A9cCKT3C3HaAR")
         
         XCTAssertEqual(
-            try JSONDecoder().decode(SolanaApprovalRequestType.self, from: signableData),
+            try JSONDecoder().decode(ApprovalRequestType.self, from: signableData),
             approvalRequest.requestType
         )
     }
@@ -121,7 +121,7 @@ class CensoTests: XCTestCase {
             opAccountCreationInfo: getOpAccountCreationInfo(),
             initiatorIsApprover: true
         )
-        let requestType: SolanaApprovalRequestType = getSolanaWalletCreationRequest(nonceAccountAddresses: ["CL8fZq5BzjCBXmixSMKqBsFoCLSFxqN6GvheDQ68HP44"])
+        let requestType: ApprovalRequestType = getSolanaWalletCreationRequest(nonceAccountAddresses: ["CL8fZq5BzjCBXmixSMKqBsFoCLSFxqN6GvheDQ68HP44"])
         let request = getWalletInitiationRequest(requestType, initiation: initiation)
         let pk = try Curve25519.Signing.PrivateKey.init(rawRepresentation: "2d7db52f8ff35aec03cd7be8d26c45d798774a4d5dfa9a9c559778752fb87d11".data(using: .hexadecimal)!)
         let initiationRequest = CensoApi.InitiationRequest(
@@ -160,7 +160,7 @@ class CensoTests: XCTestCase {
             opAccountCreationInfo: getOpAccountCreationInfo(),
             initiatorIsApprover: true
         )
-        let requestType: SolanaApprovalRequestType = getSolWithdrawalRequest(nonceAccountAddresses: ["CL8fZq5BzjCBXmixSMKqBsFoCLSFxqN6GvheDQ68HP44"])
+        let requestType: ApprovalRequestType = getSolWithdrawalRequest(nonceAccountAddresses: ["CL8fZq5BzjCBXmixSMKqBsFoCLSFxqN6GvheDQ68HP44"])
         let request = getWalletInitiationRequest(requestType, initiation: initiation)
         let pk = try Curve25519.Signing.PrivateKey.init(rawRepresentation: "7de2dc4f438213a502317cc43a58cbe4a23e8680a2438e9166334393effd726f".data(using: .hexadecimal)!)
         let initiationRequest = CensoApi.InitiationRequest(
@@ -200,7 +200,7 @@ class CensoTests: XCTestCase {
             opAccountCreationInfo: getOpAccountCreationInfo(),
             initiatorIsApprover: true
         )
-        let requestType: SolanaApprovalRequestType = getSplWithdrawalRequest(nonceAccountAddresses: ["6UcFAr9rqGfFEtLxnYdW6QjeRor3aej5akLpYpXUkPWX"])
+        let requestType: ApprovalRequestType = getSplWithdrawalRequest(nonceAccountAddresses: ["6UcFAr9rqGfFEtLxnYdW6QjeRor3aej5akLpYpXUkPWX"])
         let request = getWalletInitiationRequest(requestType, initiation: initiation)
         let pk = try Curve25519.Signing.PrivateKey.init(rawRepresentation: "4ba2d7074c6fa66dca792b64260b0513a229fa0849b1ceaa5b9cff1285fedee7".data(using: .hexadecimal)!)
         let initiationRequest = CensoApi.InitiationRequest(
@@ -239,7 +239,7 @@ class CensoTests: XCTestCase {
             opAccountCreationInfo: getOpAccountCreationInfo(),
             initiatorIsApprover: true
         )
-        let requestType: SolanaApprovalRequestType = getConversionRequest(nonceAccountAddresses: ["6UcFAr9rqGfFEtLxnYdW6QjeRor3aej5akLpYpXUkPWX"])
+        let requestType: ApprovalRequestType = getConversionRequest(nonceAccountAddresses: ["6UcFAr9rqGfFEtLxnYdW6QjeRor3aej5akLpYpXUkPWX"])
         let request = getWalletInitiationRequest(requestType, initiation: initiation)
         let pk = try Curve25519.Signing.PrivateKey.init(rawRepresentation: "5f27be66e3eb697a4274f9359c87f9069762a5e2cb7a63a622e923bd6119b963".data(using: .hexadecimal)!)
         let initiationRequest = CensoApi.InitiationRequest(
@@ -263,7 +263,7 @@ class CensoTests: XCTestCase {
             opAccountCreationInfo: getOpAccountCreationInfo(),
             initiatorIsApprover: true
         )
-        let requestType: SolanaApprovalRequestType = getWrapConversionRequest(nonceAccountAddresses: ["2vztVvZ75DahxgQVokC41yGyuiGNVaYiq7SvbiuJvjPn"])
+        let requestType: ApprovalRequestType = getWrapConversionRequest(nonceAccountAddresses: ["2vztVvZ75DahxgQVokC41yGyuiGNVaYiq7SvbiuJvjPn"])
         let request = getWalletInitiationRequest(requestType, initiation: initiation)
 
         let pk = try Curve25519.Signing.PrivateKey.init(rawRepresentation:                                                           "2aebddceb0b8bc6fd1de488581f3dc2a8885c10cdeb8558ee1ad61376ac4559a".data(using: .hexadecimal)!)
@@ -288,7 +288,7 @@ class CensoTests: XCTestCase {
             opAccountCreationInfo: getOpAccountCreationInfo(),
             initiatorIsApprover: true
         )
-        let requestType: SolanaApprovalRequestType = getUnwrapConversionRequest(nonceAccountAddresses: ["C2Fo1L8qFzmfucaVpLxVt7sYdUEorHYiYfNS2iPGXhxP"])
+        let requestType: ApprovalRequestType = getUnwrapConversionRequest(nonceAccountAddresses: ["C2Fo1L8qFzmfucaVpLxVt7sYdUEorHYiYfNS2iPGXhxP"])
         let request = getWalletInitiationRequest(requestType, initiation: initiation)
         let pk = try Curve25519.Signing.PrivateKey.init(rawRepresentation: "1f00703a5a544f81174fc90ddee2c11a1d43d5011c363a8f943b2adabc78ca52".data(using: .hexadecimal)!)
         let initiationRequest = CensoApi.InitiationRequest(
@@ -322,7 +322,7 @@ class CensoTests: XCTestCase {
             CensoApi.Nonce("5NW3hU46wJZWyLoLciNH1n5xhuudK5i4aU2Q7BqBf4yb")
         ]
 
-        let requestType: SolanaApprovalRequestType = getDAppTransactionRequest(nonceAccountAddresses: nonceAccountAddresses)
+        let requestType: ApprovalRequestType = getDAppTransactionRequest(nonceAccountAddresses: nonceAccountAddresses)
         let request = getWalletInitiationRequest(requestType, initiation: initiation)
         let initiationRequest = CensoApi.InitiationRequest(
             disposition: .Approve,
@@ -391,7 +391,7 @@ class CensoTests: XCTestCase {
             opAccountCreationInfo: getOpAccountCreationInfo(),
             initiatorIsApprover: true
         )
-        let requestType: SolanaApprovalRequestType = getAddDAppBookEntry(nonceAccountAddresses: ["AaFj4THN8CJmDPyJjPuDpsfC5FZys2Wmczust5UfmqeN"])
+        let requestType: ApprovalRequestType = getAddDAppBookEntry(nonceAccountAddresses: ["AaFj4THN8CJmDPyJjPuDpsfC5FZys2Wmczust5UfmqeN"])
         let request = getWalletInitiationRequest(requestType, initiation: initiation)
         let pk = try Curve25519.Signing.PrivateKey.init(rawRepresentation: "72ff8f7fb4a441c93d4003e2bf67dd367e3293311c4f9433c422a2fbf305c477".data(using: .hexadecimal)!)
         let initiationRequest = CensoApi.InitiationRequest(
@@ -430,7 +430,7 @@ class CensoTests: XCTestCase {
             opAccountCreationInfo: getOpAccountCreationInfo(),
             initiatorIsApprover: true
         )
-        let requestType: SolanaApprovalRequestType = getRemoveDAppBookEntry(nonceAccountAddresses: ["AaFj4THN8CJmDPyJjPuDpsfC5FZys2Wmczust5UfmqeN"])
+        let requestType: ApprovalRequestType = getRemoveDAppBookEntry(nonceAccountAddresses: ["AaFj4THN8CJmDPyJjPuDpsfC5FZys2Wmczust5UfmqeN"])
         let request = getWalletInitiationRequest(requestType, initiation: initiation)
         let pk = try Curve25519.Signing.PrivateKey.init(rawRepresentation: "1d3462075eae5a46257981c00c20982dd27a88b70a88ff95455dad6bc88859aa".data(using: .hexadecimal)!)
         let initiationRequest = CensoApi.InitiationRequest(
@@ -454,7 +454,7 @@ class CensoTests: XCTestCase {
             opAccountCreationInfo: getOpAccountCreationInfo(),
             initiatorIsApprover: true
        )
-        let requestType: SolanaApprovalRequestType = getAddAddressBookEntry(nonceAccountAddresses: ["8R4EuFv5f31D8HijRXA4eyebKMZ287ho2UyPpbtQ8Gos"])
+        let requestType: ApprovalRequestType = getAddAddressBookEntry(nonceAccountAddresses: ["8R4EuFv5f31D8HijRXA4eyebKMZ287ho2UyPpbtQ8Gos"])
         let request = getWalletInitiationRequest(requestType, initiation: initiation)
         let pk = try Curve25519.Signing.PrivateKey.init(rawRepresentation: "a37195e87d53a831c1947e8afe02aec367e78f62fb912f7a614c3a387cd911fa".data(using: .hexadecimal)!)
         let initiationRequest = CensoApi.InitiationRequest(
@@ -509,7 +509,7 @@ class CensoTests: XCTestCase {
             opAccountCreationInfo: getOpAccountCreationInfo(),
             initiatorIsApprover: true
         )
-        let requestType: SolanaApprovalRequestType = getWalletConfigPolicyUpdate(nonceAccountAddresses: ["5osJEyGL1Ryiv9jedyhjnMqXHQaAM6A5PK253DTCTVdf"])
+        let requestType: ApprovalRequestType = getWalletConfigPolicyUpdate(nonceAccountAddresses: ["5osJEyGL1Ryiv9jedyhjnMqXHQaAM6A5PK253DTCTVdf"])
         let request = getWalletInitiationRequest(requestType, initiation: initiation)
         let pk = try Curve25519.Signing.PrivateKey.init(rawRepresentation: "57cd2b0b1df0dd87e9001553716f2f4e9e1d2a8d0f4019f3048584cd3e83b385".data(using: .hexadecimal)!)
         let initiationRequest = CensoApi.InitiationRequest(
@@ -549,7 +549,7 @@ class CensoTests: XCTestCase {
             opAccountCreationInfo: getOpAccountCreationInfo(),
             initiatorIsApprover: true
         )
-        let requestType: SolanaApprovalRequestType = getBalanceAccountSettingsUpdate(nonceAccountAddresses: ["CL8fZq5BzjCBXmixSMKqBsFoCLSFxqN6GvheDQ68HP44"])
+        let requestType: ApprovalRequestType = getBalanceAccountSettingsUpdate(nonceAccountAddresses: ["CL8fZq5BzjCBXmixSMKqBsFoCLSFxqN6GvheDQ68HP44"])
         let request = getWalletInitiationRequest(requestType, initiation: initiation)
         let pk = try Curve25519.Signing.PrivateKey.init(rawRepresentation: "514c07777ad9cd72f1493191f785170e1c14c5e37c9c6714863c9fa425965545".data(using: .hexadecimal)!)
         let initiationRequest = CensoApi.InitiationRequest(
@@ -588,7 +588,7 @@ class CensoTests: XCTestCase {
             opAccountCreationInfo: getOpAccountCreationInfo(),
             initiatorIsApprover: true
         )
-        let requestType: SolanaApprovalRequestType = getBalanceAccountPolicyUpdate(nonceAccountAddresses: ["5Fx8Nk98DbUcNUe4izqJkcYwfaMGmKRbXi1A7fVPfzj7"])
+        let requestType: ApprovalRequestType = getBalanceAccountPolicyUpdate(nonceAccountAddresses: ["5Fx8Nk98DbUcNUe4izqJkcYwfaMGmKRbXi1A7fVPfzj7"])
         let request = getWalletInitiationRequest(requestType, initiation: initiation)
         let pk = try Curve25519.Signing.PrivateKey.init(rawRepresentation: "370349daceb62cb1ad6f37fbaba12dc72e36367c57b2ee976527609cd8d3f63e".data(using: .hexadecimal)!)
         let initiationRequest = CensoApi.InitiationRequest(
@@ -627,7 +627,7 @@ class CensoTests: XCTestCase {
             opAccountCreationInfo: getOpAccountCreationInfo(),
             initiatorIsApprover: true
         )
-        let requestType: SolanaApprovalRequestType = getBalanceAccountAddressWhitelistUpdate(nonceAccountAddresses: ["9LGMMPep1WKdiNNwicDvx8JiwgtBKPWhidaSv3rVUNz"])
+        let requestType: ApprovalRequestType = getBalanceAccountAddressWhitelistUpdate(nonceAccountAddresses: ["9LGMMPep1WKdiNNwicDvx8JiwgtBKPWhidaSv3rVUNz"])
         let request = getWalletInitiationRequest(requestType, initiation: initiation)
         let pk = try Curve25519.Signing.PrivateKey.init(rawRepresentation: "a9989f27d789b3c2266db5dbd1420e2831cacbb161d6e95bd48323911560fd11".data(using: .hexadecimal)!)
         let initiationRequest = CensoApi.InitiationRequest(
@@ -666,7 +666,7 @@ class CensoTests: XCTestCase {
             opAccountCreationInfo: getOpAccountCreationInfo(),
             initiatorIsApprover: true
         )
-        let requestType: SolanaApprovalRequestType = getBalanceAccountNameUpdate(nonceAccountAddresses: ["AaFj4THN8CJmDPyJjPuDpsfC5FZys2Wmczust5UfmqeN"])
+        let requestType: ApprovalRequestType = getBalanceAccountNameUpdate(nonceAccountAddresses: ["AaFj4THN8CJmDPyJjPuDpsfC5FZys2Wmczust5UfmqeN"])
         let request = getWalletInitiationRequest(requestType, initiation: initiation)
         let pk = try Curve25519.Signing.PrivateKey.init(rawRepresentation: "7707e53ddb688826e19d5d1d651450222c3d6cf73680fd331430278bba237328".data(using: .hexadecimal)!)
         let initiationRequest = CensoApi.InitiationRequest(

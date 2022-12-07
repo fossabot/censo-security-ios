@@ -10,7 +10,7 @@ import SwiftUI
 
 struct DAppTransactionDetails: View {
     var request: ApprovalRequest
-    var transactionRequest: DAppTransactionRequest
+    var transactionRequest: EthereumDAppTransactionRequest
 
     var body: some View {
         VStack(alignment: .center, spacing: 10) {
@@ -74,7 +74,7 @@ struct DAppTransactionDetails_Previews: PreviewProvider {
         let timerPublisher = Timer.TimerPublisher(interval: 1, runLoop: .current, mode: .default).autoconnect()
 
         NavigationView {
-            ApprovalRequestDetails(user: .sample, request: .sample, timerPublisher: timerPublisher) {
+            ApprovalRequestDetails(deviceSigner: DeviceSigner(deviceKey: .sample, encryptedRootSeed: Data()), user: .sample, request: .sample, timerPublisher: timerPublisher) {
                 DAppTransactionDetails(request: .sample, transactionRequest: .sample)
             }
         }

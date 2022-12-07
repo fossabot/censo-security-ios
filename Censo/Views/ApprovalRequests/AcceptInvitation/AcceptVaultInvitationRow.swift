@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct AcceptVaultInvitationRow: View {
-    var requestType: SolanaApprovalRequestType
+    var requestType: ApprovalRequestType
     var acceptVaultInvitation: AcceptVaultInvitation
 
     var body: some View {
@@ -32,7 +32,7 @@ struct AcceptVaultInvitationRow: View {
 #if DEBUG
 struct AcceptVaultInvitation_Previews: PreviewProvider {
     static var previews: some View {
-        AcceptVaultInvitationRow(requestType: .acceptVaultInvitation(.sample), acceptVaultInvitation: .sample)
+        AcceptVaultInvitationRow(requestType: .vaultInvitation(.sample), acceptVaultInvitation: .sample)
     }
 }
 

@@ -11,6 +11,7 @@ struct PenAndPaperConfirm: View {
     @Environment(\.presentationMode) var presentationMode
 
     var user: CensoApi.User
+    var deviceKey: DeviceKey
     var phrase: [String]
     var onSuccess: () -> Void
 
@@ -81,7 +82,7 @@ struct PenAndPaperConfirm: View {
         }
 
         NavigationLink(isActive: .constant(showingSuccess)) {
-            KeyConfirmationSuccess(user: user, phrase: phrase, onSuccess: onSuccess)
+            KeyConfirmationSuccess(user: user, deviceKey: deviceKey, phrase: phrase, onSuccess: onSuccess)
         } label: {
             EmptyView()
         }
@@ -102,7 +103,7 @@ struct PenAndPaperConfirm: View {
 struct PenAndPaperConfirm_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            PenAndPaperConfirm(user: .sample, phrase: ["these", "are", "test", "words", "they", "go", "on", "and", "on", "until", "there", "is", "no", "more", "these", "are", "test", "words", "they", "go", "on", "and", "on", "until"], onSuccess: {})
+            PenAndPaperConfirm(user: .sample, deviceKey: .sample, phrase: ["these", "are", "test", "words", "they", "go", "on", "and", "on", "until", "there", "is", "no", "more", "these", "are", "test", "words", "they", "go", "on", "and", "on", "until"], onSuccess: {})
         }
     }
 }

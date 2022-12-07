@@ -26,7 +26,7 @@ struct WalletCreationDetails: View {
             FactsSection(title: "Transfer Approvers") {
                 if accountCreation.approvalPolicy.approvers.count > 0 {
                     for approver in accountCreation.approvalPolicy.approvers {
-                        Fact(approver.value.name, approver.value.email)
+                        Fact(approver.name, approver.email)
                     }
                 } else {
                     Fact("No users may approve requests", "")
@@ -49,13 +49,13 @@ extension DateComponentsFormatter {
 #if DEBUG
 struct AccountCreationDetails_Previews: PreviewProvider {
     static var previews: some View {
-        WalletCreationDetails(request: .sample, accountCreation: .sample)
+        WalletCreationDetails(request: .sample, accountCreation: EthereumWalletCreation.sample)
 
         let timerPublisher = Timer.TimerPublisher(interval: 1, runLoop: .current, mode: .default).autoconnect()
 
         NavigationView {
-            ApprovalRequestDetails(user: .sample, request: .sample, timerPublisher: timerPublisher) {
-                WalletCreationDetails(request: .sample, accountCreation: .sample)
+            ApprovalRequestDetails(deviceSigner: DeviceSigner(deviceKey: .sample, encryptedRootSeed: Data()), user: .sample, request: .sample, timerPublisher: timerPublisher) {
+                WalletCreationDetails(request: .sample, accountCreation: EthereumWalletCreation.sample)
             }
         }
     }

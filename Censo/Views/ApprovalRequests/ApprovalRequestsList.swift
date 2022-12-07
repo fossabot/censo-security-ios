@@ -11,6 +11,7 @@ import SwiftUI
 import Combine
 
 struct ApprovalRequestsList: View {
+    var deviceSigner: DeviceSigner
     var user: CensoApi.User
     var requests: [ApprovalRequest]
     var onStatusChange: (() -> Void)?
@@ -28,6 +29,7 @@ struct ApprovalRequestsList: View {
                 } else {
                     ForEach(0..<requests.count, id: \.self) { idx in
                         ApprovalRequestItem(
+                            deviceSigner: deviceSigner,
                             user: user,
                             request: requests[idx],
                             onStatusChange: onStatusChange,
@@ -56,6 +58,7 @@ struct ApprovalRequestsList: View {
                     LazyVStack(alignment: .center, spacing: 12) {
                         ForEach(0..<requests.count, id: \.self) { idx in
                             ApprovalRequestItem(
+                                deviceSigner: deviceSigner,
                                 user: user,
                                 request: requests[idx],
                                 onStatusChange: onStatusChange,
@@ -74,7 +77,7 @@ struct ApprovalRequestsList: View {
 #if DEBUG
 struct ApprovalRequestsList_Previews: PreviewProvider {
     static var previews: some View {
-        ApprovalRequestsList(user: .sample, requests: [], onStatusChange: nil) { refreshContext in
+        ApprovalRequestsList(deviceSigner: DeviceSigner(deviceKey: .sample, encryptedRootSeed: Data()), user: .sample, requests: [], onStatusChange: nil) { refreshContext in
             refreshContext.endRefreshing()
         }
         .background(Color.Censo.primaryBackground.ignoresSafeArea())

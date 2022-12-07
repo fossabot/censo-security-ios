@@ -11,9 +11,10 @@ import BIP39
 struct KeyConfirmationSuccess: View {
     @Environment(\.censoApi) var censoApi
 
-    @RemoteResult private var signers: CensoApi.Signers?
+    @RemoteResult private var signers: CensoApi.AddSignersRequest?
 
     var user: CensoApi.User
+    var deviceKey: DeviceKey
     var phrase: [String]
     var onSuccess: () -> Void
 
@@ -71,17 +72,21 @@ struct KeyConfirmationSuccess: View {
         do {
             let rootSeed = try Mnemonic(phrase: phrase).seed
             let privateKeys = try PrivateKeys(rootSeed: rootSeed)
-            let signers = try CensoApi.Signers(privateKeys: privateKeys)
+            let signers = try CensoApi.AddSignersRequest(publicKeys: privateKeys.publicKeys, deviceKey: deviceKey)
 
             _signers.reload(
                 using: censoApi.provider.loader(
-                    for: .addWalletSigners(signers)
+                    for: .addWalletSigners(signers, devicePublicKey: try deviceKey.publicExternalRepresentation().base58String)
                 )
             ) { error in
-                do {
-                    try Keychain.saveRootSeed(rootSeed, email: user.loginName)
-                } catch {
+                if let error = error {
                     _signers.content = .failure(error)
+                } else {
+                    do {
+                        try Keychain.saveRootSeed(rootSeed, email: user.loginName, deviceKey: deviceKey)
+                    } catch {
+                        _signers.content = .failure(error)
+                    }
                 }
             }
         } catch {
@@ -90,30 +95,33 @@ struct KeyConfirmationSuccess: View {
     }
 }
 
-extension CensoApi.Signers {
-    init(privateKeys: PrivateKeys) throws {
+extension CensoApi.AddSignersRequest {
+    init(publicKeys: PublicKeys, deviceKey: DeviceKey) throws {
         self.signers = [
             CensoApi.WalletSigner(
-                publicKey: privateKeys.publicKey(for: .solana),
-                chain: .solana,
-                signature: try privateKeys.signature(for: Data(privateKeys.publicKey(for: .solana).base58Bytes), chain: .solana)
+                publicKey: publicKeys.bitcoin,
+                chain: .bitcoin
             ),
             CensoApi.WalletSigner(
-                publicKey: privateKeys.publicKey(for: .bitcoin),
-                chain: .bitcoin,
-                signature: try privateKeys.signature(for: Data(privateKeys.publicKey(for: .bitcoin).base58Bytes), chain: .solana)
+                publicKey: publicKeys.ethereum,
+                chain: .ethereum
             ),
             CensoApi.WalletSigner(
-                publicKey: privateKeys.publicKey(for: .ethereum),
-                chain: .ethereum,
-                signature: try privateKeys.signature(for: Data(privateKeys.publicKey(for: .ethereum).base58Bytes), chain: .solana)
-            ),
-            CensoApi.WalletSigner(
-                publicKey: privateKeys.publicKey(for: .censo),
-                chain: .censo,
-                signature: try privateKeys.signature(for: Data(privateKeys.publicKey(for: .censo).base58Bytes), chain: .solana)
+                publicKey: publicKeys.censo,
+                chain: .censo
             )
         ]
+
+        let bytes = signers
+            .map(\.publicKey)
+            .map { key in
+                Base58.decode(key)
+            }
+            .flatMap {
+                $0
+            }
+
+        self.signature = try deviceKey.signature(for: Data(bytes)).base64EncodedString()
     }
 }
 
@@ -121,7 +129,7 @@ extension CensoApi.Signers {
 struct KeyConfirmationSuccess_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            KeyConfirmationSuccess(user: .sample, phrase: [], onSuccess: {})
+            KeyConfirmationSuccess(user: .sample, deviceKey: .sample, phrase: [], onSuccess: {})
         }
     }
 }

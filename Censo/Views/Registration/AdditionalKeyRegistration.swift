@@ -11,9 +11,11 @@ import SwiftUI
 struct AdditionalKeyRegistration: View {
     @Environment(\.censoApi) var censoApi
 
-    @RemoteResult private var signers: CensoApi.Signers?
+    @RemoteResult private var signers: CensoApi.AddSignersRequest?
 
     var user: CensoApi.User
+    var publicKeys: PublicKeys
+    var deviceKey: DeviceKey
     var onSuccess: () -> Void
 
     var body: some View {
@@ -37,12 +39,11 @@ struct AdditionalKeyRegistration: View {
 
     private func reload() {
         do {
-            let privateKeys = try Keychain.privateKeys(email: user.loginName)
-            let signers = try CensoApi.Signers(privateKeys: privateKeys)
+            let signers = try CensoApi.AddSignersRequest(publicKeys: publicKeys, deviceKey: deviceKey)
 
             _signers.reload(
                 using: censoApi.provider.loader(
-                    for: .addWalletSigners(signers)
+                    for: .addWalletSigners(signers, devicePublicKey: try deviceKey.publicExternalRepresentation().base58String)
                 )
             ) { error in
                 if error == nil {
@@ -59,7 +60,7 @@ struct AdditionalKeyRegistration: View {
 struct AdditionalKeyRegistration_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            AdditionalKeyRegistration(user: .sample,
+            AdditionalKeyRegistration(user: .sample, publicKeys: .init(bitcoin: "", ethereum: "", censo: ""), deviceKey: .sample,
                                       onSuccess: {}
             )
         }

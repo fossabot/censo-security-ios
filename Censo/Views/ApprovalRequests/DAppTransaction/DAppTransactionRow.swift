@@ -9,8 +9,8 @@ import Foundation
 import SwiftUI
 
 struct DAppTransactionRow: View {
-    var requestType: SolanaApprovalRequestType
-    var transactionRequest: DAppTransactionRequest
+    var requestType: ApprovalRequestType
+    var transactionRequest: EthereumDAppTransactionRequest
 
     var body: some View {
         VStack(spacing: 8) {
@@ -71,7 +71,7 @@ struct DAppTransactionRow: View {
     }
 }
 
-extension DAppTransactionRequest.SymbolAndAmountInfo {
+extension EthereumDAppTransactionRequest.SymbolAndAmountInfo {
     var formattedUSDEquivalent: String? {
         guard let amount = usdEquivalent, let decimalValue = Decimal(string: amount) else {
             return nil
@@ -102,31 +102,31 @@ extension DAppTransactionRequest.SymbolAndAmountInfo {
 #if DEBUG
 struct DapTransactionRow_Previews: PreviewProvider {
     static var previews: some View {
-        DAppTransactionRow(requestType: .dAppTransactionRequest(.sample), transactionRequest: .sample)
+        DAppTransactionRow(requestType: .ethereumDAppTransactionRequest(.sample), transactionRequest: EthereumDAppTransactionRequest.sample)
     }
 }
 
-extension DAppTransactionRequest {
+extension EthereumDAppTransactionRequest {
     static var sample: Self {
-        DAppTransactionRequest(account: .sample, dappInfo: .sample, balanceChanges: [.sample, .sample], instructions: [], signingData: .sample)
+        EthereumDAppTransactionRequest(account: .sample, dappInfo: .sample, balanceChanges: [.sample, .sample], signingData: .sample)
     }
 }
 
-extension DAppTransactionRequest.SymbolAndAmountInfo {
+extension EthereumDAppTransactionRequest.SymbolAndAmountInfo {
     static var sample: Self {
-        DAppTransactionRequest.SymbolAndAmountInfo(symbolInfo: .sample, amount: "12.3", usdEquivalent: "1.23")
+        EthereumDAppTransactionRequest.SymbolAndAmountInfo(symbolInfo: .sample, amount: "12.3", usdEquivalent: "1.23")
     }
 }
 
-extension DAppTransactionRequest.SymbolAndAmountInfo.SymbolInfo {
+extension EthereumDAppTransactionRequest.SymbolAndAmountInfo.SymbolInfo {
     static var sample: Self {
-        DAppTransactionRequest.SymbolAndAmountInfo.SymbolInfo(symbol: "SOL", symbolDescription: "Solana")
+        EthereumDAppTransactionRequest.SymbolAndAmountInfo.SymbolInfo(symbol: "SOL", symbolDescription: "Solana")
     }
 }
 
-extension SolanaDApp {
+extension DAppInfo {
     static var sample: Self {
-        SolanaDApp(address: "dgfdg3tregdfg", name: "Sample DApp", logo: "http://logo.jpg")
+        DAppInfo(address: "dgfdg3tregdfg", name: "Sample DApp")
     }
 }
 

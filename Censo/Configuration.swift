@@ -13,8 +13,6 @@ struct Configuration {
     static let apiBaseURL: URL = URLValue(for: "API_BASE_URL")
     static let raygunApiKey: String = stringValue(for: "RAYGUN_API_KEY")
     static let raygunEnabled: Bool = stringValue(for: "RAYGUN_ENABLED").lowercased() == "yes"
-    static let solanaRpcURL = URLValue(for: "SOLANA_RPC_URL")
-    static let solanaCommitment = stringValue(for: "SOLANA_COMMITMENT")
     static let censoAuthBaseURL: URL = URLValue(for: "CENSO_AUTH_BASE_URL")
     static let minVersionURL: URL = URLValue(for: "MIN_VERSION_URL")
 }

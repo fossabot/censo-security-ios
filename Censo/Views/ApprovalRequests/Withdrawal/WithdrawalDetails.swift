@@ -51,18 +51,12 @@ extension DateFormatter {
 #if DEBUG
 struct WithdrawalDetails_Previews: PreviewProvider {
     static var previews: some View {
-        WithdrawalDetails(request: .sample, withdrawal: .sample)
+        WithdrawalDetails(request: .sample, withdrawal: EthereumWithdrawalRequest.sample)
         let timerPublisher = Timer.TimerPublisher(interval: 1, runLoop: .current, mode: .default).autoconnect()
 
         NavigationView {
-            ApprovalRequestDetails(user: .sample, request: .sample, timerPublisher: timerPublisher) {
-                WithdrawalDetails(request: .sample, withdrawal: .sample)
-            }
-        }
-        
-        NavigationView {
-            ApprovalRequestDetails(user: .sample, request: .feeBump, timerPublisher: timerPublisher) {
-                WithdrawalDetails(request: .feeBump, withdrawal: .feeBump)
+            ApprovalRequestDetails(deviceSigner: DeviceSigner(deviceKey: .sample, encryptedRootSeed: Data()), user: .sample, request: .sample, timerPublisher: timerPublisher) {
+                WithdrawalDetails(request: .sample, withdrawal: EthereumWithdrawalRequest.sample)
             }
         }
     }
