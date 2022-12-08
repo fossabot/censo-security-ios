@@ -60,8 +60,8 @@
 		<string>$(SOLANA_COMMITMENT)</string>
 		<key>SOLANA_RPC_URL</key>
 		<string>$(SOLANA_RPC_URL)</string>
-		<key>STRIKE_AUTH_BASE_URL</key>
-		<string>$(STRIKE_AUTH_BASE_URL)</string>
+		<key>CENSO_AUTH_BASE_URL</key>
+		<string>$(CENSO_AUTH_BASE_URL)</string>
 	</dict>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>

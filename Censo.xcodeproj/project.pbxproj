@@ -1144,9 +1144,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				API_BASE_URL = "https://brooklyn-demo2.strikeprotocols.com";
+				API_BASE_URL = "https://brooklyn-demo2.censocustody.com";
 				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
-				CENSO_AUTH_BASE_URL = "https://demo2.strikeprotocols.com";
+				CENSO_AUTH_BASE_URL = "https://demo2.censocustody.com";
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -1195,7 +1195,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
-				MIN_VERSION_URL = "https://strike-public-assets.s3.amazonaws.com/strike-security-app-version-dev.json";
+				MIN_VERSION_URL = "https://strike-public-assets.s3.amazonaws.com/censo-security-app-version-dev.json";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1204,7 +1204,7 @@
 				RAYGUN_ENABLED = no;
 				SDKROOT = iphoneos;
 				SOLANA_COMMITMENT = confirmed;
-				SOLANA_RPC_URL = "https://solana-validator-demo2.strikeprotocols.com";
+				SOLANA_RPC_URL = "https://solana-validator-demo2.censocustody.com";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -1274,9 +1274,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				API_BASE_URL = "https://brooklyn-demo2.strikeprotocols.com";
+				API_BASE_URL = "https://brooklyn-demo2.censocustodycom";
 				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
-				CENSO_AUTH_BASE_URL = "https://demo2.strikeprotocols.com";
+				CENSO_AUTH_BASE_URL = "https://demo2.censocustody.com";
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -1319,7 +1319,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
-				MIN_VERSION_URL = "https://strike-public-assets.s3.amazonaws.com/strike-security-app-version-dev.json";
+				MIN_VERSION_URL = "https://strike-public-assets.s3.amazonaws.com/censo-security-app-version-dev.json";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "-Xfrontend -debug-time-function-bodies";
@@ -1327,7 +1327,7 @@
 				RAYGUN_ENABLED = yes;
 				SDKROOT = iphoneos;
 				SOLANA_COMMITMENT = confirmed;
-				SOLANA_RPC_URL = "https://solana-validator-demo2.strikeprotocols.com";
+				SOLANA_RPC_URL = "https://solana-validator-demo2.censocustody.com";
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				VALIDATE_PRODUCT = YES;
@@ -1398,9 +1398,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				API_BASE_URL = "https://brooklyn-prerelease.strikeprotocols.com";
+				API_BASE_URL = "https://brooklyn-prerelease.censocustody.com";
 				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
-				CENSO_AUTH_BASE_URL = "https://prerelease.strikeprotocols.com";
+				CENSO_AUTH_BASE_URL = "https://prerelease.censocustody.com";
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -1449,7 +1449,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
-				MIN_VERSION_URL = "https://strike-public-assets.s3.amazonaws.com/strike-security-app-version-dev.json";
+				MIN_VERSION_URL = "https://strike-public-assets.s3.amazonaws.com/censo-security-app-version-dev.json";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1458,7 +1458,7 @@
 				RAYGUN_ENABLED = no;
 				SDKROOT = iphoneos;
 				SOLANA_COMMITMENT = confirmed;
-				SOLANA_RPC_URL = "https://solana-validator-prerelease.strikeprotocols.com";
+				SOLANA_RPC_URL = "https://solana-validator-prerelease.censocustody.com";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -1526,9 +1526,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				API_BASE_URL = "https://brooklyn-prerelease.strikeprotocols.com";
+				API_BASE_URL = "https://brooklyn-prerelease.censocustody.com";
 				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
-				CENSO_AUTH_BASE_URL = "https://prerelease.strikeprotocols.com";
+				CENSO_AUTH_BASE_URL = "https://prerelease.censocustody.com";
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -1571,7 +1571,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
-				MIN_VERSION_URL = "https://strike-public-assets.s3.amazonaws.com/strike-security-app-version-dev.json";
+				MIN_VERSION_URL = "https://strike-public-assets.s3.amazonaws.com/censo-security-app-version-dev.json";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "-Xfrontend -debug-time-function-bodies";
@@ -1579,7 +1579,7 @@
 				RAYGUN_ENABLED = yes;
 				SDKROOT = iphoneos;
 				SOLANA_COMMITMENT = confirmed;
-				SOLANA_RPC_URL = "https://solana-validator-prerelease.strikeprotocols.com";
+				SOLANA_RPC_URL = "https://solana-validator-prerelease.censocustody.com";
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				VALIDATE_PRODUCT = YES;
@@ -1648,9 +1648,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				API_BASE_URL = "https://brooklyn-preprod.strikeprotocols.com";
+				API_BASE_URL = "https://brooklyn-preprod.censocustody.com";
 				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
-				CENSO_AUTH_BASE_URL = "https://preprod.strikeprotocols.com";
+				CENSO_AUTH_BASE_URL = "https://preprod.censocustody.com";
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -1699,7 +1699,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
-				MIN_VERSION_URL = "https://strike-public-assets.s3.amazonaws.com/strike-security-app-version-dev.json";
+				MIN_VERSION_URL = "https://strike-public-assets.s3.amazonaws.com/censo-security-app-version-dev.json";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1776,9 +1776,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				API_BASE_URL = "https://brooklyn-preprod.strikeprotocols.com";
+				API_BASE_URL = "https://brooklyn-preprod.censocustody.com";
 				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
-				CENSO_AUTH_BASE_URL = "https://preprod.strikeprotocols.com";
+				CENSO_AUTH_BASE_URL = "https://preprod.censocustody.com";
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -1821,7 +1821,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
-				MIN_VERSION_URL = "https://strike-public-assets.s3.amazonaws.com/strike-security-app-version-dev.json";
+				MIN_VERSION_URL = "https://strike-public-assets.s3.amazonaws.com/censo-security-app-version-dev.json";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "-Xfrontend -debug-time-function-bodies";
@@ -1898,9 +1898,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				API_BASE_URL = "https://brooklyn.strikeprotocols.com";
+				API_BASE_URL = "https://brooklyn.censocustody.com";
 				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
-				CENSO_AUTH_BASE_URL = "https://prerelease.strikeprotocols.com";
+				CENSO_AUTH_BASE_URL = "https://prerelease.censocustody.com";
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -1949,7 +1949,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
-				MIN_VERSION_URL = "https://strike-public-assets.s3.amazonaws.com/strike-security-app-version-dev.json";
+				MIN_VERSION_URL = "https://strike-public-assets.s3.amazonaws.com/censo-security-app-version-dev.json";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1958,7 +1958,7 @@
 				RAYGUN_ENABLED = no;
 				SDKROOT = iphoneos;
 				SOLANA_COMMITMENT = confirmed;
-				SOLANA_RPC_URL = "https://solana-validator-prerelease.strikeprotocols.com";
+				SOLANA_RPC_URL = "https://solana-validator-prerelease.censocustody.com";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG STUBBED";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -2031,9 +2031,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				API_BASE_URL = "https://brooklyn.strikeprotocols.com";
+				API_BASE_URL = "https://brooklyn.censocustody.com";
 				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
-				CENSO_AUTH_BASE_URL = "https://prerelease.strikeprotocols.com";
+				CENSO_AUTH_BASE_URL = "https://prerelease.censocustody.com";
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -2076,7 +2076,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
-				MIN_VERSION_URL = "https://strike-public-assets.s3.amazonaws.com/strike-security-app-version-dev.json";
+				MIN_VERSION_URL = "https://strike-public-assets.s3.amazonaws.com/censo-security-app-version-dev.json";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "-Xfrontend -debug-time-function-bodies";
@@ -2084,7 +2084,7 @@
 				RAYGUN_ENABLED = no;
 				SDKROOT = iphoneos;
 				SOLANA_COMMITMENT = confirmed;
-				SOLANA_RPC_URL = "https://solana-validator-prerelease.strikeprotocols.com";
+				SOLANA_RPC_URL = "https://solana-validator-prerelease.censocustody.com";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = STUBBED;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
@@ -2154,9 +2154,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				API_BASE_URL = "https://brooklyn.strikeprotocols.com";
+				API_BASE_URL = "https://brooklyn.censocustody.com";
 				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
-				CENSO_AUTH_BASE_URL = "https://wallet.strikeprotocols.com";
+				CENSO_AUTH_BASE_URL = "https://wallet.censocustody.com";
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -2206,7 +2206,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
-				MIN_VERSION_URL = "https://strike-public-assets.s3.amazonaws.com/strike-security-app-version.json";
+				MIN_VERSION_URL = "https://strike-public-assets.s3.amazonaws.com/censo-security-app-version.json";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -2225,9 +2225,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				API_BASE_URL = "https://brooklyn.strikeprotocols.com";
+				API_BASE_URL = "https://brooklyn.censocustody.com";
 				BUILD_LIBRARY_FOR_DISTRIBUTION = NO;
-				CENSO_AUTH_BASE_URL = "https://wallet.strikeprotocols.com";
+				CENSO_AUTH_BASE_URL = "https://wallet.censocustody.com";
 				CLANG_ANALYZER_NONNULL = YES;
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
@@ -2271,7 +2271,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 14.3;
-				MIN_VERSION_URL = "https://strike-public-assets.s3.amazonaws.com/strike-security-app-version.json";
+				MIN_VERSION_URL = "https://strike-public-assets.s3.amazonaws.com/censo-security-app-version.json";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				OTHER_SWIFT_FLAGS = "-Xfrontend -debug-time-function-bodies";
