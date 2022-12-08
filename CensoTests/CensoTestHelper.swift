@@ -724,6 +724,7 @@ extension CensoTests {
             numberOfApprovalsReceived: 1,
             numberOfDeniesReceived: 1,
             vaultName: "Test Vault",
+            initiationOnly: false,
             details: .approval(requestType)
         )
     }
@@ -739,6 +740,7 @@ extension CensoTests {
             numberOfApprovalsReceived: 1,
             numberOfDeniesReceived: 1,
             vaultName: "Test Vault",
+            initiationOnly: false,
             details: .multisigOpInitiation(initiation, requestType: requestType)
         )
     }
