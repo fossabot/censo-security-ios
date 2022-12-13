@@ -1,15 +1,15 @@
 #!/bin/bash
 
 echo "Locating dSYMs"
-pushd "$PWD/build/Strike.xcarchive/dSYMs/"
+pushd "$PWD/build/Censo.xcarchive/dSYMs/"
 echo "Found dSYMs"
-zip -r "strike-dSYMs.zip" "."
+zip -r "censo-dSYMs.zip" "."
 echo "Created dSYMs zip"
-mv "strike-dSYMs.zip" "../../../strike-dSYMs.zip"
+mv "censo-dSYMs.zip" "../../../censo-dSYMs.zip"
 popd
 
-echo "dSYMs zipped: strike-dSYMs.zip"
+echo "dSYMs zipped: censo-dSYMs.zip"
 
-curl -F "DsymFile=@strike-dSYMs.zip" "https://app.raygun.com/dashboard/$RAYGUN_APPLICATION_ID/settings/symbols?authToken=$RAYGUN_ACCESS_TOKEN"
+curl -F "DsymFile=@censo-dSYMs.zip" "https://app.raygun.com/dashboard/$RAYGUN_APPLICATION_ID/settings/symbols?authToken=$RAYGUN_ACCESS_TOKEN"
 
-rm "strike-dSYMs.zip"
+rm "censo-dSYMs.zip"

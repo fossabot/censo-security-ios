@@ -25,27 +25,27 @@ done
 export RAYGUN_ACCESS_TOKEN="YXRhQHBlcHBlcmVkc29mdHdhcmUuY29tOkxLSjEyM3BvaWFzZA=="
 
 if [[ $ENVIRONMENT == 'production' ]]; then
-  export SCHEME="Strike"
+  export SCHEME="Censo"
   export CONFIGURATION="Release"
-  export PROVISIONING_PROFILE="Strike Mobile Production AppStore"
+  export PROVISIONING_PROFILE="Censo Mobile Production AppStore"
   export RAYGUN_APPLICATION_ID="282j3o2"
 elif [[ $ENVIRONMENT == 'develop' ]]; then
   export ICON_RIBBON="Dev"
-  export SCHEME="Strike (Develop)"
+  export SCHEME="Censo (Develop)"
   export CONFIGURATION="Release (Develop)"
-  export PROVISIONING_PROFILE="Strike Mobile Dev AppStore"
+  export PROVISIONING_PROFILE="Censo Mobile Dev AppStore"
   export RAYGUN_APPLICATION_ID="283703j"
 elif [[ $ENVIRONMENT == 'preprod' ]]; then
   export ICON_RIBBON="Preprod"
-  export SCHEME="Strike (Preprod)"
+  export SCHEME="Censo (Preprod)"
   export CONFIGURATION="Release (Preprod)"
-  export PROVISIONING_PROFILE="Strike Mobile Demo AppStore"
+  export PROVISIONING_PROFILE="Censo Mobile Demo AppStore"
   export RAYGUN_APPLICATION_ID="283706g"
 elif [[ $ENVIRONMENT == 'demo2' ]]; then
   export ICON_RIBBON="Demo2"
-  export SCHEME="Strike (Demo2)"
+  export SCHEME="Censo (Demo2)"
   export CONFIGURATION="Release (Demo2)"
-  export PROVISIONING_PROFILE="Strike Mobile Demo 2 AppStore"
+  export PROVISIONING_PROFILE="Censo Mobile Demo 2 AppStore"
   export RAYGUN_APPLICATION_ID="283706g"
 else
   echo "Unknown environment. Use one of 'develop', 'preprod', 'demo2' or 'production'"
@@ -81,9 +81,9 @@ fi
 
 ./.github/scripts/upload_dsyms.sh
 
-export EXPORT_OPTIONS_PLIST="Strike/ExportOptions.plist"
+export EXPORT_OPTIONS_PLIST="Censo/ExportOptions.plist"
 ./.github/scripts/export_ipa.sh
 
 ./.github/scripts/publish_testflight.sh
 
-git checkout Strike/Assets.xcassets/AppIcon.appiconset/.
+git checkout Censo/Assets.xcassets/AppIcon.appiconset/.

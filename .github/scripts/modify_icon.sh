@@ -18,7 +18,7 @@ function generateIcon() {
     echo "Modified ${IMAGE_PATH}"
 }
 
-ICON_FILES=$(find "./Strike/Assets.xcassets/AppIcon.appiconset" -name "*.png")
+ICON_FILES=$(find "./Censo/Assets.xcassets/AppIcon.appiconset" -name "*.png")
 
 if [ "${ICON_RIBBON}" != "" ]; then
     for ICON in $ICON_FILES; do

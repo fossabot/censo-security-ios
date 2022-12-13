@@ -10,17 +10,17 @@
 	<string>app-store</string>
 	<key>provisioningProfiles</key>
 	<dict>
-		<key>com.strikeprotocols.mobile-demo-2</key>
-		<string>Strike Mobile Demo 2 AppStore</string>
-		<key>com.strikeprotocols.mobile</key>
-		<string>Strike Mobile Production AppStore</string>
-		<key>com.strikeprotocols.mobile-dev</key>
-		<string>Strike Mobile Dev AppStore</string>
-		<key>com.strikeprotocols.mobile-demo</key>
-		<string>Strike Mobile Demo AppStore</string>
+		<key>com.censocustody.mobile-demo-2</key>
+		<string>Censo Mobile Demo 2 AppStore</string>
+		<key>com.censocustody.mobile</key>
+		<string>Censo Mobile Production AppStore</string>
+		<key>com.censocustody.mobile-dev</key>
+		<string>Censo Mobile Dev AppStore</string>
+		<key>com.censocustody.mobile-demo</key>
+		<string>Censo Mobile Demo AppStore</string>
 	</dict>
 	<key>signingCertificate</key>
-	<string>F6DC0A7D9968855EB1F63009CF60FC5CFF5E48E5</string>
+	<string>1B5AD483C0DF4E0E45BAABCEB1D571B3639228A2</string>
 	<key>signingStyle</key>
 	<string>manual</string>
 	<key>stripSwiftSymbols</key>

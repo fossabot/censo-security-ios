@@ -17,7 +17,7 @@ jobs:
           ssh-private-key: ${{ secrets.STRIKE_SSH_PRIVATE_KEY_GITHUB_ACTIONS }}
       - name: Add GitHub to known_hosts
         run: for ip in $(dig @8.8.8.8 github.com +short); do ssh-keyscan github.com,$ip; ssh-keyscan $ip; done 2>/dev/null >> ~/.ssh/known_hosts
-      - name: Force Xcode 13
-        run: sudo xcode-select -switch /Applications/Xcode_13.0.app
+      - name: Force Xcode 14.1
+        run: sudo xcode-select -switch /Applications/Xcode_14.1.app
       - name: Testing iOS app
         run: exec ./.github/scripts/test_app.sh

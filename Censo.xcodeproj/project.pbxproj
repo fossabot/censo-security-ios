@@ -1220,7 +1220,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Censo/Preview Content\"";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = VN5U64MGYX;
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = YES;
 				EXECUTABLE_PREFIX = demo2;
@@ -1234,8 +1234,8 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.2.2;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.strikeprotocols.mobile-demo-2";
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.censocustody.mobile-demo-2";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Censo/Censo-Bridging-Header.h";
@@ -1345,6 +1345,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Censo/Preview Content\"";
 				DEVELOPMENT_TEAM = VN5U64MGYX;
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = VN5U64MGYX;
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = YES;
 				EXECUTABLE_PREFIX = demo2;
@@ -1358,10 +1359,11 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.2.2;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.strikeprotocols.mobile-demo-2";
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.censocustody.mobile-demo-2";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "Strike Mobile Demo 2 AppStore";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "Censo Mobile Demo 2 AppStore";
 				SWIFT_OBJC_BRIDGING_HEADER = "Censo/Censo-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1487,8 +1489,8 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.2.2;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.strikeprotocols.mobile-dev";
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.censocustody.mobile-dev";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Censo/Censo-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
@@ -1609,8 +1611,8 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.2.2;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.strikeprotocols.mobile-dev";
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.censocustody.mobile-dev";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Censo/Censo-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
@@ -1737,8 +1739,8 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.2.2;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.strikeprotocols.mobile-demo";
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.censocustody.mobile-demo";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Censo/Censo-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
@@ -1859,8 +1861,8 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.2.2;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.strikeprotocols.mobile-demo";
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.censocustody.mobile-demo";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Censo/Censo-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
@@ -1991,8 +1993,8 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.2.2;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.strikeprotocols.mobile-stubbed";
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.censocustody.mobile-stubbed";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG STUBBED";
 				SWIFT_OBJC_BRIDGING_HEADER = "Censo/Censo-Bridging-Header.h";
@@ -2115,8 +2117,8 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.2.2;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.strikeprotocols.mobile-stubbed";
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.censocustody.mobile-stubbed";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Censo/Censo-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
@@ -2313,8 +2315,8 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.2.2;
-				PRODUCT_BUNDLE_IDENTIFIER = com.strikeprotocols.mobile;
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.censocustody.mobile;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG PRODUCTION";
 				SWIFT_OBJC_BRIDGING_HEADER = "Censo/Censo-Bridging-Header.h";
@@ -2346,8 +2348,8 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.2.2;
-				PRODUCT_BUNDLE_IDENTIFIER = com.strikeprotocols.mobile;
+				MARKETING_VERSION = 1.0.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.censocustody.mobile;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = PRODUCTION;
 				SWIFT_OBJC_BRIDGING_HEADER = "Censo/Censo-Bridging-Header.h";

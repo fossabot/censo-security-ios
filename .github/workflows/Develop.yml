@@ -17,8 +17,8 @@ jobs:
           ssh-private-key: ${{ secrets.STRIKE_SSH_PRIVATE_KEY_GITHUB_ACTIONS }}
       - name: Add GitHub to known_hosts
         run: for ip in $(dig @8.8.8.8 github.com +short); do ssh-keyscan github.com,$ip; ssh-keyscan $ip; done 2>/dev/null >> ~/.ssh/known_hosts
-      - name: Force Xcode 13
-        run: sudo xcode-select -switch /Applications/Xcode_13.0.app
+      - name: Force Xcode 14.1
+        run: sudo xcode-select -switch /Applications/Xcode_14.1.app
       - name: Install gpg
         run: brew install gnupg
       - name: Install ImageMagick
@@ -33,9 +33,9 @@ jobs:
         run: ./.github/scripts/modify_icon.sh
       - name: Archive project
         env:
-          SCHEME: "Strike (Develop)"
+          SCHEME: "Censo (Develop)"
           CONFIGURATION: "Release (Develop)"
-          PROVISIONING_PROFILE: "Strike Mobile Dev AppStore"
+          PROVISIONING_PROFILE: "Censo Mobile Dev AppStore"
         run: ./.github/scripts/archive_app.sh
       - name: Upload dSYMs to RayGun
         env:
@@ -44,7 +44,7 @@ jobs:
         run: ./.github/scripts/upload_dsyms.sh
       - name: Export .ipa
         env:
-          EXPORT_OPTIONS_PLIST: "Strike/ExportOptions.plist"
+          EXPORT_OPTIONS_PLIST: "Censo/ExportOptions.plist"
         run: ./.github/scripts/export_ipa.sh
       - name: Publish app to TestFlight
         env:
