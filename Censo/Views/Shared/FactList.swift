@@ -49,7 +49,7 @@ struct RowBackground: View {
         case (.new, false):
             Color.Censo.green.opacity(0.08)
         case (.updated, false):
-            Color.Censo.purple.opacity(0.08)
+            Color.Censo.blue.opacity(0.08)
         case (.deleted, true):
             VStack {
                 Divider()
@@ -70,7 +70,7 @@ struct RowBackground: View {
                 Spacer()
                 Divider()
             }
-            .background(Color.Censo.purple.opacity(0.08))
+            .background(Color.Censo.blue.opacity(0.08))
         case (_, true):
             VStack {
                 Divider()

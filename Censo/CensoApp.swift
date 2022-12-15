@@ -88,7 +88,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
     }
 
     func setupAppearance() {
-        UISegmentedControl.appearance().selectedSegmentTintColor = UIColor(Color.Censo.purple)
+        UISegmentedControl.appearance().selectedSegmentTintColor = UIColor(Color.Censo.blue)
 
         UITableView.appearance().backgroundColor = .clear
         UITableViewCell.appearance().backgroundColor = .clear

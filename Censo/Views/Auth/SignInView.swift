@@ -31,7 +31,7 @@ struct SignInView: View {
                         Image("Logo")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
-                            .frame(maxHeight: 22)
+                            .frame(maxHeight: 42)
                             .padding(50)
 
                         Text("Sign in with the account you created on the web")
@@ -50,7 +50,7 @@ struct SignInView: View {
                             .autocapitalization(.none)
                             .disableAutocorrection(true)
                             .foregroundColor(Color.black)
-                            .accentColor(Color.Censo.purple)
+                            .accentColor(Color.Censo.blue)
                             .textFieldStyle(LightRoundedTextFieldStyle())
                         }
                         .padding(35)
@@ -153,7 +153,7 @@ struct PasswordView: View {
                     Image("Logo")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
-                        .frame(maxHeight: 22)
+                        .frame(maxHeight: 42)
                         .padding([.leading, .trailing, .bottom], 50)
 
                     (Text("Signing in as ") + Text(username).bold())
@@ -169,7 +169,7 @@ struct PasswordView: View {
                         }
                         .textContentType(.password)
                         .foregroundColor(Color.black)
-                        .accentColor(Color.Censo.purple)
+                        .accentColor(Color.Censo.blue)
                         .textFieldStyle(LightRoundedTextFieldStyle())
 
                         HStack {
@@ -180,7 +180,7 @@ struct PasswordView: View {
                             } label: {
                                 Text("Forgot password?")
                             }
-                            .foregroundColor(.Censo.purple)
+                            .foregroundColor(.Censo.blue)
                         }
                     }
                     .padding(35)

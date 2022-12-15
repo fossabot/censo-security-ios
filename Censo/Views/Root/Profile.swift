@@ -45,7 +45,7 @@ struct Profile: View {
 
                             Button("Get Help", action: contactSupport)
                                 .buttonStyle(PlainButtonStyle())
-                                .foregroundColor(Color.Censo.purple)
+                                .foregroundColor(Color.Censo.blue)
                                 .font(.headline.bold())
                         }
                         .frame(maxWidth: .infinity)

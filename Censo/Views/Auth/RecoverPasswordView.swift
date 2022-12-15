@@ -36,7 +36,7 @@ struct RecoverPasswordView: View {
                     .autocapitalization(.none)
                     .disableAutocorrection(true)
                     .foregroundColor(Color.white)
-                    .accentColor(Color.Censo.purple)
+                    .accentColor(Color.Censo.blue)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .disabled(isLoading)
                     .padding()

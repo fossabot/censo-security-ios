@@ -52,7 +52,7 @@ struct PenAndPaperSignInRecovery: View {
                     .textFieldStyle(DarkRoundedTextFieldStyle(tint: .white))
                     .padding([.trailing, .leading], 30)
                     .multilineTextAlignment(.leading)
-                    .accentColor(Color.Censo.purple)
+                    .accentColor(Color.Censo.blue)
                     .focusedOnAppear()
 
                 HStack {

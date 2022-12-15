@@ -50,7 +50,7 @@ struct PasswordManagerConfirm: View {
                 .textFieldStyle(DarkRoundedTextFieldStyle(tint: incorrectPhrase ? .Censo.red : .white))
                 .padding(30)
                 .multilineTextAlignment(.leading)
-                .accentColor(Color.Censo.purple)
+                .accentColor(Color.Censo.blue)
                 .disableAutocorrection(true)
 
 

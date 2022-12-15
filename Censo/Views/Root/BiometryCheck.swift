@@ -88,7 +88,7 @@ struct Locked: View {
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 50, height: 50)
-                .foregroundColor(.Censo.purple)
+                .foregroundColor(.Censo.blue)
                 .padding()
 
             Text("Biometry Required")

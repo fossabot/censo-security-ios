@@ -30,7 +30,7 @@ struct RetryView: View {
                 Button(action: showHelp) {
                     Text("Get Help")
                 }
-                .foregroundColor(.Censo.purple)
+                .foregroundColor(.Censo.blue)
             }
 
             Spacer()
