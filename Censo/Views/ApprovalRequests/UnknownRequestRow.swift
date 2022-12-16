@@ -43,7 +43,7 @@ struct UnknownRequestRow: View {
 
             HStack(spacing: 0) {
                 Button {
-                    UIApplication.shared.open(URL(string: "https://apps.apple.com/us/app/strike-mobile/id1566407098")!, options: [:], completionHandler: nil)
+                    UIApplication.shared.open(URL(string: "https://apps.apple.com/us/app/censo-security-app/id1659702225")!, options: [:], completionHandler: nil)
                 } label: {
                     Text("Update Censo Mobile...")
                         .bold()

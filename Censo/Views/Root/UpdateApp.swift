@@ -30,7 +30,7 @@ struct UpdateApp: View {
     }
 
     private func gotoAppStore() {
-        if let url = URL(string: "https://apps.apple.com/us/app/strike-security-app/id1566407098") {
+        if let url = URL(string: "https://apps.apple.com/us/app/censo-security-app/id1659702225") {
             UIApplication.shared.open(url)
         }
     }
