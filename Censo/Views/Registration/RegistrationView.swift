@@ -59,7 +59,8 @@ extension CensoApi.User {
         }
 
         guard let bitcoin = publicKeys.first(where: { $0.chain == .bitcoin })?.key,
-              let ethereum = publicKeys.first(where: { $0.chain == .ethereum })?.key else {
+              let ethereum = publicKeys.first(where: { $0.chain == .ethereum })?.key,
+              let censo = publicKeys.first(where: { $0.chain == .censo })?.key else {
             return .incomplete(solanaPublicKey: solana)
         }
 
@@ -67,7 +68,8 @@ extension CensoApi.User {
             PublicKeys(
                 solana: solana,
                 bitcoin: bitcoin,
-                ethereum: ethereum
+                ethereum: ethereum,
+                censo: censo
             )
         )
     }

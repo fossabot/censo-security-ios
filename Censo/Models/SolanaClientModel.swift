@@ -53,6 +53,7 @@ enum Chain: String, Codable {
     case solana = "solana"
     case bitcoin = "bitcoin"
     case ethereum = "ethereum"
+    case censo = "censo"
 }
 
 enum LogoType: String, Codable {

@@ -12,10 +12,12 @@ struct PrivateKeys {
     fileprivate let solanaPublicKey: String
     fileprivate let bitcoinPublicKey: String
     fileprivate let ethereumPublicKey: String
+    fileprivate let censoPublicKey: String
 
     fileprivate let solanaSignature: (Data) throws -> String
     fileprivate let bitcoinSignature: (Data, DerivationNode?) throws -> String
     fileprivate let ethereumSignature: (Data) throws -> String
+    fileprivate let censoSignature: (Data) throws -> String
 }
 
 extension PrivateKeys {
@@ -23,7 +25,8 @@ extension PrivateKeys {
         PublicKeys(
             solana: solanaPublicKey,
             bitcoin: bitcoinPublicKey,
-            ethereum: ethereumPublicKey
+            ethereum: ethereumPublicKey,
+            censo: censoPublicKey
         )
     }
 }
@@ -33,14 +36,17 @@ extension PrivateKeys {
         let solanaPrivateKey = try Ed25519HierachicalPrivateKey.fromRootSeed(rootSeed: rootSeed).privateKey
         let bitcoinPrivateKey = try Secp256k1HierarchicalKey.fromRootSeed(rootSeed: rootSeed, derivationPath: Secp256k1HierarchicalKey.bitcoinDerivationPath)
         let ethereumPrivateKey = try Secp256k1HierarchicalKey.fromRootSeed(rootSeed: rootSeed, derivationPath: Secp256k1HierarchicalKey.ethereumDerivationPath)
+        let censoPrivateKey = try Secp256k1HierarchicalKey.fromRootSeed(rootSeed: rootSeed, derivationPath: Secp256k1HierarchicalKey.censoDerivationPath)
 
         try solanaPrivateKey.verify()
         try bitcoinPrivateKey.verify()
         try ethereumPrivateKey.verify()
+        try censoPrivateKey.verify()
 
         self.solanaPublicKey = solanaPrivateKey.base58EncodedPublicKey
         self.bitcoinPublicKey = bitcoinPrivateKey.getBase58ExtendedPublicKey()
         self.ethereumPublicKey = ethereumPrivateKey.getBase58UncompressedPublicKey()
+        self.censoPublicKey = censoPrivateKey.getBase58UncompressedPublicKey()
 
         self.solanaSignature = {
             let signature = try solanaPrivateKey.signature(for: $0)
@@ -82,6 +88,16 @@ extension PrivateKeys {
                 throw PrivateKeyError.badKey
             }
         }
+        
+        self.censoSignature = {
+            let signature = try censoPrivateKey.signData(message: $0)
+
+            if try censoPrivateKey.verifySignature(signature, message: $0) {
+                return signature.base64EncodedString()
+            } else {
+                throw PrivateKeyError.badKey
+            }
+        }
     }
 
     func publicKey(for chain: Chain) -> String {
@@ -92,6 +108,8 @@ extension PrivateKeys {
             return bitcoinPublicKey
         case .ethereum:
             return ethereumPublicKey
+        case .censo:
+            return censoPublicKey
         }
     }
 
@@ -103,6 +121,8 @@ extension PrivateKeys {
             return try bitcoinSignature(data, derivationPath)
         case .ethereum:
             return try ethereumSignature(data)
+        case .censo:
+            return try censoSignature(data)
         }
     }
 }

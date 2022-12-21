@@ -32,6 +32,11 @@ public struct Secp256k1HierarchicalKey {
                                          DerivationNode.hardened(0),
                                          DerivationNode.notHardened(0)]
     
+    static let censoDerivationPath = [DerivationNode.hardened(44),
+                                      DerivationNode.hardened(16743510),
+                                      DerivationNode.hardened(0),
+                                      DerivationNode.notHardened(0)]
+    
     
     public init(privateKey: Secp256k1PrivateKey) {
         self.privateKey = privateKey

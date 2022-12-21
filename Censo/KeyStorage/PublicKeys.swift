@@ -12,4 +12,5 @@ struct PublicKeys: Codable, Equatable {
     var solana: String
     var bitcoin: String
     var ethereum: String
+    var censo: String
 }

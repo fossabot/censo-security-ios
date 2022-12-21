@@ -391,7 +391,7 @@ extension CensoApi {
             let dataToSign = try signableData(approverPublicKey: approverPublicKey)
             return .nochain(
                 NoChainSignature(
-                    signature: try privateKeys.signature(for: dataToSign, chain: chain),
+                    signature: try privateKeys.signature(for: dataToSign, chain: Chain.censo),
                     signedData: dataToSign.base64EncodedString()
                 )
             )
@@ -401,10 +401,6 @@ extension CensoApi {
             let dataToSign = try signableData(approverPublicKey: approverPublicKey)
             
             switch (chain) {
-            case .bitcoin:
-                return try offChainSign(chain: chain, privateKeys: privateKeys, approverPublicKey: approverPublicKey)
-            case .ethereum:
-                return try offChainSign(chain: chain, privateKeys: privateKeys, approverPublicKey: approverPublicKey)
             case .solana:
                 if let nonce = nonces.first, let nonceAccountAddress = requestType.nonceAccountAddresses.first {
                     return .solana(
@@ -417,6 +413,8 @@ extension CensoApi {
                 } else {
                     throw ApiError.other("cannot create solana signature with no nonce data")
                 }
+            default:
+                return try offChainSign(chain: Chain.censo, privateKeys: privateKeys, approverPublicKey: approverPublicKey)
             }
         }
     }
