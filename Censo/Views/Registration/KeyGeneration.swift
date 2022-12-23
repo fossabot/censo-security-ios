@@ -17,47 +17,12 @@ struct KeyGeneration: View {
     var onProfile: () -> Void
 
     var body: some View {
-        VStack {
+        ZStack(alignment: .topLeading) {
             ProfileButton(action: onProfile)
-            
-            Spacer()
 
-            Image(systemName: "key")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(height: 150)
-                .padding(40)
-
-            Text("Your secret recovery phrase has been generated")
-                .font(.system(size: 26).bold())
-                .multilineTextAlignment(.center)
-                .padding(20)
-
-            Text("How would you like to save it?")
-                .padding()
-
-            NavigationLink {
-                PasswordManager(user: user, phrase: phrase, onSuccess: onSuccess)
-            } label: {
-                Text("Password Manager")
-                    .frame(maxWidth: .infinity)
-            }
-            .padding([.leading, .trailing], 30)
-            .padding([.top, .bottom])
-
-            NavigationLink {
-                PenAndPaper(user: user, phrase: phrase, onSuccess: onSuccess)
-            } label: {
-                Text("Pen and Paper")
-                    .frame(maxWidth: .infinity)
-            }
-            .padding([.leading, .trailing], 30)
-
-            Spacer()
+            KeyConfirmationSuccess(user: user, phrase: phrase, onSuccess: onSuccess)
         }
-        .buttonStyle(FilledButtonStyle())
         .navigationBarHidden(true)
-        .background(CensoBackground())
     }
 }
 
