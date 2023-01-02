@@ -67,7 +67,7 @@ struct ApprovalRequestRow<Row, Detail>: View where Row : View, Detail: View {
                         alert = .confirmation
                     }
                 } label: {
-                    Text(request.details.approveButtonCaption)
+                    Text(request.approveButtonCaption)
                         .bold()
                         .loadingIndicator(when: isLoading)
                         .foregroundColor(Color.Censo.green)
@@ -182,6 +182,16 @@ extension ApprovalRequestRow {
 extension ApprovalRequest {
     var expireDate: Date? {
         approvalTimeoutInSeconds != nil ? submitDate.addingTimeInterval(TimeInterval(approvalTimeoutInSeconds!)) : nil
+    }
+}
+
+extension ApprovalRequest {
+    var approveButtonCaption: String {
+        if self.initiationOnly {
+            return "Initiate"
+        } else {
+            return "Approve"
+        }
     }
 }
 

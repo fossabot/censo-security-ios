@@ -73,6 +73,7 @@ struct ApprovalRequest: Codable, Equatable {
     let numberOfApprovalsReceived: Int
     let numberOfDeniesReceived: Int
     let vaultName: String?
+    let initiationOnly: Bool
     let details: SolanaApprovalRequestDetails
 }
 
@@ -899,6 +900,7 @@ extension ApprovalRequest {
             numberOfApprovalsReceived: 1,
             numberOfDeniesReceived: 1,
             vaultName: "Test Vault",
+            initiationOnly: false,
             details: .approval(.withdrawalRequest(.sample))
         )
     }
@@ -914,6 +916,7 @@ extension ApprovalRequest {
             numberOfApprovalsReceived: 1,
             numberOfDeniesReceived: 1,
             vaultName: "Test Vault",
+            initiationOnly: false,
             details: .approval(.conversionRequest(.sample))
         )
     }
@@ -929,6 +932,7 @@ extension ApprovalRequest {
             numberOfApprovalsReceived: 1,
             numberOfDeniesReceived: 1,
             vaultName: "Test Vault",
+            initiationOnly: false,
             details: .approval(.withdrawalRequest(.feeBump))
         )
     }
