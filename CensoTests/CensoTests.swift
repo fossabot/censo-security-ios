@@ -885,6 +885,49 @@ class CensoTests: XCTestCase {
             "030c5e07a21177f20510e81903d7ba8d8e2b3f354574529538f01f4047a19e69"
         )
     }
+    
+    func testERC721WithdrawalApproval() throws {
+        let requestJson = "{\"id\": \"43314e6b-b595-4a64-8dc5-f41cb2a5e3a7\", \"submitDate\": \"2022-12-06T14:33:23.792+00:00\", \"submitterName\": \"User 1\", \"submitterEmail\": \"authorized1@org1\", \"approvalTimeoutInSeconds\": null, \"numberOfDispositionsRequired\": 1, \"numberOfApprovalsReceived\": 0, \"numberOfDeniesReceived\": 0, \"details\": {\"type\": \"WithdrawalRequest\", \"account\": {\"identifier\": \"626c60fc-aef1-492f-865b-86c3c3d0765d\", \"name\": \"Ethereum Wallet 1\", \"accountType\": \"BalanceAccount\", \"address\": \"0x21459D724aDCFE1007dA89CCAc687e8055967280\", \"chain\": \"ethereum\", \"chainName\": \"ethereum\"}, \"symbolAndAmountInfo\": {\"symbolInfo\": {\"symbol\": \"GGSG\", \"symbolDescription\": \"0x46415339bfa082759f5dc10b2ea1434f86ccc13f at ethereum\", \"tokenMintAddress\": \"0x46415339BFA082759f5Dc10B2EA1434f86CcC13F\", \"imageUrl\": \"https://www.arweave.net/r_K7MRot4iVWht_QKp9wiPpfCvC39bXi9cQsEn0B6WY?ext=jpeg\", \"ethTokenInfo\": {\"tokenId\": \"5055\", \"tokenType\": \"ERC721\"}, \"nftMetadata\": {\"name\": \"Galactic Gecko #5055\"}}, \"amount\": \"1\", \"nativeAmount\": \"1\", \"usdEquivalent\": null, \"fee\": {\"symbolInfo\": {\"symbol\": \"ETH\", \"symbolDescription\": \"Ethereum\", \"imageUrl\": \"https://s3.us-east-1.amazonaws.com/strike-public-assets/logos/ETH.svg\"}, \"amount\": \"0.0000000000\", \"usdEquivalent\": \"0.00\"}, \"replacementFee\": null}, \"destination\": {\"name\": \"Ethereum Wallet 2\", \"address\": \"0x038Fb817C4E2C114142371ffF9070526533a2A02\"}, \"signingData\": {\"type\": \"ethereum\", \"transaction\": {\"safeNonce\": 0, \"chainId\": 31337}}}, \"vaultName\": \"Test Organization 1\"}\n"
+        
+        let request: ApprovalRequest = Mock.decodeJsonType(data: requestJson.data(using: .utf8)!)
+
+        let approvalRequest = CensoApi.ApprovalDispositionRequest(
+            disposition: .Approve,
+            requestID: request.id,
+            requestType: request.requestType,
+            nonces: [],
+            email: "dont care"
+        )
+
+        let signableData = try approvalRequest.signableData(approverPublicKey: "7AH35qStXtrUgRkmqDmhjufNHjF74R1A9cCKT3C3HaAR")
+
+        XCTAssertEqual(
+            signableData.base64EncodedString(),
+            "JSXFQ5iHWOJpxUP76kb13iznmLGbalu9lRCjik4pqwk="
+        )
+    }
+    
+    func testERC1155WithdrawalApproval() throws {
+        let requestJson = "{\"id\": \"346faf8c-8f02-48c8-97c2-c1e8f66457fa\", \"submitDate\": \"2022-12-06T14:37:43.641+00:00\", \"submitterName\": \"User 1\", \"submitterEmail\": \"authorized1@org1\", \"approvalTimeoutInSeconds\": null, \"numberOfDispositionsRequired\": 1, \"numberOfApprovalsReceived\": 0, \"numberOfDeniesReceived\": 0, \"details\": {\"type\": \"WithdrawalRequest\", \"account\": {\"identifier\": \"df8c5545-8556-45ce-9da4-51d2293b74fc\", \"name\": \"Ethereum Wallet 1\", \"accountType\": \"BalanceAccount\", \"address\": \"0xde777F9F54e9FaD7286842527f58A504f93550c6\", \"chain\": \"ethereum\", \"chainName\": \"ethereum\"}, \"symbolAndAmountInfo\": {\"symbolInfo\": {\"symbol\": \"The Six Dragons SFT\", \"symbolDescription\": \"0x888de181eb86af0f409bf907a828759b68d1f0fe at ethereum\", \"tokenMintAddress\": \"0x888DE181EB86aF0F409Bf907a828759b68d1f0Fe\", \"imageUrl\": \"https://thesixdragons.com/enjintokens/FinalTokensResizedSmall/SFT.png\", \"ethTokenInfo\": {\"tokenId\": \"50659039041325842496780740897450011362710825167765800721389013580860476096512\", \"tokenType\": \"ERC1155\"}, \"nftMetadata\": {\"name\": \"The Six Dragons SFT\"}}, \"amount\": \"3\", \"nativeAmount\": \"3\", \"usdEquivalent\": null, \"fee\": {\"symbolInfo\": {\"symbol\": \"ETH\", \"symbolDescription\": \"Ethereum\", \"imageUrl\": \"https://s3.us-east-1.amazonaws.com/strike-public-assets/logos/ETH.svg\"}, \"amount\": \"0.0000000000\", \"usdEquivalent\": \"0.00\"}, \"replacementFee\": null}, \"destination\": {\"name\": \"Ethereum Wallet 2\", \"address\": \"0x1ceE3288CAdB408713F4bfB1E1a7300864bb751A\"}, \"signingData\": {\"type\": \"ethereum\", \"transaction\": {\"safeNonce\": 0, \"chainId\": 31337}}}, \"vaultName\": \"Test Organization 1\"}\n"
+
+        
+        let request: ApprovalRequest = Mock.decodeJsonType(data: requestJson.data(using: .utf8)!)
+
+        let approvalRequest = CensoApi.ApprovalDispositionRequest(
+            disposition: .Approve,
+            requestID: request.id,
+            requestType: request.requestType,
+            nonces: [],
+            email: "dont care"
+        )
+
+        let signableData = try approvalRequest.signableData(approverPublicKey: "7AH35qStXtrUgRkmqDmhjufNHjF74R1A9cCKT3C3HaAR")
+
+        XCTAssertEqual(
+            signableData.base64EncodedString(),
+            "wmNRZJdEqZwm/cpfkrViTENo3GiDjUwIQd4HYKrZTH8="
+        )
+    }
 
     func getOpAccountCreationInfo(_ request: ApprovalRequest) -> MultisigOpInitiation? {
         switch request.details {

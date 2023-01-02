@@ -298,11 +298,31 @@ extension CensoApi.ApprovalDispositionRequest: SignableData {
                 )
             )
         } else {
+            let amount = try request.symbolAndAmountInfo.fundamentalAmountBignum
+            let tokenType = request.symbolAndAmountInfo.symbolInfo.ethTokenInfo?.tokenType ?? EthTokenType.ERC20
             safeTransaction.append(
                 withdrawalMessageHash(
                     destinationAddress: request.symbolAndAmountInfo.symbolInfo.tokenMintAddress!,
                     amount: Bignum(0),
-                    data: erc20WithdrawalTx(destinationAddress: request.destination.address, amount: try request.symbolAndAmountInfo.fundamentalAmountBignum),
+                    data: {
+                        switch(tokenType) {
+                        case EthTokenType.ERC721:
+                            return erc721WithdrawalTx(
+                                walletAddress: request.account.address!,
+                                destinationAddress: request.destination.address,
+                                tokenId: Bignum(number: request.symbolAndAmountInfo.symbolInfo.ethTokenInfo?.tokenId ?? "0", withBase: 10)
+                            )
+                        case EthTokenType.ERC1155:
+                            return erc1155WithdrawalTx(
+                                walletAddress: request.account.address!,
+                                destinationAddress: request.destination.address,
+                                tokenId: Bignum(number: request.symbolAndAmountInfo.symbolInfo.ethTokenInfo?.tokenId ?? "0", withBase: 10),
+                                amount: amount
+                            )
+                        case EthTokenType.ERC20:
+                            return erc20WithdrawalTx(destinationAddress: request.destination.address, amount: amount)
+                        }
+                    }(),
                     nonce: signingData.transaction.safeNonce
                 )
             )

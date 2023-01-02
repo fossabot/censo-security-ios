@@ -47,6 +47,40 @@ public func erc20WithdrawalTx(destinationAddress: String, amount: Bignum) -> Dat
     return txData
 }
 
+public func erc721WithdrawalTx(walletAddress: String, destinationAddress: String, tokenId: Bignum) -> Data {
+    var txData = Data(capacity: 4 + 32*3)
+    // safeTransferFrom(address,address,uint256)
+    txData.append("42842e0e".data(using: .hexadecimal)!)
+    // from
+    appendPadded(destination: &txData, source: walletAddress.data(using: .hexadecimal)!)
+    // to
+    appendPadded(destination: &txData, source: destinationAddress.data(using: .hexadecimal)!)
+    // tokenId
+    appendPadded(destination: &txData, source: tokenId.data)
+
+    return txData
+}
+
+public func erc1155WithdrawalTx(walletAddress: String, destinationAddress: String, tokenId: Bignum, amount: Bignum) -> Data {
+    var txData = Data(capacity: 4 + 32*6)
+    // safeTransferFrom(address,address,uint256,uint256,bytes)
+    txData.append("f242432a".data(using: .hexadecimal)!)
+    // from
+    appendPadded(destination: &txData, source: walletAddress.data(using: .hexadecimal)!)
+    // to
+    appendPadded(destination: &txData, source: destinationAddress.data(using: .hexadecimal)!)
+    // tokenId
+    appendPadded(destination: &txData, source: tokenId.data)
+    // amount
+    appendPadded(destination: &txData, source: amount.data)
+    // dynamic data
+    appendPadded(destination: &txData, source: Bignum(160).data)
+    // length
+    appendPadded(destination: &txData, source: Bignum(0).data)
+
+    return txData
+}
+
 public func withdrawalMessageHash(destinationAddress: String, amount: Bignum, data: Data, nonce: UInt64) -> Data {
     var messageData = Data(capacity: 32*11)
     // eip712 type hash

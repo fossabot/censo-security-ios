@@ -264,12 +264,24 @@ enum AccountType: String, Codable {
     case StakeAccount = "StakeAccount"
 }
 
+enum EthTokenType: String, Codable {
+    case ERC20 = "ERC20"
+    case ERC721 = "ERC721"
+    case ERC1155 = "ERC1155"
+}
+
+struct EthTokenInfo: Codable, Equatable {
+    let tokenId: String?
+    let tokenType: EthTokenType
+}
+
 struct SymbolInfo: Codable, Equatable {
     let symbol: String
     let symbolDescription: String
     let tokenMintAddress: String?
     let imageUrl: String?
     let nftMetadata: NftMetadata?
+    let ethTokenInfo: EthTokenInfo?
 }
 
 struct SymbolAndAmountInfo: Codable, Equatable {
@@ -1023,7 +1035,8 @@ extension SymbolInfo {
             symbolDescription: "Bitcoin",
             tokenMintAddress: "28548397fdsf",
             imageUrl: nil,
-            nftMetadata: nil
+            nftMetadata: nil,
+            ethTokenInfo: nil
         )
     }
 }
