@@ -161,9 +161,11 @@
 		6CBA96DF28E66BAE000A3727 /* bitcoin-test-data.json in Resources */ = {isa = PBXBuildFile; fileRef = 6CBA96DE28E66BAE000A3727 /* bitcoin-test-data.json */; };
 		6CBA96E128E743A4000A3727 /* Secp256k1HierarchicalKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CBA96E028E743A4000A3727 /* Secp256k1HierarchicalKey.swift */; };
 		6CCDBD5828EF8BBD00BBB5B6 /* AdditionalKeyRegistration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CCDBD5728EF8BBD00BBB5B6 /* AdditionalKeyRegistration.swift */; };
-		6CCDBD5A28EFC4BE00BBB5B6 /* KeychainTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CCDBD5928EFC4BE00BBB5B6 /* KeychainTests.swift */; };
 		6CD5B4A228A453DB00CD1A62 /* PasswordResetRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CD5B4A128A453DB00CD1A62 /* PasswordResetRow.swift */; };
 		6CD5B4A428A455E900CD1A62 /* PasswordResetDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CD5B4A328A455E900CD1A62 /* PasswordResetDetails.swift */; };
+		BD072F78292E6DF100B36C5A /* String+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD072F77292E6DF100B36C5A /* String+Hex.swift */; };
+		BD072F7B292E7DF800B36C5A /* EthereumSigningTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD072F7A292E7DF800B36C5A /* EthereumSigningTests.swift */; };
+		BD072F7D292E7E9E00B36C5A /* EthereumSigning.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD072F7C292E7E9E00B36C5A /* EthereumSigning.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -337,6 +339,9 @@
 		6CCDBD5928EFC4BE00BBB5B6 /* KeychainTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainTests.swift; sourceTree = "<group>"; };
 		6CD5B4A128A453DB00CD1A62 /* PasswordResetRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordResetRow.swift; sourceTree = "<group>"; };
 		6CD5B4A328A455E900CD1A62 /* PasswordResetDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordResetDetails.swift; sourceTree = "<group>"; };
+		BD072F77292E6DF100B36C5A /* String+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Hex.swift"; sourceTree = "<group>"; };
+		BD072F7A292E7DF800B36C5A /* EthereumSigningTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EthereumSigningTests.swift; sourceTree = "<group>"; };
+		BD072F7C292E7E9E00B36C5A /* EthereumSigning.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EthereumSigning.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -745,6 +750,7 @@
 				6C74FA0128525AC3005C8DE1 /* solana-test-data.json */,
 				6CBA96DE28E66BAE000A3727 /* bitcoin-test-data.json */,
 				6CCDBD5928EFC4BE00BBB5B6 /* KeychainTests.swift */,
+				BD072F7A292E7DF800B36C5A /* EthereumSigningTests.swift */,
 			);
 			path = CensoTests;
 			sourceTree = "<group>";
@@ -776,6 +782,8 @@
 				6C0E3EF627EE6367002FEE7C /* SMP Bignum Extensions.swift */,
 				6C0E3EF827EE64BA002FEE7C /* SMP.swift */,
 				6C74FA0328526282005C8DE1 /* Bip44.swift */,
+				BD072F77292E6DF100B36C5A /* String+Hex.swift */,
+				BD072F7C292E7E9E00B36C5A /* EthereumSigning.swift */,
 			);
 			name = Helpers;
 			sourceTree = "<group>";
@@ -1026,6 +1034,7 @@
 				3DB7F9BC26D6C0F800A49B4E /* ConversionRow.swift in Sources */,
 				3DAF53C4262E1ACF000DD558 /* WithdrawalDetails.swift in Sources */,
 				3D11A60527580D81008C03B1 /* CameraPreview.swift in Sources */,
+				BD072F7D292E7E9E00B36C5A /* EthereumSigning.swift in Sources */,
 				3D6334F12885C299002CEC5A /* PasswordManagerConfirm.swift in Sources */,
 				3DC2F3FF25F896C40061BB3A /* RemoteResult.swift in Sources */,
 				3DBF9DC526E0020300D7683E /* ApprovalRequestItem.swift in Sources */,
@@ -1112,6 +1121,7 @@
 				3D115211282176FD007CD43D /* AddressBookUpdateRow.swift in Sources */,
 				6C74FA0C28620130005C8DE1 /* AcceptVaultInvitationDetails.swift in Sources */,
 				3DC2F42D25FAAFD00061BB3A /* MoyaLoader.swift in Sources */,
+				BD072F78292E6DF100B36C5A /* String+Hex.swift in Sources */,
 				3D61A0FC2655B4FF00AD1EE7 /* SignedInNavigationView.swift in Sources */,
 				3D6334ED2885C299002CEC5A /* PenAndPaperRecovery.swift in Sources */,
 				3DC2F42925FAAA4E0061BB3A /* Networking+Environment.swift in Sources */,
@@ -1123,9 +1133,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				40328E222593ED9D00F2EE41 /* CensoTests.swift in Sources */,
-				6CCDBD5A28EFC4BE00BBB5B6 /* KeychainTests.swift in Sources */,
 				6C1E8C99285118F900F7C337 /* BipTests.swift in Sources */,
 				6C0E3EFB27F09D2A002FEE7C /* CensoTestHelper.swift in Sources */,
+				BD072F7B292E7DF800B36C5A /* EthereumSigningTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
