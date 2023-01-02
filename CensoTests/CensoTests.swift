@@ -852,7 +852,7 @@ class CensoTests: XCTestCase {
     
     func testEthereumWithdrawalApproval() throws {
         let request = getApprovalRequest(getEthereumWithdrawalRequest())
-        let approvalRequest = StrikeApi.ApprovalDispositionRequest(
+        let approvalRequest = CensoApi.ApprovalDispositionRequest(
             disposition: .Approve,
             requestID: request.id,
             requestType: request.requestType,

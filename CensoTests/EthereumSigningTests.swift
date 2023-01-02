@@ -6,7 +6,7 @@
 //
 
 import XCTest
-@testable import Strike
+@testable import Censo
 
 class EthereumSigningTests: XCTestCase {
 
