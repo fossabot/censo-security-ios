@@ -868,6 +868,24 @@ class CensoTests: XCTestCase {
         )
     }
     
+    func testERC20WithdrawalApproval() throws {
+        let request = getApprovalRequest(getERC20WithdrawalRequest())
+        let approvalRequest = CensoApi.ApprovalDispositionRequest(
+            disposition: .Approve,
+            requestID: request.id,
+            requestType: request.requestType,
+            nonces: [],
+            email: "dont care"
+        )
+
+        let signableData = try approvalRequest.signableData(approverPublicKey: "7AH35qStXtrUgRkmqDmhjufNHjF74R1A9cCKT3C3HaAR")
+
+        XCTAssertEqual(
+            signableData.hexEncodedString(),
+            "030c5e07a21177f20510e81903d7ba8d8e2b3f354574529538f01f4047a19e69"
+        )
+    }
+
     func getOpAccountCreationInfo(_ request: ApprovalRequest) -> MultisigOpInitiation? {
         switch request.details {
         case .multisigOpInitiation(let initiation, _):

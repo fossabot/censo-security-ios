@@ -35,8 +35,20 @@ public func domainHash(chainId: UInt64, verifyingContract: String) -> Data {
     return Crypto.sha3keccak256(data: domainData)
 }
 
-public func withdrawalMessageHash(destinationAddress: String, amount: Bignum, nonce: UInt64) -> Data {
-    var messageData = Data()
+public func erc20WithdrawalTx(destinationAddress: String, amount: Bignum) -> Data {
+    var txData = Data(capacity: 4 + 32*2)
+    // transfer(address,uint256)
+    txData.append("a9059cbb".data(using: .hexadecimal)!)
+    // to
+    appendPadded(destination: &txData, source: destinationAddress.data(using: .hexadecimal)!)
+    // amount
+    appendPadded(destination: &txData, source: amount.data)
+
+    return txData
+}
+
+public func withdrawalMessageHash(destinationAddress: String, amount: Bignum, data: Data, nonce: UInt64) -> Data {
+    var messageData = Data(capacity: 32*11)
     // eip712 type hash
     messageData.append(contentsOf: Crypto.sha3keccak256(data: "SafeTx(address to,uint256 value,bytes data,uint8 operation,uint256 safeTxGas,uint256 baseGas,uint256 gasPrice,address gasToken,address refundReceiver,uint256 nonce)".data(using: .utf8)!))
 
@@ -47,7 +59,7 @@ public func withdrawalMessageHash(destinationAddress: String, amount: Bignum, no
     appendPadded(destination: &messageData, source: amount.data)
 
     // data
-    appendPadded(destination: &messageData, source: Crypto.sha3keccak256(data: Data(count: 0)))
+    appendPadded(destination: &messageData, source: Crypto.sha3keccak256(data: data))
 
     // operation
     let operation: UInt8 = 0

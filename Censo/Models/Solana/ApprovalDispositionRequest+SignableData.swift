@@ -288,8 +288,25 @@ extension CensoApi.ApprovalDispositionRequest: SignableData {
         var safeTransaction = Data()
         safeTransaction.append(contentsOf: [0x19, 0x1])
         safeTransaction.append(domainHash(chainId: signingData.transaction.chainId, verifyingContract: request.account.address!))
-        safeTransaction.append(withdrawalMessageHash(destinationAddress: request.destination.address, amount: try request.symbolAndAmountInfo.fundamentalAmountBignum, nonce: signingData.transaction.safeNonce))
-        
+        if request.symbolAndAmountInfo.symbolInfo.tokenMintAddress == nil {
+            safeTransaction.append(
+                withdrawalMessageHash(
+                    destinationAddress: request.destination.address,
+                    amount: try request.symbolAndAmountInfo.fundamentalAmountBignum,
+                    data: Data(count: 0),
+                    nonce: signingData.transaction.safeNonce
+                )
+            )
+        } else {
+            safeTransaction.append(
+                withdrawalMessageHash(
+                    destinationAddress: request.symbolAndAmountInfo.symbolInfo.tokenMintAddress!,
+                    amount: Bignum(0),
+                    data: erc20WithdrawalTx(destinationAddress: request.destination.address, amount: try request.symbolAndAmountInfo.fundamentalAmountBignum),
+                    nonce: signingData.transaction.safeNonce
+                )
+            )
+        }
         return Crypto.sha3keccak256(data: safeTransaction)
     }
     

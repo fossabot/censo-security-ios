@@ -23,6 +23,7 @@ class EthereumSigningTests: XCTestCase {
             withdrawalMessageHash(
                 destinationAddress: "0x587827b6138d916f0914812ed9c48178cd978e52",
                 amount: Bignum(number: "1000000000000000000", withBase: 10),
+                data: Data(count: 0),
                 nonce: UInt64(0)
             )
         )
