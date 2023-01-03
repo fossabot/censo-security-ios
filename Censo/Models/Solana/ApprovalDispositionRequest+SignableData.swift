@@ -378,7 +378,10 @@ extension SymbolAndAmountInfo {
     
     var fundamentalAmountBignum: Bignum {
         get throws {
-            return Bignum(number: amount.replacingOccurrences(of: ".", with: ""), withBase: 10)
+            if nativeAmount != nil && !nativeAmount!.starts(with: amount) {
+                throw AmountError.invalidDecimal
+            }
+            return Bignum(number: (nativeAmount ?? amount).replacingOccurrences(of: ".", with: ""), withBase: 10)
         }
     }
 }

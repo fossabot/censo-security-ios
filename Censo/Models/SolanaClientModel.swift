@@ -289,6 +289,7 @@ struct SymbolInfo: Codable, Equatable {
 struct SymbolAndAmountInfo: Codable, Equatable {
     let symbolInfo: SymbolInfo
     let amount: String
+    let nativeAmount: String?
     let usdEquivalent: String?
     let fee: Fee?
     let replacementFee: Fee?
@@ -1004,6 +1005,7 @@ extension SymbolAndAmountInfo {
         SymbolAndAmountInfo(
             symbolInfo: .sample,
             amount: "234325.000564",
+            nativeAmount: "234325.00056400",
             usdEquivalent: "2353453",
             fee: Fee(
                 symbolInfo: .sample,
@@ -1018,6 +1020,7 @@ extension SymbolAndAmountInfo {
         SymbolAndAmountInfo(
             symbolInfo: .sample,
             amount: "234325.000564",
+            nativeAmount: "234325.00056400",
             usdEquivalent: "2353453",
             fee: Fee(
                 symbolInfo: .sample,

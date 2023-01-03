@@ -868,6 +868,28 @@ class CensoTests: XCTestCase {
         )
     }
     
+    func testEthereumWithdrawalApprovalMithRequest() throws {
+        let requestJson = "{\"id\":\"ff6855c6-72bd-4b01-9e80-645d60a7abaf\",\"submitDate\":\"2023-01-02T23:59:18.493+00:00\",\"submitterName\":\"User 1\",\"submitterEmail\":\"authorized1@org1\",\"approvalTimeoutInSeconds\":null,\"numberOfDispositionsRequired\":1,\"numberOfApprovalsReceived\":0,\"numberOfDeniesReceived\":0,\"details\":{\"type\":\"WithdrawalRequest\",\"account\":{\"identifier\":\"a44f42a0-9a64-4214-8f2f-a3c7144a4dd4\",\"name\":\"Ethereum Wallet 1\",\"accountType\":\"BalanceAccount\",\"address\":\"0x40b85c8ea44addd59Fef1e01E9Af68F82B826de7\",\"chain\":\"ethereum\"},\"symbolAndAmountInfo\":{\"symbolInfo\":{\"symbol\":\"ETH\",\"symbolDescription\":\"Ethereum\",\"imageUrl\":\"https://s3.us-east-1.amazonaws.com/strike-public-assets/logos/ETH.svg\"},\"amount\":\"0.5000000000\",\"nativeAmount\":\"0.500000000000000000\",\"usdEquivalent\":\"2218.51\",\"fee\":{\"symbolInfo\":{\"symbol\":\"ETH\",\"symbolDescription\":\"Ethereum\",\"imageUrl\":\"https://s3.us-east-1.amazonaws.com/strike-public-assets/logos/ETH.svg\"},\"amount\":\"0.0020000000\",\"usdEquivalent\":\"8.87\"},\"replacementFee\":null},\"destination\":{\"name\":\"Ethereum Wallet 2\",\"address\":\"0x9b1cCD613360361282eeb1D72159f2856C8C4747\"},\"signingData\":{\"type\":\"ethereum\",\"transaction\":{\"safeNonce\":0,\"chainId\":31337,\"priorityFee\":5000000000}}},\"vaultName\":\"Test Organization 1\",\"initiationOnly\":false}\n"
+
+        
+        let request: ApprovalRequest = Mock.decodeJsonType(data: requestJson.data(using: .utf8)!)
+
+        let approvalRequest = CensoApi.ApprovalDispositionRequest(
+            disposition: .Approve,
+            requestID: request.id,
+            requestType: request.requestType,
+            nonces: [],
+            email: "dont care"
+        )
+
+        let signableData = try approvalRequest.signableData(approverPublicKey: "7AH35qStXtrUgRkmqDmhjufNHjF74R1A9cCKT3C3HaAR")
+
+        XCTAssertEqual(
+            signableData.hexEncodedString(),
+            "41bbfebe5dd1361e7711d05d0dfa5f2b36c29b0d75e87818ac9bbe8f269c18e4"
+        )
+    }
+    
     func testERC20WithdrawalApproval() throws {
         let request = getApprovalRequest(getERC20WithdrawalRequest())
         let approvalRequest = CensoApi.ApprovalDispositionRequest(

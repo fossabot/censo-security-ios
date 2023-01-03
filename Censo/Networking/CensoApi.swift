@@ -370,7 +370,7 @@ extension CensoApi {
                             EthereumSignature(
                                 signature: try privateKeys.signature(
                                     for: signableData(approverPublicKey: approverPublicKey),
-                                    chain: .solana
+                                    chain: .ethereum
                                 )
                             )
                         )
