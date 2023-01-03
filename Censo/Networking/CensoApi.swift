@@ -391,7 +391,7 @@ extension CensoApi {
             let dataToSign = try signableData(approverPublicKey: approverPublicKey)
             return .nochain(
                 NoChainSignature(
-                    signature: try privateKeys.signature(for: dataToSign, chain: Chain.censo),
+                    signature: try privateKeys.signature(for: Data(SHA256.hash(data:dataToSign)), chain: Chain.censo),
                     signedData: dataToSign.base64EncodedString()
                 )
             )
