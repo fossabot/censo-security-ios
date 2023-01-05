@@ -389,12 +389,22 @@ extension CensoApi {
         
         private func offChainSign(chain: Chain, privateKeys: PrivateKeys, approverPublicKey: String) throws -> SignatureType {
             let dataToSign = try signableData(approverPublicKey: approverPublicKey)
-            return .nochain(
-                NoChainSignature(
-                    signature: try privateKeys.signature(for: Data(SHA256.hash(data:dataToSign)), chain: Chain.censo),
-                    signedData: dataToSign.base64EncodedString()
+            switch (chain) {
+            case .solana:
+                return .nochain(
+                    NoChainSignature(
+                        signature: try privateKeys.signature(for: dataToSign, chain: Chain.solana),
+                        signedData: dataToSign.base64EncodedString()
+                    )
                 )
-            )
+            default:
+                return .nochain(
+                    NoChainSignature(
+                        signature: try privateKeys.signature(for: Data(SHA256.hash(data:dataToSign)), chain: Chain.censo),
+                        signedData: dataToSign.base64EncodedString()
+                    )
+                )
+            }
         }
         
         private func sign(chain: Chain, privateKeys: PrivateKeys, approverPublicKey: String) throws -> SignatureType {

@@ -107,6 +107,11 @@ extension CensoApi.Signers {
                 publicKey: privateKeys.publicKey(for: .ethereum),
                 chain: .ethereum,
                 signature: try privateKeys.signature(for: Data(privateKeys.publicKey(for: .ethereum).base58Bytes), chain: .solana)
+            ),
+            CensoApi.WalletSigner(
+                publicKey: privateKeys.publicKey(for: .censo),
+                chain: .censo,
+                signature: try privateKeys.signature(for: Data(privateKeys.publicKey(for: .censo).base58Bytes), chain: .solana)
             )
         ]
     }
