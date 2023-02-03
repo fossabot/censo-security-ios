@@ -35,10 +35,13 @@ public class EvmConfigTransactionBuilder {
     static let multiSendCallOnlyAddress = "0x40A2aCCbd92BCA938b02010E17A5b8929b49130D"
     
     // setting guard
-    static func getSetGuardExecutionFromModuleDataSafeHash(walletAddress: String, guardAddress: String, signingData: EthereumTransaction) -> Data {
+    static func getSetGuardExecutionFromModuleDataSafeHash(walletAddress: String, guardAddress: String, signingData: EthereumTransaction) throws -> Data {
+        guard let vaultAddress = signingData.vaultAddress else {
+            throw EvmConfigError.missingVault
+        }
         return EvmTransactionUtil.computeSafeTransactionHash(
             chainId: signingData.chainId,
-            safeAddress: signingData.vaultAddress ?? "0x0",
+            safeAddress: vaultAddress,
             to: walletAddress,
             value: Bignum(0),
             data: getSetGuardExecutionFromModuleData(walletAddress: walletAddress, guardAddress: guardAddress),
@@ -56,10 +59,13 @@ public class EvmConfigTransactionBuilder {
     }
     
     // updating whitelist
-    static func getUpdateWhitelistExecutionFromModuleDataSafeHash(walletAddress: String, addsOrRemoves: [Data], signingData: EthereumTransaction) -> Data {
+    static func getUpdateWhitelistExecutionFromModuleDataSafeHash(walletAddress: String, addsOrRemoves: [Data], signingData: EthereumTransaction) throws -> Data {
+        guard let vaultAddress = signingData.vaultAddress else {
+            throw EvmConfigError.missingVault
+        }
         return EvmTransactionUtil.computeSafeTransactionHash(
             chainId: signingData.chainId,
-            safeAddress: signingData.vaultAddress ?? "0x0",
+            safeAddress: vaultAddress,
             to: walletAddress,
             value: Bignum(0),
             data: getUpdateWhitelistExecutionFromModuleData(walletAddress: walletAddress, addsOrRemoves: addsOrRemoves),
@@ -76,8 +82,10 @@ public class EvmConfigTransactionBuilder {
     }
     
     // setting vault policy
-    static func getVaultPolicyUpdateDataSafeHash(txs: [SafeTx], signingData: EthereumTransaction) -> Data {
-        let vaultAddress = signingData.vaultAddress ?? "0x0"
+    static func getVaultPolicyUpdateDataSafeHash(txs: [SafeTx], signingData: EthereumTransaction) throws -> Data {
+        guard let vaultAddress = signingData.vaultAddress else {
+            throw EvmConfigError.missingVault
+        }
         let updateData = getPolicyUpdateData(safeAddress: vaultAddress, txs: txs)
         return EvmTransactionUtil.computeSafeTransactionHash(
             chainId: signingData.chainId,
@@ -116,10 +124,13 @@ public class EvmConfigTransactionBuilder {
     }
     
     // setting wallet policy
-    static func getPolicyUpdateExecutionFromModuleDataSafeHash(walletAddress: String, txs: [SafeTx],signingData: EthereumTransaction) -> Data {
+    static func getPolicyUpdateExecutionFromModuleDataSafeHash(walletAddress: String, txs: [SafeTx],signingData: EthereumTransaction) throws -> Data {
+        guard let vaultAddress = signingData.vaultAddress else {
+            throw EvmConfigError.missingVault
+        }
         return EvmTransactionUtil.computeSafeTransactionHash(
             chainId: signingData.chainId,
-            safeAddress: signingData.vaultAddress ?? "0x0",
+            safeAddress: vaultAddress,
             to: walletAddress,
             value: Bignum(0),
             data: getPolicyUpdateExecutionFromModuleData(walletAddress: walletAddress, txs: txs),

@@ -21,6 +21,12 @@ enum Operation {
     }
 }
 
+enum EvmConfigError: Error, Equatable {
+    case invalidWhitelist(String)
+    case invalidPolicy(String)
+    case missingVault
+}
+
 public class EvmTransactionUtil {
     
     static let sentinelAddress = "0000000000000000000000000000000000000001"

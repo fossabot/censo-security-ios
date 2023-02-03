@@ -35,7 +35,7 @@ class EvmWhitelistHelperTests: XCTestCase {
     
     func testSingleAddressAdded() throws {
         XCTAssertEqual(
-            EvmWhitelistHelper(addresses: EvmWhitelistHelperTests.addresses.prefix(3).map { $0 }, targetDests: EvmWhitelistHelperTests.destinations).allChanges(),
+            try EvmWhitelistHelper(addresses: EvmWhitelistHelperTests.addresses.prefix(3).map { $0 }, targetDests: EvmWhitelistHelperTests.destinations).allChanges(),
             [
                 EvmWhitelistHelperTests.nameHashes[3] + EvmWhitelistHelperTests.cleanAddresses[3]
             ]
@@ -44,7 +44,7 @@ class EvmWhitelistHelperTests: XCTestCase {
     
     func testMultipleAddressesAdded() throws {
         XCTAssertEqual(
-            EvmWhitelistHelper(addresses: EvmWhitelistHelperTests.addresses.prefix(2).map { $0 }, targetDests: EvmWhitelistHelperTests.destinations).allChanges(),
+            try EvmWhitelistHelper(addresses: EvmWhitelistHelperTests.addresses.prefix(2).map { $0 }, targetDests: EvmWhitelistHelperTests.destinations).allChanges(),
             [
                 EvmWhitelistHelperTests.nameHashes[2] + EvmWhitelistHelperTests.cleanAddresses[2],
                 EvmWhitelistHelperTests.nameHashes[3] + EvmWhitelistHelperTests.cleanAddresses[3]
@@ -54,7 +54,7 @@ class EvmWhitelistHelperTests: XCTestCase {
     
     func testAddressRemoved() throws {
         XCTAssertEqual(
-            EvmWhitelistHelper(addresses: EvmWhitelistHelperTests.addresses, targetDests: EvmWhitelistHelperTests.destinations.prefix(3).map { $0 }).allChanges(),
+            try EvmWhitelistHelper(addresses: EvmWhitelistHelperTests.addresses, targetDests: EvmWhitelistHelperTests.destinations.prefix(3).map { $0 }).allChanges(),
             [
                 "000000000000000000000001" + EvmWhitelistHelperTests.cleanAddresses[2]
             ]
@@ -63,7 +63,7 @@ class EvmWhitelistHelperTests: XCTestCase {
     
     func testMultipleContiguousAddressesRemoved() throws {
         XCTAssertEqual(
-            EvmWhitelistHelper(addresses: EvmWhitelistHelperTests.addresses, targetDests: EvmWhitelistHelperTests.destinations.prefix(2).map { $0 }).allChanges(),
+            try EvmWhitelistHelper(addresses: EvmWhitelistHelperTests.addresses, targetDests: EvmWhitelistHelperTests.destinations.prefix(2).map { $0 }).allChanges(),
             [
                 "000000000000000000000002" + EvmWhitelistHelperTests.cleanAddresses[1]
             ]
@@ -72,7 +72,7 @@ class EvmWhitelistHelperTests: XCTestCase {
     
     func testMultipleNonContiguousAddressesRemoved() throws {
         XCTAssertEqual(
-            EvmWhitelistHelper(addresses: EvmWhitelistHelperTests.addresses, targetDests: [EvmWhitelistHelperTests.destinations[1]]).allChanges(),
+            try EvmWhitelistHelper(addresses: EvmWhitelistHelperTests.addresses, targetDests: [EvmWhitelistHelperTests.destinations[1]]).allChanges(),
             [
                 "000000000000000000000001" + EvmTransactionUtil.sentinelAddress,
                 "000000000000000000000002" + EvmWhitelistHelperTests.cleanAddresses[1]
@@ -82,7 +82,7 @@ class EvmWhitelistHelperTests: XCTestCase {
     
     func testAddsAndRemoves() throws {
         XCTAssertEqual(
-            EvmWhitelistHelper(addresses: EvmWhitelistHelperTests.addresses.prefix(3).map { $0 },
+            try EvmWhitelistHelper(addresses: EvmWhitelistHelperTests.addresses.prefix(3).map { $0 },
                                targetDests: [EvmWhitelistHelperTests.destinations[1], EvmWhitelistHelperTests.destinations[2], EvmWhitelistHelperTests.destinations[3]]).allChanges(),
             [
                 "000000000000000000000001" + EvmTransactionUtil.sentinelAddress,

@@ -32,9 +32,16 @@ enum EthTokenType: Codable, Equatable {
     case erc1155(tokenId: String)
 }
 
+struct ContractNameAndAddress: Codable, Equatable {
+    let name: String
+    let address: String
+}
+
 struct EthereumTransaction: Codable, Equatable {
     let safeNonce: UInt64
     let chainId: UInt64
+    var vaultAddress: String? = nil
+    var contractAddresses: [ContractNameAndAddress] = []
 }
 
 struct EthereumSigningData: Codable, Equatable {
@@ -147,7 +154,7 @@ struct DAppInfo: Codable, Equatable {
 #if DEBUG
 extension EthereumSigningData {
     static var sample: Self {
-        EthereumSigningData(transaction: EthereumTransaction(safeNonce: 0, chainId: 1))
+        EthereumSigningData(transaction: EthereumTransaction(safeNonce: 0, chainId: 1, vaultAddress: "", contractAddresses: []))
     }
 }
 #endif

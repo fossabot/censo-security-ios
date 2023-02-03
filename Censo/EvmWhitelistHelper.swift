@@ -30,9 +30,6 @@ extension EvmDestination {
     }
 }
 
-enum WhitelistError: Error, Equatable {
-    case other(String)
-}
 
 struct EvmWhitelistHelper {
     var currentAddresses: [String]
@@ -91,13 +88,14 @@ struct EvmWhitelistHelper {
         }
     }
     
-    func removedAddresses() -> [String] {
+    func removedAddresses() throws -> [String] {
         var sequenceList: [[String]] = []
         let removedAddresses = Set(currentAddresses).subtracting(Set(targetAddresses))
         if !removedAddresses.isEmpty {
             for address in currentAddresses {
                 if removedAddresses.contains(address) {
-                    if !sequenceList.isEmpty && sequenceList.last!.contains(prevAddress(address)) {
+                    let prevAddress = try prevAddress(address)
+                    if !sequenceList.isEmpty && sequenceList.last!.contains(prevAddress) {
                         sequenceList.indices.last.map{ sequenceList[$0].append(address) }
                     } else {
                         sequenceList.append([address])
@@ -105,20 +103,19 @@ struct EvmWhitelistHelper {
                 }
             }
         }
-        return sequenceList.map {
-            print("sequence \($0)")
+        return try sequenceList.map {
             var txData = Data(capacity: 32)
             EvmTransactionUtil.appendPadded(destination: &txData, source: Bignum($0.count).data.suffix(12), padTo: 12)
-            EvmTransactionUtil.appendPadded(destination: &txData, source: prevAddress($0[0]).data(using: .hexadecimal)!, padTo: 20)
+            try EvmTransactionUtil.appendPadded(destination: &txData, source: prevAddress($0[0]).data(using: .hexadecimal)!, padTo: 20)
             return txData.toHexString()
         }
     }
     
-    func allChanges() -> [String] {
-        return removedAddresses() + addedAddresses()
+    func allChanges() throws -> [String] {
+        return try removedAddresses() + addedAddresses()
     }
     
-    private func prevAddress(_ address: String) -> String {
+    private func prevAddress(_ address: String) throws -> String {
         var prev: String? = nil
         for addr in currentAddresses {
             if (addr == address) {
@@ -126,8 +123,7 @@ struct EvmWhitelistHelper {
             }
             prev = addr
         }
-        return "0x0"
-        //throw WhitelistError.other("cannot find previous address")
+        throw EvmConfigError.invalidWhitelist("prev not found for \(address)")
     }
     
 }

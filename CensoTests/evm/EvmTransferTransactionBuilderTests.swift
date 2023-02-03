@@ -8,14 +8,13 @@
 import XCTest
 @testable import Censo
 
-class EthereumSigningTests: XCTestCase {
+class EvmTransferTransactionBuilderTests: XCTestCase {
     private let destinationAddress = "0x6e01af3913026660fcebb93f054345eccd972260"
     private let walletAddress = "0x6e01af3913026660fcebb93f054345eccd972261"
     private let ercContractAddress = "0x6e01af3913026660fcebb93f054345eccd972262"
     private let ethereumTransaction = EthereumTransaction(
         safeNonce: 10,
-        chainId: 31337,
-        vaultAddress: nil
+        chainId: 31337
     )
 
     func testDomainHash() throws {
@@ -24,7 +23,7 @@ class EthereumSigningTests: XCTestCase {
             EvmTransactionUtil.domainHash(chainId: 31337, verifyingContract: "0x7ff2590186b29e2dd24f2ed1bf3af1e7594903f1")
         )
     }
-    
+
     func testWithdrawalMessageHash() throws {
         XCTAssertEqual(
             "c280488ce25c155982200b6a2e814baf2bf0b96d161d011a712610988cabdc68",
@@ -38,7 +37,7 @@ class EthereumSigningTests: XCTestCase {
             ).toHexString()
         )
     }
-    
+
     func testEthWithdrawal() throws {
         XCTAssertEqual(
             "08e6494cf271ad5b84fe65ea12977e97b4a1c7eedaea6ff1b605c49969d3f2d8",
@@ -51,7 +50,7 @@ class EthereumSigningTests: XCTestCase {
             ).toHexString()
         )
     }
-    
+
     func testErc20Withdrawal() throws {
         XCTAssertEqual(
             "493b5d08bbf55da864e296e3bcf9fc9392955b483efb63710ceb516639c50655",
@@ -64,7 +63,7 @@ class EthereumSigningTests: XCTestCase {
             ).toHexString()
         )
     }
-    
+
     func testErc721Withdrawal() throws {
         XCTAssertEqual(
             "3ae878370ea34c6b72e53ac7efdba9d2ab25b69f16111846efcedf4611e93f43",
@@ -77,7 +76,7 @@ class EthereumSigningTests: XCTestCase {
             ).toHexString()
         )
     }
-    
+
     func testErc1155Withdrawal() throws {
         XCTAssertEqual(
             "03bcc85e250d18e4cc72e5e0bd1bdf8f11b0ac0dafaa0357d7db53687f80f924",
@@ -92,68 +91,3 @@ class EthereumSigningTests: XCTestCase {
     }
 }
 
-
-//private val destinationAddress = Keys.toChecksumAddress("0x6e01af3913026660fcebb93f054345eccd972260")
-//    private val walletAddress = Keys.toChecksumAddress("0x6e01af3913026660fcebb93f054345eccd972261")
-//    private val ercContractAddress = Keys.toChecksumAddress("0x6e01af3913026660fcebb93f054345eccd972262")
-//    private val signingData = ApprovalRequestDetailsV2.SigningData.EthereumTransaction(
-//        chainId = 31337,
-//        safeNonce = 10L,
-//        vaultAddress = null
-//    )
-//
-//    @Test
-//    fun `test eth withdrawal`() {
-//        assertEquals(
-//            "08e6494cf271ad5b84fe65ea12977e97b4a1c7eedaea6ff1b605c49969d3f2d8",
-//            EvmTransferTransactionBuilder.withdrawalSafeHash(
-//                null,
-//                ApprovalRequestDetailsV2.Amount(value = "2.0", nativeValue = "2.000000000000000000"),
-//                walletAddress,
-//                destinationAddress,
-//                signingData
-//            ).toHexString().lowercase()
-//        )
-//    }
-//
-//    @Test
-//    fun `test erc20 withdrawal`() {
-//        assertEquals(
-//            "493b5d08bbf55da864e296e3bcf9fc9392955b483efb63710ceb516639c50655",
-//            EvmTransferTransactionBuilder.withdrawalSafeHash(
-//                ApprovalRequestDetailsV2.EvmTokenInfo.ERC20(ercContractAddress),
-//                ApprovalRequestDetailsV2.Amount(value = "2.0", nativeValue = "2.00000000"),
-//                walletAddress,
-//                destinationAddress,
-//                signingData
-//            ).toHexString().lowercase()
-//        )
-//    }
-//
-//    @Test
-//    fun `test erc721 withdrawal`() {
-//        assertEquals(
-//            "3ae878370ea34c6b72e53ac7efdba9d2ab25b69f16111846efcedf4611e93f43",
-//            EvmTransferTransactionBuilder.withdrawalSafeHash(
-//                ApprovalRequestDetailsV2.EvmTokenInfo.ERC721(ercContractAddress,"11223344556677889900"),
-//                ApprovalRequestDetailsV2.Amount(value = "1", nativeValue = "1"),
-//                walletAddress,
-//                destinationAddress,
-//                signingData
-//            ).toHexString().lowercase()
-//        )
-//    }
-//
-//    @Test
-//    fun `test erc1155 withdrawal`() {
-//        assertEquals(
-//            "03bcc85e250d18e4cc72e5e0bd1bdf8f11b0ac0dafaa0357d7db53687f80f924",
-//            EvmTransferTransactionBuilder.withdrawalSafeHash(
-//                ApprovalRequestDetailsV2.EvmTokenInfo.ERC1155(ercContractAddress,"11223344556677889900"),
-//                ApprovalRequestDetailsV2.Amount(value = "2", nativeValue = "2"),
-//                walletAddress,
-//                destinationAddress,
-//                signingData
-//            ).toHexString().lowercase()
-//        )
-//    }

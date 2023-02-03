@@ -47,7 +47,7 @@ class EvmConfigTransactionBuilderTests: XCTestCase {
         )
         XCTAssertEqual(
             "f6eb42d06a737180fca879e87d6963d6030c0d40d0fdd091a4dbc4a97def0775",
-            EvmConfigTransactionBuilder.getSetGuardExecutionFromModuleDataSafeHash(
+            try EvmConfigTransactionBuilder.getSetGuardExecutionFromModuleDataSafeHash(
                 walletAddress: walletAddress,
                 guardAddress: guardAddress,
                 signingData: signingData
@@ -71,7 +71,7 @@ class EvmConfigTransactionBuilderTests: XCTestCase {
         )
         XCTAssertEqual(
             "7b93aed2b9c9b9028885fcaa0425748007cebacde75ee6df57f60314d683bf97",
-            EvmConfigTransactionBuilder.getUpdateWhitelistExecutionFromModuleDataSafeHash(
+            try EvmConfigTransactionBuilder.getUpdateWhitelistExecutionFromModuleDataSafeHash(
                 walletAddress: walletAddress,
                 addsOrRemoves: addressesToAdd,
                 signingData: signingData
@@ -89,7 +89,7 @@ class EvmConfigTransactionBuilderTests: XCTestCase {
         )
         XCTAssertEqual(
             "24befecdd62a870d007522cdc00e757452dd07a23cdb987848ad85e602af073d",
-            EvmConfigTransactionBuilder.getVaultPolicyUpdateDataSafeHash(txs: txs, signingData: signingData).toHexString()
+            try EvmConfigTransactionBuilder.getVaultPolicyUpdateDataSafeHash(txs: txs, signingData: signingData).toHexString()
         )
     }
     
@@ -103,7 +103,7 @@ class EvmConfigTransactionBuilderTests: XCTestCase {
         )
         XCTAssertEqual(
             "046eb5adcfa5c851629e450f368acba9806c87e4d6408813eba7afc81a390368",
-            EvmConfigTransactionBuilder.getVaultPolicyUpdateDataSafeHash(txs: txs, signingData: signingData).toHexString()
+            try EvmConfigTransactionBuilder.getVaultPolicyUpdateDataSafeHash(txs: txs, signingData: signingData).toHexString()
         )
     }
     
@@ -121,7 +121,7 @@ class EvmConfigTransactionBuilderTests: XCTestCase {
         )
         XCTAssertEqual(
             "209645fd1c01854cc1de79fa303547c08f24db5201ae0854d1b2e6d9c16004b3",
-            EvmConfigTransactionBuilder.getVaultPolicyUpdateDataSafeHash(txs: txs, signingData: signingData).toHexString()
+            try EvmConfigTransactionBuilder.getVaultPolicyUpdateDataSafeHash(txs: txs, signingData: signingData).toHexString()
         )
     }
 
@@ -135,7 +135,7 @@ class EvmConfigTransactionBuilderTests: XCTestCase {
         )
         XCTAssertEqual(
             "0c49daaae601de5348ab37760f0de0affc0e4870069ad66e387d1aaead179ca4",
-            EvmConfigTransactionBuilder.getVaultPolicyUpdateDataSafeHash(txs: txs, signingData: signingData).toHexString()
+            try EvmConfigTransactionBuilder.getVaultPolicyUpdateDataSafeHash(txs: txs, signingData: signingData).toHexString()
         )
     }
     
@@ -152,7 +152,7 @@ class EvmConfigTransactionBuilderTests: XCTestCase {
         )
         XCTAssertEqual(
             "04ef6db23f440eecbe4d5e47947677b160758b730821bf4adb98acecd17b3d1d",
-            EvmConfigTransactionBuilder.getVaultPolicyUpdateDataSafeHash(txs: txs, signingData: signingData).toHexString()
+            try EvmConfigTransactionBuilder.getVaultPolicyUpdateDataSafeHash(txs: txs, signingData: signingData).toHexString()
         )
     }
 
@@ -167,7 +167,7 @@ class EvmConfigTransactionBuilderTests: XCTestCase {
         )
         XCTAssertEqual(
             "b5818ccdbbd8ea23d2af5d345b4c968d6565ed216349b64818fc977f8d0f66e9",
-            EvmConfigTransactionBuilder.getPolicyUpdateExecutionFromModuleDataSafeHash(
+            try EvmConfigTransactionBuilder.getPolicyUpdateExecutionFromModuleDataSafeHash(
                 walletAddress: walletAddress,
                 txs: txs,
                 signingData: signingData
@@ -186,7 +186,7 @@ class EvmConfigTransactionBuilderTests: XCTestCase {
         )
         XCTAssertEqual(
             "c6e2dd950ce4f5da473e2b303136d00097b95287a9f9c26e7c0f89a5c2e0d017",
-            EvmConfigTransactionBuilder.getPolicyUpdateExecutionFromModuleDataSafeHash(
+            try EvmConfigTransactionBuilder.getPolicyUpdateExecutionFromModuleDataSafeHash(
                 walletAddress: walletAddress,
                 txs: txs,
                 signingData: signingData
@@ -209,7 +209,7 @@ class EvmConfigTransactionBuilderTests: XCTestCase {
         )
         XCTAssertEqual(
             "b2520eb52a950da57d80cb2ddc0f47bb7a5a545c2f6ad30669063823407f1318",
-            EvmConfigTransactionBuilder.getPolicyUpdateExecutionFromModuleDataSafeHash(
+            try EvmConfigTransactionBuilder.getPolicyUpdateExecutionFromModuleDataSafeHash(
                 walletAddress: walletAddress,
                 txs: txs,
                 signingData: signingData
@@ -228,7 +228,7 @@ class EvmConfigTransactionBuilderTests: XCTestCase {
         )
         XCTAssertEqual(
             "a9ff0670e3923384a0ec571acaa7cbdfa664dff96463a9f33b88f41ce3055999",
-            EvmConfigTransactionBuilder.getPolicyUpdateExecutionFromModuleDataSafeHash(
+            try EvmConfigTransactionBuilder.getPolicyUpdateExecutionFromModuleDataSafeHash(
                 walletAddress: walletAddress,
                 txs: txs,
                 signingData: signingData
@@ -250,7 +250,7 @@ class EvmConfigTransactionBuilderTests: XCTestCase {
         )
         XCTAssertEqual(
             "ef3d0fbdefa12a1460200dbf73ea20fc64150f13029153759e593319f993799e",
-            EvmConfigTransactionBuilder.getPolicyUpdateExecutionFromModuleDataSafeHash(
+            try EvmConfigTransactionBuilder.getPolicyUpdateExecutionFromModuleDataSafeHash(
                 walletAddress: walletAddress,
                 txs: txs,
                 signingData: signingData
