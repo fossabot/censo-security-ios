@@ -35,17 +35,17 @@ public class EvmConfigTransactionBuilder {
     static let multiSendCallOnlyAddress = "0x40A2aCCbd92BCA938b02010E17A5b8929b49130D"
     
     // setting guard
-    static func getSetGuardExecutionFromModuleDataSafeHash(walletAddress: String, guardAddress: String, signingData: EthereumTransaction) throws -> Data {
-        guard let vaultAddress = signingData.vaultAddress else {
+    static func getSetGuardExecutionFromModuleDataSafeHash(walletAddress: String, guardAddress: String, evmTransaction: EvmTransaction) throws -> Data {
+        guard let vaultAddress = evmTransaction.vaultAddress else {
             throw EvmConfigError.missingVault
         }
         return EvmTransactionUtil.computeSafeTransactionHash(
-            chainId: signingData.chainId,
+            chainId: evmTransaction.chainId,
             safeAddress: vaultAddress,
             to: walletAddress,
             value: Bignum(0),
             data: getSetGuardExecutionFromModuleData(walletAddress: walletAddress, guardAddress: guardAddress),
-            nonce: signingData.safeNonce
+            nonce: evmTransaction.safeNonce
         )
     }
         
@@ -59,17 +59,17 @@ public class EvmConfigTransactionBuilder {
     }
     
     // updating whitelist
-    static func getUpdateWhitelistExecutionFromModuleDataSafeHash(walletAddress: String, addsOrRemoves: [Data], signingData: EthereumTransaction) throws -> Data {
-        guard let vaultAddress = signingData.vaultAddress else {
+    static func getUpdateWhitelistExecutionFromModuleDataSafeHash(walletAddress: String, addsOrRemoves: [Data], evmTransaction: EvmTransaction) throws -> Data {
+        guard let vaultAddress = evmTransaction.vaultAddress else {
             throw EvmConfigError.missingVault
         }
         return EvmTransactionUtil.computeSafeTransactionHash(
-            chainId: signingData.chainId,
+            chainId: evmTransaction.chainId,
             safeAddress: vaultAddress,
             to: walletAddress,
             value: Bignum(0),
             data: getUpdateWhitelistExecutionFromModuleData(walletAddress: walletAddress, addsOrRemoves: addsOrRemoves),
-            nonce: signingData.safeNonce
+            nonce: evmTransaction.safeNonce
         )
     }
     
@@ -82,13 +82,13 @@ public class EvmConfigTransactionBuilder {
     }
     
     // setting vault policy
-    static func getVaultPolicyUpdateDataSafeHash(txs: [SafeTx], signingData: EthereumTransaction) throws -> Data {
-        guard let vaultAddress = signingData.vaultAddress else {
+    static func getVaultPolicyUpdateDataSafeHash(txs: [SafeTx], evmTransaction: EvmTransaction) throws -> Data {
+        guard let vaultAddress = evmTransaction.vaultAddress else {
             throw EvmConfigError.missingVault
         }
         let updateData = getPolicyUpdateData(safeAddress: vaultAddress, txs: txs)
         return EvmTransactionUtil.computeSafeTransactionHash(
-            chainId: signingData.chainId,
+            chainId: evmTransaction.chainId,
             safeAddress: vaultAddress,
             to: {
                 switch updateData {
@@ -102,7 +102,7 @@ public class EvmConfigTransactionBuilder {
             value: Bignum(0),
             data: updateData.data,
             operation: updateData.operation,
-            nonce: signingData.safeNonce
+            nonce: evmTransaction.safeNonce
         )
     }
     
@@ -124,17 +124,17 @@ public class EvmConfigTransactionBuilder {
     }
     
     // setting wallet policy
-    static func getPolicyUpdateExecutionFromModuleDataSafeHash(walletAddress: String, txs: [SafeTx],signingData: EthereumTransaction) throws -> Data {
-        guard let vaultAddress = signingData.vaultAddress else {
+    static func getPolicyUpdateExecutionFromModuleDataSafeHash(walletAddress: String, txs: [SafeTx], evmTransaction: EvmTransaction) throws -> Data {
+        guard let vaultAddress = evmTransaction.vaultAddress else {
             throw EvmConfigError.missingVault
         }
         return EvmTransactionUtil.computeSafeTransactionHash(
-            chainId: signingData.chainId,
+            chainId: evmTransaction.chainId,
             safeAddress: vaultAddress,
             to: walletAddress,
             value: Bignum(0),
             data: getPolicyUpdateExecutionFromModuleData(walletAddress: walletAddress, txs: txs),
-            nonce: signingData.safeNonce
+            nonce: evmTransaction.safeNonce
         )
     }
     

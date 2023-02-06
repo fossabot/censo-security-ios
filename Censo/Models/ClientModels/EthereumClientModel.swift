@@ -7,64 +7,63 @@
 
 import Foundation
 
+struct EthereumSigningData: Codable, Equatable  {
+    var transaction: EvmTransaction
+    
+    enum CodingKeys: String, CodingKey {
+        case type
+        case transaction
+    }
+    
+    init(transaction: EvmTransaction) {
+        self.transaction = transaction
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.transaction = try container.decode(EvmTransaction.self, forKey: .transaction)
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode("ethereum", forKey: .type)
+        try container.encode(transaction, forKey: .transaction)
+    }
+    
+}
+
 struct EthereumWalletCreation: Codable, Equatable  {
-    var accountSlot: UInt8
-    var accountInfo: AccountInfo
+    var identifier: String
+    var name: String
     var approvalPolicy: ApprovalPolicy
     var whitelistEnabled: BooleanSetting
     var dappsEnabled: BooleanSetting
-    var addressBookSlot: UInt8
+    var fee: Amount
+    var feeSymbolInfo: EvmSymbolInfo
 }
-
-struct EthereumAddressBookEntry: Codable, Equatable {
-    var name: String
-    var address: String
-}
-
-struct EthTokenInfo: Codable, Equatable {
-    let tokenMintAddress: String
-    let tokenType: EthTokenType
-}
-
-enum EthTokenType: Codable, Equatable {
-    case erc20
-    case erc721(tokenId: String)
-    case erc1155(tokenId: String)
-}
-
-struct ContractNameAndAddress: Codable, Equatable {
-    let name: String
-    let address: String
-}
-
-struct EthereumTransaction: Codable, Equatable {
-    let safeNonce: UInt64
-    let chainId: UInt64
-    var vaultAddress: String? = nil
-    var contractAddresses: [ContractNameAndAddress] = []
-}
-
-struct EthereumSigningData: Codable, Equatable {
-    let transaction: EthereumTransaction
-}
-
+    
 struct EthereumWithdrawalRequest: Codable, Equatable  {
-    var account: AccountInfo
-    var symbolAndAmountInfo: SymbolAndAmountInfo
-    var tokenInfo: EthTokenInfo? // TODO: Backend may or may not provide this conveniently - ask Anton
+    var wallet: WalletInfo
+    var amount: Amount
+    var symbolInfo: EvmSymbolInfo
+    var fee: Amount
+    var feeSymbolInfo: EvmSymbolInfo
     var destination: DestinationAddress
     var signingData: EthereumSigningData
 }
 
 struct EthereumWalletNameUpdate: Codable, Equatable  {
-    var account: AccountInfo
-    var newAccountName: String
+    var wallet: WalletInfo
+    var newName: String
     var signingData: EthereumSigningData
 }
 
 struct EthereumTransferPolicyUpdate: Codable, Equatable  {
-    var account: AccountInfo
+    var wallet: WalletInfo
     var approvalPolicy: ApprovalPolicy
+    var currentOnChainPolicy: OnChainPolicy
+    var fee: Amount
+    var feeSymbolInfo: EvmSymbolInfo
     var signingData: EthereumSigningData
 }
 
@@ -74,27 +73,31 @@ struct EthereumWalletSettingsUpdate: Codable, Equatable  {
         case dappsEnabled(Bool)
     }
 
-    var account: AccountInfo
+    var wallet: WalletInfo
+    var currentGuardAddress: String
     var change: Change
     var signingData: EthereumSigningData
 
     enum CodingKeys: String, CodingKey {
-        case account
+        case wallet
+        case currentGuardAddress
         case whitelistEnabled
         case dappsEnabled
         case signingData
     }
 
-    init(account: AccountInfo, change: Change, signingData: EthereumSigningData) {
-        self.account = account
+    init(wallet: WalletInfo, currentGuardAddress: String, change: Change, signingData: EthereumSigningData) {
+        self.wallet = wallet
+        self.currentGuardAddress = currentGuardAddress
         self.change = change
         self.signingData = signingData
     }
 
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
-        self.account = try container.decode(AccountInfo.self, forKey: .account)
+        self.wallet = try container.decode(WalletInfo.self, forKey: .wallet)
         self.signingData = try container.decode(EthereumSigningData.self, forKey: .signingData)
+        self.currentGuardAddress = try container.decode(String.self, forKey: .currentGuardAddress)
 
         let whitelistEnabled = try container.decode(BooleanSetting?.self, forKey: .whitelistEnabled)
         let dappsEnabled = try container.decode(BooleanSetting?.self, forKey: .dappsEnabled)
@@ -110,7 +113,8 @@ struct EthereumWalletSettingsUpdate: Codable, Equatable  {
 
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode(account, forKey: .account)
+        try container.encode(wallet, forKey: .wallet)
+        try container.encode(currentGuardAddress, forKey: .currentGuardAddress)
         try container.encode(signingData, forKey: .signingData)
 
         switch change {
@@ -123,8 +127,9 @@ struct EthereumWalletSettingsUpdate: Codable, Equatable  {
 }
 
 struct EthereumWalletWhitelistUpdate: Codable, Equatable  {
-    var account: AccountInfo
+    var wallet: WalletInfo
     var destinations: [DestinationAddress]
+    var currentOnChainWhitelist: [String]
     var signingData: EthereumSigningData
 }
 
@@ -140,7 +145,7 @@ struct EthereumDAppTransactionRequest: Codable, Equatable  {
         let usdEquivalent: String?
     }
 
-    var account: AccountInfo
+    var wallet: WalletInfo
     var dappInfo: DAppInfo
     var balanceChanges: [SymbolAndAmountInfo]
     var signingData: EthereumSigningData
@@ -152,9 +157,11 @@ struct DAppInfo: Codable, Equatable {
 }
 
 #if DEBUG
+
 extension EthereumSigningData {
     static var sample: Self {
-        EthereumSigningData(transaction: EthereumTransaction(safeNonce: 0, chainId: 1, vaultAddress: "", contractAddresses: []))
+        EthereumSigningData(transaction: .sample)
     }
 }
+
 #endif

@@ -13,8 +13,8 @@ extension ApprovalRequestType {
         switch self {
         case .ethereumWithdrawalRequest(let request as WithdrawalRequest),
              .bitcoinWithdrawalRequest(let request as WithdrawalRequest):
-            if (request.symbolAndAmountInfo.replacementFee == nil) {
-                return "Send \(request.symbolAndAmountInfo.formattedAmount) \(request.symbolAndAmountInfo.symbolInfo.symbol)"
+            if (request.replacementFee == nil) {
+                return "Send \(request.amount.formattedAmount) \(request.symbol.symbol)"
             } else {
                 return "Bump Fee"
             }
@@ -56,14 +56,14 @@ extension ApprovalRequestType {
     var header2: String? {
         switch self {
         case .ethereumWalletSettingsUpdate(let update):
-            return update.account.name.toWalletName()
+            return update.wallet.name.toWalletName()
         case .ethereumWalletWhitelistUpdate(let update):
-            return update.account.name.toWalletName()
+            return update.wallet.name.toWalletName()
         case .ethereumWalletNameUpdate(let update):
-            return "\(update.account.name.toWalletName()) → \(update.newAccountName.toWalletName())"
+            return "\(update.wallet.name.toWalletName()) → \(update.newName.toWalletName())"
         case .ethereumWithdrawalRequest(let request as WithdrawalRequest),
              .bitcoinWithdrawalRequest(let request as WithdrawalRequest):
-            if (request.symbolAndAmountInfo.replacementFee == nil) {
+            if (request.replacementFee == nil) {
                 return nil
             } else {
                 return "for sending"
@@ -77,8 +77,8 @@ extension ApprovalRequestType {
         switch self {
         case .ethereumWithdrawalRequest(let request as WithdrawalRequest),
              .bitcoinWithdrawalRequest(let request as WithdrawalRequest):
-            if (request.symbolAndAmountInfo.replacementFee == nil) {
-                return request.symbolAndAmountInfo.formattedUSDEquivalent.flatMap {
+            if (request.replacementFee == nil) {
+                return request.amount.formattedUSDEquivalent.flatMap {
                     "\($0) USD equivalent"
                 }
             } else {

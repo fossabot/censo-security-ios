@@ -7,18 +7,18 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3D0F3D5C2979D20F006C3328 /* EtheriumSignable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0F3D5B2979D20F006C3328 /* EtheriumSignable.swift */; };
+		3D0F3D5C2979D20F006C3328 /* EthereumSignable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0F3D5B2979D20F006C3328 /* EthereumSignable.swift */; };
 		3D0F3D5E2979D22C006C3328 /* BitcoinSignable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D0F3D5D2979D22C006C3328 /* BitcoinSignable.swift */; };
-		3D115202282169D4007CD43D /* WalletConfigPolicyRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D115201282169D4007CD43D /* WalletConfigPolicyRow.swift */; };
-		3D115204282169E1007CD43D /* WalletConfigPolicyDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D115203282169E1007CD43D /* WalletConfigPolicyDetails.swift */; };
-		3D11520728216FBD007CD43D /* BalanceAccountPolicyRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D11520628216FBD007CD43D /* BalanceAccountPolicyRow.swift */; };
-		3D11520928216FCC007CD43D /* BalanceAccountPolicyDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D11520828216FCC007CD43D /* BalanceAccountPolicyDetails.swift */; };
-		3D11520C28217321007CD43D /* BalanceAccountNameRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D11520B28217321007CD43D /* BalanceAccountNameRow.swift */; };
-		3D11520E2821732E007CD43D /* BalanceAccountNameDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D11520D2821732E007CD43D /* BalanceAccountNameDetails.swift */; };
+		3D115202282169D4007CD43D /* VaultConfigPolicyRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D115201282169D4007CD43D /* VaultConfigPolicyRow.swift */; };
+		3D115204282169E1007CD43D /* VaultConfigPolicyDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D115203282169E1007CD43D /* VaultConfigPolicyDetails.swift */; };
+		3D11520728216FBD007CD43D /* WalletTransferPolicyRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D11520628216FBD007CD43D /* WalletTransferPolicyRow.swift */; };
+		3D11520928216FCC007CD43D /* WalletTransferPolicyDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D11520828216FCC007CD43D /* WalletTransferPolicyDetails.swift */; };
+		3D11520C28217321007CD43D /* WallettNameRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D11520B28217321007CD43D /* WallettNameRow.swift */; };
+		3D11520E2821732E007CD43D /* WalletNameDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D11520D2821732E007CD43D /* WalletNameDetails.swift */; };
 		3D115211282176FD007CD43D /* AddressBookUpdateRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D115210282176FD007CD43D /* AddressBookUpdateRow.swift */; };
 		3D11521328217709007CD43D /* AddressBookUpdateDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D11521228217709007CD43D /* AddressBookUpdateDetails.swift */; };
-		3D11521628217FB5007CD43D /* BalanceAccountSettingsRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D11521528217FB5007CD43D /* BalanceAccountSettingsRow.swift */; };
-		3D11521828217FC2007CD43D /* BalanceAccountSettingsDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D11521728217FC2007CD43D /* BalanceAccountSettingsDetails.swift */; };
+		3D11521628217FB5007CD43D /* WalletSettingsRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D11521528217FB5007CD43D /* WalletSettingsRow.swift */; };
+		3D11521828217FC2007CD43D /* WalletSettingsDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D11521728217FC2007CD43D /* WalletSettingsDetails.swift */; };
 		3D11A60027580CD2008C03B1 /* CaptureController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D11A5FF27580CD2008C03B1 /* CaptureController.swift */; };
 		3D11A60327580D3F008C03B1 /* DAppScan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D11A60227580D3F008C03B1 /* DAppScan.swift */; };
 		3D11A60527580D81008C03B1 /* CameraPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D11A60427580D81008C03B1 /* CameraPreview.swift */; };
@@ -77,8 +77,8 @@
 		3D845E0D2910159B000C9E81 /* PrivateKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D845E0C2910159B000C9E81 /* PrivateKeys.swift */; };
 		3D845E0F291015D1000C9E81 /* PublicKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D845E0E291015D1000C9E81 /* PublicKeys.swift */; };
 		3D8CA666272C5E1900C68657 /* Theme.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3D8CA665272C5E1900C68657 /* Theme.xcassets */; };
-		3D952408283D0FB800D42243 /* BalanceAccountWhitelistRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D952407283D0FB800D42243 /* BalanceAccountWhitelistRow.swift */; };
-		3D95240A283D0FC300D42243 /* BalanceAccountWhitelistDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D952409283D0FC300D42243 /* BalanceAccountWhitelistDetails.swift */; };
+		3D952408283D0FB800D42243 /* WalletWhitelistRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D952407283D0FB800D42243 /* WalletWhitelistRow.swift */; };
+		3D95240A283D0FC300D42243 /* WallettWhitelistDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D952409283D0FC300D42243 /* WallettWhitelistDetails.swift */; };
 		3DA133A526B1AEB300BB4AF4 /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA133A426B1AEB300BB4AF4 /* Profile.swift */; };
 		3DAA26F0262F5147000F453D /* PrimaryButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DAA26EF262F5147000F453D /* PrimaryButtonStyle.swift */; };
 		3DAA26F6262F5156000F453D /* DestructiveButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DAA26F5262F5156000F453D /* DestructiveButtonStyle.swift */; };
@@ -149,14 +149,18 @@
 		6C0E3EF227EE5E29002FEE7C /* NaclLowLevel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C0E3EF127EE5E29002FEE7C /* NaclLowLevel.swift */; };
 		6C0E3EF727EE6367002FEE7C /* SMP Bignum Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C0E3EF627EE6367002FEE7C /* SMP Bignum Extensions.swift */; };
 		6C0E3EF927EE64BA002FEE7C /* SMP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C0E3EF827EE64BA002FEE7C /* SMP.swift */; };
-		6C0E3EFB27F09D2A002FEE7C /* CensoTestHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C0E3EFA27F09D2A002FEE7C /* CensoTestHelper.swift */; };
 		6C1E8C99285118F900F7C337 /* BipTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C1E8C98285118F900F7C337 /* BipTests.swift */; };
-		6C74FA0228525AC3005C8DE1 /* solana-test-data.json in Resources */ = {isa = PBXBuildFile; fileRef = 6C74FA0128525AC3005C8DE1 /* solana-test-data.json */; };
 		6C74FA0428526282005C8DE1 /* Bip44.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C74FA0328526282005C8DE1 /* Bip44.swift */; };
 		6C74FA07285AAD5F005C8DE1 /* BIP39 in Frameworks */ = {isa = PBXBuildFile; productRef = 6C74FA06285AAD5F005C8DE1 /* BIP39 */; };
 		6C74FA0A2861FE68005C8DE1 /* AcceptVaultInvitationRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C74FA092861FE68005C8DE1 /* AcceptVaultInvitationRow.swift */; };
 		6C74FA0C28620130005C8DE1 /* AcceptVaultInvitationDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C74FA0B28620130005C8DE1 /* AcceptVaultInvitationDetails.swift */; };
 		6C8BA242298CC08700D24E00 /* EvmWhitelistHelperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C8BA241298CC08700D24E00 /* EvmWhitelistHelperTests.swift */; };
+		6C8BA246298EE78A00D24E00 /* MultichainSign.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C8BA245298EE78A00D24E00 /* MultichainSign.swift */; };
+		6C8BA248298EEC1F00D24E00 /* MultichainClientModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C8BA247298EEC1F00D24E00 /* MultichainClientModel.swift */; };
+		6C8BA24A298FD94C00D24E00 /* bitcoin-test-cases.json in Resources */ = {isa = PBXBuildFile; fileRef = 6C8BA249298FD94C00D24E00 /* bitcoin-test-cases.json */; };
+		6C8BA24C298FEA3400D24E00 /* ethereum-test-cases.json in Resources */ = {isa = PBXBuildFile; fileRef = 6C8BA24B298FEA3400D24E00 /* ethereum-test-cases.json */; };
+		6C8BA250298FFB3000D24E00 /* offchain-test-cases.json in Resources */ = {isa = PBXBuildFile; fileRef = 6C8BA24F298FFB3000D24E00 /* offchain-test-cases.json */; };
+		6C8BA2542990A83D00D24E00 /* EvmClientModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C8BA2532990A83D00D24E00 /* EvmClientModel.swift */; };
 		6C8CE7332989D01200834978 /* EvmConfigTransactionBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C8CE7322989D01200834978 /* EvmConfigTransactionBuilder.swift */; };
 		6C8CE735298ABCBA00834978 /* EvmConfigTransactionBuilderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C8CE734298ABCBA00834978 /* EvmConfigTransactionBuilderTests.swift */; };
 		6C8CE737298AC8A800834978 /* EvmWhitelistHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C8CE736298AC8A700834978 /* EvmWhitelistHelper.swift */; };
@@ -195,18 +199,18 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		3D0F3D5B2979D20F006C3328 /* EtheriumSignable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EtheriumSignable.swift; sourceTree = "<group>"; };
+		3D0F3D5B2979D20F006C3328 /* EthereumSignable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EthereumSignable.swift; sourceTree = "<group>"; };
 		3D0F3D5D2979D22C006C3328 /* BitcoinSignable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitcoinSignable.swift; sourceTree = "<group>"; };
-		3D115201282169D4007CD43D /* WalletConfigPolicyRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletConfigPolicyRow.swift; sourceTree = "<group>"; };
-		3D115203282169E1007CD43D /* WalletConfigPolicyDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletConfigPolicyDetails.swift; sourceTree = "<group>"; };
-		3D11520628216FBD007CD43D /* BalanceAccountPolicyRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceAccountPolicyRow.swift; sourceTree = "<group>"; };
-		3D11520828216FCC007CD43D /* BalanceAccountPolicyDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceAccountPolicyDetails.swift; sourceTree = "<group>"; };
-		3D11520B28217321007CD43D /* BalanceAccountNameRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceAccountNameRow.swift; sourceTree = "<group>"; };
-		3D11520D2821732E007CD43D /* BalanceAccountNameDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceAccountNameDetails.swift; sourceTree = "<group>"; };
+		3D115201282169D4007CD43D /* VaultConfigPolicyRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VaultConfigPolicyRow.swift; sourceTree = "<group>"; };
+		3D115203282169E1007CD43D /* VaultConfigPolicyDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VaultConfigPolicyDetails.swift; sourceTree = "<group>"; };
+		3D11520628216FBD007CD43D /* WalletTransferPolicyRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletTransferPolicyRow.swift; sourceTree = "<group>"; };
+		3D11520828216FCC007CD43D /* WalletTransferPolicyDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletTransferPolicyDetails.swift; sourceTree = "<group>"; };
+		3D11520B28217321007CD43D /* WallettNameRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WallettNameRow.swift; sourceTree = "<group>"; };
+		3D11520D2821732E007CD43D /* WalletNameDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletNameDetails.swift; sourceTree = "<group>"; };
 		3D115210282176FD007CD43D /* AddressBookUpdateRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressBookUpdateRow.swift; sourceTree = "<group>"; };
 		3D11521228217709007CD43D /* AddressBookUpdateDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressBookUpdateDetails.swift; sourceTree = "<group>"; };
-		3D11521528217FB5007CD43D /* BalanceAccountSettingsRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceAccountSettingsRow.swift; sourceTree = "<group>"; };
-		3D11521728217FC2007CD43D /* BalanceAccountSettingsDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceAccountSettingsDetails.swift; sourceTree = "<group>"; };
+		3D11521528217FB5007CD43D /* WalletSettingsRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletSettingsRow.swift; sourceTree = "<group>"; };
+		3D11521728217FC2007CD43D /* WalletSettingsDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletSettingsDetails.swift; sourceTree = "<group>"; };
 		3D11A5FF27580CD2008C03B1 /* CaptureController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureController.swift; sourceTree = "<group>"; };
 		3D11A60227580D3F008C03B1 /* DAppScan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DAppScan.swift; sourceTree = "<group>"; };
 		3D11A60427580D81008C03B1 /* CameraPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPreview.swift; sourceTree = "<group>"; };
@@ -266,8 +270,8 @@
 		3D845E0C2910159B000C9E81 /* PrivateKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivateKeys.swift; sourceTree = "<group>"; };
 		3D845E0E291015D1000C9E81 /* PublicKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicKeys.swift; sourceTree = "<group>"; };
 		3D8CA665272C5E1900C68657 /* Theme.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Theme.xcassets; sourceTree = "<group>"; };
-		3D952407283D0FB800D42243 /* BalanceAccountWhitelistRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceAccountWhitelistRow.swift; sourceTree = "<group>"; };
-		3D952409283D0FC300D42243 /* BalanceAccountWhitelistDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BalanceAccountWhitelistDetails.swift; sourceTree = "<group>"; };
+		3D952407283D0FB800D42243 /* WalletWhitelistRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletWhitelistRow.swift; sourceTree = "<group>"; };
+		3D952409283D0FC300D42243 /* WallettWhitelistDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WallettWhitelistDetails.swift; sourceTree = "<group>"; };
 		3DA133A426B1AEB300BB4AF4 /* Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
 		3DAA26EF262F5147000F453D /* PrimaryButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrimaryButtonStyle.swift; sourceTree = "<group>"; };
 		3DAA26F5262F5156000F453D /* DestructiveButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DestructiveButtonStyle.swift; sourceTree = "<group>"; };
@@ -342,13 +346,17 @@
 		6C0E3EF127EE5E29002FEE7C /* NaclLowLevel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NaclLowLevel.swift; sourceTree = "<group>"; };
 		6C0E3EF627EE6367002FEE7C /* SMP Bignum Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SMP Bignum Extensions.swift"; sourceTree = "<group>"; };
 		6C0E3EF827EE64BA002FEE7C /* SMP.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SMP.swift; sourceTree = "<group>"; };
-		6C0E3EFA27F09D2A002FEE7C /* CensoTestHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CensoTestHelper.swift; sourceTree = "<group>"; };
 		6C1E8C98285118F900F7C337 /* BipTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BipTests.swift; sourceTree = "<group>"; };
-		6C74FA0128525AC3005C8DE1 /* solana-test-data.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "solana-test-data.json"; sourceTree = "<group>"; };
 		6C74FA0328526282005C8DE1 /* Bip44.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bip44.swift; sourceTree = "<group>"; };
 		6C74FA092861FE68005C8DE1 /* AcceptVaultInvitationRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcceptVaultInvitationRow.swift; sourceTree = "<group>"; };
 		6C74FA0B28620130005C8DE1 /* AcceptVaultInvitationDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AcceptVaultInvitationDetails.swift; sourceTree = "<group>"; };
 		6C8BA241298CC08700D24E00 /* EvmWhitelistHelperTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EvmWhitelistHelperTests.swift; sourceTree = "<group>"; };
+		6C8BA245298EE78A00D24E00 /* MultichainSign.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultichainSign.swift; sourceTree = "<group>"; };
+		6C8BA247298EEC1F00D24E00 /* MultichainClientModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultichainClientModel.swift; sourceTree = "<group>"; };
+		6C8BA249298FD94C00D24E00 /* bitcoin-test-cases.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "bitcoin-test-cases.json"; sourceTree = "<group>"; };
+		6C8BA24B298FEA3400D24E00 /* ethereum-test-cases.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "ethereum-test-cases.json"; sourceTree = "<group>"; };
+		6C8BA24F298FFB3000D24E00 /* offchain-test-cases.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = "offchain-test-cases.json"; sourceTree = "<group>"; };
+		6C8BA2532990A83D00D24E00 /* EvmClientModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvmClientModel.swift; sourceTree = "<group>"; };
 		6C8CE7322989D01200834978 /* EvmConfigTransactionBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvmConfigTransactionBuilder.swift; sourceTree = "<group>"; };
 		6C8CE734298ABCBA00834978 /* EvmConfigTransactionBuilderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvmConfigTransactionBuilderTests.swift; sourceTree = "<group>"; };
 		6C8CE736298AC8A700834978 /* EvmWhitelistHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvmWhitelistHelper.swift; sourceTree = "<group>"; };
@@ -401,31 +409,31 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		3D115200282169A5007CD43D /* WalletConfigPolicy */ = {
+		3D115200282169A5007CD43D /* VaultConfigPolicy */ = {
 			isa = PBXGroup;
 			children = (
-				3D115201282169D4007CD43D /* WalletConfigPolicyRow.swift */,
-				3D115203282169E1007CD43D /* WalletConfigPolicyDetails.swift */,
+				3D115201282169D4007CD43D /* VaultConfigPolicyRow.swift */,
+				3D115203282169E1007CD43D /* VaultConfigPolicyDetails.swift */,
 			);
-			path = WalletConfigPolicy;
+			path = VaultConfigPolicy;
 			sourceTree = "<group>";
 		};
-		3D11520528216FA1007CD43D /* BalanceAccountPolicy */ = {
+		3D11520528216FA1007CD43D /* WalletTransferPolicy */ = {
 			isa = PBXGroup;
 			children = (
-				3D11520628216FBD007CD43D /* BalanceAccountPolicyRow.swift */,
-				3D11520828216FCC007CD43D /* BalanceAccountPolicyDetails.swift */,
+				3D11520628216FBD007CD43D /* WalletTransferPolicyRow.swift */,
+				3D11520828216FCC007CD43D /* WalletTransferPolicyDetails.swift */,
 			);
-			path = BalanceAccountPolicy;
+			path = WalletTransferPolicy;
 			sourceTree = "<group>";
 		};
-		3D11520A2821730C007CD43D /* BalanceAccountName */ = {
+		3D11520A2821730C007CD43D /* WalletName */ = {
 			isa = PBXGroup;
 			children = (
-				3D11520B28217321007CD43D /* BalanceAccountNameRow.swift */,
-				3D11520D2821732E007CD43D /* BalanceAccountNameDetails.swift */,
+				3D11520B28217321007CD43D /* WallettNameRow.swift */,
+				3D11520D2821732E007CD43D /* WalletNameDetails.swift */,
 			);
-			path = BalanceAccountName;
+			path = WalletName;
 			sourceTree = "<group>";
 		};
 		3D11520F282176D8007CD43D /* AddressBookUpdate */ = {
@@ -437,13 +445,13 @@
 			path = AddressBookUpdate;
 			sourceTree = "<group>";
 		};
-		3D11521428217F9E007CD43D /* BalanceAccountSettings */ = {
+		3D11521428217F9E007CD43D /* WalletSettings */ = {
 			isa = PBXGroup;
 			children = (
-				3D11521528217FB5007CD43D /* BalanceAccountSettingsRow.swift */,
-				3D11521728217FC2007CD43D /* BalanceAccountSettingsDetails.swift */,
+				3D11521528217FB5007CD43D /* WalletSettingsRow.swift */,
+				3D11521728217FC2007CD43D /* WalletSettingsDetails.swift */,
 			);
-			path = BalanceAccountSettings;
+			path = WalletSettings;
 			sourceTree = "<group>";
 		};
 		3D11A60127580D1C008C03B1 /* DApp */ = {
@@ -597,15 +605,15 @@
 				3DAF53B7262E1402000DD558 /* ApprovalRequestDetails.swift */,
 				3DBD7DCD2655CE0F00662C62 /* ApprovalsNeeded.swift */,
 				3DB7F9BF26D6C2CD00A49B4E /* UnknownRequestRow.swift */,
-				3D952406283D0FA400D42243 /* BalanceAccountWhitelist */,
-				3D11521428217F9E007CD43D /* BalanceAccountSettings */,
+				3D952406283D0FA400D42243 /* WalletWhitelist */,
+				3D11521428217F9E007CD43D /* WalletSettings */,
 				3D11520F282176D8007CD43D /* AddressBookUpdate */,
-				3D11520A2821730C007CD43D /* BalanceAccountName */,
-				3D11520528216FA1007CD43D /* BalanceAccountPolicy */,
-				3D115200282169A5007CD43D /* WalletConfigPolicy */,
+				3D11520A2821730C007CD43D /* WalletName */,
+				3D11520528216FA1007CD43D /* WalletTransferPolicy */,
+				3D115200282169A5007CD43D /* VaultConfigPolicy */,
 				3DBC44E1280F17510016E1AB /* Login */,
 				3D7FFFEB27FA0F4E003B3F48 /* DAppTransaction */,
-				3DB995F927EB74E9005655F0 /* AccountCreation */,
+				3DB995F927EB74E9005655F0 /* WalletCreation */,
 				3DB995F427EB71D7005655F0 /* SignerUpdate */,
 				3D88B02D2640647100090749 /* Withdrawal */,
 			);
@@ -658,13 +666,13 @@
 			path = Withdrawal;
 			sourceTree = "<group>";
 		};
-		3D952406283D0FA400D42243 /* BalanceAccountWhitelist */ = {
+		3D952406283D0FA400D42243 /* WalletWhitelist */ = {
 			isa = PBXGroup;
 			children = (
-				3D952407283D0FB800D42243 /* BalanceAccountWhitelistRow.swift */,
-				3D952409283D0FC300D42243 /* BalanceAccountWhitelistDetails.swift */,
+				3D952407283D0FB800D42243 /* WalletWhitelistRow.swift */,
+				3D952409283D0FC300D42243 /* WallettWhitelistDetails.swift */,
 			);
-			path = BalanceAccountWhitelist;
+			path = WalletWhitelist;
 			sourceTree = "<group>";
 		};
 		3DAA26EE262F50CB000F453D /* ButtonStyles */ = {
@@ -686,13 +694,13 @@
 			path = SignerUpdate;
 			sourceTree = "<group>";
 		};
-		3DB995F927EB74E9005655F0 /* AccountCreation */ = {
+		3DB995F927EB74E9005655F0 /* WalletCreation */ = {
 			isa = PBXGroup;
 			children = (
 				3DB995FA27EB7997005655F0 /* WalletCreationRow.swift */,
 				3DB995FC27EB79A4005655F0 /* WalletCreationDetails.swift */,
 			);
-			path = AccountCreation;
+			path = WalletCreation;
 			sourceTree = "<group>";
 		};
 		3DBC44E1280F17510016E1AB /* Login */ = {
@@ -710,6 +718,8 @@
 				3DC7A74427D67E8800A2BBA7 /* SharedClientModel.swift */,
 				3DC205C329882EA200BD8BB0 /* EthereumClientModel.swift */,
 				3DC205C52988450400BD8BB0 /* BitcoinClientModel.swift */,
+				6C8BA247298EEC1F00D24E00 /* MultichainClientModel.swift */,
+				6C8BA2532990A83D00D24E00 /* EvmClientModel.swift */,
 			);
 			path = ClientModels;
 			sourceTree = "<group>";
@@ -730,8 +740,9 @@
 			children = (
 				3DE16107296F981200F48930 /* SignatureInfo.swift */,
 				3D0F3D5D2979D22C006C3328 /* BitcoinSignable.swift */,
-				3D0F3D5B2979D20F006C3328 /* EtheriumSignable.swift */,
+				3D0F3D5B2979D20F006C3328 /* EthereumSignable.swift */,
 				3DC205CB2988A71200BD8BB0 /* ApprovalDispositionRequest+Signing.swift */,
+				6C8BA245298EE78A00D24E00 /* MultichainSign.swift */,
 			);
 			path = Signing;
 			sourceTree = "<group>";
@@ -785,11 +796,12 @@
 				6C8CE73B298B5EF000834978 /* evm */,
 				40328E212593ED9D00F2EE41 /* CensoTests.swift */,
 				40328E232593ED9D00F2EE41 /* Info.plist */,
-				6C0E3EFA27F09D2A002FEE7C /* CensoTestHelper.swift */,
 				6C1E8C98285118F900F7C337 /* BipTests.swift */,
-				6C74FA0128525AC3005C8DE1 /* solana-test-data.json */,
 				6CBA96DE28E66BAE000A3727 /* bitcoin-test-data.json */,
 				6CCDBD5928EFC4BE00BBB5B6 /* KeychainTests.swift */,
+				6C8BA249298FD94C00D24E00 /* bitcoin-test-cases.json */,
+				6C8BA24B298FEA3400D24E00 /* ethereum-test-cases.json */,
+				6C8BA24F298FFB3000D24E00 /* offchain-test-cases.json */,
 			);
 			path = CensoTests;
 			sourceTree = "<group>";
@@ -1014,7 +1026,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				6CBA96DF28E66BAE000A3727 /* bitcoin-test-data.json in Resources */,
-				6C74FA0228525AC3005C8DE1 /* solana-test-data.json in Resources */,
+				6C8BA24A298FD94C00D24E00 /* bitcoin-test-cases.json in Resources */,
+				6C8BA24C298FEA3400D24E00 /* ethereum-test-cases.json in Resources */,
+				6C8BA250298FFB3000D24E00 /* offchain-test-cases.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1048,7 +1062,7 @@
 			files = (
 				3D2BCA08264D7A79000A6D56 /* ChangeDetails.swift in Sources */,
 				3DBC44E5280F18830016E1AB /* LoginDetails.swift in Sources */,
-				3D11521628217FB5007CD43D /* BalanceAccountSettingsRow.swift in Sources */,
+				3D11521628217FB5007CD43D /* WalletSettingsRow.swift in Sources */,
 				6CCDBD5828EF8BBD00BBB5B6 /* AdditionalKeyRegistration.swift in Sources */,
 				3D6334EC2885C299002CEC5A /* PenAndPaperConfirm.swift in Sources */,
 				3DE16108296F981200F48930 /* SignatureInfo.swift in Sources */,
@@ -1059,7 +1073,7 @@
 				3D11A60327580D3F008C03B1 /* DAppScan.swift in Sources */,
 				3DB995FF27EE1804005655F0 /* BiometryError.swift in Sources */,
 				3DBF9DAF26DE7A0E00D7683E /* ViewRouter.swift in Sources */,
-				3D11520E2821732E007CD43D /* BalanceAccountNameDetails.swift in Sources */,
+				3D11520E2821732E007CD43D /* WalletNameDetails.swift in Sources */,
 				3DAF53B8262E1402000DD558 /* ApprovalRequestDetails.swift in Sources */,
 				3D3D6D4F261B957800FEEE0B /* RetryView.swift in Sources */,
 				3DB7F9C026D6C2CD00A49B4E /* UnknownRequestRow.swift in Sources */,
@@ -1070,11 +1084,12 @@
 				3DE1610A296F98CD00F48930 /* ApprovalDispositionRequest.swift in Sources */,
 				3DBE36EF28B539C40096850B /* PenAndPaperSignInRecovery.swift in Sources */,
 				3DBC44E3280F17660016E1AB /* LoginRow.swift in Sources */,
+				6C8BA246298EE78A00D24E00 /* MultichainSign.swift in Sources */,
 				3DC7A74327D006A900A2BBA7 /* KeyRetrieval.swift in Sources */,
 				40B093A625DF27CC00EA51C6 /* String+Masked.swift in Sources */,
 				3DC205C429882EA200BD8BB0 /* EthereumClientModel.swift in Sources */,
 				6CBA96D228E63CF8000A3727 /* Secp256k1PrivateKey.swift in Sources */,
-				3D11520928216FCC007CD43D /* BalanceAccountPolicyDetails.swift in Sources */,
+				3D11520928216FCC007CD43D /* WalletTransferPolicyDetails.swift in Sources */,
 				6C74FA0428526282005C8DE1 /* Bip44.swift in Sources */,
 				3DBD7DCE2655CE0F00662C62 /* ApprovalsNeeded.swift in Sources */,
 				3DC7A74127D0067D00A2BBA7 /* KeyGeneration.swift in Sources */,
@@ -1085,6 +1100,7 @@
 				6CBA96CE28E63B37000A3727 /* EllipticCurveEncrypterSecp256k1.swift in Sources */,
 				3DBE36F128B53B3B0096850B /* KeyRetrievalSignInRecovery.swift in Sources */,
 				3DC205CA2988912000BD8BB0 /* HelperExtensions.swift in Sources */,
+				6C8BA248298EEC1F00D24E00 /* MultichainClientModel.swift in Sources */,
 				3D311DEA260BD14A007A0B98 /* Moya+AuthProvider.swift in Sources */,
 				3D6334FB2885C2C9002CEC5A /* DarkRoundedTextFieldStyle.swift in Sources */,
 				3DC7A74527D67E8900A2BBA7 /* SharedClientModel.swift in Sources */,
@@ -1093,19 +1109,20 @@
 				3D311D57260A3A1A007A0B98 /* MockAuthProvider.swift in Sources */,
 				3D7FFFEF27FA0F88003B3F48 /* DAppTransactionDetails.swift in Sources */,
 				3DB995FD27EB79A4005655F0 /* WalletCreationDetails.swift in Sources */,
-				3D11520728216FBD007CD43D /* BalanceAccountPolicyRow.swift in Sources */,
+				3D11520728216FBD007CD43D /* WalletTransferPolicyRow.swift in Sources */,
 				3D11A60B275851BA008C03B1 /* WalletConnected.swift in Sources */,
 				3D1AF111298C2CCA00A01E43 /* DeviceRegistration.swift in Sources */,
 				3D11A60027580CD2008C03B1 /* CaptureController.swift in Sources */,
 				6CBA96D028E63C11000A3727 /* SecpResult.swift in Sources */,
+				6C8BA2542990A83D00D24E00 /* EvmClientModel.swift in Sources */,
 				3DAF53C4262E1ACF000DD558 /* WithdrawalDetails.swift in Sources */,
 				3D11A60527580D81008C03B1 /* CameraPreview.swift in Sources */,
-				3D0F3D5C2979D20F006C3328 /* EtheriumSignable.swift in Sources */,
+				3D0F3D5C2979D20F006C3328 /* EthereumSignable.swift in Sources */,
 				BD072F7D292E7E9E00B36C5A /* EvmTransferTransactionBuilder.swift in Sources */,
 				3D6334F12885C299002CEC5A /* PasswordManagerConfirm.swift in Sources */,
 				3DC2F3FF25F896C40061BB3A /* RemoteResult.swift in Sources */,
 				3DBF9DC526E0020300D7683E /* ApprovalRequestItem.swift in Sources */,
-				3D115204282169E1007CD43D /* WalletConfigPolicyDetails.swift in Sources */,
+				3D115204282169E1007CD43D /* VaultConfigPolicyDetails.swift in Sources */,
 				3DB995F627EB71EE005655F0 /* SignerUpdateRow.swift in Sources */,
 				3DE1610D297087AE00F48930 /* ApprovalRequest.swift in Sources */,
 				3DED50D229103D1B00904DBA /* Keychain+Storage.swift in Sources */,
@@ -1119,7 +1136,7 @@
 				6CBA96E128E743A4000A3727 /* Secp256k1HierarchicalKey.swift in Sources */,
 				3D311D43260A336A007A0B98 /* RoundedCell.swift in Sources */,
 				3DBE36ED28B52C820096850B /* PasswordManagerSignInRecovery.swift in Sources */,
-				3D952408283D0FB800D42243 /* BalanceAccountWhitelistRow.swift in Sources */,
+				3D952408283D0FB800D42243 /* WalletWhitelistRow.swift in Sources */,
 				40A9AF0E25DF5F0E004320EF /* ComposeMail.swift in Sources */,
 				6CBA96CD28E63B35000A3727 /* ECDSA.swift in Sources */,
 				3D517A502965D6C000A2733A /* PhotoCaptureController.swift in Sources */,
@@ -1154,7 +1171,7 @@
 				40A9AF0425DF32B9004320EF /* FactList.swift in Sources */,
 				6CD5B4A228A453DB00CD1A62 /* PasswordResetRow.swift in Sources */,
 				3D3D6D122616447200FEEE0B /* LoadingModifier.swift in Sources */,
-				3D11520C28217321007CD43D /* BalanceAccountNameRow.swift in Sources */,
+				3D11520C28217321007CD43D /* WallettNameRow.swift in Sources */,
 				3D2CE49925F8423800137E05 /* SignInView.swift in Sources */,
 				40F907A625DDC31B00B107B0 /* CensoApi+Mock.swift in Sources */,
 				3D1C762227DA850A0016BB32 /* Base58.swift in Sources */,
@@ -1169,11 +1186,11 @@
 				3DAFFD2E25F8951100B408AD /* MainView.swift in Sources */,
 				3DC36BB5262B4E8C005DB1A7 /* ApprovalRequestsList.swift in Sources */,
 				6CBA96D928E63E0D000A3727 /* DerivationNode.swift in Sources */,
-				3D115202282169D4007CD43D /* WalletConfigPolicyRow.swift in Sources */,
+				3D115202282169D4007CD43D /* VaultConfigPolicyRow.swift in Sources */,
 				3D6334FC2885C2C9002CEC5A /* BackButtonBar.swift in Sources */,
 				40328E102593ED9900F2EE41 /* CensoApp.swift in Sources */,
-				3D95240A283D0FC300D42243 /* BalanceAccountWhitelistDetails.swift in Sources */,
-				3D11521828217FC2007CD43D /* BalanceAccountSettingsDetails.swift in Sources */,
+				3D95240A283D0FC300D42243 /* WallettWhitelistDetails.swift in Sources */,
+				3D11521828217FC2007CD43D /* WalletSettingsDetails.swift in Sources */,
 				3D1AF119298C2D3C00A01E43 /* CameraNotAvailable.swift in Sources */,
 				3D3D6D362616B84700FEEE0B /* RegistrationView.swift in Sources */,
 				3DAF53B4262E13A4000DD558 /* ApprovalRequestRow.swift in Sources */,
@@ -1212,7 +1229,6 @@
 				6C8CE735298ABCBA00834978 /* EvmConfigTransactionBuilderTests.swift in Sources */,
 				40328E222593ED9D00F2EE41 /* CensoTests.swift in Sources */,
 				6C1E8C99285118F900F7C337 /* BipTests.swift in Sources */,
-				6C0E3EFB27F09D2A002FEE7C /* CensoTestHelper.swift in Sources */,
 				6C8CE73F298BFB8C00834978 /* EvmPolicyHelperTests.swift in Sources */,
 				6C8BA242298CC08700D24E00 /* EvmWhitelistHelperTests.swift in Sources */,
 				BD072F7B292E7DF800B36C5A /* EvmTransferTransactionBuilderTests.swift in Sources */,
@@ -1322,7 +1338,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.2;
+				MARKETING_VERSION = 1.0.3;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.censocustody.mobile-demo-2";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1445,7 +1461,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.2;
+				MARKETING_VERSION = 1.0.3;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.censocustody.mobile-demo-2";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "Strike Mobile Demo 2 AppStore";
@@ -1573,7 +1589,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.2;
+				MARKETING_VERSION = 1.0.3;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.censocustody.mobile-dev";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Censo/Censo-Bridging-Header.h";
@@ -1693,7 +1709,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.2;
+				MARKETING_VERSION = 1.0.3;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.censocustody.mobile-dev";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Censo/Censo-Bridging-Header.h";
@@ -1819,7 +1835,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.2;
+				MARKETING_VERSION = 1.0.3;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.censocustody.mobile-demo";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Censo/Censo-Bridging-Header.h";
@@ -1939,7 +1955,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.2;
+				MARKETING_VERSION = 1.0.3;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.censocustody.mobile-demo";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Censo/Censo-Bridging-Header.h";
@@ -2069,7 +2085,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.2;
+				MARKETING_VERSION = 1.0.3;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.censocustody.mobile-stubbed";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG STUBBED";
@@ -2191,7 +2207,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.2;
+				MARKETING_VERSION = 1.0.3;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.censocustody.mobile-stubbed";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Censo/Censo-Bridging-Header.h";
@@ -2385,7 +2401,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.2;
+				MARKETING_VERSION = 1.0.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.censocustody.mobile;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG PRODUCTION";
@@ -2418,7 +2434,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.2;
+				MARKETING_VERSION = 1.0.3;
 				PRODUCT_BUNDLE_IDENTIFIER = com.censocustody.mobile;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = PRODUCTION;

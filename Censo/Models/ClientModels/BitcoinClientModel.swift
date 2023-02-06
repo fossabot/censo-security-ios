@@ -8,12 +8,9 @@
 import Foundation
 
 struct BitcoinWalletCreation: Codable, Equatable  {
-    var accountSlot: UInt8
-    var accountInfo: AccountInfo
+    var identifier: String
+    var name: String
     var approvalPolicy: ApprovalPolicy
-    var whitelistEnabled: BooleanSetting
-    var dappsEnabled: BooleanSetting
-    var addressBookSlot: UInt8
 }
 
 struct BitcoinTransaction: Codable, Equatable {
@@ -28,12 +25,22 @@ struct BitcoinSigningData: Codable, Equatable {
     let transaction: BitcoinTransaction
 }
 
+struct BitcoinSymbolInfo: Codable, Equatable {
+    let symbol: String
+    let description: String
+    let imageUrl: String?
+}
+
 struct BitcoinWithdrawalRequest: Codable, Equatable  {
-    var account: AccountInfo
-    var symbolAndAmountInfo: SymbolAndAmountInfo
+    var wallet: WalletInfo
+    var amount: Amount
+    var symbolInfo: BitcoinSymbolInfo
+    var fee: Amount
+    var replacementFee: Amount?
     var destination: DestinationAddress
     var signingData: BitcoinSigningData
 }
+
 
 struct TransactionInput: Codable, Equatable {
     let txId: String
@@ -55,10 +62,21 @@ struct TransactionOutput: Codable, Equatable {
 extension BitcoinWithdrawalRequest {
     static var sample: Self {
         BitcoinWithdrawalRequest(
-            account: .sample,
-            symbolAndAmountInfo: .sample,
+            wallet: .sample,
+            amount: .sample,
+            symbolInfo: .sample,
+            fee: .sample,
+            replacementFee: nil,
             destination: .sample,
             signingData: .sample
+        )
+    }
+}
+
+extension BitcoinSymbolInfo {
+    static var sample: Self {
+        BitcoinSymbolInfo(
+            symbol: "BTC", description: "Bitcoin", imageUrl: nil
         )
     }
 }

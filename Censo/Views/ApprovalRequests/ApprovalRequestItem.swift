@@ -30,9 +30,9 @@ struct ApprovalRequestItem: View {
         case .bitcoinWalletCreation(let walletCreation as WalletCreation),
              .ethereumWalletCreation(let walletCreation as WalletCreation):
             ApprovalRequestRow(deviceSigner: deviceSigner, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
-                WalletCreationRow(requestType: request.details, accountCreation: walletCreation)
+                WalletCreationRow(requestType: request.details, walletCreation: walletCreation)
             } detail: {
-                WalletCreationDetails(request: request, accountCreation: walletCreation)
+                WalletCreationDetails(request: request, walletCreation: walletCreation)
             }
         case .ethereumDAppTransactionRequest(let dAppTransactionRequest):
             ApprovalRequestRow(deviceSigner: deviceSigner, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
@@ -42,21 +42,21 @@ struct ApprovalRequestItem: View {
             }
         case .ethereumWalletNameUpdate(let walletNameUpdate): // 3
             ApprovalRequestRow(deviceSigner: deviceSigner, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
-                BalanceAccountNameRow(requestType: request.details, update: walletNameUpdate)
+                WalletNameRow(requestType: request.details, update: walletNameUpdate)
             } detail: {
-                BalanceAccountNameDetails(request: request, update: walletNameUpdate)
+                WalletNameDetails(request: request, update: walletNameUpdate)
             }
-//        case .ethereumTransferPolicyUpdate(let balanceAccountPolicyUpdate): // 2
-//            ApprovalRequestRow(user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
-//                BalanceAccountPolicyRow(requestType: request.requestType, update: balanceAccountPolicyUpdate)
-//            } detail: {
-//                BalanceAccountPolicyDetails(request: request, update: balanceAccountPolicyUpdate, user: user)
-//            }
+        case .ethereumTransferPolicyUpdate(let walletTransferPolicyUpdate): // 2
+            ApprovalRequestRow(deviceSigner: deviceSigner, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
+                WalletTransferPolicyRow(requestType: request.details, update: walletTransferPolicyUpdate)
+            } detail: {
+                WalletTransferPolicyDetails(request: request, update: walletTransferPolicyUpdate, user: user)
+            }
         case .ethereumWalletSettingsUpdate(let walletSettingsUpdate): // 5
             ApprovalRequestRow(deviceSigner: deviceSigner, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
-                BalanceAccountSettingsRow(requestType: request.details, update: walletSettingsUpdate)
+                WalletSettingsRow(requestType: request.details, update: walletSettingsUpdate)
             } detail: {
-                BalanceAccountSettingsDetails(request: request, update: walletSettingsUpdate, user: user)
+                WalletSettingsDetails(request: request, update: walletSettingsUpdate, user: user)
             }
         case .addressBookUpdate(let addressBookUpdate): // 4 - remove whitelist
             ApprovalRequestRow(deviceSigner: deviceSigner, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
@@ -64,25 +64,17 @@ struct ApprovalRequestItem: View {
             } detail: {
                 AddressBookUpdateDetails(request: request, update: addressBookUpdate)
             }
-//        case .dAppBookUpdate(let dAppBookUpdate):
-//            UnknownRequestRow(request: request, timerPublisher: timerPublisher)
-//        case .ethereumWalletConfigPolicyUpdate(let walletConfigPolicyUpdate): // 1
-//            ApprovalRequestRow(user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
-//                WalletConfigPolicyRow(requestType: request.requestType, update: walletConfigPolicyUpdate)
-//            } detail: {
-//                WalletConfigPolicyDetails(request: request, update: walletConfigPolicyUpdate)
-//            }
-//        case .solanaWrapConversionRequest(let wrapConversionRequest):
-//            ApprovalRequestRow(user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
-//                WrapConversionRow(requestType: request.details, conversion: wrapConversionRequest)
-//            } detail: {
-//                WrapConversionDetail(request: request, conversion: wrapConversionRequest)
-//            }
+        case .vaultPolicyUpdate(let vaultPolicyUpdate): // 1
+            ApprovalRequestRow(deviceSigner: deviceSigner, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
+                VaultConfigPolicyRow(requestType: request.details, update: vaultPolicyUpdate)
+            } detail: {
+                VaultConfigPolicyDetails(request: request, update: vaultPolicyUpdate)
+            }
         case .ethereumWalletWhitelistUpdate(let walletWhitelistUpdate):
             ApprovalRequestRow(deviceSigner: deviceSigner, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
-                BalanceAccountWhitelistRow(requestType: request.details, update: walletWhitelistUpdate)
+                WalletWhitelistRow(requestType: request.details, update: walletWhitelistUpdate)
             } detail: {
-                BalanceAccountWhitelistDetails(request: request, update: walletWhitelistUpdate, user: user)
+                WalletWhitelistDetails(request: request, update: walletWhitelistUpdate, user: user)
             }
         case .loginApproval(let login):
             ApprovalRequestRow(deviceSigner: deviceSigner, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
@@ -108,23 +100,57 @@ struct ApprovalRequestItem: View {
     }
 }
 
+protocol SymbolInfo {
+    var symbol: String { get }
+    var description: String { get }
+    var imageUrl: String? { get }
+    var nftMetadata: NftMetadata? { get }
+}
+
+extension BitcoinSymbolInfo: SymbolInfo {
+    var nftMetadata: NftMetadata? {
+        return nil
+    }
+}
+
+extension EvmSymbolInfo: SymbolInfo {}
+
 protocol WithdrawalRequest {
-    var account: AccountInfo { get }
-    var symbolAndAmountInfo: SymbolAndAmountInfo { get }
+    var wallet: WalletInfo { get }
+    var amount: Amount { get }
+    var symbol: SymbolInfo { get }
+    var fee: Amount { get }
+    var feeSymbol: String { get }
+    var replacementFee: Amount? { get }
     var destination: DestinationAddress { get }
 }
 
-extension BitcoinWithdrawalRequest: WithdrawalRequest {}
+extension BitcoinWithdrawalRequest: WithdrawalRequest {
+    var symbol: SymbolInfo {
+        return symbolInfo as SymbolInfo
+    }
+    var feeSymbol: String {
+        return symbolInfo.symbol
+    }
+}
 
-extension EthereumWithdrawalRequest: WithdrawalRequest {}
+extension EthereumWithdrawalRequest: WithdrawalRequest {
+    var replacementFee: Amount? {
+        return nil
+    }
+    
+    var symbol: SymbolInfo {
+        return symbolInfo as SymbolInfo
+    }
+    
+    var feeSymbol: String {
+        return feeSymbolInfo.symbol
+    }
+}
 
 protocol WalletCreation {
-    var accountSlot: UInt8 { get }
-    var accountInfo: AccountInfo { get }
+    var name: String { get }
     var approvalPolicy: ApprovalPolicy { get }
-    var whitelistEnabled: BooleanSetting { get }
-    var dappsEnabled: BooleanSetting { get }
-    var addressBookSlot: UInt8 { get }
 }
 
 extension BitcoinWalletCreation: WalletCreation {}

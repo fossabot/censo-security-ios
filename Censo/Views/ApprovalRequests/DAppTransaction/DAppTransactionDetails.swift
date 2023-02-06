@@ -49,7 +49,7 @@ struct DAppTransactionDetails: View {
                             .foregroundColor(Color.white)
                             .frame(width: 20, height: 20)
 
-                        AccountDetail(name: transactionRequest.account.name)
+                        AccountDetail(name: transactionRequest.wallet.name)
                             .padding(10)
                             .frame(maxWidth: .infinity, maxHeight: 40)
                             .roundedCell(background: .Censo.thirdBackground)

@@ -24,8 +24,8 @@ struct WithdrawalRow: View {
                 .foregroundColor(Color.white)
                 .padding(EdgeInsets(top: 15, leading: 20, bottom: 0, trailing: 20))
             
-            if (withdrawal.symbolAndAmountInfo.replacementFee != nil) {
-                Text("for sending \(withdrawal.symbolAndAmountInfo.formattedAmount) \(withdrawal.symbolAndAmountInfo.symbolInfo.symbol)")
+            if (withdrawal.replacementFee != nil) {
+                Text("for sending \(withdrawal.amount.formattedAmount) \(withdrawal.symbol.symbol)")
                     .font(.caption)
                     .bold()
                     .lineLimit(1)
@@ -35,7 +35,7 @@ struct WithdrawalRow: View {
                     .padding(EdgeInsets(top: 15, leading: 20, bottom: 0, trailing: 20))
                 
             } else {
-                if let usdEquivalent = withdrawal.symbolAndAmountInfo.formattedUSDEquivalent {
+                if let usdEquivalent = withdrawal.amount.formattedUSDEquivalent {
                     Text("\(usdEquivalent) USD equivalent")
                         .font(.caption)
                         .foregroundColor(Color.white.opacity(0.5))
@@ -44,7 +44,7 @@ struct WithdrawalRow: View {
             }
             
             HStack(spacing: 0) {
-                AccountDetail(name: withdrawal.account.name)
+                AccountDetail(name: withdrawal.wallet.name)
                     .padding(10)
                     .frame(maxWidth: .infinity, maxHeight: 40)
                     .roundedCell()
@@ -87,23 +87,13 @@ func formatAmount(amount: String) -> String {
     return split.joined(separator: ".")
 }
     
-extension SymbolAndAmountInfo {
+extension Amount {
     var formattedUSDEquivalent: String? {
         return formatUSDEquivalent(usdEquivalent: usdEquivalent)
     }
 
     var formattedAmount: String {
-        return formatAmount(amount: amount)
-    }
-}
-
-extension Fee {
-    var formattedUSDEquivalent: String? {
-        return formatUSDEquivalent(usdEquivalent: usdEquivalent)
-    }
-
-    var formattedAmount: String {
-        return formatAmount(amount: amount)
+        return formatAmount(amount: value)
     }
 }
 

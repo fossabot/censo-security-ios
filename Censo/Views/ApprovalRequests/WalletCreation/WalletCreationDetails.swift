@@ -10,22 +10,22 @@ import SwiftUI
 
 struct WalletCreationDetails: View {
     var request: ApprovalRequest
-    var accountCreation: WalletCreation
+    var walletCreation: WalletCreation
 
     var body: some View {
         VStack(alignment: .center, spacing: 10) {
             FactList {
-                Fact("Wallet Name", accountCreation.accountInfo.name)
+                Fact("Wallet Name", walletCreation.name)
             }
 
             FactsSection(title: "Approvals") {
-                Fact("Approvals Required", "\(accountCreation.approvalPolicy.approvalsRequired)")
-                Fact("Approval Expiration", "\(DateComponentsFormatter.abbreviatedFormatter.string(for: DateComponents(second: Int(accountCreation.approvalPolicy.approvalTimeout / 1000))) ?? "")")
+                Fact("Approvals Required", "\(walletCreation.approvalPolicy.approvalsRequired)")
+                Fact("Approval Expiration", "\(DateComponentsFormatter.abbreviatedFormatter.string(for: DateComponents(second: Int(walletCreation.approvalPolicy.approvalTimeout / 1000))) ?? "")")
             }
 
             FactsSection(title: "Transfer Approvers") {
-                if accountCreation.approvalPolicy.approvers.count > 0 {
-                    for approver in accountCreation.approvalPolicy.approvers {
+                if walletCreation.approvalPolicy.approvers.count > 0 {
+                    for approver in walletCreation.approvalPolicy.approvers {
                         Fact(approver.name, approver.email)
                     }
                 } else {
@@ -49,13 +49,13 @@ extension DateComponentsFormatter {
 #if DEBUG
 struct AccountCreationDetails_Previews: PreviewProvider {
     static var previews: some View {
-        WalletCreationDetails(request: .sample, accountCreation: EthereumWalletCreation.sample)
+        WalletCreationDetails(request: .sample, walletCreation: EthereumWalletCreation.sample)
 
         let timerPublisher = Timer.TimerPublisher(interval: 1, runLoop: .current, mode: .default).autoconnect()
 
         NavigationView {
             ApprovalRequestDetails(deviceSigner: DeviceSigner(deviceKey: .sample, encryptedRootSeed: Data()), user: .sample, request: .sample, timerPublisher: timerPublisher) {
-                WalletCreationDetails(request: .sample, accountCreation: EthereumWalletCreation.sample)
+                WalletCreationDetails(request: .sample, walletCreation: EthereumWalletCreation.sample)
             }
         }
     }

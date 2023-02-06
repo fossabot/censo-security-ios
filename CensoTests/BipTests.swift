@@ -22,23 +22,6 @@ struct TestItems: Codable {
 
 class BipTests: XCTestCase {
     
-    func testSolanaWithKnownDataSet() throws {
-        let bundle = Bundle(for: type(of: self))
-        guard let url = bundle.url(forResource: "solana-test-data", withExtension: "json") else {
-            XCTFail("Missing file: test-data.json")
-            return
-        }
-        let decoder = JSONDecoder()
-        let testItems = try! decoder.decode(TestItems.self, from: try Data(contentsOf: url))
-        for testItem in testItems.items {
-            let ed25519PrivateKey = try Ed25519HierachicalPrivateKey.fromRootSeed(rootSeed: try Mnemonic(phrase: testItem.mnemonic.components(separatedBy: " ")).seed)
-            // @solana/web3j code which generated this data set represents the private key as the actual private key(32 bytes) appended with public key (another 32 bytes)
-            XCTAssertEqual(testItem.privateKey, (ed25519PrivateKey.privateKey.rawRepresentation + ed25519PrivateKey.privateKey.publicKey.rawRepresentation).toHexString().lowercased())
-            XCTAssertEqual(testItem.publicKey, Base58.encode(ed25519PrivateKey.privateKey.publicKey.rawRepresentation.bytes))
-
-        }
-    }
-    
     func testBitcoinWithKnownDataSet() throws {
         let bundle = Bundle(for: type(of: self))
         guard let url = bundle.url(forResource: "bitcoin-test-data", withExtension: "json") else {

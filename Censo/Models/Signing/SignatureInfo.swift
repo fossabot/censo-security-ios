@@ -11,6 +11,7 @@ enum SignatureInfo: Encodable, Equatable {
     case offchain(OffChainSignature)
     case bitcoin(BitcoinSignatures)
     case ethereum(EthereumSignature)
+    case ethereumWithOffchain(EthereumSignatureWithOffchain)
 
     enum DetailsCodingKeys: String, CodingKey {
         case type
@@ -28,7 +29,11 @@ enum SignatureInfo: Encodable, Equatable {
         case .ethereum(let request):
             try container.encode("ethereum", forKey: .type)
             try request.encode(to: encoder)
+        case .ethereumWithOffchain(let request):
+            try container.encode("ethereum", forKey: .type)
+            try request.encode(to: encoder)
         }
+        
     }
 }
 
@@ -41,6 +46,24 @@ struct BitcoinSignatures: Codable, Equatable  {
     let signatures: [String]
 }
 
-struct EthereumSignature: Codable, Equatable {
+struct EthereumSignature: Codable, Equatable  {
     let signature: String
+}
+
+struct EthereumSignatureWithOffchain:  Encodable, Equatable {
+    let signature: String
+    var offchainSignature: OffChainSignature? = nil
+    
+    enum DetailsCodingKeys: String, CodingKey {
+        case signature
+        case offchainSignature
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: DetailsCodingKeys.self)
+        try container.encode(signature, forKey: .signature)
+        if offchainSignature != nil {
+            try container.encode(SignatureInfo.offchain(offchainSignature!), forKey: .offchainSignature)
+        }
+    }
 }

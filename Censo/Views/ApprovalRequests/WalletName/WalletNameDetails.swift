@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-struct BalanceAccountNameDetails: View {
+struct WalletNameDetails: View {
     var request: ApprovalRequest
     var update: EthereumWalletNameUpdate
 
@@ -20,15 +20,15 @@ struct BalanceAccountNameDetails: View {
 }
 
 #if DEBUG
-struct BalanceAccountNameDetails_Previews: PreviewProvider {
+struct WalletNameDetails_Previews: PreviewProvider {
     static var previews: some View {
-        BalanceAccountNameDetails(request: .sample, update: .sample)
+        WalletNameDetails(request: .sample, update: .sample)
 
         let timerPublisher = Timer.TimerPublisher(interval: 1, runLoop: .current, mode: .default).autoconnect()
 
         NavigationView {
             ApprovalRequestDetails(deviceSigner: DeviceSigner(deviceKey: .sample, encryptedRootSeed: Data()), user: .sample, request: .sample, timerPublisher: timerPublisher) {
-                BalanceAccountNameDetails(request: .sample, update: .sample)
+                WalletNameDetails(request: .sample, update: .sample)
             }
         }
     }

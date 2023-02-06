@@ -62,40 +62,42 @@ struct DestinationAddress: Codable, Equatable {
     let tag: String?
 }
 
-enum AccountType: String, Codable {
-    case BalanceAccount = "BalanceAccount"
-    case StakeAccount = "StakeAccount"
-}
-
-struct SymbolInfo: Codable, Equatable {
-    let symbol: String
-    let symbolDescription: String
-    let tokenMintAddress: String?
-    let imageUrl: String?
-    let nftMetadata: NftMetadata?
-}
-
-struct SymbolAndAmountInfo: Codable, Equatable {
-    let symbolInfo: SymbolInfo
-    let amount: String
-    let nativeAmount: String?
-    let usdEquivalent: String?
-    let fee: Fee?
-    let replacementFee: Fee?
-}
-
-struct Fee: Codable, Equatable {
-    let symbolInfo: SymbolInfo
-    let amount: String
+struct Amount: Codable, Equatable {
+    let value: String
+    let nativeValue: String
     let usdEquivalent: String?
 }
 
-struct AccountInfo: Codable, Equatable {
+extension Amount {
+    enum AmountError: Error {
+        case invalidDecimal
+    }
+
+    var fundamentalAmount: UInt64 {
+        get throws {
+            guard let decimal = Decimal(string: value) else { throw AmountError.invalidDecimal }
+
+            let precisionParts = value.components(separatedBy: ".")
+            let decimals = precisionParts.count == 1 ? 0 : precisionParts[1].count
+
+            return NSDecimalNumber(decimal: decimal * pow(10, decimals)).uint64Value
+        }
+    }
+
+    var fundamentalAmountBignum: Bignum {
+        get throws {
+            if !nativeValue.starts(with: value) {
+                throw AmountError.invalidDecimal
+            }
+            return Bignum(number: nativeValue.replacingOccurrences(of: ".", with: ""), withBase: 10)
+        }
+    }
+}
+
+struct WalletInfo: Codable, Equatable {
     let name: String
     let identifier: String
-    let accountType: AccountType
     let address: String
-    let chain: Chain
 }
 
 struct SignerInfo: Codable, Equatable {
@@ -103,27 +105,19 @@ struct SignerInfo: Codable, Equatable {
     let name: String
     let email: String
     let nameHashIsEmpty: Bool
+    let jpegThumbnail: String?
 }
 
 struct ApprovalPolicy: Codable, Equatable {
-    let approvalsRequired: UInt8
+    let approvalsRequired: Int
     let approvalTimeout: UInt64
     let approvers: [SignerInfo]
-}
-
-struct WhitelistUpdate: Codable, Equatable {
-    let account: AccountInfo
-    let destinationsToAdd: [DestinationAddress]
-    let destinationsToRemove: [DestinationAddress]
 }
 
 struct NftMetadata: Codable, Equatable {
     let name: String
 }
 
-struct VaultPolicyUpdate: Codable, Equatable  {
-    var approvalPolicy: ApprovalPolicy
-}
 
 struct LoginApproval: Codable, Equatable  {
     var jwtToken: String
@@ -201,64 +195,25 @@ extension DestinationAddress {
     }
 }
 
-extension AccountInfo {
+extension WalletInfo {
     static var sample: Self {
-        AccountInfo(
+        WalletInfo(
             name: "Main",
             identifier: "identifier",
-            accountType: AccountType.BalanceAccount,
-            address: "83746gfd8bj7",
-            chain: .ethereum
+            address: "83746gfd8bj7"
         )
     }
 }
 
-extension SymbolAndAmountInfo {
+extension Amount {
     static var sample: Self {
-        SymbolAndAmountInfo(
-            symbolInfo: .sample,
-            amount: "234325.000564",
-            nativeAmount: "234325.00056400",
-            usdEquivalent: "2353453",
-            fee: Fee(
-                symbolInfo: .sample,
-                amount: "0.0000123",
-                usdEquivalent: "10.12"
-            ),
-            replacementFee: nil
-        )
-    }
-    
-    static var feeBump: Self {
-        SymbolAndAmountInfo(
-            symbolInfo: .sample,
-            amount: "234325.000564",
-            nativeAmount: "234325.00056400",
-            usdEquivalent: "2353453",
-            fee: Fee(
-                symbolInfo: .sample,
-                amount: "0.0000123",
-                usdEquivalent: "10.12"
-            ),
-            replacementFee: Fee(
-                symbolInfo: .sample,
-                amount: "0.0000246",
-                usdEquivalent: "20.24"
-            )
+        Amount(
+            value: "234325.000564",
+            nativeValue: "234325.00056400",
+            usdEquivalent: "2353453"
         )
     }
 }
 
-extension SymbolInfo {
-    static var sample: Self {
-        SymbolInfo(
-            symbol: "BTC",
-            symbolDescription: "Bitcoin",
-            tokenMintAddress: "28548397fdsf",
-            imageUrl: nil,
-            nftMetadata: nil
-        )
-    }
-}
 
 #endif
