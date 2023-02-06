@@ -130,8 +130,8 @@ extension ApprovalDispositionRequest {
             let detailsJSONData = try JSONEncoder().encode(request.details)
 
             return [
-                .ethereum(
-                    EthereumSignature(
+                .ethereumWithOffchain(
+                    EthereumSignatureWithOffchain(
                         signature: try privateKeys.signature(for: try details.signableData(), chain: .ethereum),
                         offchainSignature: OffChainSignature(
                             signature: try privateKeys.signature(for: Data(SHA256.hash(data: detailsJSONData)), chain: Chain.censo),
