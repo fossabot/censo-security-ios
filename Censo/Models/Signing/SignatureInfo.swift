@@ -41,6 +41,20 @@ struct BitcoinSignatures: Codable, Equatable  {
     let signatures: [String]
 }
 
-struct EthereumSignature: Codable, Equatable {
+struct EthereumSignature:  Encodable, Equatable {
     let signature: String
+    var offchainSignature: OffChainSignature? = nil
+    
+    enum DetailsCodingKeys: String, CodingKey {
+        case signature
+        case offchainSignature
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: DetailsCodingKeys.self)
+        try container.encode(signature, forKey: .signature)
+        if offchainSignature != nil {
+            try container.encode(SignatureInfo.offchain(offchainSignature!), forKey: .offchainSignature)
+        }
+    }
 }

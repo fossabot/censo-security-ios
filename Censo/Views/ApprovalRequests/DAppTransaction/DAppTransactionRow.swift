@@ -57,7 +57,7 @@ struct DAppTransactionRow: View {
                             .foregroundColor(Color.white)
                             .frame(width: 20, height: 20)
 
-                        AccountDetail(name: transactionRequest.account.name)
+                        AccountDetail(name: transactionRequest.wallet.name)
                             .padding(10)
                             .frame(maxWidth: .infinity, maxHeight: 40)
                             .roundedCell()
@@ -108,7 +108,7 @@ struct DapTransactionRow_Previews: PreviewProvider {
 
 extension EthereumDAppTransactionRequest {
     static var sample: Self {
-        EthereumDAppTransactionRequest(account: .sample, dappInfo: .sample, balanceChanges: [.sample, .sample], signingData: .sample)
+        EthereumDAppTransactionRequest(wallet: .sample, dappInfo: .sample, balanceChanges: [.sample, .sample], signingData: .sample)
     }
 }
 

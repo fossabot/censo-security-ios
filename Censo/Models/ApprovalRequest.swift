@@ -74,6 +74,8 @@ enum ApprovalRequestType: Codable, Equatable {
             self = .ethereumWalletSettingsUpdate(try EthereumWalletSettingsUpdate(from: decoder))
         case "EthereumWalletWhitelistUpdate":
             self = .ethereumWalletWhitelistUpdate(try EthereumWalletWhitelistUpdate(from: decoder))
+        case "EthereumTransferPolicyUpdate":
+            self = .ethereumTransferPolicyUpdate(try EthereumTransferPolicyUpdate(from: decoder))
         case "CreateAddressBookEntry":
             let entry = try AddressBookEntry(from: decoder)
             self = .addressBookUpdate(AddressBookUpdate(change: .add, entry: entry))

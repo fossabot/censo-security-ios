@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-struct BalanceAccountWhitelistDetails: View {
+struct WalletWhitelistDetails: View {
     var request: ApprovalRequest
     var update: EthereumWalletWhitelistUpdate
     var user: CensoApi.User
@@ -29,15 +29,15 @@ struct BalanceAccountWhitelistDetails: View {
 }
 
 #if DEBUG
-struct BalanceAccountWhitelistDetails_Previews: PreviewProvider {
+struct WalletWhitelistDetails_Previews: PreviewProvider {
     static var previews: some View {
-        BalanceAccountWhitelistDetails(request: .sample, update: .sample, user: .sample)
+        WalletWhitelistDetails(request: .sample, update: .sample, user: .sample)
 
         let timerPublisher = Timer.TimerPublisher(interval: 1, runLoop: .current, mode: .default).autoconnect()
 
         NavigationView {
             ApprovalRequestDetails(deviceSigner: DeviceSigner(deviceKey: .sample, encryptedRootSeed: Data()), user: .sample, request: .sample, timerPublisher: timerPublisher) {
-                BalanceAccountWhitelistDetails(request: .sample, update: .sample, user: .sample)
+                WalletWhitelistDetails(request: .sample, update: .sample, user: .sample)
             }
         }
     }

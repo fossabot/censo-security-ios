@@ -5,25 +5,6 @@
 //  Created by Benjamin Holzman on 11/23/22.
 //
 
-// these are here until we move to V2 API
-enum EvmTokenInfo: Codable, Equatable {
-    case erc20(String)
-    case erc721(String, String)
-    case erc1155(String, String)
-}
-
-struct Amount: Codable, Equatable {
-    let value: String
-    let nativeValue: String
-    let usdEquivalent: String?
-    
-    var fundamentalAmountBignum: Bignum {
-        get {
-            return Bignum(number: nativeValue.replacingOccurrences(of: ".", with: ""), withBase: 10)
-        }
-    }
-}
-
 
 class EvmTransferTransactionBuilder {
     
@@ -91,21 +72,21 @@ class EvmTransferTransactionBuilder {
                                    amount: Amount,
                                    walletAddress: String,
                                    destinationAddress: String,
-                                   ethereumTransaction: EthereumTransaction) -> Data {
+                                   evmTransaction: EvmTransaction) throws -> Data {
         var safeTransaction = Data()
         if evmTokenInfo == nil {
             safeTransaction.append(
-                EvmTransactionUtil.computeSafeTransactionHash(
-                    chainId: ethereumTransaction.chainId,
+                try EvmTransactionUtil.computeSafeTransactionHash(
+                    chainId: evmTransaction.chainId,
                     safeAddress: walletAddress,
                     to: destinationAddress,
                     value: amount.fundamentalAmountBignum,
                     data: Data(count: 0),
-                    nonce: ethereumTransaction.safeNonce
+                    nonce: evmTransaction.safeNonce
                 )
             )
         } else {
-            let (data, contractAddress) = {
+            let (data, contractAddress) = try {
                 switch evmTokenInfo! {
                 case .erc721(let contractAddress, let tokenId):
                     return (EvmTransferTransactionBuilder.erc721WithdrawalTx(
@@ -114,14 +95,14 @@ class EvmTransferTransactionBuilder {
                         tokenId: Bignum(number: tokenId, withBase: 10)
                     ), contractAddress)
                 case .erc1155(let contractAddress, let tokenId):
-                    return (EvmTransferTransactionBuilder.erc1155WithdrawalTx(
+                    return (try EvmTransferTransactionBuilder.erc1155WithdrawalTx(
                         walletAddress: walletAddress,
                         destinationAddress: destinationAddress,
                         tokenId: Bignum(number: tokenId, withBase: 10),
                         amount: amount.fundamentalAmountBignum
                     ), contractAddress)
                 case .erc20(let contractAddress):
-                    return (EvmTransferTransactionBuilder.erc20WithdrawalTx(
+                    return (try EvmTransferTransactionBuilder.erc20WithdrawalTx(
                         destinationAddress: destinationAddress,
                         amount: amount.fundamentalAmountBignum
                     ), contractAddress)
@@ -129,12 +110,12 @@ class EvmTransferTransactionBuilder {
             }()
             safeTransaction.append(
                 EvmTransactionUtil.computeSafeTransactionHash(
-                    chainId: ethereumTransaction.chainId,
+                    chainId: evmTransaction.chainId,
                     safeAddress: walletAddress,
                     to: contractAddress,
                     value: Bignum(0),
                     data: data,
-                    nonce: ethereumTransaction.safeNonce
+                    nonce: evmTransaction.safeNonce
                 )
             )
         }

@@ -1,17 +1,17 @@
 //
-//  BalanceAccountWhitelistRow.swift
+//  BalanceAccountNameRow.swift
 //  Censo
 //
-//  Created by Ata Namvari on 2022-05-24.
+//  Created by Ata Namvari on 2022-05-03.
 //
 
 import Foundation
 import SwiftUI
 
 
-struct BalanceAccountWhitelistRow: View {
+struct WalletNameRow: View {
     var requestType: ApprovalRequestType
-    var update: EthereumWalletWhitelistUpdate
+    var update: EthereumWalletNameUpdate
 
     var body: some View {
         VStack(spacing: 8) {
@@ -23,9 +23,11 @@ struct BalanceAccountWhitelistRow: View {
                 .minimumScaleFactor(0.25)
                 .foregroundColor(Color.white)
                 .padding(EdgeInsets(top: 15, leading: 20, bottom: 0, trailing: 20))
-            
-            Text(update.account.name.toWalletName())
+
+            Text("\(update.wallet.name.toWalletName()) → \(update.newName.toWalletName())")
                 .font(.title3)
+                .lineLimit(1)
+                .allowsTightening(true)
                 .foregroundColor(Color.white.opacity(0.8))
                 .padding(EdgeInsets(top: 2, leading: 20, bottom: 20, trailing: 20))
         }
@@ -33,15 +35,15 @@ struct BalanceAccountWhitelistRow: View {
 }
 
 #if DEBUG
-struct BalanceAccountWhitelistRow_Previews: PreviewProvider {
+struct WalletNameRow_Previews: PreviewProvider {
     static var previews: some View {
-        BalanceAccountWhitelistRow(requestType: .ethereumWalletWhitelistUpdate(.sample), update: .sample)
+        WalletNameRow(requestType: .ethereumWalletNameUpdate(.sample), update: EthereumWalletNameUpdate.sample)
     }
 }
 
-extension EthereumWalletWhitelistUpdate {
+extension EthereumWalletNameUpdate {
     static var sample: Self {
-        EthereumWalletWhitelistUpdate(account: .sample, destinations: [.sample, .sample], signingData: .sample)
+        EthereumWalletNameUpdate(wallet: .sample, newName: "My Wallet", signingData: .sample)
     }
 }
 #endif

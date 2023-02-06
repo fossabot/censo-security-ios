@@ -25,6 +25,7 @@ enum EvmConfigError: Error, Equatable {
     case invalidWhitelist(String)
     case invalidPolicy(String)
     case missingVault
+    case missingChain
 }
 
 public class EvmTransactionUtil {

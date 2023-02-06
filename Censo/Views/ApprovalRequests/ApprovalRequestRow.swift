@@ -202,7 +202,14 @@ struct ApprovalRequestRow_Preivews: PreviewProvider {
 
 extension EthereumWithdrawalRequest {
     static var sample: Self {
-        EthereumWithdrawalRequest(account: .sample, symbolAndAmountInfo: .sample, tokenInfo: nil, destination: .sample, signingData: .sample)
+        EthereumWithdrawalRequest(
+            wallet: .sample,
+            amount: .sample,
+            symbolInfo: .sample,
+            fee: .sample,
+            feeSymbolInfo: EvmSymbolInfo.sample,
+            destination: .sample,
+            signingData: .sample)
     }
 }
 #endif

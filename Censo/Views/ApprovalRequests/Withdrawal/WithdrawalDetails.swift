@@ -15,18 +15,18 @@ struct WithdrawalDetails: View {
     var body: some View {
         VStack(alignment: .center, spacing: 15) {
             FactList {
-                Fact("From Wallet", withdrawal.account.name)
+                Fact("From Wallet", withdrawal.wallet.name)
                 Fact("Destinaton", withdrawal.destination.name)
                 Fact("Destination Address", withdrawal.destination.address.masked())
-                if withdrawal.symbolAndAmountInfo.symbolInfo.nftMetadata != nil {
-                    Fact("NFT Name", withdrawal.symbolAndAmountInfo.symbolInfo.nftMetadata!.name)
+                if withdrawal.symbol.nftMetadata != nil {
+                    Fact("NFT Name", withdrawal.symbol.nftMetadata!.name)
                 }
-                if let fee = withdrawal.symbolAndAmountInfo.fee, let replacementFee = withdrawal.symbolAndAmountInfo.replacementFee {
-                    Fact("Amount", "\(withdrawal.symbolAndAmountInfo.formattedAmount) \(withdrawal.symbolAndAmountInfo.symbolInfo.symbol)")
-                    Fact("Original Fee", "\(fee.formattedAmount) \(fee.symbolInfo.symbol)")
-                    Fact("New Fee", "\(replacementFee.formattedAmount) \(replacementFee.symbolInfo.symbol)")
-                } else if let fee = withdrawal.symbolAndAmountInfo.fee {
-                    Fact("Fee", "\(fee.formattedAmount) \(fee.symbolInfo.symbol)")
+                if let fee = withdrawal.fee, let replacementFee = withdrawal.replacementFee {
+                    Fact("Amount", "\(withdrawal.amount.formattedAmount) \(withdrawal.symbol.symbol)")
+                    Fact("Original Fee", "\(fee.formattedAmount) \(withdrawal.feeSymbol)")
+                    Fact("New Fee", "\(replacementFee.formattedAmount) \(withdrawal.feeSymbol)")
+                } else if let fee = withdrawal.fee {
+                    Fact("Fee", "\(fee.formattedAmount) \(withdrawal.feeSymbol)")
                 }
             }
         }

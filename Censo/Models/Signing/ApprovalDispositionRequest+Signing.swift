@@ -70,35 +70,77 @@ extension ApprovalDispositionRequest {
             ]
         case .ethereumWalletCreation,
              .bitcoinWalletCreation,
-             .addressBookUpdate,
-             .vaultPolicyUpdate:
+             .addressBookUpdate:
             let detailsJSONData = try JSONEncoder().encode(request.details)
-            let dataToSign = Data(SHA256.hash(data: detailsJSONData))
+            let privateKeys = try deviceSigner.privateKeys()
 
             return [
                 .offchain(
                     OffChainSignature(
-                        signature: try deviceSigner.deviceSignature(for: dataToSign).base64EncodedString(),
+                        signature: try privateKeys.signature(for: Data(SHA256.hash(data: detailsJSONData)), chain: Chain.censo),
                         signedData: detailsJSONData.base64EncodedString()
                     )
                 )
             ]
+            
+        case .vaultPolicyUpdate(let signableRequest as MultichainSignable):
+            let privateKeys = try deviceSigner.privateKeys()
+            let detailsJSONData = try JSONEncoder().encode(request.details)
+            var signatures: [SignatureInfo] = [
+                .offchain(
+                    OffChainSignature(
+                        signature: try privateKeys.signature(for: Data(SHA256.hash(data: detailsJSONData)), chain: Chain.censo),
+                        signedData: detailsJSONData.base64EncodedString()
+                    )
+                )
+            ]
+                        
+            for (chain, dataToSign) in try signableRequest.signableData() {
+                switch chain {
+                case Chain.ethereum:
+                    signatures.append(
+                        .ethereum(
+                            EthereumSignature(
+                                signature: try privateKeys.signature(for: dataToSign, chain: Chain.ethereum)
+                            )
+                        )
+                     )
+                default:
+                    break
+                }
+            }
+            return signatures
+            
         case .ethereumWithdrawalRequest(let request as EthereumSignable),
              .ethereumWalletNameUpdate(let request as EthereumSignable),
-             .ethereumTransferPolicyUpdate(let request as EthereumSignable),
              .ethereumWalletSettingsUpdate(let request as EthereumSignable),
-             .ethereumWalletWhitelistUpdate(let request as EthereumSignable),
-             .ethereumDAppTransactionRequest(let request as EthereumSignable):
-            let dataToSign = try request.signableData()
+             .ethereumWalletWhitelistUpdate(let request as EthereumSignable):
             let privateKeys = try deviceSigner.privateKeys()
 
             return [
                 .ethereum(
                     EthereumSignature(
-                        signature: try privateKeys.signature(for: dataToSign, chain: .ethereum)
+                        signature: try privateKeys.signature(for: try request.signableData(), chain: .ethereum)
                     )
                 )
             ]
+            
+        case .ethereumTransferPolicyUpdate(let details as EthereumSignable):
+            let privateKeys = try deviceSigner.privateKeys()
+            let detailsJSONData = try JSONEncoder().encode(request.details)
+
+            return [
+                .ethereum(
+                    EthereumSignature(
+                        signature: try privateKeys.signature(for: try details.signableData(), chain: .ethereum),
+                        offchainSignature: OffChainSignature(
+                            signature: try privateKeys.signature(for: Data(SHA256.hash(data: detailsJSONData)), chain: Chain.censo),
+                            signedData: detailsJSONData.base64EncodedString()
+                        )
+                    )
+                )
+            ]
+            
         case .bitcoinWithdrawalRequest(let request as BitcoinSignable):
             let dataArrayToSign = try request.signableDataList()
             let derivationPath = DerivationNode.notHardened(request.signingData.childKeyIndex)
@@ -113,6 +155,8 @@ extension ApprovalDispositionRequest {
                     )
                 )
             ]
+        case .ethereumDAppTransactionRequest(_):
+            return []
         }
     }
 }

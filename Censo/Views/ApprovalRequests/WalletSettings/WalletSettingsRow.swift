@@ -1,5 +1,5 @@
 //
-//  BalanceAccountPolicyRow.swift
+//  BalanceAccountSettingsRow.swift
 //  Censo
 //
 //  Created by Ata Namvari on 2022-05-03.
@@ -9,9 +9,9 @@ import Foundation
 import SwiftUI
 
 
-struct BalanceAccountPolicyRow: View {
+struct WalletSettingsRow: View {
     var requestType: ApprovalRequestType
-    var update: EthereumTransferPolicyUpdate
+    var update: EthereumWalletSettingsUpdate
 
     var body: some View {
         VStack(spacing: 8) {
@@ -23,8 +23,8 @@ struct BalanceAccountPolicyRow: View {
                 .minimumScaleFactor(0.25)
                 .foregroundColor(Color.white)
                 .padding(EdgeInsets(top: 15, leading: 20, bottom: 0, trailing: 20))
-
-            Text(update.account.name.toWalletName())
+            
+            Text(update.wallet.name.toWalletName())
                 .font(.title3)
                 .foregroundColor(Color.white.opacity(0.8))
                 .padding(EdgeInsets(top: 2, leading: 20, bottom: 20, trailing: 20))
@@ -33,19 +33,12 @@ struct BalanceAccountPolicyRow: View {
 }
 
 #if DEBUG
-//struct BalanceAccountPolicyRow_Previews: PreviewProvider {
-//    static var previews: some View {
-//        BalanceAccountPolicyRow(requestType: .balanceAccountPolicyUpdate(.sample), update: .sample)
-//    }
-//}
-
-//extension BalanceAccountPolicyUpdate {
-//    static var sample: Self {
-//        BalanceAccountPolicyUpdate(
-//            accountInfo: .sample,
-//            approvalPolicy: .sample,
-//            signingData: .sample
-//        )
-//    }
-//}
+struct WalletSettingsRow_Previews: PreviewProvider {
+    static var previews: some View {
+        WalletSettingsRow(
+            requestType: .ethereumWalletSettingsUpdate(.sample),
+            update: EthereumWalletSettingsUpdate.sample
+        )
+    }
+}
 #endif
