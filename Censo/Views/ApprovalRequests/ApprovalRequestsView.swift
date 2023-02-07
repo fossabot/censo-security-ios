@@ -63,9 +63,11 @@ struct ApprovalRequestsView: View {
         NotificationCenter.default.post(name: .didReloadApprovals, object: nil)
     }
 
-    private func refresh(_ context: RefreshContext) {
-        _approvalRequests.reload(using: loader, silent: true) { _ in
-            context.endRefreshing()
+    private func refresh() async {
+        await withCheckedContinuation { continuation in
+            _approvalRequests.reload(using: loader, silent: true) { _ in
+                continuation.resume()
+            }
         }
 
         NotificationCenter.default.post(name: .didReloadApprovals, object: nil)
