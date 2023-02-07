@@ -28,10 +28,6 @@ class PhotoCaptureController: NSObject, ObservableObject {
         case deviceUnableToCapturePhoto
     }
 
-    deinit {
-        stopCapture()
-    }
-
     func restartCapture() {
         guard let device = captureDevice else {
             state = .notAvailable(CaptureDeviceError.noCaptureDevice)
@@ -92,11 +88,28 @@ class PhotoCaptureController: NSObject, ObservableObject {
         switch state {
         case .running(_, let photoOutput):
             videoQueue.async {
+                if let photoOutputConnection = photoOutput.connection(with: .video) {
+                    photoOutputConnection.videoOrientation = self.orientation()
+                }
+
                 let settings = AVCapturePhotoSettings()
                 photoOutput.capturePhoto(with: settings, delegate: self)
             }
         default:
             break
+        }
+    }
+
+    private func orientation() -> AVCaptureVideoOrientation {
+        switch UIDevice.current.orientation {
+        case .landscapeLeft:
+            return .landscapeRight
+        case .landscapeRight:
+            return .landscapeLeft
+        case .portraitUpsideDown:
+            return .portraitUpsideDown
+        default:
+            return .portrait
         }
     }
 }
@@ -111,46 +124,27 @@ extension PhotoCaptureController: AVCapturePhotoCaptureDelegate {
                 fatalError("Unable to capture the photo due to an error")
         }
 
-        let dataProvider = CGDataProvider(data: dataImage as CFData)
-        let cgImageRef: CGImage! = CGImage(jpegDataProviderSource: dataProvider!, decode: nil, shouldInterpolate: true, intent: .defaultIntent)
-
-        let temp = CIImage(cgImage: cgImageRef)
-        var ciImage = temp;
-
-        switch UIDevice.current.orientation {
-        case .portrait:
-            ciImage = temp.oriented(forExifOrientation: 6)
-        case .landscapeRight:
-            ciImage = temp.oriented(forExifOrientation: 3)
-        case .landscapeLeft:
-            ciImage = temp.oriented(forExifOrientation: 1)
-        default:
-            break
-        }
-
-        let image = UIImage(ciImage: ciImage)
-
         DispatchQueue.main.async {
-            self.photo = image.squared()!
+            self.photo = UIImage(data: dataImage)!.cropsToSquare()!
         }
     }
 }
 
 extension UIImage {
-    var isPortrait:  Bool    { size.height > size.width }
-    var isLandscape: Bool    { size.width > size.height }
-    var breadth:     CGFloat { min(size.width, size.height) }
-    var breadthSize: CGSize  { .init(width: breadth, height: breadth) }
-    func squared(isOpaque: Bool = false) -> UIImage? {
-        guard let ciImage = ciImage?
-            .cropped(to: .init(origin: .init(x: isLandscape ? ((size.width-size.height)/2).rounded(.down) : 0,
-                                              y: isPortrait  ? ((size.height-size.width)/2).rounded(.down) : 0),
-                                size: breadthSize)) else { return nil }
-        let format = imageRendererFormat
-        format.opaque = isOpaque
-        return UIGraphicsImageRenderer(size: breadthSize, format: format).image { _ in
-            UIImage(ciImage: ciImage, scale: 1, orientation: imageOrientation)
-            .draw(in: .init(origin: .zero, size: breadthSize))
+    func cropsToSquare() -> UIImage? {
+        if let image = self.cgImage {
+            let refWidth = CGFloat((image.width))
+            let refHeight = CGFloat((image.height))
+            let cropSize = refWidth > refHeight ? refHeight : refWidth
+
+            let x = (refWidth - cropSize) / 2.0
+            let y = (refHeight - cropSize) / 2.0
+
+            let cropRect = CGRect(x: x, y: y, width: cropSize, height: cropSize)
+            let imageRef = image.cropping(to: cropRect)
+            let cropped = UIImage(cgImage: imageRef!, scale: 0.0, orientation: self.imageOrientation)
+            return cropped
         }
+        return nil
     }
 }
