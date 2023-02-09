@@ -160,7 +160,7 @@ extension PublicKeys {
         }
 
         switch anyKey.chain {
-        case .ethereum:
+        case .ethereum, .polygon:
             return ethereum == anyKey.key
         case .bitcoin:
             return bitcoin == anyKey.key

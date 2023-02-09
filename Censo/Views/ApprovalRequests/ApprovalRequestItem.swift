@@ -28,7 +28,8 @@ struct ApprovalRequestItem: View {
                 WithdrawalDetails(request: request, withdrawal: withdrawal)
             }
         case .bitcoinWalletCreation(let walletCreation as WalletCreation),
-             .ethereumWalletCreation(let walletCreation as WalletCreation):
+             .ethereumWalletCreation(let walletCreation as WalletCreation),
+             .polygonWalletCreation(let walletCreation as WalletCreation):
             ApprovalRequestRow(deviceSigner: deviceSigner, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
                 WalletCreationRow(requestType: request.details, walletCreation: walletCreation)
             } detail: {
@@ -40,19 +41,22 @@ struct ApprovalRequestItem: View {
             } detail: {
                 DAppTransactionDetails(request: request, transactionRequest: dAppTransactionRequest)
             }
-        case .ethereumWalletNameUpdate(let walletNameUpdate): // 3
+        case .ethereumWalletNameUpdate(let walletNameUpdate as WalletNameUpdate),
+                .polygonWalletNameUpdate(let walletNameUpdate as WalletNameUpdate):
             ApprovalRequestRow(deviceSigner: deviceSigner, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
                 WalletNameRow(requestType: request.details, update: walletNameUpdate)
             } detail: {
                 WalletNameDetails(request: request, update: walletNameUpdate)
             }
-        case .ethereumTransferPolicyUpdate(let walletTransferPolicyUpdate): // 2
+        case .ethereumTransferPolicyUpdate(let walletTransferPolicyUpdate as TransferPolicyUpdate),
+             .polygonTransferPolicyUpdate(let walletTransferPolicyUpdate as TransferPolicyUpdate): // 2
             ApprovalRequestRow(deviceSigner: deviceSigner, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
                 WalletTransferPolicyRow(requestType: request.details, update: walletTransferPolicyUpdate)
             } detail: {
                 WalletTransferPolicyDetails(request: request, update: walletTransferPolicyUpdate, user: user)
             }
-        case .ethereumWalletSettingsUpdate(let walletSettingsUpdate): // 5
+        case .ethereumWalletSettingsUpdate(let walletSettingsUpdate as WalletSettingsUpdate),
+             .polygonWalletSettingsUpdate(let walletSettingsUpdate as WalletSettingsUpdate): // 5
             ApprovalRequestRow(deviceSigner: deviceSigner, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
                 WalletSettingsRow(requestType: request.details, update: walletSettingsUpdate)
             } detail: {
@@ -70,7 +74,8 @@ struct ApprovalRequestItem: View {
             } detail: {
                 VaultConfigPolicyDetails(request: request, update: vaultPolicyUpdate)
             }
-        case .ethereumWalletWhitelistUpdate(let walletWhitelistUpdate):
+        case .ethereumWalletWhitelistUpdate(let walletWhitelistUpdate as WalletWhitelistUpdate),
+             .polygonWalletWhitelistUpdate(let walletWhitelistUpdate as WalletWhitelistUpdate):
             ApprovalRequestRow(deviceSigner: deviceSigner, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
                 WalletWhitelistRow(requestType: request.details, update: walletWhitelistUpdate)
             } detail: {
@@ -115,6 +120,7 @@ extension BitcoinSymbolInfo: SymbolInfo {
 
 extension EvmSymbolInfo: SymbolInfo {}
 
+// withdrawal
 protocol WithdrawalRequest {
     var wallet: WalletInfo { get }
     var amount: Amount { get }
@@ -148,6 +154,20 @@ extension EthereumWithdrawalRequest: WithdrawalRequest {
     }
 }
 
+extension PolygonWithdrawalRequest: WithdrawalRequest {
+    var replacementFee: Amount? {
+        return nil
+    }
+    
+    var symbol: SymbolInfo {
+        return symbolInfo as SymbolInfo
+    }
+    
+    var feeSymbol: String {
+        return feeSymbolInfo.symbol
+    }
+}
+
 protocol WalletCreation {
     var name: String { get }
     var approvalPolicy: ApprovalPolicy { get }
@@ -157,3 +177,37 @@ extension BitcoinWalletCreation: WalletCreation {}
 
 extension EthereumWalletCreation: WalletCreation {}
 
+extension PolygonWalletCreation: WalletCreation {}
+
+protocol WalletNameUpdate {
+    var wallet: WalletInfo { get }
+    var newName: String { get }
+}
+
+extension EthereumWalletNameUpdate: WalletNameUpdate {}
+extension PolygonWalletNameUpdate: WalletNameUpdate {}
+
+protocol WalletSettingsUpdate {
+    var wallet: WalletInfo { get }
+    var change: Change { get }
+}
+
+extension EthereumWalletSettingsUpdate: WalletSettingsUpdate {}
+extension PolygonWalletSettingsUpdate: WalletSettingsUpdate {}
+
+
+protocol WalletWhitelistUpdate {
+    var wallet: WalletInfo { get }
+    var destinations: [DestinationAddress] { get }
+}
+
+extension EthereumWalletWhitelistUpdate: WalletWhitelistUpdate {}
+extension PolygonWalletWhitelistUpdate: WalletWhitelistUpdate {}
+
+protocol TransferPolicyUpdate {
+    var wallet: WalletInfo { get }
+    var approvalPolicy: ApprovalPolicy { get }
+}
+
+extension EthereumTransferPolicyUpdate: TransferPolicyUpdate {}
+extension PolygonTransferPolicyUpdate: TransferPolicyUpdate {}

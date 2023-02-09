@@ -29,6 +29,7 @@ enum BooleanSetting: String, Codable {
 enum Chain: String, Codable {
     case bitcoin = "bitcoin"
     case ethereum = "ethereum"
+    case polygon = "polygon"
     case censo = "censo"
 }
 

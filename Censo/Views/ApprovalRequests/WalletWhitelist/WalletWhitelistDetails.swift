@@ -10,7 +10,7 @@ import SwiftUI
 
 struct WalletWhitelistDetails: View {
     var request: ApprovalRequest
-    var update: EthereumWalletWhitelistUpdate
+    var update: WalletWhitelistUpdate
     var user: CensoApi.User
 
     var body: some View {
@@ -31,13 +31,17 @@ struct WalletWhitelistDetails: View {
 #if DEBUG
 struct WalletWhitelistDetails_Previews: PreviewProvider {
     static var previews: some View {
-        WalletWhitelistDetails(request: .sample, update: .sample, user: .sample)
+        WalletWhitelistDetails(request: .sample,
+                               update: EthereumWalletWhitelistUpdate.sample,
+                               user: .sample)
 
         let timerPublisher = Timer.TimerPublisher(interval: 1, runLoop: .current, mode: .default).autoconnect()
 
         NavigationView {
             ApprovalRequestDetails(deviceSigner: DeviceSigner(deviceKey: .sample, encryptedRootSeed: Data()), user: .sample, request: .sample, timerPublisher: timerPublisher) {
-                WalletWhitelistDetails(request: .sample, update: .sample, user: .sample)
+                WalletWhitelistDetails(request: .sample,
+                                       update: EthereumWalletWhitelistUpdate.sample,
+                                       user: .sample)
             }
         }
     }

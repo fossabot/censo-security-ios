@@ -9,6 +9,7 @@ import Foundation
 
 enum SigningData: Codable, Equatable {
     case ethereum(signingData: EthereumSigningData)
+    case polygon(signingData: PolygonSigningData)
     
     enum CodingKeys: String, CodingKey {
         case type
@@ -21,6 +22,8 @@ enum SigningData: Codable, Equatable {
         switch type {
         case "ethereum":
             self = .ethereum(signingData: try EthereumSigningData(from: decoder))
+        case "polygon":
+            self = .polygon(signingData: try PolygonSigningData(from: decoder))
         default:
             throw DecodingError.dataCorruptedError(forKey: .type, in: container, debugDescription: "unrecognized type \(type)")
         }
@@ -30,6 +33,8 @@ enum SigningData: Codable, Equatable {
     func encode(to encoder: Encoder) throws {
         switch self {
         case .ethereum(let signingData):
+            try signingData.encode(to: encoder)
+        case .polygon(let signingData):
             try signingData.encode(to: encoder)
         }
     }

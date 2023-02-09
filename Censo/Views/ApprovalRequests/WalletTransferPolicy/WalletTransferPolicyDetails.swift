@@ -10,7 +10,7 @@ import SwiftUI
 
 struct WalletTransferPolicyDetails: View {
     var request: ApprovalRequest
-    var update: EthereumTransferPolicyUpdate
+    var update: TransferPolicyUpdate
     var user: CensoApi.User
 
     var body: some View {

@@ -88,7 +88,7 @@ extension PrivateKeys {
         switch chain {
         case .bitcoin:
             return bitcoinPublicKey
-        case .ethereum:
+        case .ethereum, .polygon:
             return ethereumPublicKey
         case .censo:
             return censoPublicKey
@@ -99,7 +99,7 @@ extension PrivateKeys {
         switch chain {
         case .bitcoin:
             return try bitcoinSignature(data, derivationPath)
-        case .ethereum:
+        case .ethereum, .polygon:
             return try ethereumSignature(data)
         case .censo:
             return try censoSignature(data)

@@ -12,6 +12,7 @@ extension ApprovalRequestType {
     var header: String {
         switch self {
         case .ethereumWithdrawalRequest(let request as WithdrawalRequest),
+             .polygonWithdrawalRequest(let request as WithdrawalRequest),
              .bitcoinWithdrawalRequest(let request as WithdrawalRequest):
             if (request.replacementFee == nil) {
                 return "Send \(request.amount.formattedAmount) \(request.symbol.symbol)"
@@ -20,19 +21,27 @@ extension ApprovalRequestType {
             }
         case .ethereumWalletCreation:
             return "Add Ethereum Wallet"
+        case .polygonWalletCreation:
+            return "Add Polygon Wallet"
         case .bitcoinWalletCreation:
             return "Add Bitcoin Wallet"
-        case .ethereumWalletNameUpdate:
+        case .ethereumWalletNameUpdate,
+             .polygonWalletNameUpdate:
             return "Rename"
-        case .ethereumWalletSettingsUpdate(let update) where update.change == .dappsEnabled(false):
+        case .ethereumWalletSettingsUpdate(let update as WalletSettingsUpdate) where update.change == .dappsEnabled(false),
+             .polygonWalletSettingsUpdate(let update as WalletSettingsUpdate) where update.change == .dappsEnabled(false):
             return "Disable dApp Access"
-        case .ethereumWalletSettingsUpdate(let update) where update.change == .dappsEnabled(true):
+        case .ethereumWalletSettingsUpdate(let update as WalletSettingsUpdate) where update.change == .dappsEnabled(true),
+             .polygonWalletSettingsUpdate(let update as WalletSettingsUpdate) where update.change == .dappsEnabled(true):
             return "Enable dApp Access"
-        case .ethereumWalletSettingsUpdate(let update) where update.change == .whitelistEnabled(false):
+        case .ethereumWalletSettingsUpdate(let update as WalletSettingsUpdate) where update.change == .whitelistEnabled(false),
+             .polygonWalletSettingsUpdate(let update as WalletSettingsUpdate) where update.change == .whitelistEnabled(false):
             return "Disable Whitelist"
-        case .ethereumWalletSettingsUpdate:
+        case .ethereumWalletSettingsUpdate,
+             .polygonWalletSettingsUpdate:
             return "Enable Whitelist"
-        case .ethereumWalletWhitelistUpdate:
+        case .ethereumWalletWhitelistUpdate,
+             .polygonWalletWhitelistUpdate:
             return "Edit Whitelist Addresses"
         case .addressBookUpdate(let update) where update.change == .add:
             return "Add Address"
@@ -46,7 +55,8 @@ extension ApprovalRequestType {
             return "Accept Invitation"
         case .passwordReset:
             return "Password Reset"
-        case .ethereumTransferPolicyUpdate:
+        case .ethereumTransferPolicyUpdate,
+             .polygonTransferPolicyUpdate:
             return "Update Transfer Approvals"
         case .vaultPolicyUpdate:
             return "Update Vault Policy"
@@ -55,13 +65,17 @@ extension ApprovalRequestType {
     
     var header2: String? {
         switch self {
-        case .ethereumWalletSettingsUpdate(let update):
+        case .ethereumWalletSettingsUpdate(let update as WalletSettingsUpdate),
+             .polygonWalletSettingsUpdate(let update as WalletSettingsUpdate):
             return update.wallet.name.toWalletName()
-        case .ethereumWalletWhitelistUpdate(let update):
+        case .ethereumWalletWhitelistUpdate(let update as WalletWhitelistUpdate),
+             .polygonWalletWhitelistUpdate(let update as WalletWhitelistUpdate):
             return update.wallet.name.toWalletName()
-        case .ethereumWalletNameUpdate(let update):
+        case .ethereumWalletNameUpdate(let update as WalletNameUpdate),
+             .polygonWalletNameUpdate(let update as WalletNameUpdate):
             return "\(update.wallet.name.toWalletName()) → \(update.newName.toWalletName())"
         case .ethereumWithdrawalRequest(let request as WithdrawalRequest),
+             .polygonWithdrawalRequest(let request as WithdrawalRequest),
              .bitcoinWithdrawalRequest(let request as WithdrawalRequest):
             if (request.replacementFee == nil) {
                 return nil
@@ -76,6 +90,7 @@ extension ApprovalRequestType {
     var subHeader: String? {
         switch self {
         case .ethereumWithdrawalRequest(let request as WithdrawalRequest),
+             .polygonWithdrawalRequest(let request as WithdrawalRequest),
              .bitcoinWithdrawalRequest(let request as WithdrawalRequest):
             if (request.replacementFee == nil) {
                 return request.amount.formattedUSDEquivalent.flatMap {

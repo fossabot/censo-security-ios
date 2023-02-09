@@ -40,11 +40,16 @@ class CensoTests: XCTestCase {
         for testCase in getTestCases(resource: "ethereum-test-cases") {
             let request: ApprovalRequest = Mock.decodeJsonType(data: testCase.request.data(using: .utf8)!)
             switch request.details {
-            case .ethereumWithdrawalRequest(let request as EthereumSignable),
-                 .ethereumWalletNameUpdate(let request as EthereumSignable),
-                 .ethereumWalletSettingsUpdate(let request as EthereumSignable),
-                 .ethereumTransferPolicyUpdate(let request as EthereumSignable),
-                 .ethereumWalletWhitelistUpdate(let request as EthereumSignable):
+            case .ethereumWithdrawalRequest(let request as EvmSignable),
+                 .ethereumWalletNameUpdate(let request as EvmSignable),
+                 .ethereumWalletSettingsUpdate(let request as EvmSignable),
+                 .ethereumTransferPolicyUpdate(let request as EvmSignable),
+                 .ethereumWalletWhitelistUpdate(let request as EvmSignable),
+                 .polygonWithdrawalRequest(let request as EvmSignable),
+                 .polygonWalletNameUpdate(let request as EvmSignable),
+                 .polygonWalletSettingsUpdate(let request as EvmSignable),
+                 .polygonTransferPolicyUpdate(let request as EvmSignable),
+                 .polygonWalletWhitelistUpdate(let request as EvmSignable):
                 
                 XCTAssertEqual(
                     try request.signableData().toHexString(),
@@ -52,9 +57,11 @@ class CensoTests: XCTestCase {
                 )
             case .vaultPolicyUpdate(let request as MultichainSignable):
                 let signatures = try request.signableData()
-                XCTAssertEqual(signatures.count, 1)
+                XCTAssertEqual(signatures.count, 2)
                 XCTAssertEqual(signatures[0].0, Chain.ethereum)
                 XCTAssertEqual(signatures[0].1.toHexString(), testCase.hash)
+                XCTAssertEqual(signatures[1].0, Chain.polygon)
+                XCTAssertEqual(signatures[1].1.toHexString(), testCase.hash)
             default:
                 XCTFail("Invalid request type")
             }
@@ -67,6 +74,7 @@ class CensoTests: XCTestCase {
             switch request.details {
             case .ethereumWalletCreation,
                  .bitcoinWalletCreation,
+                 .polygonWalletCreation,
                  .addressBookUpdate,
                  .vaultPolicyUpdate:
                 XCTAssertEqual(request.details,

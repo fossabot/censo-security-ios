@@ -1,17 +1,13 @@
 //
-//  EthereumSignable.swift
+//  PolygonSignable.swift
 //  Censo
 //
-//  Created by Ata Namvari on 2023-01-19.
+//  Created by Brendan Flood on 2/8/23.
 //
 
 import Foundation
 
-protocol EvmSignable {
-    func signableData() throws -> Data
-}
-
-extension EthereumWithdrawalRequest: EvmSignable {
+extension PolygonWithdrawalRequest: EvmSignable {
     func signableData() throws -> Data {
         return try EvmTransferTransactionBuilder.withdrawalSafeHash(
             evmTokenInfo: symbolInfo.tokenInfo,
@@ -23,13 +19,13 @@ extension EthereumWithdrawalRequest: EvmSignable {
     }
 }
 
-extension EthereumWalletNameUpdate: EvmSignable {
+extension PolygonWalletNameUpdate: EvmSignable {
     func signableData() throws -> Data {
         Data()
     }
 }
 
-extension EthereumWalletWhitelistUpdate: EvmSignable {
+extension PolygonWalletWhitelistUpdate: EvmSignable {
     func signableData() throws -> Data {
         return try EvmConfigTransactionBuilder.getUpdateWhitelistExecutionFromModuleDataSafeHash(
             walletAddress: wallet.address,
@@ -43,13 +39,7 @@ extension EthereumWalletWhitelistUpdate: EvmSignable {
 }
 
 
-extension EthereumDAppTransactionRequest: EvmSignable {
-    func signableData() throws -> Data {
-        Data()
-    }
-}
-
-extension EthereumTransferPolicyUpdate: EvmSignable {
+extension PolygonTransferPolicyUpdate: EvmSignable {
     func signableData() throws -> Data {
         let startingPolicy = try Policy(
             owners: currentOnChainPolicy.owners,
@@ -67,7 +57,7 @@ extension EthereumTransferPolicyUpdate: EvmSignable {
     }
 }
 
-extension EthereumWalletSettingsUpdate: EvmSignable {
+extension PolygonWalletSettingsUpdate: EvmSignable {
     func signableData() throws -> Data {
         
         let evmTransaction = signingData.transaction
@@ -97,4 +87,3 @@ extension EthereumWalletSettingsUpdate: EvmSignable {
         )
     }
 }
-

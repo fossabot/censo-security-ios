@@ -78,7 +78,7 @@
 		3D845E0F291015D1000C9E81 /* PublicKeys.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D845E0E291015D1000C9E81 /* PublicKeys.swift */; };
 		3D8CA666272C5E1900C68657 /* Theme.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3D8CA665272C5E1900C68657 /* Theme.xcassets */; };
 		3D952408283D0FB800D42243 /* WalletWhitelistRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D952407283D0FB800D42243 /* WalletWhitelistRow.swift */; };
-		3D95240A283D0FC300D42243 /* WallettWhitelistDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D952409283D0FC300D42243 /* WallettWhitelistDetails.swift */; };
+		3D95240A283D0FC300D42243 /* WalletWhitelistDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D952409283D0FC300D42243 /* WalletWhitelistDetails.swift */; };
 		3DA133A526B1AEB300BB4AF4 /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA133A426B1AEB300BB4AF4 /* Profile.swift */; };
 		3DAA26F0262F5147000F453D /* PrimaryButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DAA26EF262F5147000F453D /* PrimaryButtonStyle.swift */; };
 		3DAA26F6262F5156000F453D /* DestructiveButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DAA26F5262F5156000F453D /* DestructiveButtonStyle.swift */; };
@@ -182,6 +182,8 @@
 		6CCDBD5828EF8BBD00BBB5B6 /* AdditionalKeyRegistration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CCDBD5728EF8BBD00BBB5B6 /* AdditionalKeyRegistration.swift */; };
 		6CD5B4A228A453DB00CD1A62 /* PasswordResetRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CD5B4A128A453DB00CD1A62 /* PasswordResetRow.swift */; };
 		6CD5B4A428A455E900CD1A62 /* PasswordResetDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CD5B4A328A455E900CD1A62 /* PasswordResetDetails.swift */; };
+		6CF52A13299426D7004EC3F3 /* PolgygonClientModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CF52A12299426D7004EC3F3 /* PolgygonClientModel.swift */; };
+		6CF52A1529942879004EC3F3 /* PolygonSignable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CF52A1429942879004EC3F3 /* PolygonSignable.swift */; };
 		BD072F78292E6DF100B36C5A /* String+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD072F77292E6DF100B36C5A /* String+Hex.swift */; };
 		BD072F7B292E7DF800B36C5A /* EvmTransferTransactionBuilderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD072F7A292E7DF800B36C5A /* EvmTransferTransactionBuilderTests.swift */; };
 		BD072F7D292E7E9E00B36C5A /* EvmTransferTransactionBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD072F7C292E7E9E00B36C5A /* EvmTransferTransactionBuilder.swift */; };
@@ -270,7 +272,7 @@
 		3D845E0E291015D1000C9E81 /* PublicKeys.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicKeys.swift; sourceTree = "<group>"; };
 		3D8CA665272C5E1900C68657 /* Theme.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Theme.xcassets; sourceTree = "<group>"; };
 		3D952407283D0FB800D42243 /* WalletWhitelistRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletWhitelistRow.swift; sourceTree = "<group>"; };
-		3D952409283D0FC300D42243 /* WallettWhitelistDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WallettWhitelistDetails.swift; sourceTree = "<group>"; };
+		3D952409283D0FC300D42243 /* WalletWhitelistDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletWhitelistDetails.swift; sourceTree = "<group>"; };
 		3DA133A426B1AEB300BB4AF4 /* Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
 		3DAA26EF262F5147000F453D /* PrimaryButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrimaryButtonStyle.swift; sourceTree = "<group>"; };
 		3DAA26F5262F5156000F453D /* DestructiveButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DestructiveButtonStyle.swift; sourceTree = "<group>"; };
@@ -377,6 +379,8 @@
 		6CCDBD5928EFC4BE00BBB5B6 /* KeychainTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainTests.swift; sourceTree = "<group>"; };
 		6CD5B4A128A453DB00CD1A62 /* PasswordResetRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordResetRow.swift; sourceTree = "<group>"; };
 		6CD5B4A328A455E900CD1A62 /* PasswordResetDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordResetDetails.swift; sourceTree = "<group>"; };
+		6CF52A12299426D7004EC3F3 /* PolgygonClientModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolgygonClientModel.swift; sourceTree = "<group>"; };
+		6CF52A1429942879004EC3F3 /* PolygonSignable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolygonSignable.swift; sourceTree = "<group>"; };
 		BD072F77292E6DF100B36C5A /* String+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Hex.swift"; sourceTree = "<group>"; };
 		BD072F7A292E7DF800B36C5A /* EvmTransferTransactionBuilderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvmTransferTransactionBuilderTests.swift; sourceTree = "<group>"; };
 		BD072F7C292E7E9E00B36C5A /* EvmTransferTransactionBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvmTransferTransactionBuilder.swift; sourceTree = "<group>"; };
@@ -668,7 +672,7 @@
 			isa = PBXGroup;
 			children = (
 				3D952407283D0FB800D42243 /* WalletWhitelistRow.swift */,
-				3D952409283D0FC300D42243 /* WallettWhitelistDetails.swift */,
+				3D952409283D0FC300D42243 /* WalletWhitelistDetails.swift */,
 			);
 			path = WalletWhitelist;
 			sourceTree = "<group>";
@@ -718,6 +722,7 @@
 				3DC205C52988450400BD8BB0 /* BitcoinClientModel.swift */,
 				6C8BA247298EEC1F00D24E00 /* MultichainClientModel.swift */,
 				6C8BA2532990A83D00D24E00 /* EvmClientModel.swift */,
+				6CF52A12299426D7004EC3F3 /* PolgygonClientModel.swift */,
 			);
 			path = ClientModels;
 			sourceTree = "<group>";
@@ -741,6 +746,7 @@
 				3D0F3D5B2979D20F006C3328 /* EthereumSignable.swift */,
 				3DC205CB2988A71200BD8BB0 /* ApprovalDispositionRequest+Signing.swift */,
 				6C8BA245298EE78A00D24E00 /* MultichainSign.swift */,
+				6CF52A1429942879004EC3F3 /* PolygonSignable.swift */,
 			);
 			path = Signing;
 			sourceTree = "<group>";
@@ -1150,11 +1156,13 @@
 				3DD9568725EF561F003F9ECF /* Moya+CensoClient.swift in Sources */,
 				3DAA2717263092FD000F453D /* FirstTimeAppear.swift in Sources */,
 				3DE53C8E28A2BF9500B4F014 /* UpdateApp.swift in Sources */,
+				6CF52A1529942879004EC3F3 /* PolygonSignable.swift in Sources */,
 				3D6334EF2885C299002CEC5A /* KeyRecoverySuccess.swift in Sources */,
 				3D0F3D5E2979D22C006C3328 /* BitcoinSignable.swift in Sources */,
 				6C8CE737298AC8A800834978 /* EvmWhitelistHelper.swift in Sources */,
 				6CD5B4A428A455E900CD1A62 /* PasswordResetDetails.swift in Sources */,
 				3D6334EE2885C299002CEC5A /* KeyConfirmationSuccess.swift in Sources */,
+				6CF52A13299426D7004EC3F3 /* PolgygonClientModel.swift in Sources */,
 				3DB9960127EE1A1B005655F0 /* Data+Extensions.swift in Sources */,
 				3D3D6D102616447200FEEE0B /* FilledButtonStyle.swift in Sources */,
 				3D11A60D27585F72008C03B1 /* ImageLoader.swift in Sources */,
@@ -1185,7 +1193,7 @@
 				3D115202282169D4007CD43D /* VaultConfigPolicyRow.swift in Sources */,
 				3D6334FC2885C2C9002CEC5A /* BackButtonBar.swift in Sources */,
 				40328E102593ED9900F2EE41 /* CensoApp.swift in Sources */,
-				3D95240A283D0FC300D42243 /* WallettWhitelistDetails.swift in Sources */,
+				3D95240A283D0FC300D42243 /* WalletWhitelistDetails.swift in Sources */,
 				3D11521828217FC2007CD43D /* WalletSettingsDetails.swift in Sources */,
 				3D1AF119298C2D3C00A01E43 /* CameraNotAvailable.swift in Sources */,
 				3D3D6D362616B84700FEEE0B /* RegistrationView.swift in Sources */,
@@ -1568,6 +1576,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Censo/Censo.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Censo/Preview Content\"";
@@ -1588,6 +1597,7 @@
 				MARKETING_VERSION = 1.0.3;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.censocustody.mobile-dev";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Censo/Censo-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1688,6 +1698,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_ENTITLEMENTS = Censo/Censo.entitlements;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Censo/Preview Content\"";
@@ -1708,6 +1719,7 @@
 				MARKETING_VERSION = 1.0.3;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.censocustody.mobile-dev";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OBJC_BRIDGING_HEADER = "Censo/Censo-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

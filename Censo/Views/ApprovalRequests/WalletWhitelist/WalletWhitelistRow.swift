@@ -11,7 +11,7 @@ import SwiftUI
 
 struct WalletWhitelistRow: View {
     var requestType: ApprovalRequestType
-    var update: EthereumWalletWhitelistUpdate
+    var update: WalletWhitelistUpdate
 
     var body: some View {
         VStack(spacing: 8) {
@@ -35,7 +35,8 @@ struct WalletWhitelistRow: View {
 #if DEBUG
 struct WalletWhitelistRow_Previews: PreviewProvider {
     static var previews: some View {
-        WalletWhitelistRow(requestType: .ethereumWalletWhitelistUpdate(.sample), update: .sample)
+        WalletWhitelistRow(requestType: .ethereumWalletWhitelistUpdate(.sample),
+                           update: EthereumWalletWhitelistUpdate.sample)
     }
 }
 

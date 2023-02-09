@@ -1,18 +1,13 @@
 //
-//  EthereumClientModel.swift
+//  PolgygonClientModel.swift
 //  Censo
 //
-//  Created by Ata Namvari on 2023-01-30.
+//  Created by Brendan Flood on 2/8/23.
 //
 
 import Foundation
 
-enum Change: Equatable {
-    case whitelistEnabled(Bool)
-    case dappsEnabled(Bool)
-}
-
-struct EthereumSigningData: Codable, Equatable  {
+struct PolygonSigningData: Codable, Equatable  {
     var transaction: EvmTransaction
     
     enum CodingKeys: String, CodingKey {
@@ -31,13 +26,13 @@ struct EthereumSigningData: Codable, Equatable  {
 
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
-        try container.encode("ethereum", forKey: .type)
+        try container.encode("polygon", forKey: .type)
         try container.encode(transaction, forKey: .transaction)
     }
     
 }
 
-struct EthereumWalletCreation: Codable, Equatable  {
+struct PolygonWalletCreation: Codable, Equatable  {
     var identifier: String
     var name: String
     var approvalPolicy: ApprovalPolicy
@@ -47,37 +42,37 @@ struct EthereumWalletCreation: Codable, Equatable  {
     var feeSymbolInfo: EvmSymbolInfo
 }
     
-struct EthereumWithdrawalRequest: Codable, Equatable  {
+struct PolygonWithdrawalRequest: Codable, Equatable  {
     var wallet: WalletInfo
     var amount: Amount
     var symbolInfo: EvmSymbolInfo
     var fee: Amount
     var feeSymbolInfo: EvmSymbolInfo
     var destination: DestinationAddress
-    var signingData: EthereumSigningData
+    var signingData: PolygonSigningData
 }
 
-struct EthereumWalletNameUpdate: Codable, Equatable  {
+struct PolygonWalletNameUpdate: Codable, Equatable  {
     var wallet: WalletInfo
     var newName: String
-    var signingData: EthereumSigningData
+    var signingData: PolygonSigningData
 }
 
-struct EthereumTransferPolicyUpdate: Codable, Equatable  {
+struct PolygonTransferPolicyUpdate: Codable, Equatable  {
     var wallet: WalletInfo
     var approvalPolicy: ApprovalPolicy
     var currentOnChainPolicy: OnChainPolicy
     var fee: Amount
     var feeSymbolInfo: EvmSymbolInfo
-    var signingData: EthereumSigningData
+    var signingData: PolygonSigningData
 }
 
-struct EthereumWalletSettingsUpdate: Codable, Equatable  {
+struct PolygonWalletSettingsUpdate: Codable, Equatable  {
 
     var wallet: WalletInfo
     var currentGuardAddress: String
     var change: Change
-    var signingData: EthereumSigningData
+    var signingData: PolygonSigningData
 
     enum CodingKeys: String, CodingKey {
         case wallet
@@ -87,7 +82,7 @@ struct EthereumWalletSettingsUpdate: Codable, Equatable  {
         case signingData
     }
 
-    init(wallet: WalletInfo, currentGuardAddress: String, change: Change, signingData: EthereumSigningData) {
+    init(wallet: WalletInfo, currentGuardAddress: String, change: Change, signingData: PolygonSigningData) {
         self.wallet = wallet
         self.currentGuardAddress = currentGuardAddress
         self.change = change
@@ -97,7 +92,7 @@ struct EthereumWalletSettingsUpdate: Codable, Equatable  {
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         self.wallet = try container.decode(WalletInfo.self, forKey: .wallet)
-        self.signingData = try container.decode(EthereumSigningData.self, forKey: .signingData)
+        self.signingData = try container.decode(PolygonSigningData.self, forKey: .signingData)
         self.currentGuardAddress = try container.decode(String.self, forKey: .currentGuardAddress)
 
         let whitelistEnabled = try container.decode(BooleanSetting?.self, forKey: .whitelistEnabled)
@@ -127,41 +122,18 @@ struct EthereumWalletSettingsUpdate: Codable, Equatable  {
     }
 }
 
-struct EthereumWalletWhitelistUpdate: Codable, Equatable  {
+struct PolygonWalletWhitelistUpdate: Codable, Equatable  {
     var wallet: WalletInfo
     var destinations: [DestinationAddress]
     var currentOnChainWhitelist: [String]
-    var signingData: EthereumSigningData
-}
-
-struct EthereumDAppTransactionRequest: Codable, Equatable  {
-    struct SymbolAndAmountInfo: Codable, Equatable {
-        struct SymbolInfo: Codable, Equatable {
-            let symbol: String
-            let symbolDescription: String
-        }
-
-        let symbolInfo: SymbolInfo
-        let amount: String
-        let usdEquivalent: String?
-    }
-
-    var wallet: WalletInfo
-    var dappInfo: DAppInfo
-    var balanceChanges: [SymbolAndAmountInfo]
-    var signingData: EthereumSigningData
-}
-
-struct DAppInfo: Codable, Equatable {
-    let address: String
-    let name: String
+    var signingData: PolygonSigningData
 }
 
 #if DEBUG
 
-extension EthereumSigningData {
+extension PolygonSigningData {
     static var sample: Self {
-        EthereumSigningData(transaction: .sample)
+        PolygonSigningData(transaction: .sample)
     }
 }
 

@@ -19,6 +19,8 @@ extension VaultPolicyUpdate: MultichainSignable {
             switch $0 {
             case .ethereum(let signingData):
                 return (Chain.ethereum, try getSafeHash(chain: Chain.ethereum, evmTransaction: signingData.transaction))
+            case .polygon(let signingData):
+                return (Chain.polygon, try getSafeHash(chain: Chain.polygon, evmTransaction: signingData.transaction))
             }
         }
     }
@@ -34,7 +36,7 @@ extension VaultPolicyUpdate: MultichainSignable {
         return try EvmConfigTransactionBuilder.getVaultPolicyUpdateDataSafeHash(
             txs: startingPolicy.safeTransactions(
                 try Policy(
-                    owners: approvalPolicy.approvers.map { try getAddress($0.publicKeys, chain) },
+                    owners: approvalPolicy.approvers.map { try getAddress($0.publicKeys, Chain.ethereum) },
                     threshold: approvalPolicy.approvalsRequired
                 )
             ).0,

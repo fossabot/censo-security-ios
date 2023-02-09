@@ -70,6 +70,7 @@ extension ApprovalDispositionRequest {
             ]
         case .ethereumWalletCreation,
              .bitcoinWalletCreation,
+             .polygonWalletCreation,
              .addressBookUpdate:
             let detailsJSONData = try JSONEncoder().encode(request.details)
             let privateKeys = try deviceSigner.privateKeys()
@@ -105,16 +106,24 @@ extension ApprovalDispositionRequest {
                             )
                         )
                      )
+                case Chain.polygon:
+                    signatures.append(
+                        .polygon(
+                            PolygonSignature(
+                                signature: try privateKeys.signature(for: dataToSign, chain: Chain.ethereum)
+                            )
+                        )
+                     )
                 default:
                     break
                 }
             }
             return signatures
             
-        case .ethereumWithdrawalRequest(let request as EthereumSignable),
-             .ethereumWalletNameUpdate(let request as EthereumSignable),
-             .ethereumWalletSettingsUpdate(let request as EthereumSignable),
-             .ethereumWalletWhitelistUpdate(let request as EthereumSignable):
+        case .ethereumWithdrawalRequest(let request as EvmSignable),
+             .ethereumWalletNameUpdate(let request as EvmSignable),
+             .ethereumWalletSettingsUpdate(let request as EvmSignable),
+             .ethereumWalletWhitelistUpdate(let request as EvmSignable):
             let privateKeys = try deviceSigner.privateKeys()
 
             return [
@@ -124,8 +133,22 @@ extension ApprovalDispositionRequest {
                     )
                 )
             ]
+        
+        case .polygonWithdrawalRequest(let request as EvmSignable),
+             .polygonWalletNameUpdate(let request as EvmSignable),
+             .polygonWalletSettingsUpdate(let request as EvmSignable),
+             .polygonWalletWhitelistUpdate(let request as EvmSignable):
+            let privateKeys = try deviceSigner.privateKeys()
+
+            return [
+                .polygon(
+                    PolygonSignature(
+                        signature: try privateKeys.signature(for: try request.signableData(), chain: .polygon)
+                    )
+                )
+            ]
             
-        case .ethereumTransferPolicyUpdate(let details as EthereumSignable):
+        case .ethereumTransferPolicyUpdate(let details as EvmSignable):
             let privateKeys = try deviceSigner.privateKeys()
             let detailsJSONData = try JSONEncoder().encode(request.details)
 
@@ -133,6 +156,22 @@ extension ApprovalDispositionRequest {
                 .ethereumWithOffchain(
                     EthereumSignatureWithOffchain(
                         signature: try privateKeys.signature(for: try details.signableData(), chain: .ethereum),
+                        offchainSignature: OffChainSignature(
+                            signature: try privateKeys.signature(for: Data(SHA256.hash(data: detailsJSONData)), chain: Chain.censo),
+                            signedData: detailsJSONData.base64EncodedString()
+                        )
+                    )
+                )
+            ]
+            
+        case .polygonTransferPolicyUpdate(let details as EvmSignable):
+            let privateKeys = try deviceSigner.privateKeys()
+            let detailsJSONData = try JSONEncoder().encode(request.details)
+
+            return [
+                .polygonWithOffchain(
+                    PolygonSignatureWithOffchain(
+                        signature: try privateKeys.signature(for: try details.signableData(), chain: .polygon),
                         offchainSignature: OffChainSignature(
                             signature: try privateKeys.signature(for: Data(SHA256.hash(data: detailsJSONData)), chain: Chain.censo),
                             signedData: detailsJSONData.base64EncodedString()

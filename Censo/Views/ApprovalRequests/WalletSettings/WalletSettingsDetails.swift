@@ -10,7 +10,7 @@ import SwiftUI
 
 struct WalletSettingsDetails: View {
     var request: ApprovalRequest
-    var update: EthereumWalletSettingsUpdate
+    var update: WalletSettingsUpdate
     var user: CensoApi.User
 
     var body: some View {
@@ -23,13 +23,15 @@ struct WalletSettingsDetails: View {
 #if DEBUG
 struct WalletSettingsDetails_Previews: PreviewProvider {
     static var previews: some View {
-        WalletSettingsDetails(request: .sample, update: .sample, user: .sample)
+        WalletSettingsDetails(request: .sample, update: EthereumWalletSettingsUpdate.sample, user: .sample)
 
         let timerPublisher = Timer.TimerPublisher(interval: 1, runLoop: .current, mode: .default).autoconnect()
 
         NavigationView {
             ApprovalRequestDetails(deviceSigner: DeviceSigner(deviceKey: .sample, encryptedRootSeed: Data()), user: .sample, request: .sample, timerPublisher: timerPublisher) {
-                WalletSettingsDetails(request: .sample, update: .sample, user: .sample)
+                WalletSettingsDetails(request: .sample,
+                                      update: EthereumWalletSettingsUpdate.sample,
+                                      user: .sample)
             }
         }
     }

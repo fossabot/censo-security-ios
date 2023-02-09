@@ -11,7 +11,7 @@ import SwiftUI
 
 struct WalletTransferPolicyRow: View {
     var requestType: ApprovalRequestType
-    var update: EthereumTransferPolicyUpdate
+    var update: TransferPolicyUpdate
 
     var body: some View {
         VStack(spacing: 8) {
