@@ -56,7 +56,7 @@ extension EthereumWalletCreation {
             ),
             whitelistEnabled: .On,
             dappsEnabled: .On,
-            fee: Amount(value: "0.5", nativeValue: "0.5", usdEquivalent: nil),
+            fee: Amount(value: "0.5", nativeValue: "0.5", usdEquivalent: ".25"),
             feeSymbolInfo: EvmSymbolInfo(
                 symbol: "ETH",
                 description: "ETH",

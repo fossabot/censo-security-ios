@@ -24,6 +24,11 @@ struct WalletWhitelistDetails: View {
                     Fact("No whitelisted addresses", "")
                 }
             }
+            if let feeInUsd = update.fee.formattedUSDEquivalent {
+                FactsSection(title: "Fees") {
+                    Fact("Fee Estimate", "\(feeInUsd) USD")
+                }
+            }
         }
     }
 }

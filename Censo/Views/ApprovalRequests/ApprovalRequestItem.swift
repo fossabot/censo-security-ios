@@ -128,6 +128,7 @@ protocol WithdrawalRequest {
     var fee: Amount { get }
     var feeSymbol: String { get }
     var replacementFee: Amount? { get }
+    var showFeeInUsd: Bool { get }
     var destination: DestinationAddress { get }
 }
 
@@ -137,6 +138,9 @@ extension BitcoinWithdrawalRequest: WithdrawalRequest {
     }
     var feeSymbol: String {
         return symbolInfo.symbol
+    }
+    var showFeeInUsd: Bool {
+        return false
     }
 }
 
@@ -152,6 +156,10 @@ extension EthereumWithdrawalRequest: WithdrawalRequest {
     var feeSymbol: String {
         return feeSymbolInfo.symbol
     }
+    
+    var showFeeInUsd: Bool {
+        return true
+    }
 }
 
 extension PolygonWithdrawalRequest: WithdrawalRequest {
@@ -166,18 +174,35 @@ extension PolygonWithdrawalRequest: WithdrawalRequest {
     var feeSymbol: String {
         return feeSymbolInfo.symbol
     }
+    
+    var showFeeInUsd: Bool {
+        return true
+    }
 }
 
 protocol WalletCreation {
     var name: String { get }
     var approvalPolicy: ApprovalPolicy { get }
+    var feeAmount: Amount? { get }
 }
 
-extension BitcoinWalletCreation: WalletCreation {}
+extension BitcoinWalletCreation: WalletCreation {
+    var feeAmount: Amount? {
+        return nil
+    }
+}
 
-extension EthereumWalletCreation: WalletCreation {}
+extension EthereumWalletCreation: WalletCreation {
+    var feeAmount: Amount? {
+        return fee
+    }
+}
 
-extension PolygonWalletCreation: WalletCreation {}
+extension PolygonWalletCreation: WalletCreation {
+    var feeAmount: Amount? {
+        return fee
+    }
+}
 
 protocol WalletNameUpdate {
     var wallet: WalletInfo { get }
@@ -190,6 +215,7 @@ extension PolygonWalletNameUpdate: WalletNameUpdate {}
 protocol WalletSettingsUpdate {
     var wallet: WalletInfo { get }
     var change: Change { get }
+    var fee: Amount { get }
 }
 
 extension EthereumWalletSettingsUpdate: WalletSettingsUpdate {}
@@ -199,6 +225,7 @@ extension PolygonWalletSettingsUpdate: WalletSettingsUpdate {}
 protocol WalletWhitelistUpdate {
     var wallet: WalletInfo { get }
     var destinations: [DestinationAddress] { get }
+    var fee: Amount { get }
 }
 
 extension EthereumWalletWhitelistUpdate: WalletWhitelistUpdate {}
@@ -207,6 +234,7 @@ extension PolygonWalletWhitelistUpdate: WalletWhitelistUpdate {}
 protocol TransferPolicyUpdate {
     var wallet: WalletInfo { get }
     var approvalPolicy: ApprovalPolicy { get }
+    var fee: Amount { get }
 }
 
 extension EthereumTransferPolicyUpdate: TransferPolicyUpdate {}

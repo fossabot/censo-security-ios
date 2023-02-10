@@ -33,19 +33,12 @@ struct WalletTransferPolicyRow: View {
 }
 
 #if DEBUG
-//struct WalletTransferPolicyRow_Previews: PreviewProvider {
-//    static var previews: some View {
-//        WalletTransferPolicyRow(requestType: .balanceAccountPolicyUpdate(.sample), update: .sample)
-//    }
-//}
-//
-////extension BalanceAccountPolicyUpdate {
-////    static var sample: Self {
-////        BalanceAccountPolicyUpdate(
-////            accountInfo: .sample,
-////            approvalPolicy: .sample,
-////            signingData: .sample
-////        )
-////    }
-////}
+struct WalletTransferPolicyRow_Previews: PreviewProvider {
+    static var previews: some View {
+        WalletTransferPolicyRow(
+            requestType: .ethereumTransferPolicyUpdate(.sample),
+            update: EthereumTransferPolicyUpdate.sample
+        )
+    }
+}
 #endif

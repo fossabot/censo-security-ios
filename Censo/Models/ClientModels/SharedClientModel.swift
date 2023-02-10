@@ -214,6 +214,13 @@ extension Amount {
             usdEquivalent: "2353453"
         )
     }
+    static var feeSample: Self {
+        Amount(
+            value: "0.000564",
+            nativeValue: "0.00056400",
+            usdEquivalent: "6.53"
+        )
+    }
 }
 
 

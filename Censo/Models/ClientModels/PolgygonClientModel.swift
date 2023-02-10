@@ -73,6 +73,8 @@ struct PolygonWalletSettingsUpdate: Codable, Equatable  {
     var currentGuardAddress: String
     var change: Change
     var signingData: PolygonSigningData
+    var fee: Amount
+    var feeSymbolInfo: EvmSymbolInfo
 
     enum CodingKeys: String, CodingKey {
         case wallet
@@ -80,13 +82,17 @@ struct PolygonWalletSettingsUpdate: Codable, Equatable  {
         case whitelistEnabled
         case dappsEnabled
         case signingData
+        case fee
+        case feeSymbolInfo
     }
 
-    init(wallet: WalletInfo, currentGuardAddress: String, change: Change, signingData: PolygonSigningData) {
+    init(wallet: WalletInfo, currentGuardAddress: String, change: Change, signingData: PolygonSigningData, fee: Amount, feeSymbolInfo: EvmSymbolInfo) {
         self.wallet = wallet
         self.currentGuardAddress = currentGuardAddress
         self.change = change
         self.signingData = signingData
+        self.fee = fee
+        self.feeSymbolInfo = feeSymbolInfo
     }
 
     init(from decoder: Decoder) throws {
@@ -94,6 +100,8 @@ struct PolygonWalletSettingsUpdate: Codable, Equatable  {
         self.wallet = try container.decode(WalletInfo.self, forKey: .wallet)
         self.signingData = try container.decode(PolygonSigningData.self, forKey: .signingData)
         self.currentGuardAddress = try container.decode(String.self, forKey: .currentGuardAddress)
+        self.fee = try container.decode(Amount.self, forKey: .fee)
+        self.feeSymbolInfo = try container.decode(EvmSymbolInfo.self, forKey: .feeSymbolInfo)
 
         let whitelistEnabled = try container.decode(BooleanSetting?.self, forKey: .whitelistEnabled)
         let dappsEnabled = try container.decode(BooleanSetting?.self, forKey: .dappsEnabled)
@@ -112,6 +120,8 @@ struct PolygonWalletSettingsUpdate: Codable, Equatable  {
         try container.encode(wallet, forKey: .wallet)
         try container.encode(currentGuardAddress, forKey: .currentGuardAddress)
         try container.encode(signingData, forKey: .signingData)
+        try container.encode(fee, forKey: .fee)
+        try container.encode(feeSymbolInfo, forKey: .feeSymbolInfo)
 
         switch change {
         case .whitelistEnabled(let bool):
@@ -127,6 +137,8 @@ struct PolygonWalletWhitelistUpdate: Codable, Equatable  {
     var destinations: [DestinationAddress]
     var currentOnChainWhitelist: [String]
     var signingData: PolygonSigningData
+    var fee: Amount
+    var feeSymbolInfo: EvmSymbolInfo
 }
 
 #if DEBUG
