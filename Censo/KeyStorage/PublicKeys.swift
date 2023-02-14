@@ -11,5 +11,5 @@ import CryptoKit
 struct PublicKeys: Codable, Equatable {
     var bitcoin: String
     var ethereum: String
-    var censo: String
+    var offchain: String
 }
