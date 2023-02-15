@@ -26,7 +26,11 @@ struct WithdrawalDetails: View {
                     Fact("Original Fee", "\(fee.formattedAmount) \(withdrawal.feeSymbol)")
                     Fact("New Fee", "\(replacementFee.formattedAmount) \(withdrawal.feeSymbol)")
                 } else if let fee = withdrawal.fee {
-                    Fact("Fee", "\(fee.formattedAmount) \(withdrawal.feeSymbol)")
+                    if withdrawal.showFeeInUsd, let feeInUsd = fee.formattedUSDEquivalent {
+                        Fact("Fee Estimate", "\(feeInUsd) USD")
+                    } else {
+                        Fact("Fee", "\(fee.formattedAmount) \(withdrawal.feeSymbol)")
+                    }
                 }
             }
         }

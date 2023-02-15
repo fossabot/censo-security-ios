@@ -38,34 +38,54 @@ extension Int {
 }
 
 #if DEBUG
-//struct WalletConfigPolicyRow_Previews: PreviewProvider {
-//    static var previews: some View {
-//        WalletConfigPolicyRow(requestType: .walletConfigPolicyUpdate(.sample), update: .sample)
-//    }
-//}
-//
-//extension WalletConfigPolicyUpdate {
-//    static var sample: Self {
-//        WalletConfigPolicyUpdate(
-//            approvalPolicy: .sample,
-//            signingData: .sample
-//        )
-//    }
-//}
+struct VaultConfigPolicyRow_Previews: PreviewProvider {
+    static var previews: some View {
+        VaultConfigPolicyRow(requestType: .vaultPolicyUpdate(.sample), update: .sample)
+    }
+}
 
-extension ApprovalPolicy {
+extension VaultPolicyUpdate {
     static var sample: Self {
-        ApprovalPolicy(
-            approvalsRequired: 2,
-            approvalTimeout: 3000,
-            approvers: [SignerInfo.sample]
+        VaultPolicyUpdate(
+            approvalPolicy: .sample,
+            currentOnChainPolicies: [.sample],
+            signingData: [SigningData.ethereum(signingData: .sample)],
+            chainFees: [.sample, .sample2]
         )
     }
 }
 
-extension SignerInfo {
+extension VaultApprovalPolicy {
     static var sample: Self {
-        SignerInfo(publicKey: "1234", name: "John Smith", email: "john@censocustody.com", nameHashIsEmpty: false, jpegThumbnail: nil)
+        VaultApprovalPolicy(
+            approvalsRequired: 2,
+            approvalTimeout: 3000,
+            approvers: [VaultSigner.sample]
+        )
+    }
+}
+
+extension VaultSigner {
+    static var sample: Self {
+        VaultSigner(name: "John Smith",
+                    email: "john@censocustody.com",
+                    publicKeys: [],
+                    nameHashIsEmpty: false,
+                    jpegThumbnail: nil
+        )
+    }
+}
+
+extension ChainFee {
+    static var sample: Self {
+        ChainFee(chain: Chain.ethereum,
+                 fee: .feeSample,
+                 feeSymbolInfo: .sample)
+    }
+    static var sample2: Self {
+        ChainFee(chain: Chain.polygon,
+                 fee: .feeSample,
+                 feeSymbolInfo: .sample)
     }
 }
 

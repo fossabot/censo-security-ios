@@ -46,7 +46,10 @@ extension EthereumWalletWhitelistUpdate {
             wallet: .sample,
             destinations: [.sample, .sample],
             currentOnChainWhitelist: [],
-            signingData: .sample)
+            signingData: .sample,
+            fee: .feeSample,
+            feeSymbolInfo: .sample
+        )
     }
 }
 #endif

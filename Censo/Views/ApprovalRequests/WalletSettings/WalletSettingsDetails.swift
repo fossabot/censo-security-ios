@@ -15,7 +15,11 @@ struct WalletSettingsDetails: View {
 
     var body: some View {
         VStack(alignment: .center, spacing: 10) {
-
+            if let feeInUsd = update.fee.formattedUSDEquivalent {
+                FactsSection(title: "Fees") {
+                    Fact("Fee Estimate", "\(feeInUsd) USD")
+                }
+            }
         }
     }
 }
@@ -43,7 +47,9 @@ extension EthereumWalletSettingsUpdate {
             wallet: .sample,
             currentGuardAddress: "",
             change: .whitelistEnabled(true),
-            signingData: .sample
+            signingData: .sample,
+            fee: .feeSample,
+            feeSymbolInfo: .sample
         )
     }
 }

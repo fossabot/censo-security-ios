@@ -206,7 +206,7 @@ extension EthereumWithdrawalRequest {
             wallet: .sample,
             amount: .sample,
             symbolInfo: .sample,
-            fee: .sample,
+            fee: .feeSample,
             feeSymbolInfo: EvmSymbolInfo.sample,
             destination: .sample,
             signingData: .sample)

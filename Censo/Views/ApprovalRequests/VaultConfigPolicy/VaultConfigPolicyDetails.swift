@@ -28,22 +28,32 @@ struct VaultConfigPolicyDetails: View {
                     Fact("No users may approve requests", "")
                 }
             }
+            
+            if update.chainFees.count > 0 {
+                FactsSection(title: "Fees") {
+                    for chainFee in update.chainFees {
+                        if let feeInUsd = chainFee.fee.formattedUSDEquivalent {
+                            Fact("\(chainFee.chain.rawValue.capitalized) Fee Estimate", "\(feeInUsd) USD")
+                        }
+                    }
+                }
+            }
         }
     }
 }
 
 #if DEBUG
-//struct VaultConfigPolicyDetails_Previews: PreviewProvider {
-//    static var previews: some View {
-//        VaultConfigPolicyDetails(request: .sample, update: .sample)
-//
-//        let timerPublisher = Timer.TimerPublisher(interval: 1, runLoop: .current, mode: .default).autoconnect()
-//
-//        NavigationView {
-//            ApprovalRequestDetails(user: .sample, request: .sample, timerPublisher: timerPublisher) {
-//                VaultConfigPolicyDetails(request: .sample, update: .sample)
-//            }
-//        }
-//    }
-//}
+struct VaultConfigPolicyDetails_Previews: PreviewProvider {
+    static var previews: some View {
+        VaultConfigPolicyDetails(request: .sample, update: .sample)
+
+        let timerPublisher = Timer.TimerPublisher(interval: 1, runLoop: .current, mode: .default).autoconnect()
+
+        NavigationView {
+            ApprovalRequestDetails(deviceSigner: DeviceSigner(deviceKey: .sample, encryptedRootSeed: Data()), user: .sample, request: .sample, timerPublisher: timerPublisher) {
+                VaultConfigPolicyDetails(request: .sample, update: .sample)
+            }
+        }
+    }
+}
 #endif

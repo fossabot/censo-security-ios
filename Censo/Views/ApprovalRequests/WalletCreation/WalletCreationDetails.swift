@@ -32,6 +32,11 @@ struct WalletCreationDetails: View {
                     Fact("No users may approve requests", "")
                 }
             }
+            if let fee = walletCreation.feeAmount, let feeInUsd = fee.formattedUSDEquivalent {
+                FactsSection(title: "Fees") {
+                    Fact("Fee Estimate", "\(feeInUsd) USD")
+                }
+            }
         }
     }
 }

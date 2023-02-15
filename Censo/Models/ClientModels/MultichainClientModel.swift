@@ -53,6 +53,12 @@ struct ChainPubkey: Codable, Equatable {
     let key: String
 }
 
+struct ChainFee: Codable, Equatable {
+    let chain: Chain
+    let fee: Amount
+    let feeSymbolInfo: EvmSymbolInfo
+}
+
 struct VaultApprovalPolicy: Codable, Equatable {
     let approvalsRequired: Int
     let approvalTimeout: UInt64
@@ -63,4 +69,5 @@ struct VaultPolicyUpdate: Codable, Equatable  {
     var approvalPolicy: VaultApprovalPolicy
     var currentOnChainPolicies: [OnChainPolicy]
     var signingData: [SigningData]
+    var chainFees: [ChainFee]
 }
