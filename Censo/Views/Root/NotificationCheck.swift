@@ -23,19 +23,31 @@ struct NotificationCheck<Content>: View where Content : View {
         Group {
             if !userPromptedForPush {
                 VStack {
+                    Spacer()
+
                     Text("Censo would like to send you push notifications")
+                        .padding()
+                        .multilineTextAlignment(.center)
+
+                    Spacer()
 
                     Button {
                         registerForRemoteNotifications()
                     } label: {
                         Text("Enable Notifications")
                     }
+                    .buttonStyle(FilledButtonStyle())
 
                     Button {
                         self.userPromptedForPush = true
                     } label: {
                         Text("Skip")
+                            .bold()
+                            .foregroundColor(.Censo.red)
                     }
+                    .padding()
+
+                    Spacer()
                 }
             } else {
                 content()
@@ -66,3 +78,11 @@ struct NotificationCheck<Content>: View where Content : View {
         }
     }
 }
+
+#if DEBUG
+struct NotificationCheck_Previews: PreviewProvider {
+    static var previews: some View {
+        NotificationCheck(email: "", {})
+    }
+}
+#endif
