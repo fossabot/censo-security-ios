@@ -24,16 +24,15 @@ struct UnknownRequestRow: View {
                     .allowsTightening(true)
                     .textCase(.uppercase)
                     .font(.subheadline)
-                    .foregroundColor(Color.white)
                 Spacer()
                 if let expireDate = request.expireDate {
                     Countdown(date: expireDate, timerPublisher: timerPublisher)
                         .font(.subheadline)
-                        .foregroundColor(Color.white.opacity(0.5))
+                        .foregroundColor(Color.Censo.primaryForeground.opacity(0.7))
                 }
             }
             .padding(EdgeInsets(top: 5, leading: 10, bottom: 5, trailing: 10))
-            .background(Color.Censo.thirdBackground /**/)
+            .background(Color.white)
 
             Text("You have an unknown approval request. Please update this app to see the request details")
                 .multilineTextAlignment(.center)
@@ -47,13 +46,13 @@ struct UnknownRequestRow: View {
                 } label: {
                     Text("Update Censo Mobile...")
                         .bold()
-                        .foregroundColor(Color.white)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                 }
             }
             .frame(height: 45)
         }
-        .roundedCell(background: Color.Censo.secondaryBackground)
+        .roundedCell(background: Color.white)
+        .foregroundColor(.Censo.primaryForeground)
     }
 }
 

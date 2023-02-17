@@ -15,15 +15,9 @@ struct KeyGeneration: View {
     var user: CensoApi.User
     var deviceKey: DeviceKey
     var onSuccess: () -> Void
-    var onProfile: () -> Void
 
     var body: some View {
-        ZStack(alignment: .topLeading) {
-            ProfileButton(action: onProfile)
-
-            KeyConfirmationSuccess(user: user, deviceKey: deviceKey, phrase: phrase, onSuccess: onSuccess)
-        }
-        .navigationBarHidden(true)
+        KeyConfirmationSuccess(user: user, deviceKey: deviceKey, phrase: phrase, onSuccess: onSuccess)
     }
 }
 
@@ -31,7 +25,7 @@ struct KeyGeneration: View {
 struct KeyGeneration_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            KeyGeneration(user: .sample, deviceKey: .sample, onSuccess: {}, onProfile: {})
+            KeyGeneration(user: .sample, deviceKey: .sample, onSuccess: {})
         }
     }
 }

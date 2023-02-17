@@ -36,12 +36,9 @@ struct KeyRetrieval: View {
     var registeredPublicKeys: [CensoApi.PublicKey]
     var deviceKey: DeviceKey
     var onSuccess: () -> Void
-    var onProfile: () -> Void
 
     var body: some View {
         VStack {
-            ProfileButton(action: onProfile)
-
             Spacer()
 
             Image(systemName: "key")
@@ -80,6 +77,7 @@ struct KeyRetrieval: View {
         .buttonStyle(FilledButtonStyle())
         .navigationBarHidden(true)
         .background(CensoBackground())
+        .foregroundColor(.Censo.primaryForeground)
     }
 }
 
@@ -87,7 +85,7 @@ struct KeyRetrieval: View {
 struct KeyRetrieval_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            KeyRetrieval(user: .sample, registeredPublicKeys: [], deviceKey: .sample, onSuccess: {}, onProfile: {})
+            KeyRetrieval(user: .sample, registeredPublicKeys: [], deviceKey: .sample, onSuccess: {})
         }
     }
 }

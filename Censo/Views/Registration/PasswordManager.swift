@@ -84,6 +84,7 @@ struct PasswordManager: View {
             Spacer()
                 .frame(height: 20)
         }
+        .foregroundColor(.Censo.primaryForeground)
         .buttonStyle(FilledButtonStyle())
         .navigationBarHidden(true)
         .background(CensoBackground())

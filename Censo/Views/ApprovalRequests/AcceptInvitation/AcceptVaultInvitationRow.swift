@@ -18,12 +18,11 @@ struct AcceptVaultInvitationRow: View {
                 .lineLimit(1)
                 .allowsTightening(true)
                 .minimumScaleFactor(0.25)
-                .foregroundColor(Color.white)
                 .padding(EdgeInsets(top: 16, leading: 20, bottom: 0, trailing: 20))
 
             Text(acceptVaultInvitation.vaultName.toVaultName())
                 .font(.title3)
-                .foregroundColor(Color.white.opacity(0.8))
+                .foregroundColor(Color.Censo.primaryForeground.opacity(0.7))
                 .padding(EdgeInsets(top: 2, leading: 20, bottom: 20, trailing: 20))
         }
     }
@@ -33,6 +32,7 @@ struct AcceptVaultInvitationRow: View {
 struct AcceptVaultInvitation_Previews: PreviewProvider {
     static var previews: some View {
         AcceptVaultInvitationRow(requestType: .vaultInvitation(.sample), acceptVaultInvitation: .sample)
+            .preferredColorScheme(.light)
     }
 }
 

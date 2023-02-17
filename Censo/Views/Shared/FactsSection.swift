@@ -31,6 +31,6 @@ struct Header: View {
             .padding(5)
             .padding(.leading, 5)
             .frame(minHeight: 22)
-            .foregroundColor(Color.white.opacity(0.5))
+            .foregroundColor(Color.Censo.primaryForeground.opacity(0.7))
     }
 }

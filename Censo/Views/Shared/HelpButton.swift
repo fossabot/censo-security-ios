@@ -15,7 +15,6 @@ struct HelpButton: View {
             Text("Contact Censo Custody, Inc.")
                 .frame(maxWidth: .infinity, minHeight: 55)
                 .font(Font.subheadline.bold())
-                .foregroundColor(.white)
                 .overlay(
                     RoundedRectangle(cornerRadius: 8)
                         .stroke(.white, lineWidth: 1)
@@ -54,5 +53,6 @@ struct HelpButton: View {
 struct HelpButton_Previews: PreviewProvider {
     static var previews: some View {
         HelpButton()
+            .preferredColorScheme(.light)
     }
 }

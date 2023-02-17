@@ -19,7 +19,6 @@ struct DAppTransactionRow: View {
                 .lineLimit(1)
                 .allowsTightening(true)
                 .minimumScaleFactor(0.25)
-                .foregroundColor(Color.white)
                 .padding(EdgeInsets(top: 16, leading: 20, bottom: 0, trailing: 20))
 
             ForEach(0..<transactionRequest.balanceChanges.count, id: \.self) { i in
@@ -32,7 +31,6 @@ struct DAppTransactionRow: View {
                         .lineLimit(1)
                         .allowsTightening(true)
                         .minimumScaleFactor(0.25)
-                        .foregroundColor(Color.white)
                         .padding(EdgeInsets(top: 15, leading: 20, bottom: 0, trailing: 20))
 
                     Text(balanceChange.amount)
@@ -54,7 +52,6 @@ struct DAppTransactionRow: View {
 
                         Text(balanceChange.isNegative ? "←" : "→")
                             .font(.body)
-                            .foregroundColor(Color.white)
                             .frame(width: 20, height: 20)
 
                         AccountDetail(name: transactionRequest.wallet.name)
@@ -103,6 +100,7 @@ extension EthereumDAppTransactionRequest.SymbolAndAmountInfo {
 struct DapTransactionRow_Previews: PreviewProvider {
     static var previews: some View {
         DAppTransactionRow(requestType: .ethereumDAppTransactionRequest(.sample), transactionRequest: EthereumDAppTransactionRequest.sample)
+            .preferredColorScheme(.light)
     }
 }
 

@@ -21,7 +21,6 @@ struct WithdrawalRow: View {
                 .lineLimit(1)
                 .allowsTightening(true)
                 .minimumScaleFactor(0.25)
-                .foregroundColor(Color.white)
                 .padding(EdgeInsets(top: 15, leading: 20, bottom: 0, trailing: 20))
             
             if (withdrawal.replacementFee != nil) {
@@ -31,14 +30,13 @@ struct WithdrawalRow: View {
                     .lineLimit(1)
                     .allowsTightening(true)
                     .minimumScaleFactor(0.25)
-                    .foregroundColor(Color.white)
                     .padding(EdgeInsets(top: 15, leading: 20, bottom: 0, trailing: 20))
                 
             } else {
                 if let usdEquivalent = withdrawal.amount.formattedUSDEquivalent {
                     Text("\(usdEquivalent) USD equivalent")
                         .font(.caption)
-                        .foregroundColor(Color.white.opacity(0.5))
+                        .foregroundColor(Color.Censo.primaryForeground.opacity(0.7))
                         .padding(EdgeInsets(top: 2, leading: 20, bottom: 0, trailing: 20))
                 }
             }
@@ -51,7 +49,6 @@ struct WithdrawalRow: View {
                 
                 Text("→")
                     .font(.body)
-                    .foregroundColor(Color.white)
                     .frame(width: 20, height: 20)
                 
                 AccountDetail(name: withdrawal.destination.name)
@@ -127,7 +124,7 @@ extension NumberFormatter {
 struct WithdrawalRow_Previews: PreviewProvider {
     static var previews: some View {
         WithdrawalRow(requestType: .ethereumWithdrawalRequest(.sample), withdrawal: EthereumWithdrawalRequest.sample)
-        WithdrawalRow(requestType: .ethereumWithdrawalRequest(.sample), withdrawal: EthereumWithdrawalRequest.sample)
+            .preferredColorScheme(.light)
     }
 }
 #endif

@@ -35,6 +35,8 @@
 	<dict>
 		<key>API_BASE_URL</key>
 		<string>$(API_BASE_URL)</string>
+		<key>CENSO_AUTH_BASE_URL</key>
+		<string>$(CENSO_AUTH_BASE_URL)</string>
 		<key>MIN_VERSION_URL</key>
 		<string>$(MIN_VERSION_URL)</string>
 		<key>OKTA</key>
@@ -56,8 +58,6 @@
 		<string>$(RAYGUN_API_KEY)</string>
 		<key>RAYGUN_ENABLED</key>
 		<string>$(RAYGUN_ENABLED)</string>
-		<key>CENSO_AUTH_BASE_URL</key>
-		<string>$(CENSO_AUTH_BASE_URL)</string>
 	</dict>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
@@ -79,7 +79,7 @@
 	<key>UILaunchScreen</key>
 	<dict/>
 	<key>UIStatusBarStyle</key>
-	<string>UIStatusBarStyleLightContent</string>
+	<string></string>
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
@@ -94,8 +94,8 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UIUserInterfaceStyle</key>
-	<string>Dark</string>
+	<string>Light</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
-	<false/>
+	<true/>
 </dict>
 </plist>

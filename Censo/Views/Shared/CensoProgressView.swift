@@ -17,8 +17,10 @@ struct CensoProgressView: View {
 
             ProgressView()
         }
+        .preferredColorScheme(.light)
+        .foregroundColor(.Censo.primaryForeground)
         .padding(30)
-        .background(Color.black)
+        .background(Color.white)
         .overlay(
             RoundedRectangle(cornerRadius: 2)
                 .stroke(Color(white: 0.2), lineWidth: 1)

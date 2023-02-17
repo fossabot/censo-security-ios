@@ -54,7 +54,7 @@ struct KeyConfirmationSuccess: View {
                         Text("Continue")
                             .frame(maxWidth: .infinity)
                     }
-                    .padding(30)
+                    .padding()
 
                     Spacer()
                         .frame(height: 20)
@@ -66,6 +66,7 @@ struct KeyConfirmationSuccess: View {
         .buttonStyle(FilledButtonStyle())
         .navigationBarHidden(true)
         .background(CensoBackground())
+        .foregroundColor(.Censo.primaryForeground)
     }
 
     private func reload() {

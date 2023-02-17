@@ -22,24 +22,29 @@ struct ApprovalRequestsView: View {
     private let remoteNotificationPublisher = NotificationCenter.default.publisher(for: .userDidReceiveRemoteNotification)
 
     var body: some View {
-        switch $approvalRequests {
-        case .idle:
-            ProgressView("Fetching requests...")
-                .onAppear(perform: reload)
-        case .loading:
-            ProgressView("Fetching requests...")
-        case .success(let requests):
-            ApprovalRequestsList(deviceSigner: deviceSigner, user: user, requests: requests.compactMap(\.underlying), onStatusChange: reload, onRefresh: refresh)
-                .onAppear(perform: approvalRequestsDidAppear)
-                .onReceive(appForegroundedPublisher) { _ in
-                    approvalRequestsDidAppear()
-                }
-                .onReceive(remoteNotificationPublisher) { _ in
-                    approvalRequestsDidAppear()
-                }
-        case .failure(let error):
-            RetryView(error: error, action: reload)
+        Group {
+            switch $approvalRequests {
+            case .idle:
+                ProgressView("Fetching requests...")
+                    .onAppear(perform: reload)
+            case .loading:
+                ProgressView("Fetching requests...")
+            case .success(let requests):
+                ApprovalRequestsList(deviceSigner: deviceSigner, user: user, requests: requests.compactMap(\.underlying) , onStatusChange: reload, onRefresh: refresh)
+                    .onAppear(perform: approvalRequestsDidAppear)
+                    .onReceive(appForegroundedPublisher) { _ in
+                        approvalRequestsDidAppear()
+                    }
+                    .onReceive(remoteNotificationPublisher) { _ in
+                        approvalRequestsDidAppear()
+                    }
+            case .failure(let error):
+                RetryView(error: error, action: reload)
+            }
         }
+        .preferredColorScheme(.light)
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color.Censo.primaryBackground.ignoresSafeArea())
     }
 
     private var loader: MoyaLoader<[GracefullyDecoded<ApprovalRequest>], CensoApi.Target> {
@@ -80,7 +85,6 @@ struct ApprovalRequestsView_Previews: PreviewProvider {
         NavigationView {
             ApprovalRequestsView(deviceSigner: DeviceSigner(deviceKey: .sample, encryptedRootSeed: Data()), user: .sample)
                 .navigationTitle("Approvals")
-                .background(Color.Censo.primaryBackground.ignoresSafeArea())
         }
         .withMessageSupport()
     }

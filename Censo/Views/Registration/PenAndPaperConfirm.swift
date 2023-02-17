@@ -38,7 +38,6 @@ struct PenAndPaperConfirm: View {
             Text("Enter each word to verify you have the phrase written down correctly")
                 .font(.system(size: 18).bold())
                 .padding([.leading, .trailing], 40)
-                .foregroundColor(.white.opacity(0.8))
                 .fixedSize(horizontal: false, vertical: true)
 
             Spacer()
@@ -60,19 +59,22 @@ struct PenAndPaperConfirm: View {
             })
             .autocapitalization(.none)
             .disableAutocorrection(true)
-            .textFieldStyle(DarkRoundedTextFieldStyle(tint: incorrectPhrase ? .Censo.red : .white))
+            .foregroundColor(incorrectPhrase ? .red : .Censo.primaryForeground)
+            .textFieldStyle(.roundedBorder)
             .padding([.trailing, .leading], 30)
             .multilineTextAlignment(.leading)
-            .accentColor(Color.Censo.blue)
+            .accentColor(Color.Censo.red)
             .focusedOnAppear()
 
             Spacer()
             Spacer()
         }
+        .preferredColorScheme(.light)
         .multilineTextAlignment(.center)
         .buttonStyle(FilledButtonStyle())
         .navigationBarHidden(true)
         .background(CensoBackground())
+        .foregroundColor(.Censo.primaryForeground)
         .onChange(of: typedPhrase) { newValue in
             incorrectPhrase = false
 

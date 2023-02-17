@@ -15,12 +15,11 @@ struct AccountDetail: View {
         VStack(alignment: .center, spacing: 5) {
             Text(name)
                 .font(Font.subheadline.bold())
-                .foregroundColor(Color.white)
 
             if let subname = subname, subname != name {
                 Text(subname)
                     .font(.caption)
-                    .foregroundColor(Color.white.opacity(0.5))
+                    .foregroundColor(Color.Censo.primaryForeground.opacity(0.7))
             }
         }
         .multilineTextAlignment(.center)
@@ -35,6 +34,7 @@ struct TransactionAccountView_Previews: PreviewProvider {
             AccountDetail(name: "Coinbase")
         }
         .previewLayout(.fixed(width: 180, height: 60))
+        .preferredColorScheme(.light)
     }
 }
 #endif

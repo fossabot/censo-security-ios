@@ -48,6 +48,7 @@ struct KeyRecoverySuccess: View {
         .buttonStyle(FilledButtonStyle())
         .navigationBarHidden(true)
         .background(CensoBackground())
+        .foregroundColor(.Censo.primaryForeground)
     }
 }
 

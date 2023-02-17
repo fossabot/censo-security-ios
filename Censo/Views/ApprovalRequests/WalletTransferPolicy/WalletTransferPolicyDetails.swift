@@ -42,50 +42,6 @@ struct WalletTransferPolicyDetails: View {
 struct WalletTransferPolicyDetails_Previews: PreviewProvider {
     static var previews: some View {
         WalletTransferPolicyDetails(request: .sample, update: EthereumTransferPolicyUpdate.sample, user: .sample)
-
-        let timerPublisher = Timer.TimerPublisher(interval: 1, runLoop: .current, mode: .default).autoconnect()
-
-        NavigationView {
-            ApprovalRequestDetails(deviceSigner: DeviceSigner(deviceKey: .sample, encryptedRootSeed: Data()), user: .sample, request: .sample, timerPublisher: timerPublisher) {
-                WalletTransferPolicyDetails(request: .sample,
-                                            update: EthereumTransferPolicyUpdate.sample,
-                                            user: .sample)
-            }
-        }
-    }
-}
-    
-extension EthereumTransferPolicyUpdate {
-    static var sample: Self {
-        EthereumTransferPolicyUpdate(
-            wallet: .sample,
-            approvalPolicy: .sample,
-            currentOnChainPolicy: .sample,
-            fee: .feeSample,
-            feeSymbolInfo: .sample,
-            signingData: .sample
-        )
-    }
-}
-
-extension ApprovalPolicy {
-    static var sample: Self {
-        ApprovalPolicy(
-            approvalsRequired: 2,
-            approvalTimeout: 3000,
-            approvers: [.sample]
-        )
-    }
-}
-
-extension SignerInfo {
-    static var sample: Self {
-        SignerInfo( publicKey: "",
-                    name: "John Smith",
-                    email: "john@censocustody.com",
-                    nameHashIsEmpty: false,
-                    jpegThumbnail: nil
-        )
     }
 }
 #endif

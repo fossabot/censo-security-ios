@@ -25,6 +25,7 @@ struct UpdateApp: View {
 
             Spacer()
         }
+        .foregroundColor(.Censo.primaryForeground)
         .frame(maxWidth: .infinity)
         .background(CensoBackground().ignoresSafeArea())
     }

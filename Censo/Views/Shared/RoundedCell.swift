@@ -19,7 +19,7 @@ struct RoundedCell: ViewModifier {
 }
 
 extension View {
-    func roundedCell(background: Color = .black) -> some View {
+    func roundedCell(background: Color = .Censo.lightGray) -> some View {
         modifier(RoundedCell(background: background))
     }
 }

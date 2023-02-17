@@ -22,12 +22,8 @@ struct FilledButtonStyle: ButtonStyle {
                 .frame(minHeight: 44)
                 .font(Font.body.bold())
                 .foregroundColor(isEnabled ? Color.white : Color.white.opacity(0.35))
-                .background(Color.Censo.backgroundBlue)
-                .cornerRadius(12)
-                .overlay(
-                        RoundedRectangle(cornerRadius: 12)
-                            .stroke(Color("borderBlue"), lineWidth: 1)
-                    )
+                .background(Color.Censo.red)
+                .cornerRadius(4)
         }
     }
 }

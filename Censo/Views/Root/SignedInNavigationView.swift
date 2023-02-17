@@ -9,6 +9,8 @@ import Foundation
 import SwiftUI
 
 struct SignedInNavigationView<Content>: View where Content : View {
+    @Environment(\.censoApi) var censoApi
+
     @State private var showingAlert = false
     @State private var activeSheet: Sheet?
 
@@ -19,20 +21,21 @@ struct SignedInNavigationView<Content>: View where Content : View {
 
     @EnvironmentObject private var viewRouter: ViewRouter
 
-    var user: CensoApi.User?
+    @RemoteResult private var user: CensoApi.User?
+
     var onSignOut: () -> Void
-    @ViewBuilder var content: (@escaping () -> Void) -> Content
+    @ViewBuilder var content: () -> Content
 
     var body: some View {
         NavigationView {
-            content({ activeSheet = .profile })
+            content()
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background(Color.Censo.primaryBackground.ignoresSafeArea())
                 .navigationBarTitleDisplayMode(.inline)
                 .navigationBarItems(leading:
                                         Button(action: { activeSheet = .profile }, label: {
                                             Image(systemName: "person")
-                                                .foregroundColor(.white)
+                                                .foregroundColor(.Censo.primaryForeground)
                                         })
                 )
                 .sheet(item: $activeSheet) { sheet in
@@ -50,6 +53,13 @@ struct SignedInNavigationView<Content>: View where Content : View {
                 }
         }
         .navigationViewStyle(StackNavigationViewStyle())
+        .onFirstTimeAppear {
+            reload()
+        }
+    }
+
+    func reload() {
+        _user.reload(using: censoApi.provider.loader(for: .verifyUser(devicePublicKey: nil)))
     }
 }
 

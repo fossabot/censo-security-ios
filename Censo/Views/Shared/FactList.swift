@@ -77,9 +77,9 @@ struct RowBackground: View {
                 Spacer()
                 Divider()
             }
-            .background(Color.black)
+            .background(Color.white)
         case (_, false):
-            Color.Censo.secondaryBackground
+            Color.Censo.lightGray
         }
     }
 }
@@ -131,7 +131,6 @@ extension Fact {
                     Text(name)
                         .strikethrough(style == .deleted)
                         .font(.subheadline)
-                        .foregroundColor(Color.white)
 
                     Spacer()
 
@@ -139,14 +138,14 @@ extension Fact {
                         Button(action: action) {
                             content()
                                 .font(.subheadline.bold())
-                                .foregroundColor(Color.white)
                         }
                     } else {
                         content()
                             .font(.subheadline.bold())
-                            .foregroundColor(Color.white)
+
                     }
                 }
+                    .foregroundColor(Color.Censo.primaryForeground)
             ),
             style: style
         )
@@ -182,7 +181,8 @@ struct FactList_Previews: PreviewProvider {
             FactList.Item("Requested Date", "Feb 18, 2021 at 5:20:56 PM")
             FactList.Item("Policy Name", "Large Transfers")
         }
-        .background(Color.Censo.secondaryBackground)
+        .background(Color.Censo.primaryBackground)
+        .preferredColorScheme(.light)
     }
 }
 #endif
