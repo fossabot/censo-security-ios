@@ -21,7 +21,8 @@ struct ApprovalRequestItem: View {
     var body: some View {
         switch request.details {
         case .bitcoinWithdrawalRequest(let withdrawal as WithdrawalRequest),
-             .ethereumWithdrawalRequest(let withdrawal as WithdrawalRequest):
+             .ethereumWithdrawalRequest(let withdrawal as WithdrawalRequest),
+             .polygonWithdrawalRequest(let withdrawal as WithdrawalRequest):
             ApprovalRequestRow(deviceSigner: deviceSigner, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
                 WithdrawalRow(requestType: request.details, withdrawal: withdrawal)
             } detail: {
