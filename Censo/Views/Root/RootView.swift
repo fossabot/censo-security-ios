@@ -23,10 +23,13 @@ struct RootView: View {
 
     var body: some View {
         if let jwtToken = authProvider.storedJWTToken {
-            MainView(email: jwtToken.email, onSignOut: signOut)
-                .environment(\.censoApi, CensoApi(authProvider: authProvider))
-                .onFirstTimeAppear(perform: registerForRemoteNotifications)
-                .foregroundBiometryProtected(onFailure: signOut)
+            SignedInNavigationView(onSignOut: signOut) {
+                NotificationCheck(email: jwtToken.email) {
+                    MainView(email: jwtToken.email, onSignOut: signOut)
+                        .foregroundBiometryProtected(onFailure: signOut)
+                }
+            }
+            .environment(\.censoApi, CensoApi(authProvider: authProvider))
         } else {
             SignInView(authProvider: authProvider)
         }
@@ -37,16 +40,6 @@ struct RootView: View {
         authProvider.invalidate()
     }
     #endif
-
-    private func registerForRemoteNotifications() {
-        UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { (granted, error) in
-            guard granted else { return }
-
-            DispatchQueue.main.async {
-                UIApplication.shared.registerForRemoteNotifications()
-            }
-        }
-    }
 }
 
 

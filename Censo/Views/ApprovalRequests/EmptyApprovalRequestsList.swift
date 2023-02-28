@@ -24,6 +24,6 @@ struct EmptyApprovalRequestsList: View {
 
             Image(systemName: "arrow.down")
         }
-        .foregroundColor(Color.white.opacity(0.5))
+        .foregroundColor(Color.Censo.primaryForeground.opacity(0.5))
     }
 }

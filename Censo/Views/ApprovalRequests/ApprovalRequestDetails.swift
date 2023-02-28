@@ -47,7 +47,6 @@ struct ApprovalRequestDetails<Content>: View where Content : View {
                             .allowsTightening(true)
                             .multilineTextAlignment(.center)
                             .minimumScaleFactor(0.25)
-                            .foregroundColor(Color.white)
                             .padding(.top, 20)
 
                         if let header2 = request.details.header2 {
@@ -57,14 +56,14 @@ struct ApprovalRequestDetails<Content>: View where Content : View {
                                 .allowsTightening(true)
                                 .multilineTextAlignment(.center)
                                 .minimumScaleFactor(0.25)
-                                .foregroundColor(Color.white.opacity(0.8))
+                                .foregroundColor(Color.Censo.primaryForeground.opacity(0.7))
                                 .padding(.top, 5)
                         }
                         
                         if let subHeader = request.details.subHeader {
                             Text(subHeader)
                                 .font(.caption)
-                                .foregroundColor(Color.white.opacity(0.5))
+                                .foregroundColor(Color.Censo.primaryForeground.opacity(0.5))
                                 .padding(.top, 5)
                         }
                     }
@@ -139,8 +138,8 @@ struct ApprovalRequestDetails<Content>: View where Content : View {
             .background(
                 Rectangle()
                     .ignoresSafeArea()
-                    .foregroundColor(.black)
-                    .shadow(color: .Censo.gray, radius: 0, x: 0, y: -1)
+                    .foregroundColor(.Censo.primaryBackground)
+                    .shadow(color: .Censo.lightGray, radius: 2, x: 0, y: -1)
             )
         }
         .background(Color.Censo.primaryBackground.ignoresSafeArea())
@@ -176,7 +175,7 @@ struct ApprovalRequestDetails<Content>: View where Content : View {
                     .resizable()
                     .aspectRatio(contentMode: .fit)
                     .frame(width: 18, height: 18)
-                    .foregroundColor(.white)
+                    .foregroundColor(.Censo.primaryForeground)
                     .font(.body.bold())
             }
         )
@@ -189,6 +188,7 @@ struct ApprovalRequestDetails<Content>: View where Content : View {
                 completion: nil
             )
         }
+        .foregroundColor(.Censo.primaryForeground)
     }
 
     private func updateTimeRemaining() {
@@ -316,6 +316,7 @@ struct ApprovalRequestDetails_Previews: PreviewProvider {
                 WithdrawalDetails(request: .sample, withdrawal: EthereumWithdrawalRequest.sample)
             }
         }
+        .preferredColorScheme(.light)
     }
 }
 #endif

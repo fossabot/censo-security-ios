@@ -37,21 +37,12 @@
       }
     },
     {
-      "identity" : "logger",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/shibapm/Logger",
-      "state" : {
-        "revision" : "53c3ecca5abe8cf46697e33901ee774236d94cce",
-        "version" : "0.2.3"
-      }
-    },
-    {
       "identity" : "moya",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/Moya/Moya.git",
       "state" : {
-        "revision" : "d27767c3624cc64a45bb371b267b89c92d70c670",
-        "version" : "14.0.1"
+        "revision" : "c263811c1f3dbf002be9bd83107f7cdc38992b26",
+        "version" : "15.0.3"
       }
     },
     {
@@ -61,24 +52,6 @@
       "state" : {
         "revision" : "7a46a5fc86cb917f69e3daf79fcb045283d8f008",
         "version" : "8.1.2"
-      }
-    },
-    {
-      "identity" : "ohhttpstubs",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/AliSoftware/OHHTTPStubs.git",
-      "state" : {
-        "revision" : "12f19662426d0434d6c330c6974d53e2eb10ecd9",
-        "version" : "9.1.0"
-      }
-    },
-    {
-      "identity" : "packageconfig",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/shibapm/PackageConfig.git",
-      "state" : {
-        "revision" : "bf90dc69fa0792894b08a0b74cf34029694ae486",
-        "version" : "0.13.0"
       }
     },
     {
@@ -93,19 +66,10 @@
     {
       "identity" : "reactiveswift",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/Moya/ReactiveSwift.git",
+      "location" : "https://github.com/ReactiveCocoa/ReactiveSwift.git",
       "state" : {
-        "revision" : "f195d82bb30e412e70446e2b4a77e1b514099e88",
+        "revision" : "b772fa0b624926e6e2f21acbb79297736a05c585",
         "version" : "6.1.0"
-      }
-    },
-    {
-      "identity" : "rocket",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/shibapm/Rocket",
-      "state" : {
-        "revision" : "51a77ce5fa66c42715c14dcc542c01cd7a60fb27",
-        "version" : "1.2.0"
       }
     },
     {
@@ -113,8 +77,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/ReactiveX/RxSwift.git",
       "state" : {
-        "revision" : "254617dd7fae0c45319ba5fbea435bf4d0e15b5d",
-        "version" : "5.1.2"
+        "revision" : "b4307ba0b6425c0ba4178e138799946c3da594f8",
+        "version" : "6.5.0"
       }
     },
     {
@@ -133,24 +97,6 @@
       "state" : {
         "revision" : "53073d00185c49d5bdedc13e3697f5eb760fc2ad",
         "version" : "1.2.0"
-      }
-    },
-    {
-      "identity" : "swiftshell",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/kareman/SwiftShell",
-      "state" : {
-        "revision" : "a6014fe94c3dbff0ad500e8da4f251a5d336530b",
-        "version" : "5.1.0-beta.1"
-      }
-    },
-    {
-      "identity" : "yams",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/jpsim/Yams",
-      "state" : {
-        "revision" : "9ff1cc9327586db4e0c8f46f064b6a82ec1566fa",
-        "version" : "4.0.6"
       }
     }
   ],

@@ -30,7 +30,7 @@ struct RetryView: View {
                 Button(action: showHelp) {
                     Text("Get Help")
                 }
-                .foregroundColor(.Censo.blue)
+                .foregroundColor(.Censo.red)
             }
 
             Spacer()
@@ -38,6 +38,7 @@ struct RetryView: View {
         .frame(maxWidth: .infinity)
         .background(CensoBackground().ignoresSafeArea())
         .navigationBarTitleDisplayMode(.inline)
+        .preferredColorScheme(.light)
     }
 
     private func showHelp() {

@@ -48,10 +48,11 @@ struct PasswordManagerConfirm: View {
             }
 
             SecureField("", text: $pastedPhrase)
-                .textFieldStyle(DarkRoundedTextFieldStyle(tint: incorrectPhrase ? .Censo.red : .white))
-                .padding(30)
+                .textFieldStyle(.roundedBorder)
+                .foregroundColor(incorrectPhrase ? .red : .Censo.primaryForeground)
+                .padding()
                 .multilineTextAlignment(.leading)
-                .accentColor(Color.Censo.blue)
+                .accentColor(Color.Censo.red)
                 .disableAutocorrection(true)
 
 
@@ -59,9 +60,11 @@ struct PasswordManagerConfirm: View {
             Spacer()
             Spacer()
         }
+        .preferredColorScheme(.light)
         .multilineTextAlignment(.center)
         .buttonStyle(FilledButtonStyle())
         .navigationBarHidden(true)
+        .foregroundColor(.Censo.primaryForeground)
         .background(CensoBackground())
         .onAppear {
             UIPasteboard.general.string = nil

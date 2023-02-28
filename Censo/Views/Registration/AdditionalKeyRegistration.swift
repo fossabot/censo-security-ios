@@ -33,7 +33,6 @@ struct AdditionalKeyRegistration: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .multilineTextAlignment(.center)
         .buttonStyle(FilledButtonStyle())
-        .navigationBarHidden(true)
         .background(CensoBackground())
     }
 

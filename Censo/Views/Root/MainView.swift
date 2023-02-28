@@ -32,36 +32,26 @@ struct UserVerification: View {
     var body: some View {
         switch $user {
         case .idle:
-            SignedInNavigationView(onSignOut: onSignOut) { _ in
-                ProgressView()
-                    .onAppear(perform: reload)
-            }
+            ProgressView()
+                .onAppear(perform: reload)
         case .loading:
-            SignedInNavigationView(onSignOut: onSignOut) { _ in
-                ProgressView()
-            }
+            ProgressView()
         case .failure(let error):
-            SignedInNavigationView(onSignOut: onSignOut) { _ in
-                RetryView(error: error, action: reload)
-            }
+            RetryView(error: error, action: reload)
         case .success(let user):
-            // TODO: Do we really need this onProfile stuff?
-            SignedInNavigationView(user: user, onSignOut: onSignOut) { onProfile in
-                DeviceKeyRegistration(user: user, deviceKey: deviceKey) {
-                    reload()
-                } content: {
-                    PublicKeysStorage(email: user.loginName, deviceKey: deviceKey) {
-                        ProgressView()
-                    } success: { keyStore, reloadPublicKeys in
-                        RegistrationView(
-                            user: user,
-                            deviceKey: deviceKey,
-                            keyStore: keyStore,
-                            onReloadUser: reload,
-                            onProfile: onProfile,
-                            onReloadPublicKeys: reloadPublicKeys
-                        )
-                    }
+            DeviceKeyRegistration(user: user, deviceKey: deviceKey) {
+                reload()
+            } content: {
+                PublicKeysStorage(email: user.loginName, deviceKey: deviceKey) {
+                    ProgressView()
+                } success: { keyStore, reloadPublicKeys in
+                    RegistrationView(
+                        user: user,
+                        deviceKey: deviceKey,
+                        keyStore: keyStore,
+                        onReloadUser: reload,
+                        onReloadPublicKeys: reloadPublicKeys
+                    )
                 }
             }
         }

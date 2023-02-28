@@ -23,7 +23,7 @@ struct BiometryCheck<V>: ViewModifier where V : View {
 
             if !biometryEnabled {
                 ZStack {
-                    Color.black.ignoresSafeArea()
+                    Color.Censo.primaryBackground.ignoresSafeArea()
 
                     lockedView()
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
@@ -78,7 +78,7 @@ struct Locked: View {
             Spacer()
             Spacer()
             
-            Image("Logo")
+            Image("LogoColor")
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(maxHeight: 44)
@@ -88,7 +88,7 @@ struct Locked: View {
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(width: 50, height: 50)
-                .foregroundColor(.Censo.blue)
+                .foregroundColor(.Censo.red)
                 .padding()
 
             Text("Biometry Required")
@@ -98,7 +98,7 @@ struct Locked: View {
             Spacer()
 
             if LAContext().biometryType == .none {
-                Text("We're sorry. The Censo Mobile App requirs biometric authentication for security purposes and your device does not support biometric authentication")
+                Text("We're sorry. The Censo Mobile App requires biometric authentication for security purposes and your device does not support biometric authentication")
             } else {
                 Text("The Censo Mobile App requires \(biometryType) to be enabled for security purposes.")
                     .multilineTextAlignment(.leading)
@@ -126,3 +126,12 @@ struct Locked: View {
         }
     }
 }
+
+#if DEBUG
+struct Locked_Previews: PreviewProvider {
+    static var previews: some View {
+        Locked()
+            .preferredColorScheme(.light)
+    }
+}
+#endif

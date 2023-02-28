@@ -45,11 +45,11 @@ struct Profile: View {
 
                             Button("Get Help", action: contactSupport)
                                 .buttonStyle(PlainButtonStyle())
-                                .foregroundColor(Color.Censo.blue)
+                                .foregroundColor(Color.Censo.red)
                                 .font(.headline.bold())
                         }
                         .frame(maxWidth: .infinity)
-                        .foregroundColor(Color.white)
+                        .foregroundColor(Color.Censo.primaryForeground)
                         .padding([.top, .bottom])
                         .multilineTextAlignment(.center)
                     ) {}
@@ -71,6 +71,7 @@ struct Profile: View {
                 .buttonStyle(DestructiveButtonStyle())
                 .padding()
             }
+            .foregroundColor(.Censo.primaryForeground)
             .listRowBackground(Color.Censo.secondaryBackground)
             .font(.body)
             .background(Color.Censo.primaryBackground.ignoresSafeArea())
@@ -79,7 +80,7 @@ struct Profile: View {
             .navigationBarTitleDisplayMode(.inline)
             .navigationBarItems(trailing: Button("Done", action: {
                 presentationMode.wrappedValue.dismiss()
-            }).foregroundColor(.white))
+            }).foregroundColor(.Censo.primaryForeground))
             .alert(isPresented: $showingSignOutAlert) {
                 Alert(title: Text("Are you sure you want to sign out?"),
                       primaryButton: .default(Text("Yes")) {
@@ -112,7 +113,7 @@ struct ProfileItem<Content>: View where Content : View {
             Spacer()
 
             content()
-                .foregroundColor(Color.white.opacity(0.5))
+                .foregroundColor(Color.Censo.primaryForeground.opacity(0.5))
         }
     }
 }

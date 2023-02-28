@@ -50,8 +50,9 @@ struct PasswordManagerRecovery: View {
             }
 
             SecureField("", text: $pastedPhrase)
-                .textFieldStyle(DarkRoundedTextFieldStyle(tint: incorrectPhrase ? .Censo.red : .white))
-                .padding(30)
+                .textFieldStyle(.roundedBorder)
+                .foregroundColor(incorrectPhrase ? .red : .Censo.primaryForeground)
+                .padding()
                 .multilineTextAlignment(.leading)
                 .accentColor(Color.Censo.blue)
                 .disableAutocorrection(true)
@@ -60,10 +61,12 @@ struct PasswordManagerRecovery: View {
             Spacer()
             Spacer()
         }
+        .preferredColorScheme(.light)
         .multilineTextAlignment(.center)
         .buttonStyle(FilledButtonStyle())
         .navigationBarHidden(true)
         .background(CensoBackground())
+        .foregroundColor(.Censo.primaryForeground)
         .onAppear {
             UIPasteboard.general.string = nil
         }

@@ -21,12 +21,11 @@ struct WalletTransferPolicyRow: View {
                 .lineLimit(1)
                 .allowsTightening(true)
                 .minimumScaleFactor(0.25)
-                .foregroundColor(Color.white)
                 .padding(EdgeInsets(top: 15, leading: 20, bottom: 0, trailing: 20))
 
             Text(update.wallet.name.toWalletName())
                 .font(.title3)
-                .foregroundColor(Color.white.opacity(0.8))
+                .foregroundColor(Color.Censo.primaryForeground.opacity(0.7))
                 .padding(EdgeInsets(top: 2, leading: 20, bottom: 20, trailing: 20))
         }
     }
@@ -35,10 +34,27 @@ struct WalletTransferPolicyRow: View {
 #if DEBUG
 struct WalletTransferPolicyRow_Previews: PreviewProvider {
     static var previews: some View {
-        WalletTransferPolicyRow(
-            requestType: .ethereumTransferPolicyUpdate(.sample),
-            update: EthereumTransferPolicyUpdate.sample
+        WalletTransferPolicyRow(requestType: .ethereumTransferPolicyUpdate(.sample), update: EthereumTransferPolicyUpdate.sample)
+            .preferredColorScheme(.light)
+    }
+}
+
+extension EthereumTransferPolicyUpdate {
+    static var sample: Self {
+        EthereumTransferPolicyUpdate(
+            wallet: .sample,
+            approvalPolicy: .sample,
+            currentOnChainPolicy: .sample,
+            fee: .sample,
+            feeSymbolInfo: .sample,
+            signingData: .sample
         )
+    }
+}
+
+extension ApprovalPolicy {
+    static var sample: Self {
+        ApprovalPolicy(approvalsRequired: 3, approvalTimeout: 4000, approvers: [])
     }
 }
 #endif

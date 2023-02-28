@@ -28,10 +28,10 @@ struct SignInView: View {
             VStack(spacing: 0) {
                 ScrollView {
                     VStack {
-                        Image("Logo")
+                        Image("LogoColor")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
-                            .frame(maxHeight: 42)
+                            .frame(maxHeight: 62)
                             .padding(50)
 
                         Text("Sign in with the account you created on the web")
@@ -39,28 +39,22 @@ struct SignInView: View {
                             .padding([.leading, .trailing], 60)
                             .padding([.bottom], 20)
 
-                        VStack(alignment: .leading, spacing: 20) {
-                            Text("Email")
 
-                            TextField("", text: $username) {
-                                if canSignIn { signIn() }
-                            }
-                            .keyboardType(.emailAddress)
-                            .textContentType(.emailAddress)
-                            .autocapitalization(.none)
-                            .disableAutocorrection(true)
-                            .foregroundColor(Color.black)
-                            .accentColor(Color.Censo.blue)
-                            .textFieldStyle(LightRoundedTextFieldStyle())
+                        TextField(text: $username, label: {
+                            Text("Email Address")
+                        })
+                        .onSubmit {
+                            if canSignIn { signIn() }
                         }
-                        .padding(35)
-                        .background(
-                            Rectangle()
-                                .border(.gray.opacity(0.4), width: 1)
-                                .foregroundColor(.black)
-                        )
-                        .padding(20)
+                        .keyboardType(.emailAddress)
+                        .textContentType(.emailAddress)
+                        .autocapitalization(.none)
+                        .disableAutocorrection(true)
+                        .foregroundColor(Color.black)
+                        .accentColor(Color.Censo.red)
+                        .textFieldStyle(LightRoundedTextFieldStyle())
                         .disabled(isAuthenticating)
+                        .padding()
                     }
                 }
 
@@ -74,7 +68,7 @@ struct SignInView: View {
                 .buttonStyle(FilledButtonStyle())
                 .disabled(!canSignIn)
                 .ignoresSafeArea(.keyboard, edges: .bottom)
-                .padding(30)
+                .padding()
 
                 NavigationLink(isActive: $showingPassword) {
                     PasswordView(username: username, authProvider: authProvider)
@@ -82,6 +76,7 @@ struct SignInView: View {
                     EmptyView()
                 }
             }
+            .foregroundColor(.Censo.primaryForeground)
             .navigationBarHidden(true)
             .background(
                 CensoBackground()
@@ -100,6 +95,7 @@ struct SignInView: View {
                 }
             }
         }
+        .preferredColorScheme(.light)
     }
 
     private func signIn() {
@@ -150,36 +146,31 @@ struct PasswordView: View {
 
             ScrollView {
                 VStack {
-                    Image("Logo")
+                    Image("LogoColor")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
-                        .frame(maxHeight: 42)
-                        .padding([.leading, .trailing, .bottom], 50)
+                        .frame(maxHeight: 62)
+                        .padding(50)
 
                     (Text("Signing in as ") + Text(username).bold())
                         .multilineTextAlignment(.center)
                         .padding([.leading, .trailing], 60)
                         .padding([.bottom], 20)
 
-                    VStack(alignment: .leading, spacing: 20) {
+                    SecureField(text: $password, label: {
                         Text("Password")
-
-                        SecureField("", text: $password) {
-                            if canSignIn { signIn() }
-                        }
-                        .textContentType(.password)
-                        .foregroundColor(Color.black)
-                        .accentColor(Color.Censo.blue)
-                        .textFieldStyle(LightRoundedTextFieldStyle())
+                    })
+                    .onSubmit {
+                        if canSignIn { signIn() }
                     }
-                    .padding(35)
-                    .background(
-                        Rectangle()
-                            .border(.gray.opacity(0.4), width: 1)
-                            .foregroundColor(.black)
-                    )
-                    .padding(20)
+                    .textContentType(.password)
+                    .foregroundColor(Color.black)
+                    .accentColor(Color.Censo.red)
+                    .textFieldStyle(LightRoundedTextFieldStyle())
+                    .autocapitalization(.none)
+                    .disableAutocorrection(true)
                     .disabled(isAuthenticating)
+                    .padding()
                 }
             }
 
@@ -193,8 +184,9 @@ struct PasswordView: View {
             .buttonStyle(FilledButtonStyle())
             .disabled(!canSignIn)
             .ignoresSafeArea(.keyboard, edges: .bottom)
-            .padding(30)
+            .padding()
         }
+        .foregroundColor(.Censo.primaryForeground)
         .navigationBarHidden(true)
         .background(
             CensoBackground()
@@ -205,6 +197,7 @@ struct PasswordView: View {
                 return Alert.withDismissButton(title: Text("Sign In Error"), message: Text("Please check your username and password"))
             }
         }
+        .preferredColorScheme(.light)
     }
 
     private func signIn() {
@@ -248,6 +241,7 @@ extension SignInView.AlertType: Identifiable {
 struct SignInView_Previews: PreviewProvider {
     static var previews: some View {
         SignInView(authProvider: CensoAuthProvider())
+            .environment(\.colorScheme, .dark)
 
         PasswordView(username: "john@hollywood.com", authProvider: CensoAuthProvider())
     }

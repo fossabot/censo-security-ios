@@ -15,24 +15,19 @@ struct RegistrationView: View {
     var deviceKey: DeviceKey
     var keyStore: KeyStore?
     var onReloadUser: () -> Void
-    var onProfile: () -> Void
     var onReloadPublicKeys: () -> Void
 
     var body: some View {
         switch (keyStore, user.registeredPublicKeys) {
         case (_, .none):
-            KeyGeneration(user: user, deviceKey: deviceKey, onSuccess: onReloadUser, onProfile: onProfile)
+            KeyGeneration(user: user, deviceKey: deviceKey, onSuccess: onReloadUser)
         case (.none, .complete):
             KeyRetrieval(user: user, registeredPublicKeys: user.publicKeys, deviceKey: deviceKey) {
                 onReloadPublicKeys()
-            } onProfile: {
-                onProfile()
             }
         case (.none, .incomplete(let publicKeys)):
             KeyRetrieval(user: user, registeredPublicKeys: publicKeys, deviceKey: deviceKey) {
                 onReloadPublicKeys()
-            } onProfile: {
-                onProfile()
             }
         case (.some((let storedPublicKeys, _)), .incomplete):
             AdditionalKeyRegistration(user: user, publicKeys: storedPublicKeys, deviceKey: deviceKey) {
@@ -84,7 +79,7 @@ extension CensoApi.User {
 #if DEBUG
 struct RegistrationView_Previews: PreviewProvider {
     static var previews: some View {
-        RegistrationView(user: .sample, deviceKey: .sample, keyStore: nil, onReloadUser: { }, onProfile: {}, onReloadPublicKeys: {})
+        RegistrationView(user: .sample, deviceKey: .sample, keyStore: nil, onReloadUser: { }, onReloadPublicKeys: {})
     }
 }
 #endif

@@ -21,7 +21,6 @@ struct VaultConfigPolicyRow: View {
                 .lineLimit(1)
                 .allowsTightening(true)
                 .minimumScaleFactor(0.25)
-                .foregroundColor(Color.white)
                 .padding(EdgeInsets(top: 15, leading: 20, bottom: 20, trailing: 20))
         }
     }
@@ -41,6 +40,7 @@ extension Int {
 struct VaultConfigPolicyRow_Previews: PreviewProvider {
     static var previews: some View {
         VaultConfigPolicyRow(requestType: .vaultPolicyUpdate(.sample), update: .sample)
+            .preferredColorScheme(.light)
     }
 }
 

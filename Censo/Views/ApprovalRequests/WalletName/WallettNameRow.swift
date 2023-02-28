@@ -21,14 +21,13 @@ struct WalletNameRow: View {
                 .lineLimit(1)
                 .allowsTightening(true)
                 .minimumScaleFactor(0.25)
-                .foregroundColor(Color.white)
                 .padding(EdgeInsets(top: 15, leading: 20, bottom: 0, trailing: 20))
 
             Text("\(update.wallet.name.toWalletName()) → \(update.newName.toWalletName())")
                 .font(.title3)
                 .lineLimit(1)
                 .allowsTightening(true)
-                .foregroundColor(Color.white.opacity(0.8))
+                .foregroundColor(Color.Censo.primaryForeground.opacity(0.7))
                 .padding(EdgeInsets(top: 2, leading: 20, bottom: 20, trailing: 20))
         }
     }
@@ -38,6 +37,7 @@ struct WalletNameRow: View {
 struct WalletNameRow_Previews: PreviewProvider {
     static var previews: some View {
         WalletNameRow(requestType: .ethereumWalletNameUpdate(.sample), update: EthereumWalletNameUpdate.sample)
+            .preferredColorScheme(.light)
     }
 }
 

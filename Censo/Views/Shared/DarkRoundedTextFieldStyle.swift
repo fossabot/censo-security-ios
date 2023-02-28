@@ -32,9 +32,10 @@ struct LightRoundedTextFieldStyle: TextFieldStyle {
             .background(Color.white)
             .foregroundColor(tint)
             .overlay(
-                RoundedRectangle(cornerRadius: 8)
+                RoundedRectangle(cornerRadius: 4)
                     .stroke(tint.opacity(0.8), lineWidth: 1)
             )
-            .cornerRadius(8)
+            .cornerRadius(4)
+            .shadow(color: .black.opacity(0.06), radius: 32, x: 0, y: 4)
     }
 }
