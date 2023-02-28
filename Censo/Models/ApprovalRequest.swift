@@ -23,7 +23,6 @@ struct ApprovalRequest: Codable, Equatable {
 
 enum ApprovalRequestType: Codable, Equatable {
     case loginApproval(LoginApproval)
-    case vaultInvitation(AcceptVaultInvitation)
     case passwordReset(PasswordReset)
 
     case bitcoinWithdrawalRequest(BitcoinWithdrawalRequest)
@@ -49,6 +48,11 @@ enum ApprovalRequestType: Codable, Equatable {
     case addressBookUpdate(AddressBookUpdate)
 
     case vaultPolicyUpdate(VaultPolicyUpdate)
+    case vaultCreation(VaultCreation)
+    
+    case orgAdminPolicyUpdate(OrgAdminPolicyUpdate)
+    
+    case addDevice(AddDevice)
 
     case ethereumDAppTransactionRequest(EthereumDAppTransactionRequest)
 
@@ -62,8 +66,6 @@ enum ApprovalRequestType: Codable, Equatable {
         switch type {
         case "Login":
             self = .loginApproval(try LoginApproval(from: decoder))
-        case "VaultInvitation":
-            self = .vaultInvitation(try AcceptVaultInvitation(from: decoder))
         case "PasswordReset":
             self = .passwordReset(try PasswordReset(from: decoder))
         case "BitcoinWithdrawalRequest":
@@ -102,6 +104,12 @@ enum ApprovalRequestType: Codable, Equatable {
             self = .addressBookUpdate(AddressBookUpdate(change: .remove, entry: entry))
         case "VaultPolicyUpdate":
             self = .vaultPolicyUpdate(try VaultPolicyUpdate(from: decoder))
+        case "VaultCreation":
+            self = .vaultCreation(try VaultCreation(from: decoder))
+        case "OrgAdminPolicyUpdate":
+            self = .orgAdminPolicyUpdate(try OrgAdminPolicyUpdate(from: decoder))
+        case "AddDevice":
+            self = .addDevice(try AddDevice(from: decoder))
         default:
             throw DecodingError.dataCorruptedError(forKey: .type, in: container, debugDescription: "Invalid Approval Type")
         }
@@ -113,9 +121,6 @@ enum ApprovalRequestType: Codable, Equatable {
         case .loginApproval(let loginApproval):
             try container.encode("Login", forKey: .type)
             try loginApproval.encode(to: encoder)
-        case .vaultInvitation(let acceptVaultInvitation):
-            try container.encode("VaultInvitation", forKey: .type)
-            try acceptVaultInvitation.encode(to: encoder)
         case .passwordReset(let passwordReset):
             try container.encode("PasswordReset", forKey: .type)
             try passwordReset.encode(to: encoder)
@@ -170,6 +175,15 @@ enum ApprovalRequestType: Codable, Equatable {
         case .vaultPolicyUpdate(let vaultPolicyUpdate):
             try container.encode("VaultPolicyUpdate", forKey: .type)
             try vaultPolicyUpdate.encode(to: encoder)
+        case .vaultCreation(let vaultCreation):
+            try container.encode("VaultCreation", forKey: .type)
+            try vaultCreation.encode(to: encoder)
+        case .orgAdminPolicyUpdate(let orgAdminPolicyUpdate):
+            try container.encode("OrgAdminPolicyUpdate", forKey: .type)
+            try orgAdminPolicyUpdate.encode(to: encoder)
+        case .addDevice(let addDevice):
+            try container.encode("AddDevice", forKey: .type)
+            try addDevice.encode(to: encoder)
         case .ethereumDAppTransactionRequest(let dAppTransactionRequest):
             try container.encode("EthereumDAppTransactionRequest", forKey: .type)
             try dAppTransactionRequest.encode(to: encoder)

@@ -124,29 +124,32 @@ public class EvmConfigTransactionBuilder {
     }
     
     // setting wallet policy
-    static func getPolicyUpdateExecutionFromModuleDataSafeHash(walletAddress: String, txs: [SafeTx], evmTransaction: EvmTransaction) throws -> Data {
-        guard let vaultAddress = evmTransaction.vaultAddress else {
+    static func getPolicyUpdateExecutionFromModuleDataSafeHash(verifyingContract: String?, safeAddress: String?, txs: [SafeTx], evmTransaction: EvmTransaction) throws -> Data {
+        guard let verifyingContract = verifyingContract else {
+            throw EvmConfigError.missingVault
+        }
+        guard let safeAddress = safeAddress else {
             throw EvmConfigError.missingVault
         }
         return EvmTransactionUtil.computeSafeTransactionHash(
             chainId: evmTransaction.chainId,
-            safeAddress: vaultAddress,
-            to: walletAddress,
+            safeAddress: verifyingContract,
+            to: safeAddress,
             value: Bignum(0),
-            data: getPolicyUpdateExecutionFromModuleData(walletAddress: walletAddress, txs: txs),
+            data: getPolicyUpdateExecutionFromModuleData(safeAddress: safeAddress, txs: txs),
             nonce: evmTransaction.safeNonce
         )
     }
     
-    static func getPolicyUpdateExecutionFromModuleData(walletAddress: String, txs: [SafeTx]) -> Data {
-        let updateData = getPolicyUpdateData(safeAddress: walletAddress, txs: txs)
+    static func getPolicyUpdateExecutionFromModuleData(safeAddress: String, txs: [SafeTx]) -> Data {
+        let updateData = getPolicyUpdateData(safeAddress: safeAddress, txs: txs)
         return execTransactionFromModuleTx(
             to: {
                 switch updateData {
                 case .multisend:
                     return multiSendCallOnlyAddress
                 case .single:
-                    return walletAddress
+                    return safeAddress
                     
                 }
             }(),

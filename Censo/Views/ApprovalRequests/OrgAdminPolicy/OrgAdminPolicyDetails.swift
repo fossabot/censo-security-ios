@@ -1,16 +1,16 @@
 //
-//  WalletConfigPolicyDetails.swift
+//  OrgAdminPolicyDetails.swift
 //  Censo
 //
-//  Created by Ata Namvari on 2022-05-03.
+//  Created by Brendan Flood on 2/28/23.
 //
 
 import Foundation
 import SwiftUI
 
-struct VaultConfigPolicyDetails: View {
+struct OrgAdminPolicyDetails: View {
     var request: ApprovalRequest
-    var update: VaultPolicyUpdate
+    var update: OrgAdminPolicyUpdate
 
     var body: some View {
         VStack(alignment: .center, spacing: 10) {
@@ -19,7 +19,7 @@ struct VaultConfigPolicyDetails: View {
                 Fact("Approval Expiration", "\(DateComponentsFormatter.abbreviatedFormatter.string(for: DateComponents(second: Int(update.approvalPolicy.approvalTimeout / 1000))) ?? "")")
             }
 
-            FactsSection(title: "Vault Managers") {
+            FactsSection(title: "Org Administrators") {
                 if update.approvalPolicy.approvers.count > 0 {
                     for approver in update.approvalPolicy.approvers.sorted(by: { $0.name < $1.name }) {
                         Fact(approver.name, approver.email)
@@ -43,9 +43,9 @@ struct VaultConfigPolicyDetails: View {
 }
 
 #if DEBUG
-struct VaultConfigPolicyDetails_Previews: PreviewProvider {
+struct OrgAdminPolicyDetails_Previews: PreviewProvider {
     static var previews: some View {
-        VaultConfigPolicyDetails(request: .sample, update: .sample)
+        OrgAdminPolicyDetails(request: .sample, update: .sample)
     }
 }
 #endif

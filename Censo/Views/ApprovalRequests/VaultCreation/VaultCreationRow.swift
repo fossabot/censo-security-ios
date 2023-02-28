@@ -1,15 +1,16 @@
 //
-//  AcceptVaultInvitationRow.swift
+//  VaultCreationRow.swift
 //  Censo
 //
-//  Created by Brendan Flood on 6/21/22.
+//  Created by Brendan Flood on 2/28/23.
 //
 
+import Foundation
 import SwiftUI
 
-struct AcceptVaultInvitationRow: View {
+struct VaultCreationRow: View {
     var requestType: ApprovalRequestType
-    var acceptVaultInvitation: AcceptVaultInvitation
+    var vaultCreation: VaultCreation
 
     var body: some View {
         VStack(spacing: 8) {
@@ -20,7 +21,7 @@ struct AcceptVaultInvitationRow: View {
                 .minimumScaleFactor(0.25)
                 .padding(EdgeInsets(top: 16, leading: 20, bottom: 0, trailing: 20))
 
-            Text(acceptVaultInvitation.vaultName.toVaultName())
+            Text(vaultCreation.name.toVaultName())
                 .font(.title3)
                 .foregroundColor(Color.Censo.primaryForeground.opacity(0.7))
                 .padding(EdgeInsets(top: 2, leading: 20, bottom: 20, trailing: 20))
@@ -29,18 +30,24 @@ struct AcceptVaultInvitationRow: View {
 }
 
 #if DEBUG
-struct AcceptVaultInvitation_Previews: PreviewProvider {
+struct VaultCreationRow_Previews: PreviewProvider {
     static var previews: some View {
-        AcceptVaultInvitationRow(requestType: .vaultInvitation(.sample), acceptVaultInvitation: .sample)
-            .preferredColorScheme(.light)
+        VaultCreationRow(requestType: .vaultCreation(.sample),
+                         vaultCreation: .sample)
+        .preferredColorScheme(.light)
     }
 }
 
-extension AcceptVaultInvitation {
+extension VaultCreation {
     static var sample: Self {
-        AcceptVaultInvitation(vaultGuid: "vaultGuid", vaultName: "Vault Name")
+        VaultCreation(
+            approvalPolicy: .sample,
+            name: "XYZ Vault",
+            signingData: [],
+            chainFees: [.sample, .sample2]
+        )
     }
 }
+
 
 #endif
-
