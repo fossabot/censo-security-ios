@@ -59,7 +59,7 @@ struct AdditionalKeyRegistration: View {
 struct AdditionalKeyRegistration_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            AdditionalKeyRegistration(user: .sample, publicKeys: .init(bitcoin: "", ethereum: "", censo: ""), deviceKey: .sample,
+            AdditionalKeyRegistration(user: .sample, publicKeys: .init(bitcoin: "", ethereum: "", offchain: ""), deviceKey: .sample,
                                       onSuccess: {}
             )
         }

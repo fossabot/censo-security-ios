@@ -109,7 +109,7 @@ extension EvmTransaction {
 
 extension OnChainPolicy {
     static var sample: Self {
-        OnChainPolicy(owners: ["onwer1"], threshold: 1, chain: Chain.censo)
+        OnChainPolicy(owners: ["onwer1"], threshold: 1, chain: Chain.offchain)
     }
 }
 #endif

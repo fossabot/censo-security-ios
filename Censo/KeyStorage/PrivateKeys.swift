@@ -23,7 +23,7 @@ extension PrivateKeys {
         PublicKeys(
             bitcoin: bitcoinPublicKey,
             ethereum: ethereumPublicKey,
-            censo: censoPublicKey
+            offchain: censoPublicKey
         )
     }
 }
@@ -90,7 +90,7 @@ extension PrivateKeys {
             return bitcoinPublicKey
         case .ethereum, .polygon:
             return ethereumPublicKey
-        case .censo:
+        case .offchain:
             return censoPublicKey
         }
     }
@@ -101,7 +101,7 @@ extension PrivateKeys {
             return try bitcoinSignature(data, derivationPath)
         case .ethereum, .polygon:
             return try ethereumSignature(data)
-        case .censo:
+        case .offchain:
             return try censoSignature(data)
         }
     }
