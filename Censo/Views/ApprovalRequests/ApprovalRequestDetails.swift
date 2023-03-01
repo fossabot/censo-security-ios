@@ -26,14 +26,7 @@ struct ApprovalRequestDetails<Content>: View where Content : View {
     var onStatusChange: (() -> Void)?
     @ViewBuilder var content: () -> Content
 
-    var statusTitle: String {
-        switch request.details {
-        case .vaultInvitation:
-            return ""
-        default:
-            return "STATUS"
-        }
-    }
+    var statusTitle: String = "STATUS"
 
     var body: some View {
         VStack(spacing: 0) {
@@ -75,21 +68,12 @@ struct ApprovalRequestDetails<Content>: View where Content : View {
                         if let vaultName = request.vaultName {
                             Fact("Vault Name", vaultName)
                         }
-
-                        switch request.details {
-                        case .vaultInvitation:
-                            Fact("Invited By", request.submitterName)
-                            Fact("Invited By Email", request.submitterEmail) {
-                                isComposingMail = true
-                            }
-                        default:
-                            Fact("Initiated By", request.submitterEmail) {
-                                isComposingMail = true
-                            }
-                            Fact("Approvals Received", "\(request.numberOfApprovalsReceived) of \(request.numberOfDispositionsRequired)")
-
-                            Fact("Denials Received", "\(request.numberOfDeniesReceived) of \(request.numberOfDispositionsRequired)")
+                        Fact("Initiated By", request.submitterEmail) {
+                            isComposingMail = true
                         }
+                        Fact("Approvals Received", "\(request.numberOfApprovalsReceived) of \(request.numberOfDispositionsRequired)")
+
+                        Fact("Denials Received", "\(request.numberOfDeniesReceived) of \(request.numberOfDispositionsRequired)")
                         
                         
                         if let expireDate = request.expireDate {

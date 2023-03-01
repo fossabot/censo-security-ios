@@ -195,10 +195,6 @@ extension CensoApi {
         let signature: String
     }
     
-    enum DeviceType: String, Codable {
-        case ios = "ios"
-    }
-    
     struct UserDevice: Codable {
         let publicKey: String
         let deviceType: DeviceType

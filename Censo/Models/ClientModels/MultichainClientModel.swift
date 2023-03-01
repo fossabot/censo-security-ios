@@ -68,6 +68,21 @@ struct VaultApprovalPolicy: Codable, Equatable {
 struct VaultPolicyUpdate: Codable, Equatable  {
     var approvalPolicy: VaultApprovalPolicy
     var currentOnChainPolicies: [OnChainPolicy]
+    var vaultName: String
+    var signingData: [SigningData]
+    var chainFees: [ChainFee]
+}
+
+struct VaultCreation: Codable, Equatable  {
+    var approvalPolicy: VaultApprovalPolicy
+    var name: String
+    var signingData: [SigningData]
+    var chainFees: [ChainFee]
+}
+
+struct OrgAdminPolicyUpdate: Codable, Equatable  {
+    var approvalPolicy: VaultApprovalPolicy
+    var currentOnChainPolicies: [OnChainPolicy]
     var signingData: [SigningData]
     var chainFees: [ChainFee]
 }

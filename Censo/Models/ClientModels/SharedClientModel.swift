@@ -126,13 +126,29 @@ struct LoginApproval: Codable, Equatable  {
     var name: String
 }
 
-struct AcceptVaultInvitation: Codable, Equatable  {
-    var vaultGuid: String
-    var vaultName: String
-}
-
 // TODO: This may not be needed
 struct PasswordReset: Codable, Equatable  {}
+
+enum DeviceType: String, Codable {
+    case ios = "ios"
+    case android = "android"
+    
+    var description : String {
+        switch self {
+        case .ios: return "iOS"
+        case .android: return "Android"
+        }
+      }
+}
+
+struct AddDevice: Codable, Equatable  {
+    var name: String
+    var email: String
+    var jpegThumbnail: String
+    var deviceGuid: String
+    var deviceKey: String
+    var deviceType: DeviceType
+}
 
 #if DEBUG
 extension ApprovalRequest {

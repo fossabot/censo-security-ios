@@ -26,12 +26,7 @@ struct ApprovalRequestRow<Row, Detail>: View where Row : View, Detail: View {
     @ViewBuilder var detail: () -> Detail
     
     var titleVaultName: String? {
-        switch request.details {
-        case .vaultInvitation:
-            return nil
-        default:
-            return request.vaultName?.toVaultName()
-        }
+        return request.vaultName?.toVaultName()
     }
 
     var body: some View {

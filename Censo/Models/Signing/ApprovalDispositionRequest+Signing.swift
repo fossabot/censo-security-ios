@@ -57,20 +57,11 @@ extension ApprovalDispositionRequest {
                     )
                 )
             ]
-        case .vaultInvitation(let request):
-            let dataToSign = request.vaultName.data(using: .utf8)!
-
-            return [
-                .offchain(
-                    OffChainSignature(
-                        signature: try deviceSigner.deviceSignature(for: dataToSign).base64EncodedString(),
-                        signedData: dataToSign.base64EncodedString()
-                    )
-                )
-            ]
         case .ethereumWalletCreation,
              .bitcoinWalletCreation,
              .polygonWalletCreation,
+             .vaultCreation,
+             .addDevice,
              .addressBookUpdate:
             let detailsJSONData = try JSONEncoder().encode(request.details)
             let privateKeys = try deviceSigner.privateKeys()
@@ -84,7 +75,8 @@ extension ApprovalDispositionRequest {
                 )
             ]
             
-        case .vaultPolicyUpdate(let signableRequest as MultichainSignable):
+        case .vaultPolicyUpdate(let signableRequest as MultichainSignable),
+             .orgAdminPolicyUpdate(let signableRequest as MultichainSignable):
             let privateKeys = try deviceSigner.privateKeys()
             let detailsJSONData = try JSONEncoder().encode(request.details)
             var signatures: [SignatureInfo] = [

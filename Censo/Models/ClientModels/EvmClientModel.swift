@@ -71,6 +71,7 @@ struct EvmTransaction: Codable, Equatable {
     let safeNonce: UInt64
     let chainId: UInt64
     var vaultAddress: String? = nil
+    var orgVaultAddress: String? = nil
     var contractAddresses: [ContractNameAndAddress] = []
 }
 
