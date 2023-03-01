@@ -165,8 +165,8 @@ extension PublicKeys {
             return ethereum == anyKey.key
         case .bitcoin:
             return bitcoin == anyKey.key
-        case .censo:
-            return censo == anyKey.key
+        case .offchain:
+            return offchain == anyKey.key
         }
     }
 }

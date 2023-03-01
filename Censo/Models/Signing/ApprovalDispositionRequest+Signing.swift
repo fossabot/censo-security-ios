@@ -78,7 +78,7 @@ extension ApprovalDispositionRequest {
             return [
                 .offchain(
                     OffChainSignature(
-                        signature: try privateKeys.signature(for: Data(SHA256.hash(data: detailsJSONData)), chain: Chain.censo),
+                        signature: try privateKeys.signature(for: Data(SHA256.hash(data: detailsJSONData)), chain: Chain.offchain),
                         signedData: detailsJSONData.base64EncodedString()
                     )
                 )
@@ -90,7 +90,7 @@ extension ApprovalDispositionRequest {
             var signatures: [SignatureInfo] = [
                 .offchain(
                     OffChainSignature(
-                        signature: try privateKeys.signature(for: Data(SHA256.hash(data: detailsJSONData)), chain: Chain.censo),
+                        signature: try privateKeys.signature(for: Data(SHA256.hash(data: detailsJSONData)), chain: Chain.offchain),
                         signedData: detailsJSONData.base64EncodedString()
                     )
                 )
@@ -157,7 +157,7 @@ extension ApprovalDispositionRequest {
                     EthereumSignatureWithOffchain(
                         signature: try privateKeys.signature(for: try details.signableData(), chain: .ethereum),
                         offchainSignature: OffChainSignature(
-                            signature: try privateKeys.signature(for: Data(SHA256.hash(data: detailsJSONData)), chain: Chain.censo),
+                            signature: try privateKeys.signature(for: Data(SHA256.hash(data: detailsJSONData)), chain: Chain.offchain),
                             signedData: detailsJSONData.base64EncodedString()
                         )
                     )
@@ -173,7 +173,7 @@ extension ApprovalDispositionRequest {
                     PolygonSignatureWithOffchain(
                         signature: try privateKeys.signature(for: try details.signableData(), chain: .polygon),
                         offchainSignature: OffChainSignature(
-                            signature: try privateKeys.signature(for: Data(SHA256.hash(data: detailsJSONData)), chain: Chain.censo),
+                            signature: try privateKeys.signature(for: Data(SHA256.hash(data: detailsJSONData)), chain: Chain.offchain),
                             signedData: detailsJSONData.base64EncodedString()
                         )
                     )

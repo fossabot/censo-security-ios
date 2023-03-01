@@ -108,8 +108,8 @@ extension CensoApi.AddSignersRequest {
                 chain: .ethereum
             ),
             CensoApi.WalletSigner(
-                publicKey: publicKeys.censo,
-                chain: .censo
+                publicKey: publicKeys.offchain,
+                chain: .offchain
             )
         ]
 
