@@ -55,7 +55,8 @@ class CensoTests: XCTestCase {
                     try request.signableData().toHexString(),
                     testCase.hash
                 )
-            case .vaultPolicyUpdate(let request as MultichainSignable):
+            case .vaultPolicyUpdate(let request as MultichainSignable),
+                 .orgAdminPolicyUpdate(let request as MultichainSignable):
                 let signatures = try request.signableData()
                 XCTAssertEqual(signatures.count, 2)
                 XCTAssertEqual(signatures[0].0, Chain.ethereum)
@@ -76,6 +77,8 @@ class CensoTests: XCTestCase {
                  .bitcoinWalletCreation,
                  .polygonWalletCreation,
                  .addressBookUpdate,
+                 .addDevice,
+                 .vaultCreation,
                  .vaultPolicyUpdate:
                 XCTAssertEqual(request.details,
                                Mock.decodeJsonType(data: try JSONEncoder().encode(request.details)))

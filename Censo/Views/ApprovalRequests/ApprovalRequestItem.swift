@@ -69,11 +69,29 @@ struct ApprovalRequestItem: View {
             } detail: {
                 AddressBookUpdateDetails(request: request, update: addressBookUpdate)
             }
+        case .addDevice(let addDevice):
+            ApprovalRequestRow(deviceSigner: deviceSigner, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
+                AddDeviceRow(requestType: request.details, addDevice: addDevice)
+            } detail: {
+                AddDeviceDetails(request: request, addDevice: addDevice)
+            }
         case .vaultPolicyUpdate(let vaultPolicyUpdate): // 1
             ApprovalRequestRow(deviceSigner: deviceSigner, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
                 VaultConfigPolicyRow(requestType: request.details, update: vaultPolicyUpdate)
             } detail: {
                 VaultConfigPolicyDetails(request: request, update: vaultPolicyUpdate)
+            }
+        case .vaultCreation(let vaultCreation): // 1
+            ApprovalRequestRow(deviceSigner: deviceSigner, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
+                VaultCreationRow(requestType: request.details, vaultCreation: vaultCreation)
+            } detail: {
+                VaultCreationDetails(request: request, vaultCreation: vaultCreation)
+            }
+        case .orgAdminPolicyUpdate(let orgAdminPolicyUpdate): // 1
+            ApprovalRequestRow(deviceSigner: deviceSigner, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
+                OrgAdminPolicyRow(requestType: request.details, update: orgAdminPolicyUpdate)
+            } detail: {
+                OrgAdminPolicyDetails(request: request, update: orgAdminPolicyUpdate)
             }
         case .ethereumWalletWhitelistUpdate(let walletWhitelistUpdate as WalletWhitelistUpdate),
              .polygonWalletWhitelistUpdate(let walletWhitelistUpdate as WalletWhitelistUpdate):
@@ -87,12 +105,6 @@ struct ApprovalRequestItem: View {
                 LoginRow(requestType: request.details, login: login)
             } detail: {
                 LoginDetails(requestType: request.details, login: login)
-            }
-        case .vaultInvitation(let acceptVaultInvitation):
-            ApprovalRequestRow(deviceSigner: deviceSigner, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
-                AcceptVaultInvitationRow(requestType: request.details, acceptVaultInvitation: acceptVaultInvitation)
-            } detail: {
-                AcceptVaultInvitationDetails(requestType: request.details, acceptVaultInvitation: acceptVaultInvitation)
             }
         case .passwordReset:
             ApprovalRequestRow(deviceSigner: deviceSigner, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {

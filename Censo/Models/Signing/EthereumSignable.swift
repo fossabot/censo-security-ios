@@ -60,7 +60,8 @@ extension EthereumTransferPolicyUpdate: EvmSignable {
             threshold: approvalPolicy.approvalsRequired
         )
         return try EvmConfigTransactionBuilder.getPolicyUpdateExecutionFromModuleDataSafeHash(
-            walletAddress: wallet.address,
+            verifyingContract: signingData.transaction.vaultAddress,
+            safeAddress: wallet.address,
             txs: startingPolicy.safeTransactions(targetPolicy).0,
             evmTransaction: signingData.transaction
         )

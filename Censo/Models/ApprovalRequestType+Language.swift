@@ -51,8 +51,6 @@ extension ApprovalRequestType {
             return "Execute dApp Transaction"
         case .loginApproval:
             return "Log In"
-        case .vaultInvitation:
-            return "Accept Invitation"
         case .passwordReset:
             return "Password Reset"
         case .ethereumTransferPolicyUpdate,
@@ -60,6 +58,12 @@ extension ApprovalRequestType {
             return "Update Transfer Approvals"
         case .vaultPolicyUpdate:
             return "Update Vault Policy"
+        case .vaultCreation:
+            return "Create Vault"
+        case .orgAdminPolicyUpdate:
+            return "Update Org Policy"
+        case .addDevice:
+            return "Add New Device"
         }
     }
     
@@ -82,6 +86,10 @@ extension ApprovalRequestType {
             } else {
                 return "for sending"
             }
+        case .vaultPolicyUpdate(let request):
+            return request.vaultName.toVaultName()
+        case .vaultCreation(let request):
+            return request.name.toVaultName()
         default:
             return nil
         }
