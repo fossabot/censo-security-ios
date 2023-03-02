@@ -67,6 +67,8 @@ extension ApprovalRequestType {
             return "Create Vault"
         case .orgAdminPolicyUpdate:
             return "Update Org Policy"
+        case .orgNameUpdate:
+            return "Rename Organization"
         case .addDevice:
             return "Add New Device"
         }
@@ -82,7 +84,8 @@ extension ApprovalRequestType {
             return update.wallet.name.toWalletName()
         case .ethereumWalletNameUpdate(let update as NameUpdate),
              .polygonWalletNameUpdate(let update as NameUpdate),
-             .vaultNameUpdate(let update as NameUpdate):
+             .vaultNameUpdate(let update as NameUpdate),
+             .orgNameUpdate(let update as NameUpdate):
             return "\(update.oldDisplayName) → \(update.newDisplayName)"
         case .ethereumWithdrawalRequest(let request as WithdrawalRequest),
              .polygonWithdrawalRequest(let request as WithdrawalRequest),

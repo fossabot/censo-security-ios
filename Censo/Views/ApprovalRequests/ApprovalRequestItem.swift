@@ -270,6 +270,18 @@ extension BitcoinWalletNameUpdate: NameUpdate {
     }
 }
 
+extension OrgNameUpdate: NameUpdate {
+    var oldDisplayName: String {
+        oldName
+    }
+    var newDisplayName: String {
+        newName
+    }
+    var chainFees: [ChainFee] {
+        []
+    }
+}
+
 protocol WalletSettingsUpdate {
     var wallet: WalletInfo { get }
     var change: Change { get }
