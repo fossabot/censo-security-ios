@@ -56,6 +56,7 @@ class CensoTests: XCTestCase {
                     testCase.hash
                 )
             case .vaultPolicyUpdate(let request as MultichainSignable),
+                 .vaultNameUpdate(let request as MultichainSignable),
                  .orgAdminPolicyUpdate(let request as MultichainSignable):
                 let signatures = try request.signableData()
                 XCTAssertEqual(signatures.count, 2)
@@ -79,7 +80,8 @@ class CensoTests: XCTestCase {
                  .addressBookUpdate,
                  .addDevice,
                  .vaultCreation,
-                 .vaultPolicyUpdate:
+                 .vaultPolicyUpdate,
+                 .vaultNameUpdate:
                 XCTAssertEqual(request.details,
                                Mock.decodeJsonType(data: try JSONEncoder().encode(request.details)))
             default:

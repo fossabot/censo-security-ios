@@ -25,9 +25,12 @@ extension ApprovalRequestType {
             return "Add Polygon Wallet"
         case .bitcoinWalletCreation:
             return "Add Bitcoin Wallet"
-        case .ethereumWalletNameUpdate,
-             .polygonWalletNameUpdate:
-            return "Rename"
+        case .ethereumWalletNameUpdate:
+            return "Rename Ethereum Wallet"
+        case .polygonWalletNameUpdate:
+            return "Rename Polygon Wallet"
+        case .bitcoinWalletNameUpdate:
+            return "Rename Bitcoin Wallet"
         case .ethereumWalletSettingsUpdate(let update as WalletSettingsUpdate) where update.change == .dappsEnabled(false),
              .polygonWalletSettingsUpdate(let update as WalletSettingsUpdate) where update.change == .dappsEnabled(false):
             return "Disable dApp Access"
@@ -58,6 +61,8 @@ extension ApprovalRequestType {
             return "Update Transfer Approvals"
         case .vaultPolicyUpdate:
             return "Update Vault Policy"
+        case .vaultNameUpdate:
+            return "Rename Vault"
         case .vaultCreation:
             return "Create Vault"
         case .orgAdminPolicyUpdate:
@@ -75,9 +80,10 @@ extension ApprovalRequestType {
         case .ethereumWalletWhitelistUpdate(let update as WalletWhitelistUpdate),
              .polygonWalletWhitelistUpdate(let update as WalletWhitelistUpdate):
             return update.wallet.name.toWalletName()
-        case .ethereumWalletNameUpdate(let update as WalletNameUpdate),
-             .polygonWalletNameUpdate(let update as WalletNameUpdate):
-            return "\(update.wallet.name.toWalletName()) → \(update.newName.toWalletName())"
+        case .ethereumWalletNameUpdate(let update as NameUpdate),
+             .polygonWalletNameUpdate(let update as NameUpdate),
+             .vaultNameUpdate(let update as NameUpdate):
+            return "\(update.oldDisplayName) → \(update.newDisplayName)"
         case .ethereumWithdrawalRequest(let request as WithdrawalRequest),
              .polygonWithdrawalRequest(let request as WithdrawalRequest),
              .bitcoinWithdrawalRequest(let request as WithdrawalRequest):

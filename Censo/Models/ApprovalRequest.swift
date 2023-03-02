@@ -34,6 +34,7 @@ enum ApprovalRequestType: Codable, Equatable {
     case polygonWalletCreation(PolygonWalletCreation)
 
     case ethereumWalletNameUpdate(EthereumWalletNameUpdate)
+    case bitcoinWalletNameUpdate(BitcoinWalletNameUpdate)
     case polygonWalletNameUpdate(PolygonWalletNameUpdate)
 
     case ethereumTransferPolicyUpdate(EthereumTransferPolicyUpdate)
@@ -49,6 +50,7 @@ enum ApprovalRequestType: Codable, Equatable {
 
     case vaultPolicyUpdate(VaultPolicyUpdate)
     case vaultCreation(VaultCreation)
+    case vaultNameUpdate(VaultNameUpdate)
     
     case orgAdminPolicyUpdate(OrgAdminPolicyUpdate)
     
@@ -76,6 +78,8 @@ enum ApprovalRequestType: Codable, Equatable {
             self = .polygonWithdrawalRequest(try PolygonWithdrawalRequest(from: decoder))
         case "BitcoinWalletCreation":
             self = .bitcoinWalletCreation(try BitcoinWalletCreation(from: decoder))
+        case "BitcoinWalletNameUpdate":
+            self = .bitcoinWalletNameUpdate(try BitcoinWalletNameUpdate(from: decoder))
         case "EthereumWalletCreation":
             self = .ethereumWalletCreation(try EthereumWalletCreation(from: decoder))
         case "PolygonWalletCreation":
@@ -106,6 +110,8 @@ enum ApprovalRequestType: Codable, Equatable {
             self = .vaultPolicyUpdate(try VaultPolicyUpdate(from: decoder))
         case "VaultCreation":
             self = .vaultCreation(try VaultCreation(from: decoder))
+        case "VaultNameUpdate":
+            self = .vaultNameUpdate(try VaultNameUpdate(from: decoder))
         case "OrgAdminPolicyUpdate":
             self = .orgAdminPolicyUpdate(try OrgAdminPolicyUpdate(from: decoder))
         case "AddDevice":
@@ -136,6 +142,9 @@ enum ApprovalRequestType: Codable, Equatable {
         case .bitcoinWalletCreation(let walletCreation):
             try container.encode("BitcoinWalletCreation", forKey: .type)
             try walletCreation.encode(to: encoder)
+        case .bitcoinWalletNameUpdate(let walletNameUpdate):
+            try container.encode("BitcoinWalletNameUpdate", forKey: .type)
+            try walletNameUpdate.encode(to: encoder)
         case .ethereumWalletCreation(let walletCreation):
             try container.encode("EthereumWalletCreation", forKey: .type)
             try walletCreation.encode(to: encoder)
@@ -178,6 +187,9 @@ enum ApprovalRequestType: Codable, Equatable {
         case .vaultCreation(let vaultCreation):
             try container.encode("VaultCreation", forKey: .type)
             try vaultCreation.encode(to: encoder)
+        case .vaultNameUpdate(let vaultNameUpdate):
+            try container.encode("VaultNameUpdate", forKey: .type)
+            try vaultNameUpdate.encode(to: encoder)
         case .orgAdminPolicyUpdate(let orgAdminPolicyUpdate):
             try container.encode("OrgAdminPolicyUpdate", forKey: .type)
             try orgAdminPolicyUpdate.encode(to: encoder)

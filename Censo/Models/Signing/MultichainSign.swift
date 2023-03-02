@@ -55,6 +55,28 @@ extension VaultPolicyUpdate: MultichainSignable {
     
 }
 
+extension VaultNameUpdate: MultichainSignable {
+    func signableData() throws -> [(Chain, Data)] {
+        return try signingData.map {
+            switch $0 {
+            case .ethereum(let signingData):
+                return (Chain.ethereum, try getSafeHash(evmTransaction: signingData.transaction))
+            case .polygon(let signingData):
+                return (Chain.polygon, try getSafeHash(evmTransaction: signingData.transaction))
+            }
+        }
+    }
+    
+    private func getSafeHash(evmTransaction: EvmTransaction) throws -> Data {
+        return try EvmConfigTransactionBuilder.getNameUpdateExecutionFromModuleDataSafeHash(
+            verifyingContract: evmTransaction.orgVaultAddress,
+            safeAddress: evmTransaction.vaultAddress,
+            newName: newName,
+            evmTransaction: evmTransaction
+        )
+    }
+}
+
 extension OrgAdminPolicyUpdate: MultichainSignable {
     
     func signableData() throws -> [(Chain, Data)] {
