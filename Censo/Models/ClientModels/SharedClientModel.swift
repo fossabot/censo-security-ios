@@ -150,6 +150,11 @@ struct AddDevice: Codable, Equatable  {
     var deviceType: DeviceType
 }
 
+struct OrgNameUpdate: Codable, Equatable  {
+    var oldName: String
+    var newName: String
+}
+
 #if DEBUG
 extension ApprovalRequest {
     static var sample: Self {

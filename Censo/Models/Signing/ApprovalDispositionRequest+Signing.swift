@@ -63,7 +63,8 @@ extension ApprovalDispositionRequest {
              .bitcoinWalletNameUpdate,
              .vaultCreation,
              .addDevice,
-             .addressBookUpdate:
+             .addressBookUpdate,
+             .orgNameUpdate:
             let detailsJSONData = try JSONEncoder().encode(request.details)
             let privateKeys = try deviceSigner.privateKeys()
 
