@@ -42,12 +42,14 @@ struct ApprovalRequestItem: View {
             } detail: {
                 DAppTransactionDetails(request: request, transactionRequest: dAppTransactionRequest)
             }
-        case .ethereumWalletNameUpdate(let walletNameUpdate as WalletNameUpdate),
-                .polygonWalletNameUpdate(let walletNameUpdate as WalletNameUpdate):
+        case .ethereumWalletNameUpdate(let nameUpdate as NameUpdate),
+             .polygonWalletNameUpdate(let nameUpdate as NameUpdate),
+             .bitcoinWalletNameUpdate(let nameUpdate as NameUpdate),
+             .vaultNameUpdate(let nameUpdate as NameUpdate):
             ApprovalRequestRow(deviceSigner: deviceSigner, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
-                WalletNameRow(requestType: request.details, update: walletNameUpdate)
+                NameUpdateRow(requestType: request.details, update: nameUpdate)
             } detail: {
-                WalletNameDetails(request: request, update: walletNameUpdate)
+                NameUpdateDetails(request: request, update: nameUpdate)
             }
         case .ethereumTransferPolicyUpdate(let walletTransferPolicyUpdate as TransferPolicyUpdate),
              .polygonTransferPolicyUpdate(let walletTransferPolicyUpdate as TransferPolicyUpdate): // 2
@@ -217,13 +219,56 @@ extension PolygonWalletCreation: WalletCreation {
     }
 }
 
-protocol WalletNameUpdate {
-    var wallet: WalletInfo { get }
-    var newName: String { get }
+protocol NameUpdate {
+    var oldDisplayName: String { get }
+    var newDisplayName: String { get }
+    var chainFees: [ChainFee] { get }
 }
 
-extension EthereumWalletNameUpdate: WalletNameUpdate {}
-extension PolygonWalletNameUpdate: WalletNameUpdate {}
+extension VaultNameUpdate: NameUpdate {
+    var oldDisplayName: String {
+        oldName.toVaultName()
+    }
+    var newDisplayName: String {
+        newName.toVaultName()
+    }
+}
+
+extension EthereumWalletNameUpdate: NameUpdate {
+    var oldDisplayName: String {
+        wallet.name.toWalletName()
+    }
+    var newDisplayName: String {
+        newName.toWalletName()
+    }
+    var chainFees: [ChainFee] {
+        [ChainFee(chain: Chain.ethereum, fee: fee, feeSymbolInfo: feeSymbolInfo)]
+    }
+}
+
+extension PolygonWalletNameUpdate: NameUpdate {
+    var oldDisplayName: String {
+        wallet.name.toWalletName()
+    }
+    var newDisplayName: String {
+        newName.toWalletName()
+    }
+    var chainFees: [ChainFee] {
+        [ChainFee(chain: Chain.ethereum, fee: fee, feeSymbolInfo: feeSymbolInfo)]
+    }
+}
+
+extension BitcoinWalletNameUpdate: NameUpdate {
+    var oldDisplayName: String {
+        wallet.name.toWalletName()
+    }
+    var newDisplayName: String {
+        newName.toWalletName()
+    }
+    var chainFees: [ChainFee] {
+        []
+    }
+}
 
 protocol WalletSettingsUpdate {
     var wallet: WalletInfo { get }
@@ -252,3 +297,4 @@ protocol TransferPolicyUpdate {
 
 extension EthereumTransferPolicyUpdate: TransferPolicyUpdate {}
 extension PolygonTransferPolicyUpdate: TransferPolicyUpdate {}
+

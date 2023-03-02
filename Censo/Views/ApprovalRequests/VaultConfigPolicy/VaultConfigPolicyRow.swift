@@ -23,10 +23,12 @@ struct VaultConfigPolicyRow: View {
                 .minimumScaleFactor(0.25)
                 .padding(EdgeInsets(top: 15, leading: 20, bottom: 0, trailing: 20))
             
-            Text(requestType.header2!)
-                .font(.title3)
-                .foregroundColor(Color.Censo.primaryForeground.opacity(0.7))
-                .padding(EdgeInsets(top: 2, leading: 20, bottom: 20, trailing: 20))
+            if let header2 = requestType.header {
+                Text(header2)
+                    .font(.title3)
+                    .foregroundColor(Color.Censo.primaryForeground.opacity(0.7))
+                    .padding(EdgeInsets(top: 2, leading: 20, bottom: 20, trailing: 20))
+            }
         }
     }
 }

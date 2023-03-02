@@ -159,6 +159,33 @@ public class EvmConfigTransactionBuilder {
         )
     }
     
+    static func getNameUpdateExecutionFromModuleData(safeAddress: String, newName: String) -> Data {
+        let data = setNameHash(name: newName)
+        return execTransactionFromModuleTx(
+            to: safeAddress,
+            value: Bignum(0),
+            data: data,
+            operation: .call
+        )
+    }
+
+    static func getNameUpdateExecutionFromModuleDataSafeHash(verifyingContract: String?, safeAddress: String?, newName: String, evmTransaction: EvmTransaction) throws -> Data {
+        guard let verifyingContract = verifyingContract else {
+            throw EvmConfigError.missingVault
+        }
+        guard let safeAddress = safeAddress else {
+            throw EvmConfigError.missingVault
+        }
+        return EvmTransactionUtil.computeSafeTransactionHash(
+            chainId: evmTransaction.chainId,
+            safeAddress: verifyingContract,
+            to: safeAddress,
+            value: Bignum(0),
+            data: getNameUpdateExecutionFromModuleData(safeAddress: safeAddress, newName: newName),
+            nonce: evmTransaction.safeNonce
+        )
+    }
+    
     
     private class func getPolicyChangeDataList(txs: [SafeTx]) -> [Data] {
         return txs.map({ getPolicyChangeData(tx: $0) })
@@ -184,6 +211,14 @@ public class EvmConfigTransactionBuilder {
         txData.append("e19a9dd9".data(using: .hexadecimal)!)
         // to
         EvmTransactionUtil.appendPadded(destination: &txData, source: guardAddress.data(using: .hexadecimal)!)
+        return txData
+    }
+    
+    private class func setNameHash(name: String) -> Data {
+         // setNameHash(bytes32)
+        var txData = Data(capacity: 4 + 32*2)
+        txData.append("3afbdcf4".data(using: .hexadecimal)!)
+        EvmTransactionUtil.appendPadded(destination: &txData, source: Crypto.sha3keccak256(data: name.data(using: .utf8)!))
         return txData
     }
 

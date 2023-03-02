@@ -60,6 +60,8 @@ struct EthereumWithdrawalRequest: Codable, Equatable  {
 struct EthereumWalletNameUpdate: Codable, Equatable  {
     var wallet: WalletInfo
     var newName: String
+    var fee: Amount
+    var feeSymbolInfo: EvmSymbolInfo
     var signingData: EthereumSigningData
 }
 

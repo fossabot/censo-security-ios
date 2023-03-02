@@ -13,6 +13,11 @@ struct BitcoinWalletCreation: Codable, Equatable  {
     var approvalPolicy: ApprovalPolicy
 }
 
+struct BitcoinWalletNameUpdate: Codable, Equatable  {
+    var wallet: WalletInfo
+    var newName: String
+}
+
 struct BitcoinTransaction: Codable, Equatable {
     let version: Int
     let txIns: [TransactionInput]

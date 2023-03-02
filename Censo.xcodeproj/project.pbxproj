@@ -13,8 +13,8 @@
 		3D115204282169E1007CD43D /* VaultConfigPolicyDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D115203282169E1007CD43D /* VaultConfigPolicyDetails.swift */; };
 		3D11520728216FBD007CD43D /* WalletTransferPolicyRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D11520628216FBD007CD43D /* WalletTransferPolicyRow.swift */; };
 		3D11520928216FCC007CD43D /* WalletTransferPolicyDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D11520828216FCC007CD43D /* WalletTransferPolicyDetails.swift */; };
-		3D11520C28217321007CD43D /* WallettNameRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D11520B28217321007CD43D /* WallettNameRow.swift */; };
-		3D11520E2821732E007CD43D /* WalletNameDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D11520D2821732E007CD43D /* WalletNameDetails.swift */; };
+		3D11520C28217321007CD43D /* NameUpdateRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D11520B28217321007CD43D /* NameUpdateRow.swift */; };
+		3D11520E2821732E007CD43D /* NameUpdateDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D11520D2821732E007CD43D /* NameUpdateDetails.swift */; };
 		3D115211282176FD007CD43D /* AddressBookUpdateRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D115210282176FD007CD43D /* AddressBookUpdateRow.swift */; };
 		3D11521328217709007CD43D /* AddressBookUpdateDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D11521228217709007CD43D /* AddressBookUpdateDetails.swift */; };
 		3D11521628217FB5007CD43D /* WalletSettingsRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D11521528217FB5007CD43D /* WalletSettingsRow.swift */; };
@@ -211,8 +211,8 @@
 		3D115203282169E1007CD43D /* VaultConfigPolicyDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VaultConfigPolicyDetails.swift; sourceTree = "<group>"; };
 		3D11520628216FBD007CD43D /* WalletTransferPolicyRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletTransferPolicyRow.swift; sourceTree = "<group>"; };
 		3D11520828216FCC007CD43D /* WalletTransferPolicyDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletTransferPolicyDetails.swift; sourceTree = "<group>"; };
-		3D11520B28217321007CD43D /* WallettNameRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WallettNameRow.swift; sourceTree = "<group>"; };
-		3D11520D2821732E007CD43D /* WalletNameDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletNameDetails.swift; sourceTree = "<group>"; };
+		3D11520B28217321007CD43D /* NameUpdateRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameUpdateRow.swift; sourceTree = "<group>"; };
+		3D11520D2821732E007CD43D /* NameUpdateDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NameUpdateDetails.swift; sourceTree = "<group>"; };
 		3D115210282176FD007CD43D /* AddressBookUpdateRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressBookUpdateRow.swift; sourceTree = "<group>"; };
 		3D11521228217709007CD43D /* AddressBookUpdateDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressBookUpdateDetails.swift; sourceTree = "<group>"; };
 		3D11521528217FB5007CD43D /* WalletSettingsRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletSettingsRow.swift; sourceTree = "<group>"; };
@@ -439,13 +439,13 @@
 			path = WalletTransferPolicy;
 			sourceTree = "<group>";
 		};
-		3D11520A2821730C007CD43D /* WalletName */ = {
+		3D11520A2821730C007CD43D /* NameUpdate */ = {
 			isa = PBXGroup;
 			children = (
-				3D11520B28217321007CD43D /* WallettNameRow.swift */,
-				3D11520D2821732E007CD43D /* WalletNameDetails.swift */,
+				3D11520B28217321007CD43D /* NameUpdateRow.swift */,
+				3D11520D2821732E007CD43D /* NameUpdateDetails.swift */,
 			);
-			path = WalletName;
+			path = NameUpdate;
 			sourceTree = "<group>";
 		};
 		3D11520F282176D8007CD43D /* AddressBookUpdate */ = {
@@ -623,7 +623,7 @@
 				3D952406283D0FA400D42243 /* WalletWhitelist */,
 				3D11521428217F9E007CD43D /* WalletSettings */,
 				3D11520F282176D8007CD43D /* AddressBookUpdate */,
-				3D11520A2821730C007CD43D /* WalletName */,
+				3D11520A2821730C007CD43D /* NameUpdate */,
 				3D11520528216FA1007CD43D /* WalletTransferPolicy */,
 				3D115200282169A5007CD43D /* VaultConfigPolicy */,
 				3DBC44E1280F17510016E1AB /* Login */,
@@ -1109,7 +1109,7 @@
 				3D11A60327580D3F008C03B1 /* DAppScan.swift in Sources */,
 				3DB995FF27EE1804005655F0 /* BiometryError.swift in Sources */,
 				3DBF9DAF26DE7A0E00D7683E /* ViewRouter.swift in Sources */,
-				3D11520E2821732E007CD43D /* WalletNameDetails.swift in Sources */,
+				3D11520E2821732E007CD43D /* NameUpdateDetails.swift in Sources */,
 				3DAF53B8262E1402000DD558 /* ApprovalRequestDetails.swift in Sources */,
 				3D3D6D4F261B957800FEEE0B /* RetryView.swift in Sources */,
 				6C7627C729AE695100FE1CC2 /* AddDeviceRow.swift in Sources */,
@@ -1211,7 +1211,7 @@
 				40A9AF0425DF32B9004320EF /* FactList.swift in Sources */,
 				6CD5B4A228A453DB00CD1A62 /* PasswordResetRow.swift in Sources */,
 				3D3D6D122616447200FEEE0B /* LoadingModifier.swift in Sources */,
-				3D11520C28217321007CD43D /* WallettNameRow.swift in Sources */,
+				3D11520C28217321007CD43D /* NameUpdateRow.swift in Sources */,
 				3D2CE49925F8423800137E05 /* SignInView.swift in Sources */,
 				40F907A625DDC31B00B107B0 /* CensoApi+Mock.swift in Sources */,
 				3D1C762227DA850A0016BB32 /* Base58.swift in Sources */,
