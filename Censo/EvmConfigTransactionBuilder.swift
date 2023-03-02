@@ -206,7 +206,7 @@ public class EvmConfigTransactionBuilder {
     
     
     private class func setGuardTx(guardAddress: String) -> Data {
-        var txData = Data(capacity: 4 + 32*2)
+        var txData = Data(capacity: 4 + 32)
         // setGuard(address)
         txData.append("e19a9dd9".data(using: .hexadecimal)!)
         // to
