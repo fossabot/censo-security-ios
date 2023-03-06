@@ -140,7 +140,8 @@ extension CensoApi.User {
             ),
             useStaticKey: false,
             publicKeys: [],
-            deviceKey: nil
+            deviceKeyInfo: nil,
+            shardingPolicy: nil
         )
     }
 }

@@ -30,7 +30,7 @@ struct DeviceKeyRegistration<Content>: View where Content : View {
                 .onAppear {
                     loadPublicKey()
                 }
-        case .success(let data) where data.base58String != user.deviceKey:
+        case .success(let data) where data.base58String != user.deviceKeyInfo?.key:
             PhotoCapture(deviceKey: deviceKey) {
                 onSuccess()
             }
