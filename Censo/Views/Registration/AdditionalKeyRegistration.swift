@@ -11,7 +11,7 @@ import SwiftUI
 struct AdditionalKeyRegistration: View {
     @Environment(\.censoApi) var censoApi
 
-    @RemoteResult private var signers: CensoApi.AddSignersRequest?
+    @RemoteResult private var signers: CensoApi.SignersInfo?
 
     var user: CensoApi.User
     var publicKeys: PublicKeys
@@ -38,7 +38,7 @@ struct AdditionalKeyRegistration: View {
 
     private func reload() {
         do {
-            let signers = try CensoApi.AddSignersRequest(publicKeys: publicKeys, deviceKey: deviceKey)
+            let signers = try CensoApi.SignersInfo(publicKeys: publicKeys, deviceKey: deviceKey)
 
             _signers.reload(
                 using: censoApi.provider.loader(

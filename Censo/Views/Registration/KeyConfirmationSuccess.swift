@@ -11,7 +11,7 @@ import BIP39
 struct KeyConfirmationSuccess: View {
     @Environment(\.censoApi) var censoApi
 
-    @RemoteResult private var signers: CensoApi.AddSignersRequest?
+    @RemoteResult private var signers: CensoApi.SignersInfo?
 
     var user: CensoApi.User
     var deviceKey: DeviceKey
@@ -73,7 +73,7 @@ struct KeyConfirmationSuccess: View {
         do {
             let rootSeed = try Mnemonic(phrase: phrase).seed
             let privateKeys = try PrivateKeys(rootSeed: rootSeed)
-            let signers = try CensoApi.AddSignersRequest(publicKeys: privateKeys.publicKeys, deviceKey: deviceKey)
+            let signers = try CensoApi.SignersInfo(publicKeys: privateKeys.publicKeys, deviceKey: deviceKey)
 
             _signers.reload(
                 using: censoApi.provider.loader(
@@ -96,7 +96,7 @@ struct KeyConfirmationSuccess: View {
     }
 }
 
-extension CensoApi.AddSignersRequest {
+extension CensoApi.SignersInfo {
     init(publicKeys: PublicKeys, deviceKey: DeviceKey) throws {
         self.signers = [
             CensoApi.WalletSigner(
@@ -123,6 +123,7 @@ extension CensoApi.AddSignersRequest {
             }
 
         self.signature = try deviceKey.signature(for: Data(bytes)).base64EncodedString()
+        self.share = nil
     }
 }
 

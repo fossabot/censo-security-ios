@@ -21,7 +21,8 @@ struct CensoApi {
 
         case verifyUser(devicePublicKey: String?)
         case registerDevice(UserDevice, devicePublicKey: String)
-        case addWalletSigners(AddSignersRequest, devicePublicKey: String)
+        case boostrapDeviceAndSigners(BootstrapUserDeviceAndSigners, devicePublicKey: String)
+        case addWalletSigners(SignersInfo, devicePublicKey: String)
         case approvalRequests
         case registerApprovalDisposition(ApprovalDispositionPayload, devicePublicKey: String)
 
@@ -157,6 +158,18 @@ extension CensoApi {
             }
         }
     }
+    
+    struct ShardingPolicy: Codable {
+        let policyRevisionId: String
+        let threshold: Int
+        let admins: [String]
+    }
+    
+    struct DeviceKeyInfo: Codable {
+        let key: String
+        let approved: Bool
+        let bootstrapKey: String?
+    }
 
     struct User: Codable, Identifiable {
         let id: String
@@ -166,7 +179,8 @@ extension CensoApi {
         let organization: Organization
         let useStaticKey: Bool
         let publicKeys: [PublicKey]
-        let deviceKey: String?
+        let deviceKeyInfo: DeviceKeyInfo?
+        let shardingPolicy: ShardingPolicy?
     }
 
     struct PublicKey: Codable {
@@ -201,9 +215,32 @@ extension CensoApi {
         let userImage: UserImage
     }
     
-    struct AddSignersRequest: Codable {
+    struct Shard: Codable {
+        let adminPublicKey: String
+        let encryptedData: String
+    }
+
+    struct Share: Codable {
+        let shareId: String
+        let policyRevisionId: String
+        let shards: [Shard]
+    }
+    
+    struct SignersInfo: Codable {
         let signers: [WalletSigner]
         let signature: String
+        let share: Share?
+    }
+    
+    struct BootstrapDevice: Codable {
+        let publicKey: String
+        let signature: String
+    }
+    
+    struct BootstrapUserDeviceAndSigners: Codable {
+        let userDevice: UserDevice
+        let bootstrapDevice: BootstrapDevice
+        let signersInfo: SignersInfo
     }
 
     struct ConnectedWallet: Codable {
@@ -294,6 +331,8 @@ extension CensoApi.Target: Moya.TargetType {
             return "v1/users"
         case .registerDevice:
             return "v1/user-devices"
+        case .boostrapDeviceAndSigners:
+            return "v1/bootstrap-user-devices"
         case .addWalletSigners:
             return "v3/wallet-signers"
         case .approvalRequests:
@@ -321,6 +360,7 @@ extension CensoApi.Target: Moya.TargetType {
             return .get
         case .connectDApp,
              .addWalletSigners,
+             .boostrapDeviceAndSigners,
              .registerApprovalDisposition,
              .resetPassword,
              .registerPushToken,
@@ -361,6 +401,8 @@ extension CensoApi.Target: Moya.TargetType {
             return .requestPlain
         case .registerDevice(let userDevice, _):
             return .requestJSONEncodable(userDevice)
+        case .boostrapDeviceAndSigners(let bootstrapDeviceAndSigners, _):
+            return .requestJSONEncodable(bootstrapDeviceAndSigners)
         case .connectDApp(let code):
             return .requestJSONEncodable([
                 "uri": code
@@ -388,6 +430,7 @@ extension CensoApi.Target: Moya.TargetType {
                 "X-Censo-Device-Identifier": (try? deviceKey.publicExternalRepresentation().base58String) ?? "[DEVICE_KEY_ERROR]"
             ]
         case .addWalletSigners(_, let devicePublicKey),
+             .boostrapDeviceAndSigners(_, let devicePublicKey),
              .registerApprovalDisposition(_, let devicePublicKey),
              .registerDevice(_, let devicePublicKey),
              .verifyUser(.some(let devicePublicKey)):
