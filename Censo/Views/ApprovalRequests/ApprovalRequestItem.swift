@@ -45,7 +45,8 @@ struct ApprovalRequestItem: View {
         case .ethereumWalletNameUpdate(let nameUpdate as NameUpdate),
              .polygonWalletNameUpdate(let nameUpdate as NameUpdate),
              .bitcoinWalletNameUpdate(let nameUpdate as NameUpdate),
-             .vaultNameUpdate(let nameUpdate as NameUpdate):
+             .vaultNameUpdate(let nameUpdate as NameUpdate),
+             .orgNameUpdate(let nameUpdate as NameUpdate):
             ApprovalRequestRow(deviceSigner: deviceSigner, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
                 NameUpdateRow(requestType: request.details, update: nameUpdate)
             } detail: {

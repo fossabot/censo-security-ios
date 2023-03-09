@@ -23,7 +23,7 @@ struct VaultConfigPolicyRow: View {
                 .minimumScaleFactor(0.25)
                 .padding(EdgeInsets(top: 15, leading: 20, bottom: 0, trailing: 20))
             
-            if let header2 = requestType.header {
+            if let header2 = requestType.header2 {
                 Text(header2)
                     .font(.title3)
                     .foregroundColor(Color.Censo.primaryForeground.opacity(0.7))
