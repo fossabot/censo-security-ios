@@ -50,12 +50,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
             raygunClient.enableCrashReporting()
         }
 
-        NotificationCenter.default.addObserver(forName: .userWillSignOut, object: nil, queue: .main) { [weak self] _ in
-            guard let deviceIdentifier = UIDevice.current.identifierForVendor?.uuidString else {
-                return
-            }
-
-            self?.censoApi.provider.request(.unregisterPushToken(deviceIdentifier: deviceIdentifier)) { _ in }
+        NotificationCenter.default.addObserver(forName: .userWillSignOut, object: nil, queue: .main) { _ in
             UIApplication.shared.unregisterForRemoteNotifications()
         }
 
@@ -85,6 +80,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
         debugPrint("Failed to register for remote notifications: \(error.localizedDescription)")
+        RaygunClient.sharedInstance().send(error: error, tags: ["push-registration"], customData: nil)
     }
 
     func setupAppearance() {

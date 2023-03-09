@@ -146,7 +146,7 @@ extension ApprovalRequest {
             numberOfDispositionsRequired: 3,
             numberOfApprovalsReceived: 1,
             numberOfDeniesReceived: 1,
-            vaultName: "Test Vault",
+            vaultName: "BlueRock Securities",
             initiationOnly: false,
             details: .bitcoinWithdrawalRequest(.sample)
         )
