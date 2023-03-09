@@ -23,7 +23,7 @@ struct NameUpdateRow: View {
                 .minimumScaleFactor(0.25)
                 .padding(EdgeInsets(top: 15, leading: 20, bottom: 0, trailing: 20))
             
-            if let header2 = requestType.header {
+            if let header2 = requestType.header2 {
                 Text(header2)
                     .font(.title3)
                     .lineLimit(1)
