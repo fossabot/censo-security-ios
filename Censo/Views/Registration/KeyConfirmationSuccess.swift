@@ -7,11 +7,19 @@
 
 import SwiftUI
 import BIP39
+import Moya
 
 struct KeyConfirmationSuccess: View {
     @Environment(\.censoApi) var censoApi
+    
+    enum RegistrationState {
+        case idle
+        case loading
+        case failure(Error)
+        case success
+    }
 
-    @RemoteResult private var signers: CensoApi.SignersInfo?
+    @State private var registrationState: RegistrationState = .idle
 
     var user: CensoApi.User
     var deviceKey: DeviceKey
@@ -20,7 +28,7 @@ struct KeyConfirmationSuccess: View {
 
     var body: some View {
         Group {
-            switch $signers {
+            switch registrationState {
             case .idle:
                 CensoProgressView(text: "Registering your key with Censo...")
                     .onAppear(perform: reload)
@@ -70,28 +78,29 @@ struct KeyConfirmationSuccess: View {
     }
 
     private func reload() {
+        registrationState = .loading
         do {
             let rootSeed = try Mnemonic(phrase: phrase).seed
             let privateKeys = try PrivateKeys(rootSeed: rootSeed)
             let signers = try CensoApi.SignersInfo(publicKeys: privateKeys.publicKeys, deviceKey: deviceKey)
-
-            _signers.reload(
-                using: censoApi.provider.loader(
-                    for: .addWalletSigners(signers, devicePublicKey: try deviceKey.publicExternalRepresentation().base58String)
-                )
-            ) { error in
-                if let error = error {
-                    _signers.content = .failure(error)
-                } else {
+            
+            censoApi.provider.request(.addWalletSigners(signers, devicePublicKey: try deviceKey.publicExternalRepresentation().base58String)) { result in
+                switch result {
+                case .failure(let error):
+                    registrationState = .failure(error)
+                case .success(let response) where response.statusCode >= 400:
+                    registrationState = .failure(MoyaError.statusCode(response))
+                case .success:
                     do {
                         try Keychain.saveRootSeed(rootSeed, email: user.loginName, deviceKey: deviceKey)
+                        registrationState = .success
                     } catch {
-                        _signers.content = .failure(error)
+                        registrationState = .failure(error)
                     }
                 }
             }
         } catch {
-            _signers.content = .failure(error)
+            registrationState = .failure(error)
         }
     }
 }
