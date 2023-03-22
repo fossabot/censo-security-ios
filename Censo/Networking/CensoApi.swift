@@ -38,7 +38,6 @@ struct CensoApi {
         stubClosure: @escaping MoyaProvider<Target>.StubClosure = CensoApi.defaultStubBehaviorClosure()
     ) {
         self.provider = MoyaProvider<Target>(
-            requestClosure: Self.authTokenEndpointResolver(authProvider: authProvider),
             stubClosure: stubClosure,
             plugins: [
                 AuthProviderPlugin(authProvider: authProvider)
@@ -48,58 +47,6 @@ struct CensoApi {
     
     fileprivate static func defaultStubBehaviorClosure() -> MoyaProvider<Target>.StubClosure {
         return MoyaProvider.neverStub
-    }
-    
-    fileprivate static func authTokenEndpointResolver(authProvider: AuthProvider?, callbackQueue: DispatchQueue = .main) -> MoyaProvider<Target>.RequestClosure {
-        return { [weak authProvider] endpoint, closure in
-            let originalRequest: URLRequest
-
-            do {
-                originalRequest = try endpoint.urlRequest()
-            } catch {
-                closure(.failure(.underlying(error, nil)))
-                return
-            }
-
-            func attemptRequest() {
-                closure(.success(originalRequest))
-            }
-
-            guard let authProvider = authProvider, authProvider.isExpired else {
-                // In the case user is not authenticated or their token has expired,
-                // proceed with the original request.  This will allow the caller
-                // to respond to 401 responses appropriately.
-                attemptRequest()
-                return
-            }
-
-            DispatchQueue.refreshTokenDispatchQueue.async {
-                DispatchGroup.refreshTokenDispatchGroup.wait()
-
-                guard authProvider.isExpired else {
-                    callbackQueue.async {
-                        attemptRequest()
-                    }
-                    return
-                }
-
-                DispatchGroup.refreshTokenDispatchGroup.enter()
-
-                authProvider.refresh { (error) in
-                    DispatchGroup.refreshTokenDispatchGroup.leave()
-
-                    if let error = error {
-                        callbackQueue.async {
-                            closure(.failure(MoyaError.underlying(error, nil)))
-                        }
-                    } else {
-                        callbackQueue.async {
-                            closure(.success(originalRequest))
-                        }
-                    }
-                }
-            }
-        }
     }
 }
 
