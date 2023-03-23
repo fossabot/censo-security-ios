@@ -20,7 +20,7 @@ class EvmTransferTransactionBuilderTests: XCTestCase {
     func testDomainHash() throws {
         XCTAssertEqual(
             "0x3914f2cd675546d440c95ea0be3263f035e2f742ff979aa5c735e5aa0a3c9c15".data(using: .hexadecimal),
-            EvmTransactionUtil.domainHash(chainId: 31337, verifyingContract: "0x7ff2590186b29e2ddDapp24f2ed1bf3af1e7594903f1")
+            EvmTransactionUtil.domainHash(chainId: 31337, verifyingContract: "0x7ff2590186b29e2dd24f2ed1bf3af1e7594903f1")
         )
     }
 
