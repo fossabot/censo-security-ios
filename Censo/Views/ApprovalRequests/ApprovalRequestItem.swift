@@ -115,6 +115,12 @@ struct ApprovalRequestItem: View {
             } detail: {
                 PasswordResetDetails(requestType: request.details)
             }
+        case .vaultUserRolesUpdate(let update):
+            ApprovalRequestRow(deviceSigner: deviceSigner, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
+                VaultUserRolesUpdateRow(requestType: request.details, update: update)
+            } detail: {
+                VaultUserRolesUpdateDetails(request: request, update: update)
+            }
         default:
             UnknownRequestRow(request: request, timerPublisher: timerPublisher)
         }

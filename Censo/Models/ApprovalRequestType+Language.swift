@@ -69,6 +69,8 @@ extension ApprovalRequestType {
             return "Update Org Policy"
         case .orgNameUpdate:
             return "Rename Organization"
+        case .vaultUserRolesUpdate:
+            return "Update User Roles in Vault"
         case .addDevice:
             return "Add New Device"
         }
@@ -99,6 +101,8 @@ extension ApprovalRequestType {
             return request.vaultName.toVaultName()
         case .vaultCreation(let request):
             return request.name.toVaultName()
+        case .vaultUserRolesUpdate(let request):
+            return request.vaultName.toVaultName()
         default:
             return nil
         }
