@@ -24,7 +24,7 @@ struct SignInView: View {
     }
 
     var body: some View {
-        NavigationView {
+        NavStackWorkaround {
             VStack(spacing: 0) {
                 ScrollView {
                     VStack {

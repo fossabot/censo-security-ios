@@ -27,7 +27,7 @@ struct SignedInNavigationView<Content>: View where Content : View {
     @ViewBuilder var content: () -> Content
 
     var body: some View {
-        NavigationView {
+        NavStackWorkaround {
             content()
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background(Color.Censo.primaryBackground.ignoresSafeArea())
@@ -52,7 +52,6 @@ struct SignedInNavigationView<Content>: View where Content : View {
                     activeSheet = .profile
                 }
         }
-        .navigationViewStyle(StackNavigationViewStyle())
         .onFirstTimeAppear {
             reload()
         }

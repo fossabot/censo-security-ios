@@ -138,6 +138,6 @@ extension UINavigationController: UIGestureRecognizerDelegate {
     }
 
     public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-        return viewControllers.count > 1 && viewControllers.last?.navigationItem.leftBarButtonItem != nil
+        return viewControllers.count > 1
     }
 }

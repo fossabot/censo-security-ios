@@ -80,6 +80,7 @@
 		3D8CA666272C5E1900C68657 /* Theme.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3D8CA665272C5E1900C68657 /* Theme.xcassets */; };
 		3D952408283D0FB800D42243 /* WalletWhitelistRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D952407283D0FB800D42243 /* WalletWhitelistRow.swift */; };
 		3D95240A283D0FC300D42243 /* WalletWhitelistDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D952409283D0FC300D42243 /* WalletWhitelistDetails.swift */; };
+		3D9E4FD329CCB69A00B42C83 /* NavStackWorkaround.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D9E4FD229CCB69900B42C83 /* NavStackWorkaround.swift */; };
 		3DA133A526B1AEB300BB4AF4 /* Profile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DA133A426B1AEB300BB4AF4 /* Profile.swift */; };
 		3DAA26F0262F5147000F453D /* PrimaryButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DAA26EF262F5147000F453D /* PrimaryButtonStyle.swift */; };
 		3DAA26F6262F5156000F453D /* DestructiveButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DAA26F5262F5156000F453D /* DestructiveButtonStyle.swift */; };
@@ -275,6 +276,7 @@
 		3D8CA665272C5E1900C68657 /* Theme.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Theme.xcassets; sourceTree = "<group>"; };
 		3D952407283D0FB800D42243 /* WalletWhitelistRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletWhitelistRow.swift; sourceTree = "<group>"; };
 		3D952409283D0FC300D42243 /* WalletWhitelistDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletWhitelistDetails.swift; sourceTree = "<group>"; };
+		3D9E4FD229CCB69900B42C83 /* NavStackWorkaround.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavStackWorkaround.swift; sourceTree = "<group>"; };
 		3DA133A426B1AEB300BB4AF4 /* Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
 		3DAA26EF262F5147000F453D /* PrimaryButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrimaryButtonStyle.swift; sourceTree = "<group>"; };
 		3DAA26F5262F5156000F453D /* DestructiveButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DestructiveButtonStyle.swift; sourceTree = "<group>"; };
@@ -574,6 +576,7 @@
 				3D6334F82885C2C9002CEC5A /* CensoBackground.swift */,
 				3D6334F42885C2C9002CEC5A /* CensoProgressView.swift */,
 				3D1AD40628DC007D0085ACAA /* ForegroundBiometryLock.swift */,
+				3D9E4FD229CCB69900B42C83 /* NavStackWorkaround.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -1189,6 +1192,7 @@
 				3DAF53C0262E158B000DD558 /* WithdrawalRow.swift in Sources */,
 				3DB995F827EB71FA005655F0 /* SignerUpdateDetails.swift in Sources */,
 				3D61A0FE2655B50700AD1EE7 /* MessageSupport.swift in Sources */,
+				3D9E4FD329CCB69A00B42C83 /* NavStackWorkaround.swift in Sources */,
 				3D2CE49A25F8423800137E05 /* RootView.swift in Sources */,
 				3D3D6D112616447200FEEE0B /* Alert+DismissButton.swift in Sources */,
 				3DAFFD2E25F8951100B408AD /* MainView.swift in Sources */,
@@ -1346,7 +1350,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.4;
+				MARKETING_VERSION = 1.0.5;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.censocustody.mobile-demo-2";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1469,7 +1473,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.4;
+				MARKETING_VERSION = 1.0.5;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.censocustody.mobile-demo-2";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "Strike Mobile Demo 2 AppStore";
@@ -1598,7 +1602,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.4;
+				MARKETING_VERSION = 1.0.5;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.censocustody.mobile-dev";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1720,7 +1724,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.4;
+				MARKETING_VERSION = 1.0.5;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.censocustody.mobile-dev";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1847,7 +1851,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.4;
+				MARKETING_VERSION = 1.0.5;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.censocustody.mobile-demo";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Censo/Censo-Bridging-Header.h";
@@ -1967,7 +1971,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.4;
+				MARKETING_VERSION = 1.0.5;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.censocustody.mobile-demo";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Censo/Censo-Bridging-Header.h";
@@ -2097,7 +2101,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.4;
+				MARKETING_VERSION = 1.0.5;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.censocustody.mobile-stubbed";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG STUBBED";
@@ -2219,7 +2223,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.4;
+				MARKETING_VERSION = 1.0.5;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.censocustody.mobile-stubbed";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_OBJC_BRIDGING_HEADER = "Censo/Censo-Bridging-Header.h";
@@ -2413,7 +2417,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.4;
+				MARKETING_VERSION = 1.0.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.censocustody.mobile;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG PRODUCTION";
@@ -2446,7 +2450,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.4;
+				MARKETING_VERSION = 1.0.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.censocustody.mobile;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = PRODUCTION;

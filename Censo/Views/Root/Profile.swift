@@ -19,7 +19,7 @@ struct Profile: View {
     var onSignOut: () -> Void
 
     var body: some View {
-        NavigationView {
+        NavStackWorkaround {
             VStack {
                 List {
                     if let user = user {
