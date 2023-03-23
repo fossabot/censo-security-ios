@@ -64,7 +64,8 @@ extension ApprovalDispositionRequest {
              .vaultCreation,
              .addDevice,
              .addressBookUpdate,
-             .orgNameUpdate:
+             .orgNameUpdate,
+             .vaultUserRolesUpdate:
             let detailsJSONData = try JSONEncoder().encode(request.details)
             let privateKeys = try deviceSigner.privateKeys()
 
