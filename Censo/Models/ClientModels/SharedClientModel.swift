@@ -155,6 +155,30 @@ struct OrgNameUpdate: Codable, Equatable  {
     var newName: String
 }
 
+enum VaultUserRoleEnum: String, Codable {
+    case Viewer = "Viewer"
+    case TransactionSubmitter = "TransactionSubmitter"
+    
+    var description : String {
+        switch self {
+        case .Viewer: return "Viewer"
+        case .TransactionSubmitter: return "Transaction Submitter"
+        }
+    }
+}
+
+struct VaultUserRole: Codable, Equatable {
+    let name: String
+    let email: String
+    let jpegThumbnail: String?
+    let role: VaultUserRoleEnum
+}
+
+struct VaultUserRolesUpdate: Codable, Equatable  {
+    let vaultName: String
+    let userRoles: [VaultUserRole]
+}
+
 #if DEBUG
 extension ApprovalRequest {
     static var sample: Self {

@@ -54,6 +54,7 @@ enum ApprovalRequestType: Codable, Equatable {
     
     case orgAdminPolicyUpdate(OrgAdminPolicyUpdate)
     case orgNameUpdate(OrgNameUpdate)
+    case vaultUserRolesUpdate(VaultUserRolesUpdate)
     
     case addDevice(AddDevice)
 
@@ -117,6 +118,8 @@ enum ApprovalRequestType: Codable, Equatable {
             self = .orgAdminPolicyUpdate(try OrgAdminPolicyUpdate(from: decoder))
         case "OrgNameUpdate":
             self = .orgNameUpdate(try OrgNameUpdate(from: decoder))
+        case "VaultUserRolesUpdate":
+            self = .vaultUserRolesUpdate(try VaultUserRolesUpdate(from: decoder))
         case "AddDevice":
             self = .addDevice(try AddDevice(from: decoder))
         default:
@@ -199,6 +202,9 @@ enum ApprovalRequestType: Codable, Equatable {
         case .orgNameUpdate(let orgNameUpdate):
             try container.encode("OrgNameUpdate", forKey: .type)
             try orgNameUpdate.encode(to: encoder)
+        case .vaultUserRolesUpdate(let update):
+            try container.encode("VaultUserRolesUpdate", forKey: .type)
+            try update.encode(to: encoder)
         case .addDevice(let addDevice):
             try container.encode("AddDevice", forKey: .type)
             try addDevice.encode(to: encoder)
