@@ -96,7 +96,7 @@ struct Profile: View {
     }
 
     private func contactSupport() {
-        if let helpUrl = URL(string: "https://help.censocustody.com"), UIApplication.shared.canOpenURL(helpUrl) {
+        if let helpUrl = URL(string: "https://help.censo.co"), UIApplication.shared.canOpenURL(helpUrl) {
             UIApplication.shared.open(helpUrl)
         }
     }
