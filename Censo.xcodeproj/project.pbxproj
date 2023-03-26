@@ -151,6 +151,8 @@
 		6C0E3EF727EE6367002FEE7C /* SMP Bignum Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C0E3EF627EE6367002FEE7C /* SMP Bignum Extensions.swift */; };
 		6C0E3EF927EE64BA002FEE7C /* SMP.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C0E3EF827EE64BA002FEE7C /* SMP.swift */; };
 		6C1E8C99285118F900F7C337 /* BipTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C1E8C98285118F900F7C337 /* BipTests.swift */; };
+		6C72A2EA29CE367F00678912 /* VaultUserRolesUpdateRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C72A2E829CE367F00678912 /* VaultUserRolesUpdateRow.swift */; };
+		6C72A2EB29CE367F00678912 /* VaultUserRolesUpdateDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C72A2E929CE367F00678912 /* VaultUserRolesUpdateDetails.swift */; };
 		6C74FA0428526282005C8DE1 /* Bip44.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C74FA0328526282005C8DE1 /* Bip44.swift */; };
 		6C74FA07285AAD5F005C8DE1 /* BIP39 in Frameworks */ = {isa = PBXBuildFile; productRef = 6C74FA06285AAD5F005C8DE1 /* BIP39 */; };
 		6C7627BF29AE3DF900FE1CC2 /* OrgAdminPolicyRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C7627BE29AE3DF900FE1CC2 /* OrgAdminPolicyRow.swift */; };
@@ -355,6 +357,8 @@
 		6C0E3EF627EE6367002FEE7C /* SMP Bignum Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SMP Bignum Extensions.swift"; sourceTree = "<group>"; };
 		6C0E3EF827EE64BA002FEE7C /* SMP.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SMP.swift; sourceTree = "<group>"; };
 		6C1E8C98285118F900F7C337 /* BipTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BipTests.swift; sourceTree = "<group>"; };
+		6C72A2E829CE367F00678912 /* VaultUserRolesUpdateRow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VaultUserRolesUpdateRow.swift; sourceTree = "<group>"; };
+		6C72A2E929CE367F00678912 /* VaultUserRolesUpdateDetails.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VaultUserRolesUpdateDetails.swift; sourceTree = "<group>"; };
 		6C74FA0328526282005C8DE1 /* Bip44.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bip44.swift; sourceTree = "<group>"; };
 		6C7627BE29AE3DF900FE1CC2 /* OrgAdminPolicyRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrgAdminPolicyRow.swift; sourceTree = "<group>"; };
 		6C7627C029AE3E0C00FE1CC2 /* OrgAdminPolicyDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrgAdminPolicyDetails.swift; sourceTree = "<group>"; };
@@ -611,6 +615,7 @@
 		3D3D6D52261B959300FEEE0B /* ApprovalRequests */ = {
 			isa = PBXGroup;
 			children = (
+				6C72A2E729CE35DA00678912 /* VaultUserRolesUpdate */,
 				6C7627BD29AE3DB600FE1CC2 /* AddDevice */,
 				6C7627BC29AE3D8C00FE1CC2 /* OrgAdminPolicy */,
 				6C7627BB29AE3D7A00FE1CC2 /* VaultCreation */,
@@ -867,6 +872,15 @@
 				40F907A525DDC31B00B107B0 /* CensoApi+Mock.swift */,
 			);
 			name = Mock;
+			sourceTree = "<group>";
+		};
+		6C72A2E729CE35DA00678912 /* VaultUserRolesUpdate */ = {
+			isa = PBXGroup;
+			children = (
+				6C72A2E929CE367F00678912 /* VaultUserRolesUpdateDetails.swift */,
+				6C72A2E829CE367F00678912 /* VaultUserRolesUpdateRow.swift */,
+			);
+			path = VaultUserRolesUpdate;
 			sourceTree = "<group>";
 		};
 		6C7627BB29AE3D7A00FE1CC2 /* VaultCreation */ = {
@@ -1130,6 +1144,7 @@
 				40B093A625DF27CC00EA51C6 /* String+Masked.swift in Sources */,
 				3DC205C429882EA200BD8BB0 /* EthereumClientModel.swift in Sources */,
 				6CBA96D228E63CF8000A3727 /* Secp256k1PrivateKey.swift in Sources */,
+				6C72A2EB29CE367F00678912 /* VaultUserRolesUpdateDetails.swift in Sources */,
 				3D11520928216FCC007CD43D /* WalletTransferPolicyDetails.swift in Sources */,
 				6C74FA0428526282005C8DE1 /* Bip44.swift in Sources */,
 				6C7627C129AE3E0C00FE1CC2 /* OrgAdminPolicyDetails.swift in Sources */,
@@ -1263,6 +1278,7 @@
 				3D61A0FC2655B4FF00AD1EE7 /* SignedInNavigationView.swift in Sources */,
 				3D6334ED2885C299002CEC5A /* PenAndPaperRecovery.swift in Sources */,
 				3DC2F42925FAAA4E0061BB3A /* Networking+Environment.swift in Sources */,
+				6C72A2EA29CE367F00678912 /* VaultUserRolesUpdateRow.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

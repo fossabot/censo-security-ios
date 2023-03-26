@@ -64,7 +64,8 @@ struct PhotoSubmission: View {
                     image: imageData.base64EncodedString(),
                     type: .jpeg,
                     signature: try deviceKey.signature(for: Data(SHA256.hash(data: imageData))).base64EncodedString()
-                )
+                ),
+                replacingDeviceIdentifier: nil
             )
 
             inProgress = true

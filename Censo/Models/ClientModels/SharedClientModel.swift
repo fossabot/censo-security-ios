@@ -115,6 +115,17 @@ struct ApprovalPolicy: Codable, Equatable {
     let approvers: [SignerInfo]
 }
 
+struct ShardingParticipant: Codable, Equatable {
+    let participantId: String
+    let devicePublicKeys: [String]
+}
+
+struct ShardingPolicy: Codable, Equatable {
+    let policyRevisionGuid: String
+    let threshold: Int
+    let participants: [ShardingParticipant]
+}
+
 struct NftMetadata: Codable, Equatable {
     let name: String
 }
@@ -148,6 +159,8 @@ struct AddDevice: Codable, Equatable  {
     var deviceGuid: String
     var deviceKey: String
     var deviceType: DeviceType
+    var currentShardingPolicyRevisionGuid: String?
+    var targetShardingPolicy: ShardingPolicy?
 }
 
 struct OrgNameUpdate: Codable, Equatable  {

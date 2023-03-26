@@ -35,13 +35,39 @@ struct OrgAdminPolicyRow_Previews: PreviewProvider {
     }
 }
 
+extension ShardingParticipant {
+    static var sample: Self {
+        ShardingParticipant(
+            participantId: "01234",
+            devicePublicKeys: ["publicKey1"]
+        )
+    }
+}
+extension ShardingPolicy {
+    static var sample: Self {
+        ShardingPolicy(
+            policyRevisionGuid: "1234",
+            threshold: 1,
+            participants: [.sample])
+    }
+}
+
+extension ShardingPolicyChangeInfo {
+    static var sample: Self {
+        ShardingPolicyChangeInfo(
+            currentPolicyRevisionGuid: "01234",
+            targetPolicy: .sample)
+    }
+}
+
 extension OrgAdminPolicyUpdate {
     static var sample: Self {
         OrgAdminPolicyUpdate(
             approvalPolicy: .sample,
             currentOnChainPolicies: [.sample],
             signingData: [SigningData.ethereum(signingData: .sample)],
-            chainFees: [.sample, .sample2]
+            chainFees: [.sample, .sample2],
+            shardingPolicyChangeInfo: .sample
         )
     }
 }
