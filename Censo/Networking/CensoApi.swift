@@ -29,6 +29,9 @@ struct CensoApi {
         case registerPushToken(String, deviceIdentifier: String)
         case unregisterPushToken(deviceIdentifier: String)
         case connectDApp(code: String)
+        
+        case shards(policyRevisionId: String, userId: String?, deviceIdentifier: String)
+        case recoveryShards(deviceIdentifier: String)
     }
     
     /// The provider for the Moya Target definition for this API.
@@ -159,12 +162,6 @@ extension CensoApi {
         }
     }
     
-    struct ShardingPolicy: Codable {
-        let policyRevisionId: String
-        let threshold: Int
-        let admins: [String]
-    }
-    
     struct DeviceKeyInfo: Codable {
         let key: String
         let approved: Bool
@@ -177,10 +174,10 @@ extension CensoApi {
         let loginName: String
         let hasApprovalPermission: Bool
         let organization: Organization
-        let useStaticKey: Bool
         let publicKeys: [PublicKey]
         let deviceKeyInfo: DeviceKeyInfo?
         let shardingPolicy: ShardingPolicy?
+        let canAddSigners: Bool
     }
 
     struct PublicKey: Codable {
@@ -213,17 +210,44 @@ extension CensoApi {
         let publicKey: String
         let deviceType: DeviceType
         let userImage: UserImage
+        let replacingDeviceIdentifier: String?
+    }
+    
+    struct ShardCopy: Codable {
+        let encryptionPublicKey: String
+        let encryptedData: String
     }
     
     struct Shard: Codable {
-        let adminPublicKey: String
-        let encryptedData: String
+        let participantId: String
+        let shardCopies: [ShardCopy]
+        let shardId: String?
+        let shardParentId: String?
     }
 
     struct Share: Codable {
-        let shareId: String
         let policyRevisionId: String
         let shards: [Shard]
+    }
+    
+    struct RecoveryShard: Codable {
+        let shardId: String
+        let encryptedData: String
+    }
+    
+    struct AncestorShard: Codable {
+        let shardId: String
+        let partitionId: String
+        let shardParentId: String?
+    }
+    
+    struct GetShardsResponse: Codable {
+        let shards: [Shard]
+    }
+
+    struct GetRecoveryShardsResponse: Codable {
+        let shards: [Shard]
+        let ancestors: [AncestorShard]
     }
     
     struct SignersInfo: Codable {
@@ -265,6 +289,8 @@ extension CensoApi {
         var requestID: String
         var approvalDisposition: ApprovalDisposition
         var signatures: [SignatureInfo]
+        var shards: [Shard]?
+        var recoveryShards: [RecoveryShard]?
     }
 }
 
@@ -349,6 +375,10 @@ extension CensoApi.Target: Moya.TargetType {
             return ""
         case .resetPassword(let email):
             return "email/\(email.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? "[INVALID_EMAIL]")/reset"
+        case .shards:
+            return "v1/shards"
+        case .recoveryShards:
+            return "v1/recovery-shards"
         }
     }
     
@@ -356,7 +386,9 @@ extension CensoApi.Target: Moya.TargetType {
         switch self {
         case .verifyUser,
              .approvalRequests,
-             .minVersion:
+             .minVersion,
+             .shards,
+             .recoveryShards:
             return .get
         case .connectDApp,
              .addWalletSigners,
@@ -379,8 +411,14 @@ extension CensoApi.Target: Moya.TargetType {
         case .verifyUser,
              .approvalRequests,
              .resetPassword,
-             .minVersion:
+             .minVersion,
+             .recoveryShards:
             return .requestPlain
+        case .shards(let policyRevisionId, let userId, _):
+             var params: [String: Any] = [:]
+             params["policy-revision-id"] = policyRevisionId
+             params["userId"] = userId
+             return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
         case .addWalletSigners(let signers, _):
             return .requestJSONEncodable(signers)
         case .registerPushToken(let token, let deviceIdentifier):
@@ -433,7 +471,9 @@ extension CensoApi.Target: Moya.TargetType {
              .boostrapDeviceAndSigners(_, let devicePublicKey),
              .registerApprovalDisposition(_, let devicePublicKey),
              .registerDevice(_, let devicePublicKey),
-             .verifyUser(.some(let devicePublicKey)):
+             .verifyUser(.some(let devicePublicKey)),
+             .shards(_, _, let devicePublicKey),
+             .recoveryShards(let devicePublicKey):
             return [
                 "Content-Type": "application/json",
                 "X-IsApi": "true",

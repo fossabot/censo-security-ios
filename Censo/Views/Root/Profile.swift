@@ -138,10 +138,10 @@ extension CensoApi.User {
                 id: "testOrg",
                 name: "Hollywood Securities"
             ),
-            useStaticKey: false,
             publicKeys: [],
             deviceKeyInfo: nil,
-            shardingPolicy: nil
+            shardingPolicy: nil,
+            canAddSigners: true
         )
     }
 }

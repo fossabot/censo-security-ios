@@ -87,9 +87,15 @@ struct VaultCreation: Codable, Equatable  {
     var chainFees: [ChainFee]
 }
 
+struct ShardingPolicyChangeInfo : Codable, Equatable  {
+    var currentPolicyRevisionGuid: String
+    var targetPolicy: ShardingPolicy
+}
+
 struct OrgAdminPolicyUpdate: Codable, Equatable  {
     var approvalPolicy: VaultApprovalPolicy
     var currentOnChainPolicies: [OnChainPolicy]
     var signingData: [SigningData]
     var chainFees: [ChainFee]
+    var shardingPolicyChangeInfo: ShardingPolicyChangeInfo
 }
