@@ -121,6 +121,18 @@ struct ApprovalRequestItem: View {
             } detail: {
                 VaultUserRolesUpdateDetails(request: request, update: update)
             }
+        case .suspendUser(let suspendUser):
+            ApprovalRequestRow(deviceSigner: deviceSigner, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
+                SuspendUserRow(requestType: request.details, suspendUser: suspendUser)
+            } detail: {
+                SuspendUserDetails(request: request, suspendUser: suspendUser)
+            }
+        case .restoreUser(let restoreUser):
+            ApprovalRequestRow(deviceSigner: deviceSigner, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
+                RestoreUserRow(requestType: request.details, restoreUser: restoreUser)
+            } detail: {
+                RestoreUserDetails(request: request, restoreUser: restoreUser)
+            }
         default:
             UnknownRequestRow(request: request, timerPublisher: timerPublisher)
         }

@@ -192,6 +192,18 @@ struct VaultUserRolesUpdate: Codable, Equatable  {
     let userRoles: [VaultUserRole]
 }
 
+struct SuspendUser: Codable, Equatable  {
+    let name: String
+    let email: String
+    let jpegThumbnail: String?
+}
+
+struct RestoreUser: Codable, Equatable  {
+    let name: String
+    let email: String
+    let jpegThumbnail: String?
+}
+
 #if DEBUG
 extension ApprovalRequest {
     static var sample: Self {
