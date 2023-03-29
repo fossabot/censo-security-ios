@@ -195,6 +195,9 @@
 		BD072F78292E6DF100B36C5A /* String+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD072F77292E6DF100B36C5A /* String+Hex.swift */; };
 		BD072F7B292E7DF800B36C5A /* EvmTransferTransactionBuilderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD072F7A292E7DF800B36C5A /* EvmTransferTransactionBuilderTests.swift */; };
 		BD072F7D292E7E9E00B36C5A /* EvmTransferTransactionBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD072F7C292E7E9E00B36C5A /* EvmTransferTransactionBuilder.swift */; };
+		E42F565D29D3289500C6922B /* SuspendUserRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = E42F565C29D3289500C6922B /* SuspendUserRow.swift */; };
+		E42F565F29D3297900C6922B /* UserDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = E42F565E29D3297900C6922B /* UserDetails.swift */; };
+		E42F566129D32B8B00C6922B /* RestoreUserRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = E42F566029D32B8B00C6922B /* RestoreUserRow.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -400,6 +403,9 @@
 		BD072F77292E6DF100B36C5A /* String+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Hex.swift"; sourceTree = "<group>"; };
 		BD072F7A292E7DF800B36C5A /* EvmTransferTransactionBuilderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvmTransferTransactionBuilderTests.swift; sourceTree = "<group>"; };
 		BD072F7C292E7E9E00B36C5A /* EvmTransferTransactionBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvmTransferTransactionBuilder.swift; sourceTree = "<group>"; };
+		E42F565C29D3289500C6922B /* SuspendUserRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuspendUserRow.swift; sourceTree = "<group>"; };
+		E42F565E29D3297900C6922B /* UserDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDetails.swift; sourceTree = "<group>"; };
+		E42F566029D32B8B00C6922B /* RestoreUserRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestoreUserRow.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -615,6 +621,9 @@
 		3D3D6D52261B959300FEEE0B /* ApprovalRequests */ = {
 			isa = PBXGroup;
 			children = (
+				E44C2B2729D43D88000D9E5C /* UserDetails */,
+				E42F565B29D3287800C6922B /* RestoreUser */,
+				E42F565A29D3286D00C6922B /* SuspendUser */,
 				6C72A2E729CE35DA00678912 /* VaultUserRolesUpdate */,
 				6C7627BD29AE3DB600FE1CC2 /* AddDevice */,
 				6C7627BC29AE3D8C00FE1CC2 /* OrgAdminPolicy */,
@@ -969,6 +978,30 @@
 			path = PasswordReset;
 			sourceTree = "<group>";
 		};
+		E42F565A29D3286D00C6922B /* SuspendUser */ = {
+			isa = PBXGroup;
+			children = (
+				E42F565C29D3289500C6922B /* SuspendUserRow.swift */,
+			);
+			path = SuspendUser;
+			sourceTree = "<group>";
+		};
+		E42F565B29D3287800C6922B /* RestoreUser */ = {
+			isa = PBXGroup;
+			children = (
+				E42F566029D32B8B00C6922B /* RestoreUserRow.swift */,
+			);
+			path = RestoreUser;
+			sourceTree = "<group>";
+		};
+		E44C2B2729D43D88000D9E5C /* UserDetails */ = {
+			isa = PBXGroup;
+			children = (
+				E42F565E29D3297900C6922B /* UserDetails.swift */,
+			);
+			path = UserDetails;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1135,6 +1168,7 @@
 				3DAF53BC262E1421000DD558 /* Countdown.swift in Sources */,
 				3D6334F32885C299002CEC5A /* PasswordManager.swift in Sources */,
 				3D6334F92885C2C9002CEC5A /* CensoProgressView.swift in Sources */,
+				E42F565D29D3289500C6922B /* SuspendUserRow.swift in Sources */,
 				3DE1610A296F98CD00F48930 /* ApprovalDispositionRequest.swift in Sources */,
 				3DBE36EF28B539C40096850B /* PenAndPaperSignInRecovery.swift in Sources */,
 				3DBC44E3280F17660016E1AB /* LoginRow.swift in Sources */,
@@ -1186,6 +1220,7 @@
 				3DED50D229103D1B00904DBA /* Keychain+Storage.swift in Sources */,
 				6C8CE73D298B5FC600834978 /* EvmPolicyHelper.swift in Sources */,
 				3D39B3EA2912E89A00948D3A /* PublicKeysStorage.swift in Sources */,
+				E42F565F29D3297900C6922B /* UserDetails.swift in Sources */,
 				3D6334F02885C299002CEC5A /* PasswordManagerRecovery.swift in Sources */,
 				3D517A532965F88600A2733A /* CameraPreview.swift_old in Sources */,
 				3DAA26F0262F5147000F453D /* PrimaryButtonStyle.swift in Sources */,
@@ -1272,6 +1307,7 @@
 				3DC205C829887B6400BD8BB0 /* ApprovalRequestType+Language.swift in Sources */,
 				3D3D6D162616449C00FEEE0B /* HelpView.swift in Sources */,
 				3D845E0D2910159B000C9E81 /* PrivateKeys.swift in Sources */,
+				E42F566129D32B8B00C6922B /* RestoreUserRow.swift in Sources */,
 				3D115211282176FD007CD43D /* AddressBookUpdateRow.swift in Sources */,
 				3DC2F42D25FAAFD00061BB3A /* MoyaLoader.swift in Sources */,
 				BD072F78292E6DF100B36C5A /* String+Hex.swift in Sources */,
