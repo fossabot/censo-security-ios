@@ -65,7 +65,6 @@
 		3D4BFF64299D36540031F99B /* NotificationCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4BFF63299D36540031F99B /* NotificationCheck.swift */; };
 		3D517A502965D6C000A2733A /* PhotoCaptureController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D517A4E2965D6C000A2733A /* PhotoCaptureController.swift */; };
 		3D517A512965D6C000A2733A /* SecureEnclave.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D517A4F2965D6C000A2733A /* SecureEnclave.swift */; };
-		3D517A532965F88600A2733A /* CameraPreview.swift_old in Sources */ = {isa = PBXBuildFile; fileRef = 3D517A522965F88600A2733A /* CameraPreview.swift_old */; };
 		3D61A0FC2655B4FF00AD1EE7 /* SignedInNavigationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D61A0FA2655B4FF00AD1EE7 /* SignedInNavigationView.swift */; };
 		3D61A0FE2655B50700AD1EE7 /* MessageSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D61A0FD2655B50700AD1EE7 /* MessageSupport.swift */; };
 		3D6334EC2885C299002CEC5A /* PenAndPaperConfirm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6334E42885C298002CEC5A /* PenAndPaperConfirm.swift */; };
@@ -280,7 +279,6 @@
 		3D4BFF63299D36540031F99B /* NotificationCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationCheck.swift; sourceTree = "<group>"; };
 		3D517A4E2965D6C000A2733A /* PhotoCaptureController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoCaptureController.swift; sourceTree = "<group>"; };
 		3D517A4F2965D6C000A2733A /* SecureEnclave.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecureEnclave.swift; sourceTree = "<group>"; };
-		3D517A522965F88600A2733A /* CameraPreview.swift_old */ = {isa = PBXFileReference; lastKnownFileType = text; path = CameraPreview.swift_old; sourceTree = "<group>"; };
 		3D61A0FA2655B4FF00AD1EE7 /* SignedInNavigationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignedInNavigationView.swift; sourceTree = "<group>"; };
 		3D61A0FD2655B50700AD1EE7 /* MessageSupport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageSupport.swift; sourceTree = "<group>"; };
 		3D6334E42885C298002CEC5A /* PenAndPaperConfirm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PenAndPaperConfirm.swift; sourceTree = "<group>"; };
@@ -849,7 +847,6 @@
 		40328E0E2593ED9900F2EE41 /* Censo */ = {
 			isa = PBXGroup;
 			children = (
-				3D517A522965F88600A2733A /* CameraPreview.swift_old */,
 				40EBD48F25CB324B00756065 /* Censo.entitlements */,
 				40CB67AC25C1076300DB15D6 /* Configuration.swift */,
 				40328E0F2593ED9900F2EE41 /* CensoApp.swift */,
@@ -1265,7 +1262,6 @@
 				3D39B3EA2912E89A00948D3A /* PublicKeysStorage.swift in Sources */,
 				E42F565F29D3297900C6922B /* UserDetails.swift in Sources */,
 				3D6334F02885C299002CEC5A /* PasswordManagerRecovery.swift in Sources */,
-				3D517A532965F88600A2733A /* CameraPreview.swift_old in Sources */,
 				3DAA26F0262F5147000F453D /* PrimaryButtonStyle.swift in Sources */,
 				3D10290929E06D3100EC5A6C /* BootstrapPhotoSubmission.swift in Sources */,
 				3D1AF113298C2CE700A01E43 /* DeviceKeyRegistration.swift in Sources */,
