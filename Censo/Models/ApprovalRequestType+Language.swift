@@ -73,6 +73,8 @@ extension ApprovalRequestType {
             return "Update User Roles in Vault"
         case .addDevice:
             return "Add New Device"
+        case .removeDevice:
+            return "Remove Device"
         case .suspendUser:
             return "Suspend User"
         case .restoreUser:

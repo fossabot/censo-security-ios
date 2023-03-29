@@ -9,9 +9,9 @@ import Foundation
 import SwiftUI
 
 
-struct AddDeviceRow: View {
+struct AddOrRemoveDeviceRow: View {
     var requestType: ApprovalRequestType
-    var addDevice: AddDevice
+    var userDevice: UserDevice
 
     var body: some View {
         VStack(spacing: 8) {
@@ -23,7 +23,7 @@ struct AddDeviceRow: View {
                 .minimumScaleFactor(0.25)
                 .padding(EdgeInsets(top: 15, leading: 20, bottom: 0, trailing: 20))
             
-            Text(addDevice.email)
+            Text(userDevice.email)
                 .font(.title3)
                 .foregroundColor(Color.Censo.primaryForeground.opacity(0.7))
                 .padding(EdgeInsets(top: 2, leading: 20, bottom: 20, trailing: 20))
@@ -35,7 +35,7 @@ struct AddDeviceRow: View {
 #if DEBUG
 struct AddDeviceRow_Previews: PreviewProvider {
     static var previews: some View {
-        AddDeviceRow(requestType: .addDevice(.sample), addDevice: .sample)
+        AddOrRemoveDeviceRow(requestType: .addDevice(.sample), userDevice: AddDevice.sample)
             .preferredColorScheme(.light)
     }
 }

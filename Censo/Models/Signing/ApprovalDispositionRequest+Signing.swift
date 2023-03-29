@@ -63,6 +63,7 @@ extension ApprovalDispositionRequest {
              .bitcoinWalletNameUpdate,
              .vaultCreation,
              .addDevice,
+             .removeDevice,
              .addressBookUpdate,
              .orgNameUpdate,
              .vaultUserRolesUpdate,

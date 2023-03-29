@@ -80,6 +80,7 @@ class CensoTests: XCTestCase {
                  .polygonWalletCreation,
                  .addressBookUpdate,
                  .addDevice,
+                 .removeDevice,
                  .vaultCreation,
                  .vaultPolicyUpdate,
                  .vaultNameUpdate,
