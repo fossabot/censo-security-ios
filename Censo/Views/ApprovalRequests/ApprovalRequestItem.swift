@@ -121,6 +121,18 @@ struct ApprovalRequestItem: View {
             } detail: {
                 VaultUserRolesUpdateDetails(request: request, update: update)
             }
+        case .suspendUser(let suspendUser):
+            ApprovalRequestRow(deviceSigner: deviceSigner, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
+                SuspendUserRow(requestType: request.details, suspendUser: suspendUser)
+            } detail: {
+                UserDetails(request: request, user: suspendUser as UserInfo)
+            }
+        case .restoreUser(let restoreUser):
+            ApprovalRequestRow(deviceSigner: deviceSigner, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
+                RestoreUserRow(requestType: request.details, restoreUser: restoreUser)
+            } detail: {
+                UserDetails(request: request, user: restoreUser as UserInfo)
+            }
         default:
             UnknownRequestRow(request: request, timerPublisher: timerPublisher)
         }
@@ -317,3 +329,11 @@ protocol TransferPolicyUpdate {
 extension EthereumTransferPolicyUpdate: TransferPolicyUpdate {}
 extension PolygonTransferPolicyUpdate: TransferPolicyUpdate {}
 
+protocol UserInfo {
+    var name: String { get }
+    var email: String { get }
+    var jpegThumbnail: String? { get }
+}
+
+extension SuspendUser: UserInfo { }
+extension RestoreUser: UserInfo { }

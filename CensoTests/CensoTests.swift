@@ -84,7 +84,9 @@ class CensoTests: XCTestCase {
                  .vaultNameUpdate,
                  .orgNameUpdate,
                  .orgAdminPolicyUpdate,
-                 .vaultUserRolesUpdate:
+                 .vaultUserRolesUpdate,
+                 .suspendUser,
+                 .restoreUser:
                 XCTAssertEqual(request.details,
                                Mock.decodeJsonType(data: try JSONEncoder().encode(request.details)))
             default:
