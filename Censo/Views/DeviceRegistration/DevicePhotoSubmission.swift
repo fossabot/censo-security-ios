@@ -1,5 +1,5 @@
 //
-//  PhotoSubmission.swift
+//  DevicePhotoSubmission.swift
 //  Censo
 //
 //  Created by Ata Namvari on 2023-02-02.
@@ -9,7 +9,7 @@ import SwiftUI
 import Moya
 import CryptoKit
 
-struct PhotoSubmission: View {
+struct DevicePhotoSubmission: View {
     @Environment(\.censoApi) var censoApi
 
     @State private var inProgress = false

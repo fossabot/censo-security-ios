@@ -8,19 +8,17 @@
 import Foundation
 import Security
 
-struct DeviceKey {
-    private let secKey: SecKey
+protocol SecureEnclaveKey {
+    var secKey: SecKey { get }
+}
 
-    fileprivate init(secKey: SecKey) {
-        self.secKey = secKey
-    }
+enum SecKeyError: Error {
+    case invalidKey
+    case algorithmNotSupported
+}
 
-    enum SecKeyError: Error {
-        case invalidKey
-        case algorithmNotSupported
-    }
-
-    func publicExternalRepresentation() throws -> Data {
+extension SecureEnclaveKey {
+    public func publicExternalRepresentation() throws -> Data {
         guard let publicKey = SecKeyCopyPublicKey(secKey) else {
             throw SecKeyError.invalidKey
         }
@@ -34,7 +32,7 @@ struct DeviceKey {
         return data!
     }
 
-    func encrypt(data: Data) throws -> Data {
+    public func encrypt(data: Data) throws -> Data {
         guard let publicKey = SecKeyCopyPublicKey(secKey) else {
             throw SecKeyError.invalidKey
         }
@@ -56,7 +54,7 @@ struct DeviceKey {
         return encryptedData!
     }
 
-    func decrypt(data: Data) throws -> Data {
+    public func decrypt(data: Data) throws -> Data {
         let algorithm: SecKeyAlgorithm = .eciesEncryptionCofactorVariableIVX963SHA256AESGCM
 
         guard SecKeyIsAlgorithmSupported(secKey, .decrypt, algorithm) else {
@@ -98,6 +96,16 @@ struct DeviceKey {
     }
 }
 
+// DeviceKey
+
+struct DeviceKey: SecureEnclaveKey {
+    let secKey: SecKey
+
+    fileprivate init(secKey: SecKey) {
+        self.secKey = secKey
+    }
+}
+
 extension SecureEnclaveWrapper {
     static func deviceKeyIdentifier(email: String) -> String {
         let email = email.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
@@ -118,6 +126,40 @@ extension SecureEnclaveWrapper {
         } else {
             let secKey = try makeAndStoreKey(name: deviceKeyIdentifier(email: email))
             return DeviceKey(secKey: secKey)
+        }
+    }
+}
+
+// Bootstrap Key
+
+struct BootstrapKey: SecureEnclaveKey {
+    let secKey: SecKey
+
+    fileprivate init(secKey: SecKey) {
+        self.secKey = secKey
+    }
+}
+
+extension SecureEnclaveWrapper {
+    static func bootstrapKeyIdentifier(email: String) -> String {
+        let email = email.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
+        return "bootstrapKey-\(email)"
+    }
+
+    static func bootstrapKey(email: String) -> BootstrapKey? {
+        guard let secKey = loadKey(name: bootstrapKeyIdentifier(email: email)) else {
+            return nil
+        }
+
+        return BootstrapKey(secKey: secKey)
+    }
+
+    static func generateBootstrapKey(email: String) throws -> BootstrapKey {
+        if let bootstrapKey = bootstrapKey(email: email) {
+            return bootstrapKey
+        } else {
+            let secKey = try makeAndStoreKey(name: bootstrapKeyIdentifier(email: email))
+            return BootstrapKey(secKey: secKey)
         }
     }
 }

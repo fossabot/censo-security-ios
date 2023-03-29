@@ -7,18 +7,18 @@
 
 import SwiftUI
 
-struct PhotoCapture: View {
+struct PhotoCapture<Submission>: View where Submission : View {
+    typealias RetakeClosure = () -> Void
+
     @StateObject private var controller = PhotoCaptureController()
 
     var deviceKey: DeviceKey
-    var onSuccess: () -> Void
+    @ViewBuilder var submission: (UIImage, @escaping RetakeClosure) -> Submission
 
     var body: some View {
         switch (controller.photo, controller.state) {
         case (.some(let uiImage), _):
-            PhotoSubmission(uiImage: uiImage, deviceKey: deviceKey) {
-                onSuccess()
-            } onRetake: {
+            submission(uiImage) {
                 controller.photo = nil
             }
         case (.none, .notAvailable):

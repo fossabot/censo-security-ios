@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct DeviceRegistration<Loading, Success>: View where Loading : View, Success : View {
+struct DeviceKeyGeneration<Loading, Success>: View where Loading : View, Success : View {
     enum Storage {
         case failedToCreate(Error)
         case success(DeviceKey?)

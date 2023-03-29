@@ -122,17 +122,23 @@ extension CensoApi.SignersInfo {
             )
         ]
 
-        let bytes = signers
+        self.signature = try deviceKey.signature(for: signers.dataToSign).base64EncodedString()
+        self.share = nil
+    }
+}
+
+extension Array where Element == CensoApi.WalletSigner {
+    var dataToSign: Data {
+        let bytes = self
             .map(\.publicKey)
             .map { key in
                 Base58.decode(key)
             }
-            .flatMap {
-                $0
+            .flatMap { bytes in
+                bytes
             }
 
-        self.signature = try deviceKey.signature(for: Data(bytes)).base64EncodedString()
-        self.share = nil
+        return Data(bytes)
     }
 }
 

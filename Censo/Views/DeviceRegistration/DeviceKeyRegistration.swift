@@ -31,8 +31,13 @@ struct DeviceKeyRegistration<Content>: View where Content : View {
                     loadPublicKey()
                 }
         case .success(let data) where data.base58String != user.deviceKeyInfo?.key:
-            PhotoCapture(deviceKey: deviceKey) {
-                onSuccess()
+            PhotoCapture(deviceKey: deviceKey) { uiImage, retakeClosure in
+                DevicePhotoSubmission(
+                    uiImage: uiImage,
+                    deviceKey: deviceKey,
+                    onSuccess: onSuccess,
+                    onRetake: retakeClosure
+                )
             }
         case .success:
             content()

@@ -13,7 +13,7 @@ struct MainView: View {
     var onSignOut: () -> Void
 
     var body: some View {
-        DeviceRegistration(email: email) {
+        DeviceKeyGeneration(email: email) {
             ProgressView()
         } content: { deviceKey in
             UserVerification(deviceKey: deviceKey, onSignOut: onSignOut)
@@ -39,19 +39,38 @@ struct UserVerification: View {
         case .failure(let error):
             RetryView(error: error, action: reload)
         case .success(let user):
-            DeviceKeyRegistration(user: user, deviceKey: deviceKey) {
-                reload()
-            } content: {
-                PublicKeysStorage(email: user.loginName, deviceKey: deviceKey) {
+            if user.shardingPolicy == nil {
+                BootstrapKeyGeneration(email: user.loginName) {
                     ProgressView()
-                } success: { keyStore, reloadPublicKeys in
-                    RegistrationView(
-                        user: user,
-                        deviceKey: deviceKey,
-                        keyStore: keyStore,
-                        onReloadUser: reload,
-                        onReloadPublicKeys: reloadPublicKeys
-                    )
+                } content: { bootstrapKey in
+                    PhotoCapture(deviceKey: deviceKey) { uiImage, retakeClosure in
+                        BootstrapPhotoSubmission(
+                            email: user.loginName,
+                            uiImage: uiImage,
+                            deviceKey: deviceKey,
+                            bootstrapKey: bootstrapKey,
+                            onSuccess: reload,
+                            onRetake: retakeClosure
+                        )
+                    }
+                }
+            } else {
+                DeviceKeyRegistration(
+                    user: user,
+                    deviceKey: deviceKey,
+                    onSuccess: reload
+                ) {
+                    PublicKeysStorage(email: user.loginName, deviceKey: deviceKey) {
+                        ProgressView()
+                    } success: { keyStore, reloadPublicKeys in
+                        RegistrationView(
+                            user: user,
+                            deviceKey: deviceKey,
+                            keyStore: keyStore,
+                            onReloadUser: reload,
+                            onReloadPublicKeys: reloadPublicKeys
+                        )
+                    }
                 }
             }
         }
