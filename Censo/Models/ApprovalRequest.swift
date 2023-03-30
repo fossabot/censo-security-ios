@@ -60,6 +60,7 @@ enum ApprovalRequestType: Codable, Equatable {
     case enableRecoveryContract(EnableRecoveryContract)
 
     case addDevice(AddDevice)
+    case removeDevice(RemoveDevice)
 
     case ethereumDAppTransactionRequest(EthereumDAppTransactionRequest)
 
@@ -125,6 +126,8 @@ enum ApprovalRequestType: Codable, Equatable {
             self = .vaultUserRolesUpdate(try VaultUserRolesUpdate(from: decoder))
         case "AddDevice":
             self = .addDevice(try AddDevice(from: decoder))
+        case "RemoveDevice":
+            self = .removeDevice(try RemoveDevice(from: decoder))
         case "SuspendUser":
             self = .suspendUser(try SuspendUser(from: decoder))
         case "RestoreUser":
@@ -217,6 +220,9 @@ enum ApprovalRequestType: Codable, Equatable {
         case .addDevice(let addDevice):
             try container.encode("AddDevice", forKey: .type)
             try addDevice.encode(to: encoder)
+        case .removeDevice(let removeDevice):
+            try container.encode("RemoveDevice", forKey: .type)
+            try removeDevice.encode(to: encoder)
         case .ethereumDAppTransactionRequest(let dAppTransactionRequest):
             try container.encode("EthereumDAppTransactionRequest", forKey: .type)
             try dAppTransactionRequest.encode(to: encoder)

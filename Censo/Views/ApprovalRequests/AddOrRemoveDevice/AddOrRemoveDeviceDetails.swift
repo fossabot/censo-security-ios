@@ -8,18 +8,18 @@
 import Foundation
 import SwiftUI
 
-struct AddDeviceDetails: View {
+struct AddOrRemoveDeviceDetails: View {
     var request: ApprovalRequest
-    var addDevice: AddDevice
+    var userDevice: UserDevice
 
     var body: some View {
         VStack(alignment: .center, spacing: 10) {
             FactList {
-                Fact("Name", addDevice.name)
-                Fact("Email", addDevice.email)
-                Fact("Device Type", addDevice.deviceType.description)
+                Fact("Name", userDevice.name)
+                Fact("Email", userDevice.email)
+                Fact("Device Type", userDevice.deviceType.description)
             }
-            if let data = Data(base64Encoded: addDevice.jpegThumbnail), let uiImage = UIImage(data: data) {
+            if let data = Data(base64Encoded: userDevice.jpegThumbnail), let uiImage = UIImage(data: data) {
                 Image(uiImage: uiImage)
             }
         }
@@ -29,7 +29,7 @@ struct AddDeviceDetails: View {
 #if DEBUG
 struct AddDeviceDetails_Previews: PreviewProvider {
     static var previews: some View {
-        AddDeviceDetails(request: .sample, addDevice: .sample)
+        AddOrRemoveDeviceDetails(request: .sample, userDevice: AddDevice.sample)
     }
 }
 #endif

@@ -158,8 +158,8 @@
 		6C7627C129AE3E0C00FE1CC2 /* OrgAdminPolicyDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C7627C029AE3E0C00FE1CC2 /* OrgAdminPolicyDetails.swift */; };
 		6C7627C329AE673500FE1CC2 /* VaultCreationRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C7627C229AE673500FE1CC2 /* VaultCreationRow.swift */; };
 		6C7627C529AE674600FE1CC2 /* VaultCreationDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C7627C429AE674600FE1CC2 /* VaultCreationDetails.swift */; };
-		6C7627C729AE695100FE1CC2 /* AddDeviceRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C7627C629AE695100FE1CC2 /* AddDeviceRow.swift */; };
-		6C7627C929AE6B5A00FE1CC2 /* AddDeviceDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C7627C829AE6B5A00FE1CC2 /* AddDeviceDetails.swift */; };
+		6C7627C729AE695100FE1CC2 /* AddOrRemoveDeviceRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C7627C629AE695100FE1CC2 /* AddOrRemoveDeviceRow.swift */; };
+		6C7627C929AE6B5A00FE1CC2 /* AddOrRemoveDeviceDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C7627C829AE6B5A00FE1CC2 /* AddOrRemoveDeviceDetails.swift */; };
 		6C8BA242298CC08700D24E00 /* EvmWhitelistHelperTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C8BA241298CC08700D24E00 /* EvmWhitelistHelperTests.swift */; };
 		6C8BA246298EE78A00D24E00 /* MultichainSign.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C8BA245298EE78A00D24E00 /* MultichainSign.swift */; };
 		6C8BA248298EEC1F00D24E00 /* MultichainClientModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C8BA247298EEC1F00D24E00 /* MultichainClientModel.swift */; };
@@ -367,8 +367,8 @@
 		6C7627C029AE3E0C00FE1CC2 /* OrgAdminPolicyDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrgAdminPolicyDetails.swift; sourceTree = "<group>"; };
 		6C7627C229AE673500FE1CC2 /* VaultCreationRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VaultCreationRow.swift; sourceTree = "<group>"; };
 		6C7627C429AE674600FE1CC2 /* VaultCreationDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VaultCreationDetails.swift; sourceTree = "<group>"; };
-		6C7627C629AE695100FE1CC2 /* AddDeviceRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddDeviceRow.swift; sourceTree = "<group>"; };
-		6C7627C829AE6B5A00FE1CC2 /* AddDeviceDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddDeviceDetails.swift; sourceTree = "<group>"; };
+		6C7627C629AE695100FE1CC2 /* AddOrRemoveDeviceRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddOrRemoveDeviceRow.swift; sourceTree = "<group>"; };
+		6C7627C829AE6B5A00FE1CC2 /* AddOrRemoveDeviceDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddOrRemoveDeviceDetails.swift; sourceTree = "<group>"; };
 		6C8BA241298CC08700D24E00 /* EvmWhitelistHelperTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EvmWhitelistHelperTests.swift; sourceTree = "<group>"; };
 		6C8BA245298EE78A00D24E00 /* MultichainSign.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultichainSign.swift; sourceTree = "<group>"; };
 		6C8BA247298EEC1F00D24E00 /* MultichainClientModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultichainClientModel.swift; sourceTree = "<group>"; };
@@ -627,7 +627,7 @@
 				E42F565B29D3287800C6922B /* RestoreUser */,
 				E42F565A29D3286D00C6922B /* SuspendUser */,
 				6C72A2E729CE35DA00678912 /* VaultUserRolesUpdate */,
-				6C7627BD29AE3DB600FE1CC2 /* AddDevice */,
+				6C7627BD29AE3DB600FE1CC2 /* AddOrRemoveDevice */,
 				6C7627BC29AE3D8C00FE1CC2 /* OrgAdminPolicy */,
 				6C7627BB29AE3D7A00FE1CC2 /* VaultCreation */,
 				6CD5B4A028A453B400CD1A62 /* PasswordReset */,
@@ -911,13 +911,13 @@
 			path = OrgAdminPolicy;
 			sourceTree = "<group>";
 		};
-		6C7627BD29AE3DB600FE1CC2 /* AddDevice */ = {
+		6C7627BD29AE3DB600FE1CC2 /* AddOrRemoveDevice */ = {
 			isa = PBXGroup;
 			children = (
-				6C7627C629AE695100FE1CC2 /* AddDeviceRow.swift */,
-				6C7627C829AE6B5A00FE1CC2 /* AddDeviceDetails.swift */,
+				6C7627C629AE695100FE1CC2 /* AddOrRemoveDeviceRow.swift */,
+				6C7627C829AE6B5A00FE1CC2 /* AddOrRemoveDeviceDetails.swift */,
 			);
-			path = AddDevice;
+			path = AddOrRemoveDevice;
 			sourceTree = "<group>";
 		};
 		6C8CE73A298B5EC100834978 /* evm */ = {
@@ -1153,7 +1153,7 @@
 				3D11520E2821732E007CD43D /* NameUpdateDetails.swift in Sources */,
 				3DAF53B8262E1402000DD558 /* ApprovalRequestDetails.swift in Sources */,
 				3D3D6D4F261B957800FEEE0B /* RetryView.swift in Sources */,
-				6C7627C729AE695100FE1CC2 /* AddDeviceRow.swift in Sources */,
+				6C7627C729AE695100FE1CC2 /* AddOrRemoveDeviceRow.swift in Sources */,
 				3DB7F9C026D6C2CD00A49B4E /* UnknownRequestRow.swift in Sources */,
 				40CB67F925C3195D00DB15D6 /* Mock.swift in Sources */,
 				3DAF53BC262E1421000DD558 /* Countdown.swift in Sources */,
@@ -1261,7 +1261,7 @@
 				40F907A625DDC31B00B107B0 /* CensoApi+Mock.swift in Sources */,
 				3D1C762227DA850A0016BB32 /* Base58.swift in Sources */,
 				3D6334FA2885C2C9002CEC5A /* FocusedOnAppear.swift in Sources */,
-				6C7627C929AE6B5A00FE1CC2 /* AddDeviceDetails.swift in Sources */,
+				6C7627C929AE6B5A00FE1CC2 /* AddOrRemoveDeviceDetails.swift in Sources */,
 				6CBA96CC28E63B32000A3727 /* Crypto.swift in Sources */,
 				3DE53C8C28A2B45D00B4F014 /* VersionCheck.swift in Sources */,
 				3DAF53C0262E158B000DD558 /* WithdrawalRow.swift in Sources */,

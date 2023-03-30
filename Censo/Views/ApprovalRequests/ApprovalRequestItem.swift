@@ -72,11 +72,12 @@ struct ApprovalRequestItem: View {
             } detail: {
                 AddressBookUpdateDetails(request: request, update: addressBookUpdate)
             }
-        case .addDevice(let addDevice):
+        case .addDevice(let userDevice as UserDevice),
+             .removeDevice(let userDevice as UserDevice):
             ApprovalRequestRow(deviceSigner: deviceSigner, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
-                AddDeviceRow(requestType: request.details, addDevice: addDevice)
+                AddOrRemoveDeviceRow(requestType: request.details, userDevice: userDevice)
             } detail: {
-                AddDeviceDetails(request: request, addDevice: addDevice)
+                AddOrRemoveDeviceDetails(request: request, userDevice: userDevice)
             }
         case .vaultPolicyUpdate(let vaultPolicyUpdate): // 1
             ApprovalRequestRow(deviceSigner: deviceSigner, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
@@ -343,3 +344,16 @@ protocol UserInfo {
 
 extension SuspendUser: UserInfo { }
 extension RestoreUser: UserInfo { }
+
+
+protocol UserDevice {
+    var name: String { get }
+    var email: String { get }
+    var jpegThumbnail: String { get }
+    var deviceGuid: String { get }
+    var deviceKey: String { get }
+    var deviceType: DeviceType { get }
+}
+
+extension AddDevice: UserDevice { }
+extension RemoveDevice: UserDevice { }

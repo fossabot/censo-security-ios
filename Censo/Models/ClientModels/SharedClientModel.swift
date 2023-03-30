@@ -163,6 +163,15 @@ struct AddDevice: Codable, Equatable  {
     var targetShardingPolicy: ShardingPolicy?
 }
 
+struct RemoveDevice: Codable, Equatable  {
+    var name: String
+    var email: String
+    var jpegThumbnail: String
+    var deviceGuid: String
+    var deviceKey: String
+    var deviceType: DeviceType
+}
+
 struct OrgNameUpdate: Codable, Equatable  {
     var oldName: String
     var newName: String
