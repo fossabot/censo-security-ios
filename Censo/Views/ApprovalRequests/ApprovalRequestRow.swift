@@ -182,7 +182,7 @@ extension ApprovalRequest {
 }
 
 #if DEBUG
-struct ApprovalRequestRow_Preivews: PreviewProvider {
+struct ApprovalRequestRow_Previews: PreviewProvider {
     static var previews: some View {
         let timerPublisher = Timer.TimerPublisher(interval: 1, runLoop: .current, mode: .default).autoconnect()
 

@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Moya
+import raygun4apple
 
 @main
 struct CensoApp: App {

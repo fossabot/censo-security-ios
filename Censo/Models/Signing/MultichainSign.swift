@@ -117,3 +117,21 @@ extension OrgAdminPolicyUpdate: MultichainSignable {
     }
     
 }
+
+extension EnableRecoveryContract: MultichainSignable {
+    func signableData() throws -> [(Chain, Data)] {
+        return try signingData.map {
+            switch $0 {
+            case .ethereum(let signingData):
+                return (Chain.ethereum, try getSafeHash(chain: Chain.ethereum, evmTransaction: signingData.transaction))
+            case .polygon(let signingData):
+                return (Chain.polygon, try getSafeHash(chain: Chain.polygon, evmTransaction: signingData.transaction))
+            }
+        }
+    }
+    
+    private func getSafeHash(chain: Chain, evmTransaction: EvmTransaction) throws -> Data {
+        return try EvmConfigTransactionBuilder.getEnableRecoveryContractSafeHash(evmTransaction: evmTransaction, orgName: orgName, owners: recoveryAddresses, threshold: Bignum(recoveryThreshold))
+    }
+
+}

@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import raygun4apple
 
 struct ApprovalRequestsView: View {
     @Environment(\.censoApi) var censoApi
