@@ -4,10 +4,10 @@
 //
 //  Created by Ata Namvari on 2022-08-09.
 //
-
 import SwiftUI
 import Semver
 import Moya
+import raygun4apple
 
 struct VersionCheck<V>: ViewModifier where V : View {
     @Environment(\.censoApi) var apiProvider

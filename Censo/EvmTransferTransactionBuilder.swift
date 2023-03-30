@@ -4,7 +4,7 @@
 //
 //  Created by Benjamin Holzman on 11/23/22.
 //
-
+import Foundation
 
 class EvmTransferTransactionBuilder {
     

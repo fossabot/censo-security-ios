@@ -7,7 +7,7 @@
 
 import Foundation
 import CryptoKit
-
+import UIKit
 import Moya
 
 struct CensoApi {

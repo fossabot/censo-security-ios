@@ -57,7 +57,8 @@ class CensoTests: XCTestCase {
                 )
             case .vaultPolicyUpdate(let request as MultichainSignable),
                  .vaultNameUpdate(let request as MultichainSignable),
-                 .orgAdminPolicyUpdate(let request as MultichainSignable):
+                 .orgAdminPolicyUpdate(let request as MultichainSignable),
+                 .enableRecoveryContract(let request as MultichainSignable):
                 let signatures = try request.signableData()
                 XCTAssertEqual(signatures.count, 2)
                 XCTAssertEqual(signatures[0].0, Chain.ethereum)

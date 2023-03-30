@@ -133,6 +133,12 @@ struct ApprovalRequestItem: View {
             } detail: {
                 UserDetails(request: request, user: restoreUser as UserInfo)
             }
+        case .enableRecoveryContract(let enableRecoveryContract):
+            ApprovalRequestRow(deviceSigner: deviceSigner, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
+                EnableRecoveryPolicyRow(requestType: request.details, enableRecoveryContract: enableRecoveryContract)
+            } detail: {
+                EnableRecoveryPolicyDetails(request: request, enableRecoveryContract: enableRecoveryContract)
+            }
         default:
             UnknownRequestRow(request: request, timerPublisher: timerPublisher)
         }
