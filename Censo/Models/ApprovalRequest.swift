@@ -57,7 +57,8 @@ enum ApprovalRequestType: Codable, Equatable {
     case vaultUserRolesUpdate(VaultUserRolesUpdate)
     case suspendUser(SuspendUser)
     case restoreUser(RestoreUser)
-    
+    case enableRecoveryContract(EnableRecoveryContract)
+
     case addDevice(AddDevice)
 
     case ethereumDAppTransactionRequest(EthereumDAppTransactionRequest)
@@ -128,6 +129,8 @@ enum ApprovalRequestType: Codable, Equatable {
             self = .suspendUser(try SuspendUser(from: decoder))
         case "RestoreUser":
             self = .restoreUser(try RestoreUser(from: decoder))
+        case "EnableRecoveryContract":
+            self = .enableRecoveryContract(try EnableRecoveryContract(from: decoder))
         default:
             throw DecodingError.dataCorruptedError(forKey: .type, in: container, debugDescription: "Invalid Approval Type")
         }
@@ -223,6 +226,9 @@ enum ApprovalRequestType: Codable, Equatable {
         case .restoreUser(let restoreUser):
             try container.encode("RestoreUser", forKey: .type)
             try restoreUser.encode(to: encoder)
+        case .enableRecoveryContract(let enableRecoveryContract):
+            try container.encode("EnableRecoveryContract", forKey: .type)
+            try enableRecoveryContract.encode(to: encoder)
         }
     }
 }

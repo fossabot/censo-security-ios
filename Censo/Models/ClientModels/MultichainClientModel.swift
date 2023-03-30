@@ -99,3 +99,11 @@ struct OrgAdminPolicyUpdate: Codable, Equatable  {
     var chainFees: [ChainFee]
     var shardingPolicyChangeInfo: ShardingPolicyChangeInfo
 }
+
+struct EnableRecoveryContract: Codable, Equatable {
+    var recoveryThreshold: Int
+    var recoveryAddresses: [String]
+    var orgName: String
+    var signingData: [SigningData]
+    var chainFees: [ChainFee]
+}

@@ -7,6 +7,7 @@
 
 import Foundation
 import AVFoundation
+import UIKit
 
 class PhotoCaptureController: NSObject, ObservableObject {
     @Published fileprivate(set) var state: CaptureState = .stopped

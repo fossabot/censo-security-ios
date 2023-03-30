@@ -82,7 +82,8 @@ extension ApprovalDispositionRequest {
             
         case .vaultPolicyUpdate(let signableRequest as MultichainSignable),
              .vaultNameUpdate(let signableRequest as MultichainSignable),
-             .orgAdminPolicyUpdate(let signableRequest as MultichainSignable):
+             .orgAdminPolicyUpdate(let signableRequest as MultichainSignable),
+             .enableRecoveryContract(let signableRequest as MultichainSignable):
             let privateKeys = try deviceSigner.privateKeys()
             let detailsJSONData = try JSONEncoder().encode(request.details)
             var signatures: [SignatureInfo] = [

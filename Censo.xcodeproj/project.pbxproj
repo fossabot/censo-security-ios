@@ -53,7 +53,6 @@
 		3D3D6D4F261B957800FEEE0B /* RetryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3D6D4E261B957800FEEE0B /* RetryView.swift */; };
 		3D3D6D54261B95B100FEEE0B /* ApprovalRequestsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3D6D53261B95B100FEEE0B /* ApprovalRequestsView.swift */; };
 		3D4BFF64299D36540031F99B /* NotificationCheck.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D4BFF63299D36540031F99B /* NotificationCheck.swift */; };
-		3D4C145F2710C9BE00382FBF /* raygun4apple.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3D61A0F42655983B00AD1EE7 /* raygun4apple.framework */; };
 		3D517A502965D6C000A2733A /* PhotoCaptureController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D517A4E2965D6C000A2733A /* PhotoCaptureController.swift */; };
 		3D517A512965D6C000A2733A /* SecureEnclave.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D517A4F2965D6C000A2733A /* SecureEnclave.swift */; };
 		3D517A532965F88600A2733A /* CameraPreview.swift_old in Sources */ = {isa = PBXBuildFile; fileRef = 3D517A522965F88600A2733A /* CameraPreview.swift_old */; };
@@ -195,6 +194,9 @@
 		BD072F78292E6DF100B36C5A /* String+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD072F77292E6DF100B36C5A /* String+Hex.swift */; };
 		BD072F7B292E7DF800B36C5A /* EvmTransferTransactionBuilderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD072F7A292E7DF800B36C5A /* EvmTransferTransactionBuilderTests.swift */; };
 		BD072F7D292E7E9E00B36C5A /* EvmTransferTransactionBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD072F7C292E7E9E00B36C5A /* EvmTransferTransactionBuilder.swift */; };
+		BDFBBC2E29D5FA7D0054286C /* EnableRecoveryPolicyRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDFBBC2D29D5FA7D0054286C /* EnableRecoveryPolicyRow.swift */; };
+		BDFBBC3029D5FDF90054286C /* EnableRecoveryPolicyDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDFBBC2F29D5FDF90054286C /* EnableRecoveryPolicyDetails.swift */; };
+		BDFBBC3329D60AB60054286C /* raygun4apple in Frameworks */ = {isa = PBXBuildFile; productRef = BDFBBC3229D60AB60054286C /* raygun4apple */; };
 		E42F565D29D3289500C6922B /* SuspendUserRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = E42F565C29D3289500C6922B /* SuspendUserRow.swift */; };
 		E42F565F29D3297900C6922B /* UserDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = E42F565E29D3297900C6922B /* UserDetails.swift */; };
 		E42F566129D32B8B00C6922B /* RestoreUserRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = E42F566029D32B8B00C6922B /* RestoreUserRow.swift */; };
@@ -260,8 +262,6 @@
 		3D517A4E2965D6C000A2733A /* PhotoCaptureController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PhotoCaptureController.swift; sourceTree = "<group>"; };
 		3D517A4F2965D6C000A2733A /* SecureEnclave.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecureEnclave.swift; sourceTree = "<group>"; };
 		3D517A522965F88600A2733A /* CameraPreview.swift_old */ = {isa = PBXFileReference; lastKnownFileType = text; path = CameraPreview.swift_old; sourceTree = "<group>"; };
-		3D61A0F42655983B00AD1EE7 /* raygun4apple.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = raygun4apple.framework; sourceTree = "<group>"; };
-		3D61A0F8265598F700AD1EE7 /* Censo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Censo-Bridging-Header.h"; sourceTree = "<group>"; };
 		3D61A0FA2655B4FF00AD1EE7 /* SignedInNavigationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignedInNavigationView.swift; sourceTree = "<group>"; };
 		3D61A0FD2655B50700AD1EE7 /* MessageSupport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageSupport.swift; sourceTree = "<group>"; };
 		3D6334E42885C298002CEC5A /* PenAndPaperConfirm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PenAndPaperConfirm.swift; sourceTree = "<group>"; };
@@ -403,6 +403,8 @@
 		BD072F77292E6DF100B36C5A /* String+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Hex.swift"; sourceTree = "<group>"; };
 		BD072F7A292E7DF800B36C5A /* EvmTransferTransactionBuilderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvmTransferTransactionBuilderTests.swift; sourceTree = "<group>"; };
 		BD072F7C292E7E9E00B36C5A /* EvmTransferTransactionBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvmTransferTransactionBuilder.swift; sourceTree = "<group>"; };
+		BDFBBC2D29D5FA7D0054286C /* EnableRecoveryPolicyRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnableRecoveryPolicyRow.swift; sourceTree = "<group>"; };
+		BDFBBC2F29D5FDF90054286C /* EnableRecoveryPolicyDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnableRecoveryPolicyDetails.swift; sourceTree = "<group>"; };
 		E42F565C29D3289500C6922B /* SuspendUserRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuspendUserRow.swift; sourceTree = "<group>"; };
 		E42F565E29D3297900C6922B /* UserDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDetails.swift; sourceTree = "<group>"; };
 		E42F566029D32B8B00C6922B /* RestoreUserRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestoreUserRow.swift; sourceTree = "<group>"; };
@@ -415,7 +417,7 @@
 			files = (
 				3DE53C8A28A2A5CE00B4F014 /* Semver in Frameworks */,
 				6C74FA07285AAD5F005C8DE1 /* BIP39 in Frameworks */,
-				3D4C145F2710C9BE00382FBF /* raygun4apple.framework in Frameworks */,
+				BDFBBC3329D60AB60054286C /* raygun4apple in Frameworks */,
 				3DE53CCB28AAC0E500B4F014 /* JWTDecode in Frameworks */,
 				6CBA96CB28E63B04000A3727 /* secp256k1 in Frameworks */,
 				3DE66E80299C2E9B00E64808 /* Moya in Frameworks */,
@@ -504,7 +506,6 @@
 		3D2CBC6D26152D2C00B1F8E5 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				3D61A0F42655983B00AD1EE7 /* raygun4apple.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -621,6 +622,7 @@
 		3D3D6D52261B959300FEEE0B /* ApprovalRequests */ = {
 			isa = PBXGroup;
 			children = (
+				BDFBBC2C29D5FA3F0054286C /* EnableRecoveryPolicy */,
 				E44C2B2729D43D88000D9E5C /* UserDetails */,
 				E42F565B29D3287800C6922B /* RestoreUser */,
 				E42F565A29D3286D00C6922B /* SuspendUser */,
@@ -818,7 +820,6 @@
 				40328E182593ED9D00F2EE41 /* Info.plist */,
 				40328E132593ED9D00F2EE41 /* Assets.xcassets */,
 				3D3B4BDC262F4E57006E8619 /* Preview Content */,
-				3D61A0F8265598F700AD1EE7 /* Censo-Bridging-Header.h */,
 				3D8CA665272C5E1900C68657 /* Theme.xcassets */,
 			);
 			path = Censo;
@@ -978,6 +979,15 @@
 			path = PasswordReset;
 			sourceTree = "<group>";
 		};
+		BDFBBC2C29D5FA3F0054286C /* EnableRecoveryPolicy */ = {
+			isa = PBXGroup;
+			children = (
+				BDFBBC2D29D5FA7D0054286C /* EnableRecoveryPolicyRow.swift */,
+				BDFBBC2F29D5FDF90054286C /* EnableRecoveryPolicyDetails.swift */,
+			);
+			path = EnableRecoveryPolicy;
+			sourceTree = "<group>";
+		};
 		E42F565A29D3286D00C6922B /* SuspendUser */ = {
 			isa = PBXGroup;
 			children = (
@@ -1012,7 +1022,6 @@
 				40328E082593ED9900F2EE41 /* Sources */,
 				40328E092593ED9900F2EE41 /* Frameworks */,
 				40328E0A2593ED9900F2EE41 /* Resources */,
-				3D61A0F72655984A00AD1EE7 /* Embed and Sign RayGun Framework */,
 			);
 			buildRules = (
 			);
@@ -1026,6 +1035,7 @@
 				6CBA96B728E631AB000A3727 /* CryptoSwift */,
 				6CBA96CA28E63B04000A3727 /* secp256k1 */,
 				3DE66E7F299C2E9B00E64808 /* Moya */,
+				BDFBBC3229D60AB60054286C /* raygun4apple */,
 			);
 			productName = Strike;
 			productReference = 40328E0C2593ED9900F2EE41 /* Censo.app */;
@@ -1083,6 +1093,7 @@
 				6CBA96B628E631AB000A3727 /* XCRemoteSwiftPackageReference "CryptoSwift" */,
 				6CBA96C928E63B04000A3727 /* XCRemoteSwiftPackageReference "secp256k1.swift" */,
 				3DE66E7E299C2E9B00E64808 /* XCRemoteSwiftPackageReference "Moya" */,
+				BDFBBC3129D60AB60054286C /* XCRemoteSwiftPackageReference "raygun4apple" */,
 			);
 			productRefGroup = 40328E0D2593ED9900F2EE41 /* Products */;
 			projectDirPath = "";
@@ -1118,32 +1129,12 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
-/* Begin PBXShellScriptBuildPhase section */
-		3D61A0F72655984A00AD1EE7 /* Embed and Sign RayGun Framework */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 12;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Embed and Sign RayGun Framework";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "FRAMEWORK_APP_PATH=\"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}\"\n\n# 1. Copying FRAMEWORK to FRAMEWORK_APP_PATH\nfind \"$SRCROOT\" -name '*.framework' -type d -maxdepth 1 | while read -r FRAMEWORK\ndo\nif [[ $FRAMEWORK == *\"raygun4apple.framework\" ]]\nthen\n    echo \"Copying $FRAMEWORK into $FRAMEWORK_APP_PATH\"\n    mkdir -p \"$FRAMEWORK_APP_PATH\"\n    cp -r $FRAMEWORK \"$FRAMEWORK_APP_PATH\"\nfi\ndone\n# 2. Loops through the frameworks embedded in the application and removes unused architectures.\nfind \"$FRAMEWORK_APP_PATH\" -name '*.framework' -type d -maxdepth 1 | while read -r FRAMEWORK\ndo\nif [[ $FRAMEWORK == *\"raygun4apple.framework\" ]]\nthen\n     \n    echo \"Strip invalid archs on: $FRAMEWORK\"\n    FRAMEWORK_EXECUTABLE_NAME=$(/usr/libexec/PlistBuddy -c \"Print CFBundleExecutable\" \"$FRAMEWORK/Info.plist\")\n    FRAMEWORK_EXECUTABLE_PATH=\"$FRAMEWORK/$FRAMEWORK_EXECUTABLE_NAME\"\n    echo \"Executable is $FRAMEWORK_EXECUTABLE_PATH\"\n    EXTRACTED_ARCHS=()\n    for ARCH in $ARCHS\n    do\n    echo \"Extracting $ARCH from $FRAMEWORK_EXECUTABLE_NAME\"\n    lipo -extract \"$ARCH\" \"$FRAMEWORK_EXECUTABLE_PATH\" -o \"$FRAMEWORK_EXECUTABLE_PATH-$ARCH\"\n    EXTRACTED_ARCHS+=(\"$FRAMEWORK_EXECUTABLE_PATH-$ARCH\")\n    done\n    echo \"Merging extracted architectures: ${ARCHS}\"\n    lipo -o \"$FRAMEWORK_EXECUTABLE_PATH-merged\" -create \"${EXTRACTED_ARCHS[@]}\"\n    rm \"${EXTRACTED_ARCHS[@]}\"\n    echo \"Replacing original executable with thinned version\"\n    rm \"$FRAMEWORK_EXECUTABLE_PATH\"\n    mv \"$FRAMEWORK_EXECUTABLE_PATH-merged\" \"$FRAMEWORK_EXECUTABLE_PATH\"\n    codesign --force --sign ${EXPANDED_CODE_SIGN_IDENTITY} ${OTHER_CODE_SIGN_FLAGS:-} --preserve-metadata=identifier,entitlements \"$FRAMEWORK_EXECUTABLE_PATH\"\nelse\n    echo \"Ignored strip on: $FRAMEWORK\"\nfi\ndone\n";
-		};
-/* End PBXShellScriptBuildPhase section */
-
 /* Begin PBXSourcesBuildPhase section */
 		40328E082593ED9900F2EE41 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BDFBBC2E29D5FA7D0054286C /* EnableRecoveryPolicyRow.swift in Sources */,
 				3D2BCA08264D7A79000A6D56 /* ChangeDetails.swift in Sources */,
 				3DBC44E5280F18830016E1AB /* LoginDetails.swift in Sources */,
 				3D11521628217FB5007CD43D /* WalletSettingsRow.swift in Sources */,
@@ -1211,6 +1202,7 @@
 				3D11A60527580D81008C03B1 /* CameraPreview.swift in Sources */,
 				3D0F3D5C2979D20F006C3328 /* EthereumSignable.swift in Sources */,
 				BD072F7D292E7E9E00B36C5A /* EvmTransferTransactionBuilder.swift in Sources */,
+				BDFBBC3029D5FDF90054286C /* EnableRecoveryPolicyDetails.swift in Sources */,
 				3D6334F12885C299002CEC5A /* PasswordManagerConfirm.swift in Sources */,
 				3DC2F3FF25F896C40061BB3A /* RemoteResult.swift in Sources */,
 				3DBF9DC526E0020300D7683E /* ApprovalRequestItem.swift in Sources */,
@@ -1400,6 +1392,7 @@
 				MIN_VERSION_URL = "https://strike-public-assets.s3.amazonaws.com/censo-security-app-version-dev.json";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
+				NEW_SETTING = "";
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_SWIFT_FLAGS = "-Xfrontend -debug-time-function-bodies";
 				RAYGUN_API_KEY = CtOnGQjIo1U8dELkoUf0iw;
@@ -1423,6 +1416,7 @@
 				DEVELOPMENT_TEAM = VN5U64MGYX;
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = YES;
+				EXCLUDED_ARCHS = "";
 				EXECUTABLE_PREFIX = demo2;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1438,7 +1432,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.censocustody.mobile-demo-2";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_OBJC_BRIDGING_HEADER = "Censo/Censo-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1522,6 +1515,7 @@
 				MIN_VERSION_URL = "https://strike-public-assets.s3.amazonaws.com/censo-security-app-version-dev.json";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
+				NEW_SETTING = "";
 				OTHER_SWIFT_FLAGS = "-Xfrontend -debug-time-function-bodies";
 				RAYGUN_API_KEY = CtOnGQjIo1U8dELkoUf0iw;
 				RAYGUN_ENABLED = yes;
@@ -1546,6 +1540,7 @@
 				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = VN5U64MGYX;
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = YES;
+				EXCLUDED_ARCHS = "";
 				EXECUTABLE_PREFIX = demo2;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1562,7 +1557,6 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "Strike Mobile Demo 2 AppStore";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = "Censo Mobile Demo 2 AppStore";
-				SWIFT_OBJC_BRIDGING_HEADER = "Censo/Censo-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1652,6 +1646,7 @@
 				MIN_VERSION_URL = "https://strike-public-assets.s3.amazonaws.com/censo-security-app-version-dev.json";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
+				NEW_SETTING = "";
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_SWIFT_FLAGS = "-Xfrontend -debug-time-function-bodies";
 				RAYGUN_API_KEY = L9T2bPaEjr3Lede3SNpFJw;
@@ -1675,6 +1670,7 @@
 				DEVELOPMENT_TEAM = VN5U64MGYX;
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = YES;
+				EXCLUDED_ARCHS = "";
 				EXECUTABLE_PREFIX = develop;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1690,7 +1686,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.censocustody.mobile-dev";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_OBJC_BRIDGING_HEADER = "Censo/Censo-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1774,6 +1769,7 @@
 				MIN_VERSION_URL = "https://strike-public-assets.s3.amazonaws.com/censo-security-app-version-dev.json";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
+				NEW_SETTING = "";
 				OTHER_SWIFT_FLAGS = "-Xfrontend -debug-time-function-bodies";
 				RAYGUN_API_KEY = L9T2bPaEjr3Lede3SNpFJw;
 				RAYGUN_ENABLED = yes;
@@ -1797,6 +1793,7 @@
 				DEVELOPMENT_TEAM = VN5U64MGYX;
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = YES;
+				EXCLUDED_ARCHS = "";
 				EXECUTABLE_PREFIX = develop;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1812,7 +1809,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.censocustody.mobile-dev";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_OBJC_BRIDGING_HEADER = "Censo/Censo-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1902,6 +1898,7 @@
 				MIN_VERSION_URL = "https://strike-public-assets.s3.amazonaws.com/censo-security-app-version-dev.json";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
+				NEW_SETTING = "";
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_SWIFT_FLAGS = "-Xfrontend -debug-time-function-bodies";
 				RAYGUN_API_KEY = CtOnGQjIo1U8dELkoUf0iw;
@@ -1924,6 +1921,7 @@
 				DEVELOPMENT_TEAM = VN5U64MGYX;
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = YES;
+				EXCLUDED_ARCHS = "";
 				EXECUTABLE_PREFIX = preprod;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1938,7 +1936,6 @@
 				MARKETING_VERSION = 1.0.5;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.censocustody.mobile-demo";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "Censo/Censo-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -2022,6 +2019,7 @@
 				MIN_VERSION_URL = "https://strike-public-assets.s3.amazonaws.com/censo-security-app-version-dev.json";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
+				NEW_SETTING = "";
 				OTHER_SWIFT_FLAGS = "-Xfrontend -debug-time-function-bodies";
 				RAYGUN_API_KEY = CtOnGQjIo1U8dELkoUf0iw;
 				RAYGUN_ENABLED = yes;
@@ -2044,6 +2042,7 @@
 				DEVELOPMENT_TEAM = VN5U64MGYX;
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = YES;
+				EXCLUDED_ARCHS = "";
 				EXECUTABLE_PREFIX = preprod;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2058,7 +2057,6 @@
 				MARKETING_VERSION = 1.0.5;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.censocustody.mobile-demo";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "Censo/Censo-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -2148,6 +2146,7 @@
 				MIN_VERSION_URL = "https://strike-public-assets.s3.amazonaws.com/censo-security-app-version-dev.json";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
+				NEW_SETTING = "";
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_SWIFT_FLAGS = "-Xfrontend -debug-time-function-bodies";
 				RAYGUN_API_KEY = vuxX53AURVfZS87D1WPqeg;
@@ -2170,6 +2169,7 @@
 				DEVELOPMENT_TEAM = VN5U64MGYX;
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = YES;
+				EXCLUDED_ARCHS = "";
 				EXECUTABLE_PREFIX = stubbed;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2189,7 +2189,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.censocustody.mobile-stubbed";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG STUBBED";
-				SWIFT_OBJC_BRIDGING_HEADER = "Censo/Censo-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -2273,6 +2272,7 @@
 				MIN_VERSION_URL = "https://strike-public-assets.s3.amazonaws.com/censo-security-app-version-dev.json";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
+				NEW_SETTING = "";
 				OTHER_SWIFT_FLAGS = "-Xfrontend -debug-time-function-bodies";
 				RAYGUN_API_KEY = vuxX53AURVfZS87D1WPqeg;
 				RAYGUN_ENABLED = no;
@@ -2296,6 +2296,7 @@
 				DEVELOPMENT_TEAM = VN5U64MGYX;
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = YES;
+				EXCLUDED_ARCHS = "";
 				EXECUTABLE_PREFIX = stubbed;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -2310,7 +2311,6 @@
 				MARKETING_VERSION = 1.0.5;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.censocustody.mobile-stubbed";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_OBJC_BRIDGING_HEADER = "Censo/Censo-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -2401,6 +2401,7 @@
 				MIN_VERSION_URL = "https://strike-public-assets.s3.amazonaws.com/censo-security-app-version.json";
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
+				NEW_SETTING = "";
 				ONLY_ACTIVE_ARCH = YES;
 				OTHER_SWIFT_FLAGS = "-Xfrontend -debug-time-function-bodies";
 				RAYGUN_API_KEY = vuxX53AURVfZS87D1WPqeg;
@@ -2464,6 +2465,7 @@
 				MIN_VERSION_URL = "https://strike-public-assets.s3.amazonaws.com/censo-security-app-version.json";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
+				NEW_SETTING = "";
 				OTHER_SWIFT_FLAGS = "-Xfrontend -debug-time-function-bodies";
 				RAYGUN_API_KEY = vuxX53AURVfZS87D1WPqeg;
 				RAYGUN_ENABLED = yes;
@@ -2487,6 +2489,8 @@
 				DEVELOPMENT_TEAM = VN5U64MGYX;
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = YES;
+				EXCLUDED_ARCHS = "";
+				"EXCLUDED_ARCHS[sdk=*]" = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -2505,7 +2509,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.censocustody.mobile;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG PRODUCTION";
-				SWIFT_OBJC_BRIDGING_HEADER = "Censo/Censo-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -2523,6 +2526,7 @@
 				DEVELOPMENT_TEAM = VN5U64MGYX;
 				ENABLE_BITCODE = NO;
 				ENABLE_PREVIEWS = YES;
+				EXCLUDED_ARCHS = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
@@ -2538,7 +2542,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.censocustody.mobile;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = PRODUCTION;
-				SWIFT_OBJC_BRIDGING_HEADER = "Censo/Censo-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -2701,6 +2704,14 @@
 				kind = branch;
 			};
 		};
+		BDFBBC3129D60AB60054286C /* XCRemoteSwiftPackageReference "raygun4apple" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/MindscapeHQ/raygun4apple.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -2733,6 +2744,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 6CBA96C928E63B04000A3727 /* XCRemoteSwiftPackageReference "secp256k1.swift" */;
 			productName = secp256k1;
+		};
+		BDFBBC3229D60AB60054286C /* raygun4apple */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BDFBBC3129D60AB60054286C /* XCRemoteSwiftPackageReference "raygun4apple" */;
+			productName = raygun4apple;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

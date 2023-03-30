@@ -64,6 +64,15 @@
       }
     },
     {
+      "identity" : "raygun4apple",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/MindscapeHQ/raygun4apple.git",
+      "state" : {
+        "revision" : "6f629551d81bebc5985b2529d649897511a58e42",
+        "version" : "2.0.0"
+      }
+    },
+    {
       "identity" : "reactiveswift",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/ReactiveCocoa/ReactiveSwift.git",

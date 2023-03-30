@@ -33,7 +33,14 @@ enum PolicyUpdateData: Equatable {
 
 public class EvmConfigTransactionBuilder {
     static let multiSendCallOnlyAddress = "0x40A2aCCbd92BCA938b02010E17A5b8929b49130D"
-    
+    static let gnosisSafeAddress = "0xd9Db270c1B5E3Bd161E8c8503c55cEABeE709552"
+    static let gnosisSafeProxyFactoryAddress = "0xa6B71E26C5e0845f74c812102Ca7114b6a896AB2"
+    static let addressZero = "0x000000000000000000000000000000000000000000"
+    static let gnosisSafeProxyBinary = "0x608060405234801561001057600080fd5b506040516101e63803806101e68339818101604052602081101561003357600080fd5b8101908080519060200190929190505050600073ffffffffffffffffffffffffffffffffffffffff168173ffffffffffffffffffffffffffffffffffffffff1614156100ca576040517f08c379a00000000000000000000000000000000000000000000000000000000081526004018080602001828103825260228152602001806101c46022913960400191505060405180910390fd5b806000806101000a81548173ffffffffffffffffffffffffffffffffffffffff021916908373ffffffffffffffffffffffffffffffffffffffff1602179055505060ab806101196000396000f3fe608060405273ffffffffffffffffffffffffffffffffffffffff600054167fa619486e0000000000000000000000000000000000000000000000000000000060003514156050578060005260206000f35b3660008037600080366000845af43d6000803e60008114156070573d6000fd5b3d6000f3fea2646970667358221220d1429297349653a4918076d650332de1a1068c5f3e07c5c82360c277770b955264736f6c63430007060033496e76616c69642073696e676c65746f6e20616464726573732070726f7669646564"
+    static let censoRecoveryGuard = "CensoRecoveryGuard"
+    static let censoRecoveryFallbackHandler = "CensoRecoveryFallbackHandler"
+    static let censoSetup = "CensoSetup"
+
     // setting guard
     static func getSetGuardExecutionFromModuleDataSafeHash(walletAddress: String, guardAddress: String, evmTransaction: EvmTransaction) throws -> Data {
         guard let vaultAddress = evmTransaction.vaultAddress else {
@@ -186,7 +193,42 @@ public class EvmConfigTransactionBuilder {
         )
     }
     
+    static func getEnableRecoveryContractSafeHash(evmTransaction: EvmTransaction, orgName: String, owners: [String], threshold: Bignum) throws -> Data {
+        guard let guardAddress = getContractAddressByName(name: censoRecoveryGuard, contractAddresses: evmTransaction.contractAddresses) else {
+            throw EvmConfigError.missingContractAddresses
+        }
+        guard let fallbackHandlerAddress = getContractAddressByName(name: censoRecoveryFallbackHandler, contractAddresses: evmTransaction.contractAddresses) else {
+            throw EvmConfigError.missingContractAddresses
+        }
+        guard let setupAddress = getContractAddressByName(name: censoSetup, contractAddresses: evmTransaction.contractAddresses) else {
+            throw EvmConfigError.missingContractAddresses
+        }
+        return EvmTransactionUtil.computeSafeTransactionHash(chainId: evmTransaction.chainId, safeAddress: evmTransaction.orgVaultAddress!, to: evmTransaction.orgVaultAddress!, value: Bignum(0), data: enableModuleTx(moduleAddress: calculateRecoveryContractAddress(guardAddress: guardAddress, vaultAddress: evmTransaction.orgVaultAddress!, fallbackHandlerAddress: fallbackHandlerAddress, setupAddress: setupAddress, orgName: orgName, owners: owners, threshold: threshold)), nonce: evmTransaction.safeNonce)
+    }
     
+    private class func getContractAddressByName(name: String, contractAddresses: [ContractNameAndAddress]) -> String? {
+        return contractAddresses.first(where: { $0.name.lowercased() == name.lowercased() })?.address
+    }
+    
+    static func calculateRecoveryContractAddress(guardAddress: String, vaultAddress: String, fallbackHandlerAddress: String, setupAddress: String, orgName: String, owners: [String], threshold: Bignum) -> String {
+        let salt = Crypto.sha3keccak256(data: ("Recovery-" + orgName).data(using: .utf8)!)
+        let setupData = censoSetupTx(guardAddress: guardAddress, vaultAddress: vaultAddress, fallbackHandlerAddress: fallbackHandlerAddress, nameHash: salt)
+        let initializer = safeSetupTx(owners: owners, threshold: threshold, to: setupAddress, data: setupData, fallbackHandlerAddress: fallbackHandlerAddress)
+        let result = Crypto.sha3keccak256(
+            data: "ff".data(using: .hexadecimal)! +
+                  gnosisSafeProxyFactoryAddress.data(using: .hexadecimal)! +
+                  Crypto.sha3keccak256(data: Crypto.sha3keccak256(data: initializer) + salt) +
+            Crypto.sha3keccak256(data: gnosisSafeProxyBinary.data(using: .hexadecimal)! + "000000000000000000000000".data(using: .hexadecimal)! + gnosisSafeAddress.data(using: .hexadecimal)!))
+        return result[12..<result.count].toHexString()
+    }
+
+    static func enableModuleTx(moduleAddress: String) -> Data {
+        var txData = Data(capacity: 4 + 32)
+        txData.append("610b5925".data(using: .hexadecimal)!)
+        EvmTransactionUtil.appendPadded(destination: &txData, source: moduleAddress.data(using: .hexadecimal)!)
+        return txData
+    }
+
     private class func getPolicyChangeDataList(txs: [SafeTx]) -> [Data] {
         return txs.map({ getPolicyChangeData(tx: $0) })
     }
@@ -313,5 +355,45 @@ public class EvmConfigTransactionBuilder {
         txData.append(data)
         return txData
     }
-    
+
+    private class func censoSetupTx(guardAddress: String, vaultAddress: String, fallbackHandlerAddress: String, nameHash: Data) -> Data {
+        var txData = Data(capacity: 4 + 32 * 4)
+        txData.append("ed6a2ed6".data(using: .hexadecimal)!)
+        EvmTransactionUtil.appendPadded(destination: &txData, source: guardAddress.data(using: .hexadecimal)!)
+        EvmTransactionUtil.appendPadded(destination: &txData, source: vaultAddress.data(using: .hexadecimal)!)
+        EvmTransactionUtil.appendPadded(destination: &txData, source: fallbackHandlerAddress.data(using: .hexadecimal)!)
+        EvmTransactionUtil.appendPadded(destination: &txData, source: nameHash)
+        return txData
+     }
+
+     private class func safeSetupTx(owners: [String], threshold: Bignum, to: String, data: Data, fallbackHandlerAddress: String) -> Data {
+         let mod = data.count % 32
+         let padding = mod > 0 ? 32 - mod : 0
+         var txData = Data(capacity: 4 + 32 * (10 + owners.count) + data.count + padding)
+         txData.append("b63e800d".data(using: .hexadecimal)!)
+         // offset of _owners array (first part of the tail)
+         EvmTransactionUtil.appendPadded(destination: &txData, source: (Bignum(32) * Bignum(8)).data)
+         EvmTransactionUtil.appendPadded(destination: &txData, source: threshold.data)
+         EvmTransactionUtil.appendPadded(destination: &txData, source: to.data(using: .hexadecimal)!)
+         // offset of data (second part of the tail)
+         EvmTransactionUtil.appendPadded(destination: &txData, source: (Bignum(32) * Bignum(9 + owners.count)).data)
+         EvmTransactionUtil.appendPadded(destination: &txData, source: fallbackHandlerAddress.data(using: .hexadecimal)!)
+         EvmTransactionUtil.appendPadded(destination: &txData, source: addressZero.data(using: .hexadecimal)!)
+         EvmTransactionUtil.appendPadded(destination: &txData, source: Bignum(0).data)
+         EvmTransactionUtil.appendPadded(destination: &txData, source: addressZero.data(using: .hexadecimal)!)
+         // _owners length
+         EvmTransactionUtil.appendPadded(destination: &txData, source: Bignum(owners.count).data)
+         // _owners
+         owners.forEach { owner in
+             EvmTransactionUtil.appendPadded(destination: &txData, source: owner.data(using: .hexadecimal)!)
+         }
+         // data length
+         EvmTransactionUtil.appendPadded(destination: &txData, source: Bignum(data.count).data)
+         txData.append(data)
+         if padding > 0 {
+             EvmTransactionUtil.appendPadded(destination: &txData, source: Data(), padTo: padding)
+         }
+         return txData
+     }
+
 }
