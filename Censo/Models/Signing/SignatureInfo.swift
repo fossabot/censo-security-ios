@@ -9,10 +9,8 @@ import Foundation
 
 enum SignatureInfo: Encodable, Equatable {
     case offchain(OffChainSignature)
-    case bitcoin(BitcoinSignatures)
-    case ethereum(EthereumSignature)
+    case bitcoinWithOffchain(BitcoinSignaturesWithOffchain)
     case ethereumWithOffchain(EthereumSignatureWithOffchain)
-    case polygon(PolygonSignature)
     case polygonWithOffchain(PolygonSignatureWithOffchain)
 
     enum DetailsCodingKeys: String, CodingKey {
@@ -25,17 +23,11 @@ enum SignatureInfo: Encodable, Equatable {
         case .offchain(let request):
             try container.encode("offchain", forKey: .type)
             try request.encode(to: encoder)
-        case .bitcoin(let request):
+        case .bitcoinWithOffchain(let request):
             try container.encode("bitcoin", forKey: .type)
-            try request.encode(to: encoder)
-        case .ethereum(let request):
-            try container.encode("ethereum", forKey: .type)
             try request.encode(to: encoder)
         case .ethereumWithOffchain(let request):
             try container.encode("ethereum", forKey: .type)
-            try request.encode(to: encoder)
-        case .polygon(let request):
-            try container.encode("polygon", forKey: .type)
             try request.encode(to: encoder)
         case .polygonWithOffchain(let request):
             try container.encode("polygon", forKey: .type)
@@ -50,21 +42,25 @@ struct OffChainSignature: Codable, Equatable  {
     let signedData: String
 }
 
-struct BitcoinSignatures: Codable, Equatable  {
+struct BitcoinSignaturesWithOffchain: Codable, Equatable  {
     let signatures: [String]
-}
-
-struct EthereumSignature: Codable, Equatable  {
-    let signature: String
-}
-
-struct PolygonSignature: Codable, Equatable  {
-    let signature: String
+    var offchainSignature: OffChainSignature
+    
+    enum DetailsCodingKeys: String, CodingKey {
+        case signatures
+        case offchainSignature
+    }
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: DetailsCodingKeys.self)
+        try container.encode(signatures, forKey: .signatures)
+        try container.encode(SignatureInfo.offchain(offchainSignature), forKey: .offchainSignature)
+    }
 }
 
 struct EthereumSignatureWithOffchain:  Encodable, Equatable {
     let signature: String
-    var offchainSignature: OffChainSignature? = nil
+    var offchainSignature: OffChainSignature
     
     enum DetailsCodingKeys: String, CodingKey {
         case signature
@@ -74,15 +70,13 @@ struct EthereumSignatureWithOffchain:  Encodable, Equatable {
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: DetailsCodingKeys.self)
         try container.encode(signature, forKey: .signature)
-        if offchainSignature != nil {
-            try container.encode(SignatureInfo.offchain(offchainSignature!), forKey: .offchainSignature)
-        }
+        try container.encode(SignatureInfo.offchain(offchainSignature), forKey: .offchainSignature)
     }
 }
 
 struct PolygonSignatureWithOffchain:  Encodable, Equatable {
     let signature: String
-    var offchainSignature: OffChainSignature? = nil
+    var offchainSignature: OffChainSignature
     
     enum DetailsCodingKeys: String, CodingKey {
         case signature
@@ -92,8 +86,6 @@ struct PolygonSignatureWithOffchain:  Encodable, Equatable {
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: DetailsCodingKeys.self)
         try container.encode(signature, forKey: .signature)
-        if offchainSignature != nil {
-            try container.encode(SignatureInfo.offchain(offchainSignature!), forKey: .offchainSignature)
-        }
+        try container.encode(SignatureInfo.offchain(offchainSignature), forKey: .offchainSignature)
     }
 }
