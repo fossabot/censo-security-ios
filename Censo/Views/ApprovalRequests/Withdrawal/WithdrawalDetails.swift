@@ -21,15 +21,15 @@ struct WithdrawalDetails: View {
                 if withdrawal.symbol.nftMetadata != nil {
                     Fact("NFT Name", withdrawal.symbol.nftMetadata!.name)
                 }
-                if let fee = withdrawal.fee, let replacementFee = withdrawal.replacementFee {
+                if let replacementFee = withdrawal.replacementFee {
                     Fact("Amount", "\(withdrawal.amount.formattedAmount) \(withdrawal.symbol.symbol)")
-                    Fact("Original Fee", "\(fee.formattedAmount) \(withdrawal.feeSymbol)")
+                    Fact("Original Fee", "\(withdrawal.fee.formattedAmount) \(withdrawal.feeSymbol)")
                     Fact("New Fee", "\(replacementFee.formattedAmount) \(withdrawal.feeSymbol)")
-                } else if let fee = withdrawal.fee {
-                    if withdrawal.showFeeInUsd, let feeInUsd = fee.formattedUSDEquivalent {
+                } else {
+                    if withdrawal.showFeeInUsd, let feeInUsd = withdrawal.fee.formattedUSDEquivalent {
                         Fact("Fee Estimate", "\(feeInUsd) USD")
                     } else {
-                        Fact("Fee", "\(fee.formattedAmount) \(withdrawal.feeSymbol)")
+                        Fact("Fee", "\(withdrawal.fee.formattedAmount) \(withdrawal.feeSymbol)")
                     }
                 }
             }
