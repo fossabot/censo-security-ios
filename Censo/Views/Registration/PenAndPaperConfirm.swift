@@ -84,7 +84,7 @@ struct PenAndPaperConfirm: View {
         }
 
         NavigationLink(isActive: .constant(showingSuccess)) {
-            KeyConfirmationSuccess(user: user, deviceKey: deviceKey, phrase: phrase, onSuccess: onSuccess)
+            //KeyConfirmationSuccess(user: user, deviceKey: deviceKey, phrase: phrase, onSuccess: onSuccess)
         } label: {
             EmptyView()
         }

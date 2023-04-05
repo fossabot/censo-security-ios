@@ -24,6 +24,7 @@ struct KeyConfirmationSuccess: View {
     var user: CensoApi.User
     var deviceKey: DeviceKey
     var phrase: [String]
+    var shardingPolicy: ShardingPolicy
     var onSuccess: () -> Void
 
     var body: some View {
@@ -81,10 +82,13 @@ struct KeyConfirmationSuccess: View {
         registrationState = .loading
         do {
             let rootSeed = try Mnemonic(phrase: phrase).seed
-            let privateKeys = try PrivateKeys(rootSeed: rootSeed)
-            let signers = try CensoApi.SignersInfo(publicKeys: privateKeys.publicKeys, deviceKey: deviceKey)
+            let signersInfo = try CensoApi.SignersInfo(
+                shardingPolicy: shardingPolicy,
+                rootSeed: rootSeed,
+                deviceKey: deviceKey
+            )
             
-            censoApi.provider.request(.addWalletSigners(signers, devicePublicKey: try deviceKey.publicExternalRepresentation().base58String)) { result in
+            censoApi.provider.request(.addWalletSigners(signersInfo, devicePublicKey: try deviceKey.publicExternalRepresentation().base58String)) { result in
                 switch result {
                 case .failure(let error):
                     registrationState = .failure(error)
@@ -105,28 +109,6 @@ struct KeyConfirmationSuccess: View {
     }
 }
 
-extension CensoApi.SignersInfo {
-    init(publicKeys: PublicKeys, deviceKey: DeviceKey) throws {
-        self.signers = [
-            CensoApi.WalletSigner(
-                publicKey: publicKeys.bitcoin,
-                chain: .bitcoin
-            ),
-            CensoApi.WalletSigner(
-                publicKey: publicKeys.ethereum,
-                chain: .ethereum
-            ),
-            CensoApi.WalletSigner(
-                publicKey: publicKeys.offchain,
-                chain: .offchain
-            )
-        ]
-
-        self.signature = try deviceKey.signature(for: signers.dataToSign).base64EncodedString()
-        self.share = nil
-    }
-}
-
 extension Array where Element == CensoApi.WalletSigner {
     var dataToSign: Data {
         let bytes = self
@@ -142,11 +124,30 @@ extension Array where Element == CensoApi.WalletSigner {
     }
 }
 
+extension PublicKeys {
+    var walletSigners: [CensoApi.WalletSigner] {
+        [
+            CensoApi.WalletSigner(
+                publicKey: bitcoin,
+                chain: .bitcoin
+            ),
+            CensoApi.WalletSigner(
+                publicKey: ethereum,
+                chain: .ethereum
+            ),
+            CensoApi.WalletSigner(
+                publicKey: offchain,
+                chain: .offchain
+            )
+        ]
+    }
+}
+
 #if DEBUG
 struct KeyConfirmationSuccess_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            KeyConfirmationSuccess(user: .sample, deviceKey: .sample, phrase: [], onSuccess: {})
+            KeyConfirmationSuccess(user: .sample, deviceKey: .sample, phrase: [], shardingPolicy: .sample, onSuccess: {})
         }
     }
 }

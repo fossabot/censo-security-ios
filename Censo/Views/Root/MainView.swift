@@ -39,7 +39,26 @@ struct UserVerification: View {
         case .failure(let error):
             RetryView(error: error, action: reload)
         case .success(let user):
-            if user.shardingPolicy == nil {
+            if let shardingPolicy = user.shardingPolicy {
+                DeviceKeyRegistration(
+                    user: user,
+                    deviceKey: deviceKey,
+                    onSuccess: reload
+                ) {
+                    PublicKeysStorage(email: user.loginName, deviceKey: deviceKey) {
+                        ProgressView()
+                    } success: { keyStore, reloadPublicKeys in
+                        RegistrationView(
+                            user: user,
+                            shardingPolicy: shardingPolicy,
+                            deviceKey: deviceKey,
+                            keyStore: keyStore,
+                            onReloadUser: reload,
+                            onReloadPublicKeys: reloadPublicKeys
+                        )
+                    }
+                }
+            } else {
                 BootstrapKeyGeneration(email: user.loginName) {
                     ProgressView()
                 } content: { bootstrapKey in
@@ -51,24 +70,6 @@ struct UserVerification: View {
                             bootstrapKey: bootstrapKey,
                             onSuccess: reload,
                             onRetake: retakeClosure
-                        )
-                    }
-                }
-            } else {
-                DeviceKeyRegistration(
-                    user: user,
-                    deviceKey: deviceKey,
-                    onSuccess: reload
-                ) {
-                    PublicKeysStorage(email: user.loginName, deviceKey: deviceKey) {
-                        ProgressView()
-                    } success: { keyStore, reloadPublicKeys in
-                        RegistrationView(
-                            user: user,
-                            deviceKey: deviceKey,
-                            keyStore: keyStore,
-                            onReloadUser: reload,
-                            onReloadPublicKeys: reloadPublicKeys
                         )
                     }
                 }

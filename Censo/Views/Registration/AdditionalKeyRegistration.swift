@@ -14,8 +14,9 @@ struct AdditionalKeyRegistration: View {
     @RemoteResult private var signers: CensoApi.SignersInfo?
 
     var user: CensoApi.User
-    var publicKeys: PublicKeys
+    var encryptedRootSeed: Data
     var deviceKey: DeviceKey
+    var shardingPolicy: ShardingPolicy
     var onSuccess: () -> Void
 
     var body: some View {
@@ -38,7 +39,13 @@ struct AdditionalKeyRegistration: View {
 
     private func reload() {
         do {
-            let signers = try CensoApi.SignersInfo(publicKeys: publicKeys, deviceKey: deviceKey)
+            let rootSeed = try deviceKey.encrypt(data: encryptedRootSeed).bytes
+
+            let signers = try CensoApi.SignersInfo(
+                shardingPolicy: shardingPolicy,
+                rootSeed: rootSeed,
+                deviceKey: deviceKey
+            )
 
             _signers.reload(
                 using: censoApi.provider.loader(
@@ -59,9 +66,7 @@ struct AdditionalKeyRegistration: View {
 struct AdditionalKeyRegistration_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            AdditionalKeyRegistration(user: .sample, publicKeys: .init(bitcoin: "", ethereum: "", offchain: ""), deviceKey: .sample,
-                                      onSuccess: {}
-            )
+            AdditionalKeyRegistration(user: .sample, encryptedRootSeed: Data(), deviceKey: .sample, shardingPolicy: .sample, onSuccess: {})
         }
     }
 }

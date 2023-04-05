@@ -13,11 +13,12 @@ struct KeyGeneration: View {
     @State private var phrase = Mnemonic(strength: 256).phrase
 
     var user: CensoApi.User
+    var shardingPolicy: ShardingPolicy
     var deviceKey: DeviceKey
     var onSuccess: () -> Void
 
     var body: some View {
-        KeyConfirmationSuccess(user: user, deviceKey: deviceKey, phrase: phrase, onSuccess: onSuccess)
+        KeyConfirmationSuccess(user: user, deviceKey: deviceKey, phrase: phrase, shardingPolicy: shardingPolicy, onSuccess: onSuccess)
     }
 }
 
@@ -25,7 +26,7 @@ struct KeyGeneration: View {
 struct KeyGeneration_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            KeyGeneration(user: .sample, deviceKey: .sample, onSuccess: {})
+            KeyGeneration(user: .sample, shardingPolicy: .sample, deviceKey: .sample, onSuccess: {})
         }
     }
 }

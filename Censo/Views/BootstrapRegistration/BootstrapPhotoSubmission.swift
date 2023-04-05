@@ -62,30 +62,14 @@ struct BootstrapPhotoSubmission: View {
 
         do {
             let rootSeed = try Mnemonic(phrase: phrase).seed
-            let privateKeys = try PrivateKeys(rootSeed: rootSeed)
-            let devicePublicKey = try deviceKey.publicExternalRepresentation().base58String
-            let signersInfo = try CensoApi.SignersInfo(publicKeys: privateKeys.publicKeys, deviceKey: deviceKey)
+            let devicePublicKeyData = try deviceKey.publicExternalRepresentation()
+            let devicePublicKey = devicePublicKeyData.base58String
 
-            let userDevice = CensoApi.UserDevice(
-                publicKey: try deviceKey.publicExternalRepresentation().base58String,
-                deviceType: .ios,
-                userImage: CensoApi.UserImage(
-                    image: imageData.base64EncodedString(),
-                    type: .jpeg,
-                    signature: try deviceKey.signature(for: Data(SHA256.hash(data: imageData))).base64EncodedString()
-                ),
-                replacingDeviceIdentifier: nil
-            )
-
-            let bootstrapDevice = CensoApi.BootstrapDevice(
-                publicKey: try bootstrapKey.publicExternalRepresentation().base58String,
-                signature: try bootstrapKey.signature(for: signersInfo.signers.dataToSign).base64EncodedString()
-            )
-
-            let bootstrapUserDeviceAndSigners = CensoApi.BootstrapUserDeviceAndSigners(
-                userDevice: userDevice,
-                bootstrapDevice: bootstrapDevice,
-                signersInfo: signersInfo
+            let bootstrapUserDeviceAndSigners = try CensoApi.BootstrapUserDeviceAndSigners(
+                imageData: imageData,
+                deviceKey: deviceKey,
+                bootstrapKey: bootstrapKey,
+                rootSeed: rootSeed
             )
 
             inProgress = true
@@ -116,5 +100,33 @@ struct BootstrapPhotoSubmission: View {
             self.alertPresented = true
         }
 
+    }
+}
+
+extension CensoApi.BootstrapUserDeviceAndSigners {
+    init(imageData: Data, deviceKey: DeviceKey, bootstrapKey: BootstrapKey, rootSeed: [UInt8]) throws {
+        self.userDevice = CensoApi.UserDevice(
+            publicKey: try deviceKey.publicExternalRepresentation().base58String,
+            deviceType: .ios,
+            userImage: CensoApi.UserImage(
+                image: imageData.base64EncodedString(),
+                type: .jpeg,
+                signature: try deviceKey.signature(for: Data(SHA256.hash(data: imageData))).base64EncodedString()
+            ),
+            replacingDeviceIdentifier: nil
+        )
+
+        let shardingPolicy = try ShardingPolicy(deviceKey: deviceKey, bootstrapKey: bootstrapKey)
+
+        self.signersInfo = try CensoApi.SignersInfo(
+            shardingPolicy: shardingPolicy,
+            rootSeed: rootSeed,
+            deviceKey: deviceKey
+        )
+
+        self.bootstrapDevice = CensoApi.BootstrapDevice(
+            publicKey: try bootstrapKey.publicExternalRepresentation().base58String,
+            signature: try bootstrapKey.signature(for: signersInfo.signers.dataToSign).base64EncodedString()
+        )
     }
 }

@@ -12,6 +12,7 @@ struct RegistrationView: View {
     @Environment(\.censoApi) var censoApi
 
     var user: CensoApi.User
+    var shardingPolicy: ShardingPolicy
     var deviceKey: DeviceKey
     var keyStore: KeyStore?
     var onReloadUser: () -> Void
@@ -20,7 +21,7 @@ struct RegistrationView: View {
     var body: some View {
         switch (keyStore, user.registeredPublicKeys) {
         case (_, .none):
-            KeyGeneration(user: user, deviceKey: deviceKey, onSuccess: onReloadUser)
+            KeyGeneration(user: user, shardingPolicy: shardingPolicy, deviceKey: deviceKey, onSuccess: onReloadUser)
         case (.none, .complete):
             KeyRetrieval(user: user, registeredPublicKeys: user.publicKeys, deviceKey: deviceKey) {
                 onReloadPublicKeys()
@@ -29,8 +30,8 @@ struct RegistrationView: View {
             KeyRetrieval(user: user, registeredPublicKeys: publicKeys, deviceKey: deviceKey) {
                 onReloadPublicKeys()
             }
-        case (.some((let storedPublicKeys, _)), .incomplete):
-            AdditionalKeyRegistration(user: user, publicKeys: storedPublicKeys, deviceKey: deviceKey) {
+        case (.some((_, let encryptedRootSeed)), .incomplete):
+            AdditionalKeyRegistration(user: user, encryptedRootSeed: encryptedRootSeed, deviceKey: deviceKey, shardingPolicy: shardingPolicy) {
                 onReloadUser()
             }
         case (.some((let storedPublicKeys, let encryptedRootSeed)), .complete(let remotePublicKeys)) where storedPublicKeys == remotePublicKeys:
@@ -79,7 +80,7 @@ extension CensoApi.User {
 #if DEBUG
 struct RegistrationView_Previews: PreviewProvider {
     static var previews: some View {
-        RegistrationView(user: .sample, deviceKey: .sample, keyStore: nil, onReloadUser: { }, onReloadPublicKeys: {})
+        RegistrationView(user: .sample, shardingPolicy: .sample, deviceKey: .sample, keyStore: nil, onReloadUser: { }, onReloadPublicKeys: {})
     }
 }
 #endif

@@ -200,7 +200,7 @@ extension CensoApi {
     struct SignersInfo: Codable {
         let signers: [WalletSigner]
         let signature: String
-        let share: Share?
+        let share: Share
     }
     
     struct BootstrapDevice: Codable {
