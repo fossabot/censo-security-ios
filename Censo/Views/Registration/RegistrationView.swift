@@ -36,7 +36,8 @@ struct RegistrationView: View {
             }
         case (.some((let storedPublicKeys, let encryptedRootSeed)), .complete(let remotePublicKeys)) where storedPublicKeys == remotePublicKeys:
             ApprovalRequestsView(
-                deviceSigner: DeviceSigner(
+                registeredDevice: RegisteredDevice(
+                    email: user.loginName,
                     deviceKey: deviceKey,
                     encryptedRootSeed: encryptedRootSeed
                 ),

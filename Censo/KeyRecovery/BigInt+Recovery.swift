@@ -12,6 +12,7 @@ extension BigInt {
     enum BigIntConversionError: Error {
         case badParticipantId
         case badRootSeed
+        case badData
     }
 
     init(shardingParticipant: ShardingParticipant) throws {
@@ -25,6 +26,14 @@ extension BigInt {
     init(rootSeed: [UInt8]) throws {
         guard let bigInt = BigInt(rootSeed.toHexString(), radix: 16) else {
             throw BigIntConversionError.badRootSeed
+        }
+
+        self = bigInt
+    }
+
+    init(data: Data) throws {
+        guard let bigInt = BigInt(data.toHexString(), radix: 16) else {
+            throw BigIntConversionError.badData
         }
 
         self = bigInt

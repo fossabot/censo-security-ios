@@ -17,7 +17,7 @@ struct ApprovalRequestRow<Row, Detail>: View where Row : View, Detail: View {
     @State private var alert: AlertType? = nil
     @State private var navigated = false
 
-    var deviceSigner: DeviceSigner
+    var registeredDevice: RegisteredDevice
     var user: CensoApi.User
     var request: ApprovalRequest
     var timerPublisher: Publishers.Autoconnect<Timer.TimerPublisher>
@@ -97,7 +97,7 @@ struct ApprovalRequestRow<Row, Detail>: View where Row : View, Detail: View {
 
             NavigationLink(isActive: $navigated) {
                 ApprovalRequestDetails(
-                    deviceSigner: deviceSigner,
+                    registeredDevice: registeredDevice,
                     user: user,
                     request: request,
                     timerPublisher: timerPublisher,
@@ -129,10 +129,10 @@ struct ApprovalRequestRow<Row, Detail>: View where Row : View, Detail: View {
                     .registerApprovalDisposition(
                         CensoApi.ApprovalDispositionPayload(
                             dispositionRequest: request,
-                            deviceSigner: deviceSigner,
+                            registeredDevice: registeredDevice,
                             apiProvider: censoApi.provider
                         ),
-                        devicePublicKey: try deviceSigner.devicePublicKey()
+                        devicePublicKey: try registeredDevice.devicePublicKey()
                     )
                 )
 
@@ -186,7 +186,7 @@ struct ApprovalRequestRow_Previews: PreviewProvider {
     static var previews: some View {
         let timerPublisher = Timer.TimerPublisher(interval: 1, runLoop: .current, mode: .default).autoconnect()
 
-        ApprovalRequestRow(deviceSigner: .init(deviceKey: .sample, encryptedRootSeed: Data()), user: .sample, request: .sample, timerPublisher: timerPublisher) {
+        ApprovalRequestRow(registeredDevice: .init(email: "test@test.com", deviceKey: .sample, encryptedRootSeed: Data()), user: .sample, request: .sample, timerPublisher: timerPublisher) {
             WithdrawalRow(requestType: .ethereumWithdrawalRequest(.sample), withdrawal: EthereumWithdrawalRequest.sample)
         } detail: {
             WithdrawalDetails(request: .sample, withdrawal: EthereumWithdrawalRequest.sample)

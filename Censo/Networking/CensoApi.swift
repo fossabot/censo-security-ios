@@ -188,11 +188,18 @@ extension CensoApi {
         let shardParentId: String?
     }
     
-    struct GetShardsResponse: Codable {
+    struct ShardsResponse: Codable {
+        struct Shard: Codable {
+            let participantId: String
+            let shardCopies: [ShardCopy]
+            let shardId: String
+            let shardParentId: String?
+        }
+
         let shards: [Shard]
     }
 
-    struct GetRecoveryShardsResponse: Codable {
+    struct RecoveryShardsResponse: Codable {
         let shards: [Shard]
         let ancestors: [AncestorShard]
     }

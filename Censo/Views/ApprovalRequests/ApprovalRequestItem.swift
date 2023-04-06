@@ -12,7 +12,7 @@ import Alamofire
 
 
 struct ApprovalRequestItem: View {
-    var deviceSigner: DeviceSigner
+    var registeredDevice: RegisteredDevice
     var user: CensoApi.User
     var request: ApprovalRequest
     var onStatusChange: (() -> Void)?
@@ -23,7 +23,7 @@ struct ApprovalRequestItem: View {
         case .bitcoinWithdrawalRequest(let withdrawal as WithdrawalRequest),
              .ethereumWithdrawalRequest(let withdrawal as WithdrawalRequest),
              .polygonWithdrawalRequest(let withdrawal as WithdrawalRequest):
-            ApprovalRequestRow(deviceSigner: deviceSigner, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
+            ApprovalRequestRow(registeredDevice: registeredDevice, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
                 WithdrawalRow(requestType: request.details, withdrawal: withdrawal)
             } detail: {
                 WithdrawalDetails(request: request, withdrawal: withdrawal)
@@ -31,13 +31,13 @@ struct ApprovalRequestItem: View {
         case .bitcoinWalletCreation(let walletCreation as WalletCreation),
              .ethereumWalletCreation(let walletCreation as WalletCreation),
              .polygonWalletCreation(let walletCreation as WalletCreation):
-            ApprovalRequestRow(deviceSigner: deviceSigner, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
+            ApprovalRequestRow(registeredDevice: registeredDevice, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
                 WalletCreationRow(requestType: request.details, walletCreation: walletCreation)
             } detail: {
                 WalletCreationDetails(request: request, walletCreation: walletCreation)
             }
         case .ethereumDAppTransactionRequest(let dAppTransactionRequest):
-            ApprovalRequestRow(deviceSigner: deviceSigner, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
+            ApprovalRequestRow(registeredDevice: registeredDevice, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
                 DAppTransactionRow(requestType: request.details, transactionRequest: dAppTransactionRequest)
             } detail: {
                 DAppTransactionDetails(request: request, transactionRequest: dAppTransactionRequest)
@@ -47,95 +47,95 @@ struct ApprovalRequestItem: View {
              .bitcoinWalletNameUpdate(let nameUpdate as NameUpdate),
              .vaultNameUpdate(let nameUpdate as NameUpdate),
              .orgNameUpdate(let nameUpdate as NameUpdate):
-            ApprovalRequestRow(deviceSigner: deviceSigner, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
+            ApprovalRequestRow(registeredDevice: registeredDevice, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
                 NameUpdateRow(requestType: request.details, update: nameUpdate)
             } detail: {
                 NameUpdateDetails(request: request, update: nameUpdate)
             }
         case .ethereumTransferPolicyUpdate(let walletTransferPolicyUpdate as TransferPolicyUpdate),
              .polygonTransferPolicyUpdate(let walletTransferPolicyUpdate as TransferPolicyUpdate): // 2
-            ApprovalRequestRow(deviceSigner: deviceSigner, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
+            ApprovalRequestRow(registeredDevice: registeredDevice, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
                 WalletTransferPolicyRow(requestType: request.details, update: walletTransferPolicyUpdate)
             } detail: {
                 WalletTransferPolicyDetails(request: request, update: walletTransferPolicyUpdate, user: user)
             }
         case .ethereumWalletSettingsUpdate(let walletSettingsUpdate as WalletSettingsUpdate),
              .polygonWalletSettingsUpdate(let walletSettingsUpdate as WalletSettingsUpdate): // 5
-            ApprovalRequestRow(deviceSigner: deviceSigner, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
+            ApprovalRequestRow(registeredDevice: registeredDevice, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
                 WalletSettingsRow(requestType: request.details, update: walletSettingsUpdate)
             } detail: {
                 WalletSettingsDetails(request: request, update: walletSettingsUpdate, user: user)
             }
         case .addressBookUpdate(let addressBookUpdate): // 4 - remove whitelist
-            ApprovalRequestRow(deviceSigner: deviceSigner, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
+            ApprovalRequestRow(registeredDevice: registeredDevice, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
                 AddressBookUpdateRow(requestType: request.details, update: addressBookUpdate)
             } detail: {
                 AddressBookUpdateDetails(request: request, update: addressBookUpdate)
             }
         case .addDevice(let userDevice as UserDevice),
              .removeDevice(let userDevice as UserDevice):
-            ApprovalRequestRow(deviceSigner: deviceSigner, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
+            ApprovalRequestRow(registeredDevice: registeredDevice, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
                 AddOrRemoveDeviceRow(requestType: request.details, userDevice: userDevice)
             } detail: {
                 AddOrRemoveDeviceDetails(request: request, userDevice: userDevice)
             }
         case .vaultPolicyUpdate(let vaultPolicyUpdate): // 1
-            ApprovalRequestRow(deviceSigner: deviceSigner, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
+            ApprovalRequestRow(registeredDevice: registeredDevice, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
                 VaultConfigPolicyRow(requestType: request.details, update: vaultPolicyUpdate)
             } detail: {
                 VaultConfigPolicyDetails(request: request, update: vaultPolicyUpdate)
             }
         case .vaultCreation(let vaultCreation): // 1
-            ApprovalRequestRow(deviceSigner: deviceSigner, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
+            ApprovalRequestRow(registeredDevice: registeredDevice, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
                 VaultCreationRow(requestType: request.details, vaultCreation: vaultCreation)
             } detail: {
                 VaultCreationDetails(request: request, vaultCreation: vaultCreation)
             }
         case .orgAdminPolicyUpdate(let orgAdminPolicyUpdate): // 1
-            ApprovalRequestRow(deviceSigner: deviceSigner, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
+            ApprovalRequestRow(registeredDevice: registeredDevice, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
                 OrgAdminPolicyRow(requestType: request.details, update: orgAdminPolicyUpdate)
             } detail: {
                 OrgAdminPolicyDetails(request: request, update: orgAdminPolicyUpdate)
             }
         case .ethereumWalletWhitelistUpdate(let walletWhitelistUpdate as WalletWhitelistUpdate),
              .polygonWalletWhitelistUpdate(let walletWhitelistUpdate as WalletWhitelistUpdate):
-            ApprovalRequestRow(deviceSigner: deviceSigner, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
+            ApprovalRequestRow(registeredDevice: registeredDevice, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
                 WalletWhitelistRow(requestType: request.details, update: walletWhitelistUpdate)
             } detail: {
                 WalletWhitelistDetails(request: request, update: walletWhitelistUpdate, user: user)
             }
         case .loginApproval(let login):
-            ApprovalRequestRow(deviceSigner: deviceSigner, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
+            ApprovalRequestRow(registeredDevice: registeredDevice, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
                 LoginRow(requestType: request.details, login: login)
             } detail: {
                 LoginDetails(requestType: request.details, login: login)
             }
         case .passwordReset:
-            ApprovalRequestRow(deviceSigner: deviceSigner, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
+            ApprovalRequestRow(registeredDevice: registeredDevice, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
                 PasswordResetRow(requestType: request.details, email: request.submitterEmail)
             } detail: {
                 PasswordResetDetails(requestType: request.details)
             }
         case .vaultUserRolesUpdate(let update):
-            ApprovalRequestRow(deviceSigner: deviceSigner, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
+            ApprovalRequestRow(registeredDevice: registeredDevice, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
                 VaultUserRolesUpdateRow(requestType: request.details, update: update)
             } detail: {
                 VaultUserRolesUpdateDetails(request: request, update: update)
             }
         case .suspendUser(let suspendUser):
-            ApprovalRequestRow(deviceSigner: deviceSigner, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
+            ApprovalRequestRow(registeredDevice: registeredDevice, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
                 SuspendUserRow(requestType: request.details, suspendUser: suspendUser)
             } detail: {
                 UserDetails(request: request, user: suspendUser as UserInfo)
             }
         case .restoreUser(let restoreUser):
-            ApprovalRequestRow(deviceSigner: deviceSigner, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
+            ApprovalRequestRow(registeredDevice: registeredDevice, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
                 RestoreUserRow(requestType: request.details, restoreUser: restoreUser)
             } detail: {
                 UserDetails(request: request, user: restoreUser as UserInfo)
             }
         case .enableRecoveryContract(let enableRecoveryContract):
-            ApprovalRequestRow(deviceSigner: deviceSigner, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
+            ApprovalRequestRow(registeredDevice: registeredDevice, user: user, request: request, timerPublisher: timerPublisher, onStatusChange: onStatusChange) {
                 EnableRecoveryPolicyRow(requestType: request.details, enableRecoveryContract: enableRecoveryContract)
             } detail: {
                 EnableRecoveryPolicyDetails(request: request, enableRecoveryContract: enableRecoveryContract)

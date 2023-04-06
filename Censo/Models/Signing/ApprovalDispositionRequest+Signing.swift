@@ -9,38 +9,15 @@ import Foundation
 import Moya
 import CryptoKit
 
-struct DeviceSigner {
-    private var deviceKey: DeviceKey
-    private var encryptedRootSeed: Data
-
-    init(deviceKey: DeviceKey, encryptedRootSeed: Data) {
-        self.deviceKey = deviceKey
-        self.encryptedRootSeed = encryptedRootSeed
-    }
-
-    func deviceSignature(for data: Data) throws -> Data {
-        try deviceKey.signature(for: data)
-    }
-
-    func privateKeys() throws -> PrivateKeys {
-        let rootSeed = try deviceKey.decrypt(data: encryptedRootSeed)
-        return try PrivateKeys(rootSeed: rootSeed.bytes)
-    }
-
-    func devicePublicKey() throws -> String {
-        try deviceKey.publicExternalRepresentation().base58String
-    }
-}
-
 extension ApprovalDispositionRequest {
-    func signatureInfos(using deviceSigner: DeviceSigner, apiProvider: MoyaProvider<CensoApi.Target>) async throws -> [SignatureInfo] {
+    func signatureInfos(using registeredDevice: RegisteredDevice, apiProvider: MoyaProvider<CensoApi.Target>) async throws -> [SignatureInfo] {
         switch disposition {
         case .Approve:
             switch request.details {
             case .loginApproval(let request):
-                return try getLoginSignatureInfos(using: deviceSigner, request: request)
+                return try getLoginSignatureInfos(using: registeredDevice, request: request)
             case .passwordReset:
-                return try getPasswordResetSignatureInfos(using: deviceSigner)
+                return try getPasswordResetSignatureInfos(using: registeredDevice)
             case .ethereumWalletCreation,
                     .bitcoinWalletCreation,
                     .polygonWalletCreation,
@@ -53,15 +30,15 @@ extension ApprovalDispositionRequest {
                     .vaultUserRolesUpdate,
                     .suspendUser,
                     .restoreUser:
-                return [try .offchain(getApprovalRequestDetailsSignature(using: deviceSigner, privateKeys: try deviceSigner.privateKeys()))]
+                return [try .offchain(getApprovalRequestDetailsSignature(using: registeredDevice, privateKeys: try registeredDevice.privateKeys()))]
                 
             case .vaultPolicyUpdate(let signableRequest as MultichainSignable),
                     .vaultNameUpdate(let signableRequest as MultichainSignable),
                     .orgAdminPolicyUpdate(let signableRequest as MultichainSignable),
                     .enableRecoveryContract(let signableRequest as MultichainSignable):
-                let privateKeys = try deviceSigner.privateKeys()
+                let privateKeys = try registeredDevice.privateKeys()
                 var signatures: [SignatureInfo] = [
-                    .offchain(try getApprovalRequestDetailsSignature(using: deviceSigner, privateKeys: privateKeys))
+                    .offchain(try getApprovalRequestDetailsSignature(using: registeredDevice, privateKeys: privateKeys))
                 ]
                 
                 for (chain, dataToSign) in try signableRequest.signableData() {
@@ -71,7 +48,7 @@ extension ApprovalDispositionRequest {
                             .ethereumWithOffchain(
                                 EthereumSignatureWithOffchain(
                                     signature: try privateKeys.signature(for: dataToSign, chain: Chain.ethereum),
-                                    offchainSignature: try getApprovalRequestDetailsSignature(using: deviceSigner, privateKeys: privateKeys)
+                                    offchainSignature: try getApprovalRequestDetailsSignature(using: registeredDevice, privateKeys: privateKeys)
                                 )
                             )
                         )
@@ -80,7 +57,7 @@ extension ApprovalDispositionRequest {
                             .polygonWithOffchain(
                                 PolygonSignatureWithOffchain(
                                     signature: try privateKeys.signature(for: dataToSign, chain: Chain.ethereum),
-                                    offchainSignature: try getApprovalRequestDetailsSignature(using: deviceSigner, privateKeys: privateKeys)
+                                    offchainSignature: try getApprovalRequestDetailsSignature(using: registeredDevice, privateKeys: privateKeys)
                                 )
                             )
                         )
@@ -94,13 +71,13 @@ extension ApprovalDispositionRequest {
                     .ethereumWalletNameUpdate(let request as EvmSignable),
                     .ethereumWalletSettingsUpdate(let request as EvmSignable),
                     .ethereumWalletWhitelistUpdate(let request as EvmSignable):
-                let privateKeys = try deviceSigner.privateKeys()
+                let privateKeys = try registeredDevice.privateKeys()
                 
                 return [
                     .ethereumWithOffchain(
                         EthereumSignatureWithOffchain(
                             signature: try privateKeys.signature(for: try request.signableData(), chain: .ethereum),
-                            offchainSignature: try getApprovalRequestDetailsSignature(using: deviceSigner, privateKeys: privateKeys)
+                            offchainSignature: try getApprovalRequestDetailsSignature(using: registeredDevice, privateKeys: privateKeys)
                         )
                     )
                 ]
@@ -109,37 +86,37 @@ extension ApprovalDispositionRequest {
                     .polygonWalletNameUpdate(let request as EvmSignable),
                     .polygonWalletSettingsUpdate(let request as EvmSignable),
                     .polygonWalletWhitelistUpdate(let request as EvmSignable):
-                let privateKeys = try deviceSigner.privateKeys()
+                let privateKeys = try registeredDevice.privateKeys()
                 
                 return [
                     .polygonWithOffchain(
                         PolygonSignatureWithOffchain(
                             signature: try privateKeys.signature(for: try request.signableData(), chain: .polygon),
-                            offchainSignature: try getApprovalRequestDetailsSignature(using: deviceSigner, privateKeys: privateKeys)
+                            offchainSignature: try getApprovalRequestDetailsSignature(using: registeredDevice, privateKeys: privateKeys)
                         )
                     )
                 ]
                 
             case .ethereumTransferPolicyUpdate(let details as EvmSignable):
-                let privateKeys = try deviceSigner.privateKeys()
+                let privateKeys = try registeredDevice.privateKeys()
                 
                 return [
                     .ethereumWithOffchain(
                         EthereumSignatureWithOffchain(
                             signature: try privateKeys.signature(for: try details.signableData(), chain: .ethereum),
-                            offchainSignature: try getApprovalRequestDetailsSignature(using: deviceSigner, privateKeys: privateKeys)
+                            offchainSignature: try getApprovalRequestDetailsSignature(using: registeredDevice, privateKeys: privateKeys)
                         )
                     )
                 ]
                 
             case .polygonTransferPolicyUpdate(let details as EvmSignable):
-                let privateKeys = try deviceSigner.privateKeys()
+                let privateKeys = try registeredDevice.privateKeys()
                 
                 return [
                     .polygonWithOffchain(
                         PolygonSignatureWithOffchain(
                             signature: try privateKeys.signature(for: try details.signableData(), chain: .polygon),
-                            offchainSignature: try getApprovalRequestDetailsSignature(using: deviceSigner, privateKeys: privateKeys)
+                            offchainSignature: try getApprovalRequestDetailsSignature(using: registeredDevice, privateKeys: privateKeys)
                         )
                     )
                 ]
@@ -147,7 +124,7 @@ extension ApprovalDispositionRequest {
             case .bitcoinWithdrawalRequest(let request as BitcoinSignable):
                 let dataArrayToSign = try request.signableDataList()
                 let derivationPath = DerivationNode.notHardened(request.signingData.childKeyIndex)
-                let privateKeys = try deviceSigner.privateKeys()
+                let privateKeys = try registeredDevice.privateKeys()
                 
                 return [
                     .bitcoinWithOffchain(
@@ -155,7 +132,7 @@ extension ApprovalDispositionRequest {
                             signatures: try dataArrayToSign.map { data in
                                 try privateKeys.signature(for: data, chain: .bitcoin, derivationPath: derivationPath)
                             },
-                            offchainSignature: try getApprovalRequestDetailsSignature(using: deviceSigner, privateKeys: privateKeys)
+                            offchainSignature: try getApprovalRequestDetailsSignature(using: registeredDevice, privateKeys: privateKeys)
                         )
                     )
                 ]
@@ -165,40 +142,40 @@ extension ApprovalDispositionRequest {
         case .Deny:
             switch request.details {
             case .loginApproval(let request):
-                return try getLoginSignatureInfos(using: deviceSigner, request: request)
+                return try getLoginSignatureInfos(using: registeredDevice, request: request)
             case .passwordReset:
-                return try getPasswordResetSignatureInfos(using: deviceSigner)
+                return try getPasswordResetSignatureInfos(using: registeredDevice)
             default:
-                return [try .offchain(getApprovalRequestDetailsSignature(using: deviceSigner, privateKeys: try deviceSigner.privateKeys()))]
+                return [try .offchain(getApprovalRequestDetailsSignature(using: registeredDevice, privateKeys: try registeredDevice.privateKeys()))]
             }
         }
     }
     
-    private func getLoginSignatureInfos(using deviceSigner: DeviceSigner, request: LoginApproval) throws -> [SignatureInfo] {
+    private func getLoginSignatureInfos(using registeredDevice: RegisteredDevice, request: LoginApproval) throws -> [SignatureInfo] {
         let dataToSign = "{\"token\":\"\(request.jwtToken)\",\"disposition\":\"\(disposition)\"}".data(using: .utf8)!
         return [
             .offchain(
                 OffChainSignature(
-                    signature: try deviceSigner.deviceSignature(for: dataToSign).base64EncodedString(),
+                    signature: try registeredDevice.deviceSignature(for: dataToSign).base64EncodedString(),
                     signedData: dataToSign.base64EncodedString()
                 )
             )
         ]
     }
     
-    private func getPasswordResetSignatureInfos(using deviceSigner: DeviceSigner) throws -> [SignatureInfo] {
+    private func getPasswordResetSignatureInfos(using registeredDevice: RegisteredDevice) throws -> [SignatureInfo] {
         let dataToSign = "{\"guid\":\"\(request.id)\",\"disposition\":\"\(disposition)\"}".data(using: .utf8)!
         return [
             .offchain(
                 OffChainSignature(
-                    signature: try deviceSigner.deviceSignature(for: dataToSign).base64EncodedString(),
+                    signature: try registeredDevice.deviceSignature(for: dataToSign).base64EncodedString(),
                     signedData: dataToSign.base64EncodedString()
                 )
             )
         ]
     }
     
-    private func getApprovalRequestDetailsSignature(using deviceSigner: DeviceSigner, privateKeys: PrivateKeys) throws -> OffChainSignature {
+    private func getApprovalRequestDetailsSignature(using registeredDevice: RegisteredDevice, privateKeys: PrivateKeys) throws -> OffChainSignature {
         let jsonData = try JSONEncoder().encode(ApprovalRequestDetailsWithDisposition(
             approvalRequestDetails: request.details,
             disposition: disposition
@@ -213,12 +190,4 @@ extension ApprovalDispositionRequest {
 struct ApprovalRequestDetailsWithDisposition: Codable, Equatable  {
     let approvalRequestDetails: ApprovalRequestType
     let disposition: ApprovalDisposition
-}
-
-extension CensoApi.ApprovalDispositionPayload {
-    init(dispositionRequest: ApprovalDispositionRequest, deviceSigner: DeviceSigner, apiProvider: MoyaProvider<CensoApi.Target>) async throws {
-        self.approvalDisposition = dispositionRequest.disposition
-        self.requestID = dispositionRequest.request.id
-        self.signatures = try await dispositionRequest.signatureInfos(using: deviceSigner, apiProvider: apiProvider)
-    }
 }

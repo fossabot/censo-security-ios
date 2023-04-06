@@ -13,20 +13,17 @@ extension CensoApi.SignersInfo {
         let privateKeys = try PrivateKeys(rootSeed: rootSeed)
         let signers = privateKeys.publicKeys.walletSigners
 
-        let secretSharer = try SecretSharer(
+        let secretSharer = try ShardingPolicySecretSharer(
             secret: BigInt(rootSeed: rootSeed),
-            threshold: shardingPolicy.threshold,
-            participants: shardingPolicy.participants.map { try BigInt(shardingParticipant: $0) }
+            shardingPolicy: shardingPolicy
         )
-
-        let participantIdToAdminUserMap = Dictionary(uniqueKeysWithValues: shardingPolicy.participants.map({ ($0.participantId, $0) }))
 
         let share = CensoApi.Share(
             policyRevisionId: shardingPolicy.policyRevisionGuid,
-            shards: try secretSharer.shards.map { point in
+            shards: try secretSharer.shardsAndParticipants.map { point, participant in
                 CensoApi.Shard(
                     participantId: point.x.magnitude.toHexString(),
-                    shardCopies: try participantIdToAdminUserMap[point.x.magnitude.toHexString()]!.devicePublicKeys.map { devicePublicKey in
+                    shardCopies: try participant.devicePublicKeys.map { devicePublicKey in
                         CensoApi.ShardCopy(
                             encryptionPublicKey: devicePublicKey,
                             encryptedData: try ECPublicKey(base58String: devicePublicKey).encrypt(data: point.y.serialize()).base64EncodedString()
@@ -43,5 +40,32 @@ extension CensoApi.SignersInfo {
             signature: try deviceKey.signature(for: signers.dataToSign).base64EncodedString(),
             share: share
         )
+    }
+}
+
+struct ShardingPolicySecretSharer {
+    let secretSharer: SecretSharer
+    let shardsAndParticipants: [(Point, ShardingParticipant)]
+
+    enum PolicyShardingError: Error {
+        case notAllParticipantsSharded
+    }
+
+    init(secret: BigInt, shardingPolicy: ShardingPolicy) throws {
+        self.secretSharer = try SecretSharer(
+            secret: secret,
+            threshold: shardingPolicy.threshold,
+            participants: shardingPolicy.participants.map { try BigInt(shardingParticipant: $0) }
+        )
+
+        let participantIdToAdminUserMap = Dictionary(uniqueKeysWithValues: shardingPolicy.participants.map({ ($0.participantId, $0) }))
+
+        self.shardsAndParticipants = try secretSharer.shards.map { point in
+            if let participant = participantIdToAdminUserMap[point.x.magnitude.toHexString()] {
+                return (point, participant)
+            } else {
+                throw PolicyShardingError.notAllParticipantsSharded
+            }
+        }
     }
 }

@@ -19,7 +19,7 @@ struct ApprovalRequestDetails<Content>: View where Content : View {
     @State private var isComposingMail = false
     @State private var timeRemaining: DateComponents = DateComponents()
 
-    var deviceSigner: DeviceSigner
+    var registeredDevice: RegisteredDevice
     var user: CensoApi.User
     var request: ApprovalRequest
     var timerPublisher: Publishers.Autoconnect<Timer.TimerPublisher>
@@ -200,10 +200,10 @@ struct ApprovalRequestDetails<Content>: View where Content : View {
                     .registerApprovalDisposition(
                         CensoApi.ApprovalDispositionPayload(
                             dispositionRequest: request,
-                            deviceSigner: deviceSigner,
+                            registeredDevice: registeredDevice,
                             apiProvider: censoApi.provider
                         ),
-                        devicePublicKey: try deviceSigner.devicePublicKey()
+                        devicePublicKey: try registeredDevice.devicePublicKey()
                     )
                 )
 
@@ -234,10 +234,10 @@ struct ApprovalRequestDetails<Content>: View where Content : View {
                     .registerApprovalDisposition(
                         CensoApi.ApprovalDispositionPayload(
                             dispositionRequest: request,
-                            deviceSigner: deviceSigner,
+                            registeredDevice: registeredDevice,
                             apiProvider: censoApi.provider
                         ),
-                        devicePublicKey: try deviceSigner.devicePublicKey()
+                        devicePublicKey: try registeredDevice.devicePublicKey()
                     )
                 )
 
@@ -296,7 +296,7 @@ struct ApprovalRequestDetails_Previews: PreviewProvider {
         let timerPublisher = Timer.TimerPublisher(interval: 1, runLoop: .current, mode: .default).autoconnect()
 
         NavigationView {
-            ApprovalRequestDetails(deviceSigner: DeviceSigner(deviceKey: .sample, encryptedRootSeed: Data()), user: .sample, request: .sample, timerPublisher: timerPublisher) {
+            ApprovalRequestDetails(registeredDevice: RegisteredDevice(email: "test@test.com", deviceKey: .sample, encryptedRootSeed: Data()), user: .sample, request: .sample, timerPublisher: timerPublisher) {
                 WithdrawalDetails(request: .sample, withdrawal: EthereumWithdrawalRequest.sample)
             }
         }
