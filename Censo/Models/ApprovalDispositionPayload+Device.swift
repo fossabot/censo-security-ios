@@ -79,18 +79,20 @@ extension CensoApi.ApprovalDispositionPayload {
             .shards
             .map { shard in
                 try shard.shardCopies.map { shardCopy in
+                    let encryptedShardData = Data(base64Encoded: shardCopy.encryptedData)!
+
                     if shardCopy.encryptionPublicKey == devicePublicKey {
                         return CensoApi.RecoveryShard(
                             shardId: shard.shardId,
                             encryptedData: try newDeviceKey.encrypt(
-                                data: try registeredDevice.decrypt(Data(base64Encoded: shardCopy.encryptedData)!)
+                                data: try registeredDevice.decrypt(encryptedShardData)
                             ).base64EncodedString()
                         )
                     } else if let bootstrapKey = registeredDevice.bootstrapKey, try shardCopy.encryptionPublicKey == bootstrapKey.publicExternalRepresentation().base58String {
                         return CensoApi.RecoveryShard(
                             shardId: shard.shardId,
                             encryptedData: try newDeviceKey.encrypt(
-                                data: try bootstrapKey.decrypt(data: Data(base64Encoded: shardCopy.encryptedData)!)
+                                data: try bootstrapKey.decrypt(data: encryptedShardData)
                             ).base64EncodedString()
                         )
                     } else {
@@ -155,4 +157,3 @@ extension CensoApi.ApprovalDispositionPayload {
             .flatMap { $0 }
     }
 }
-

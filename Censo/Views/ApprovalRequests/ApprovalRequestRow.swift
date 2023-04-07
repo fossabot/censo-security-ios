@@ -21,7 +21,8 @@ struct ApprovalRequestRow<Row, Detail>: View where Row : View, Detail: View {
     var user: CensoApi.User
     var request: ApprovalRequest
     var timerPublisher: Publishers.Autoconnect<Timer.TimerPublisher>
-    var onStatusChange: (() -> Void)?
+    var onApprove: (() -> Void)?
+    var onDecline: (() -> Void)?
     @ViewBuilder var row: () -> Row
     @ViewBuilder var detail: () -> Detail
     
@@ -101,7 +102,8 @@ struct ApprovalRequestRow<Row, Detail>: View where Row : View, Detail: View {
                     user: user,
                     request: request,
                     timerPublisher: timerPublisher,
-                    onStatusChange: onStatusChange,
+                    onApprove: onApprove,
+                    onDecline: onDecline,
                     content: detail
                 )
                 .environment(\.censoApi, censoApi)
@@ -124,20 +126,21 @@ struct ApprovalRequestRow<Row, Detail>: View where Row : View, Detail: View {
 
             do {
                 let request = ApprovalDispositionRequest(disposition: .Approve, request: request)
+                let payload = try await CensoApi.ApprovalDispositionPayload(
+                    dispositionRequest: request,
+                    registeredDevice: registeredDevice,
+                    apiProvider: censoApi.provider
+                )
 
                 _ = try await censoApi.provider.request(
                     .registerApprovalDisposition(
-                        CensoApi.ApprovalDispositionPayload(
-                            dispositionRequest: request,
-                            registeredDevice: registeredDevice,
-                            apiProvider: censoApi.provider
-                        ),
+                        payload,
                         devicePublicKey: try registeredDevice.devicePublicKey()
                     )
                 )
 
                 await MainActor.run {
-                    onStatusChange?()
+                    onApprove?()
                 }
             } catch {
                 await MainActor.run {

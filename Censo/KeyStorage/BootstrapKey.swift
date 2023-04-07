@@ -37,4 +37,8 @@ extension SecureEnclaveWrapper {
             return BootstrapKey(secKey: secKey)
         }
     }
+
+    static func removeBootstrapKey(email: String) {
+        removeKey(name: bootstrapKeyIdentifier(email: email))
+    }
 }

@@ -21,6 +21,11 @@
 		3D10290529E06D2400EC5A6C /* DevicePhotoSubmission.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D10290329E06D2400EC5A6C /* DevicePhotoSubmission.swift */; };
 		3D10290929E06D3100EC5A6C /* BootstrapPhotoSubmission.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D10290729E06D3100EC5A6C /* BootstrapPhotoSubmission.swift */; };
 		3D10290A29E06D3100EC5A6C /* BootstrapKeyGeneration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D10290829E06D3100EC5A6C /* BootstrapKeyGeneration.swift */; };
+		3D10290D29E070C800EC5A6C /* BootstrapKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D10290B29E070C800EC5A6C /* BootstrapKey.swift */; };
+		3D10290E29E070C800EC5A6C /* SecureEnclaveKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D10290C29E070C800EC5A6C /* SecureEnclaveKey.swift */; };
+		3D10291129E0712F00EC5A6C /* RegisteredDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D10290F29E0712F00EC5A6C /* RegisteredDevice.swift */; };
+		3D10291229E0712F00EC5A6C /* ApprovalDispositionPayload+Device.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D10291029E0712F00EC5A6C /* ApprovalDispositionPayload+Device.swift */; };
+		3D10291429E0714E00EC5A6C /* WaitingForDeviceApproval.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D10291329E0714E00EC5A6C /* WaitingForDeviceApproval.swift */; };
 		3D115202282169D4007CD43D /* VaultConfigPolicyRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D115201282169D4007CD43D /* VaultConfigPolicyRow.swift */; };
 		3D115204282169E1007CD43D /* VaultConfigPolicyDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D115203282169E1007CD43D /* VaultConfigPolicyDetails.swift */; };
 		3D11520728216FBD007CD43D /* WalletTransferPolicyRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D11520628216FBD007CD43D /* WalletTransferPolicyRow.swift */; };
@@ -235,6 +240,11 @@
 		3D10290329E06D2400EC5A6C /* DevicePhotoSubmission.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DevicePhotoSubmission.swift; sourceTree = "<group>"; };
 		3D10290729E06D3100EC5A6C /* BootstrapPhotoSubmission.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BootstrapPhotoSubmission.swift; sourceTree = "<group>"; };
 		3D10290829E06D3100EC5A6C /* BootstrapKeyGeneration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BootstrapKeyGeneration.swift; sourceTree = "<group>"; };
+		3D10290B29E070C800EC5A6C /* BootstrapKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BootstrapKey.swift; sourceTree = "<group>"; };
+		3D10290C29E070C800EC5A6C /* SecureEnclaveKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecureEnclaveKey.swift; sourceTree = "<group>"; };
+		3D10290F29E0712F00EC5A6C /* RegisteredDevice.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RegisteredDevice.swift; sourceTree = "<group>"; };
+		3D10291029E0712F00EC5A6C /* ApprovalDispositionPayload+Device.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ApprovalDispositionPayload+Device.swift"; sourceTree = "<group>"; };
+		3D10291329E0714E00EC5A6C /* WaitingForDeviceApproval.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WaitingForDeviceApproval.swift; sourceTree = "<group>"; };
 		3D115201282169D4007CD43D /* VaultConfigPolicyRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VaultConfigPolicyRow.swift; sourceTree = "<group>"; };
 		3D115203282169E1007CD43D /* VaultConfigPolicyDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VaultConfigPolicyDetails.swift; sourceTree = "<group>"; };
 		3D11520628216FBD007CD43D /* WalletTransferPolicyRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletTransferPolicyRow.swift; sourceTree = "<group>"; };
@@ -643,6 +653,7 @@
 		3D3D6D3D261B946800FEEE0B /* Registration */ = {
 			isa = PBXGroup;
 			children = (
+				3D10291329E0714E00EC5A6C /* WaitingForDeviceApproval.swift */,
 				3D3D6D352616B84700FEEE0B /* RegistrationView.swift */,
 				3DC7A74027D0067D00A2BBA7 /* KeyGeneration.swift */,
 				3DC7A74227D006A900A2BBA7 /* KeyRetrieval.swift */,
@@ -697,6 +708,8 @@
 		3D79C8602645C3CD00FE5D9C /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				3D10291029E0712F00EC5A6C /* ApprovalDispositionPayload+Device.swift */,
+				3D10290F29E0712F00EC5A6C /* RegisteredDevice.swift */,
 				6CBA96D528E63D96000A3727 /* Secp256k1 */,
 				3DBF9DAE26DE7A0E00D7683E /* ViewRouter.swift */,
 				3DB995FE27EE1804005655F0 /* BiometryError.swift */,
@@ -723,6 +736,8 @@
 		3D845E0B29101588000C9E81 /* KeyStorage */ = {
 			isa = PBXGroup;
 			children = (
+				3D10290B29E070C800EC5A6C /* BootstrapKey.swift */,
+				3D10290C29E070C800EC5A6C /* SecureEnclaveKey.swift */,
 				3DC205CE2989710800BD8BB0 /* DeviceKey.swift */,
 				3D845E0C2910159B000C9E81 /* PrivateKeys.swift */,
 				3D845E0E291015D1000C9E81 /* PublicKeys.swift */,
@@ -1179,6 +1194,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3D1028F029DDD10300EC5A6C /* ShardingParticipant+PublicKey.swift in Sources */,
+				3D10291229E0712F00EC5A6C /* ApprovalDispositionPayload+Device.swift in Sources */,
 				BDFBBC2E29D5FA7D0054286C /* EnableRecoveryPolicyRow.swift in Sources */,
 				3D2BCA08264D7A79000A6D56 /* ChangeDetails.swift in Sources */,
 				3DBC44E5280F18830016E1AB /* LoginDetails.swift in Sources */,
@@ -1235,6 +1251,7 @@
 				3D311DEA260BD14A007A0B98 /* Moya+AuthProvider.swift in Sources */,
 				3D6334FB2885C2C9002CEC5A /* DarkRoundedTextFieldStyle.swift in Sources */,
 				3DC7A74527D67E8900A2BBA7 /* SharedClientModel.swift in Sources */,
+				3D10290E29E070C800EC5A6C /* SecureEnclaveKey.swift in Sources */,
 				3D3D6CF12616437400FEEE0B /* AuthProvider.swift in Sources */,
 				3DAA26F6262F5156000F453D /* DestructiveButtonStyle.swift in Sources */,
 				3D311D57260A3A1A007A0B98 /* MockAuthProvider.swift in Sources */,
@@ -1243,6 +1260,7 @@
 				3D11520728216FBD007CD43D /* WalletTransferPolicyRow.swift in Sources */,
 				3D11A60B275851BA008C03B1 /* WalletConnected.swift in Sources */,
 				3D11A60027580CD2008C03B1 /* CaptureController.swift in Sources */,
+				3D10290D29E070C800EC5A6C /* BootstrapKey.swift in Sources */,
 				3D1028EE29DDD10300EC5A6C /* ShardingPolicy+Bootstrap.swift in Sources */,
 				6CBA96D028E63C11000A3727 /* SecpResult.swift in Sources */,
 				6C8BA2542990A83D00D24E00 /* EvmClientModel.swift in Sources */,
@@ -1250,6 +1268,7 @@
 				3D11A60527580D81008C03B1 /* CameraPreview.swift in Sources */,
 				3D0F3D5C2979D20F006C3328 /* EthereumSignable.swift in Sources */,
 				BD072F7D292E7E9E00B36C5A /* EvmTransferTransactionBuilder.swift in Sources */,
+				3D10291429E0714E00EC5A6C /* WaitingForDeviceApproval.swift in Sources */,
 				BDFBBC3029D5FDF90054286C /* EnableRecoveryPolicyDetails.swift in Sources */,
 				3D6334F12885C299002CEC5A /* PasswordManagerConfirm.swift in Sources */,
 				3DC2F3FF25F896C40061BB3A /* RemoteResult.swift in Sources */,
@@ -1284,6 +1303,7 @@
 				3DD9568725EF561F003F9ECF /* Moya+CensoClient.swift in Sources */,
 				3DAA2717263092FD000F453D /* FirstTimeAppear.swift in Sources */,
 				3DE53C8E28A2BF9500B4F014 /* UpdateApp.swift in Sources */,
+				3D10291129E0712F00EC5A6C /* RegisteredDevice.swift in Sources */,
 				6CF52A1529942879004EC3F3 /* PolygonSignable.swift in Sources */,
 				3D6334EF2885C299002CEC5A /* KeyRecoverySuccess.swift in Sources */,
 				3D0F3D5E2979D22C006C3328 /* BitcoinSignable.swift in Sources */,

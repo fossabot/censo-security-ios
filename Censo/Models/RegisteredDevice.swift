@@ -39,4 +39,8 @@ struct RegisteredDevice {
     func decrypt(_ data: Data) throws -> Data {
         try deviceKey.decrypt(data: data)
     }
+
+    func removeBootstrapKey() {
+        SecureEnclaveWrapper.removeBootstrapKey(email: email)
+    }
 }

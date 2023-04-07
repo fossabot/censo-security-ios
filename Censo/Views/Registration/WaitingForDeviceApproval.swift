@@ -33,7 +33,6 @@ struct WaitingForDeviceApproval: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .multilineTextAlignment(.center)
         .buttonStyle(FilledButtonStyle())
-        .navigationBarHidden(true)
         .background(CensoBackground())
         .foregroundColor(.Censo.primaryForeground)
         .onReceive(appForegroundedPublisher.merge(with: remoteNotificationPublisher)) { _ in

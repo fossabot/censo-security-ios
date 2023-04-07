@@ -130,7 +130,3 @@ extension CensoApi.BootstrapUserDeviceAndSigners {
         )
     }
 }
-<<<<<<< HEAD
-
-=======
->>>>>>> c482964 (Adds sharding policy shares to signers)

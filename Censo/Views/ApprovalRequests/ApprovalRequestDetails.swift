@@ -23,7 +23,8 @@ struct ApprovalRequestDetails<Content>: View where Content : View {
     var user: CensoApi.User
     var request: ApprovalRequest
     var timerPublisher: Publishers.Autoconnect<Timer.TimerPublisher>
-    var onStatusChange: (() -> Void)?
+    var onApprove: (() -> Void)?
+    var onDecline: (() -> Void)?
     @ViewBuilder var content: () -> Content
 
     var statusTitle: String = "STATUS"
@@ -195,20 +196,21 @@ struct ApprovalRequestDetails<Content>: View where Content : View {
 
             do {
                 let request = ApprovalDispositionRequest(disposition: .Approve, request: request)
+                let payload = try await CensoApi.ApprovalDispositionPayload(
+                    dispositionRequest: request,
+                    registeredDevice: registeredDevice,
+                    apiProvider: censoApi.provider
+                )
 
                 _ = try await censoApi.provider.request(
                     .registerApprovalDisposition(
-                        CensoApi.ApprovalDispositionPayload(
-                            dispositionRequest: request,
-                            registeredDevice: registeredDevice,
-                            apiProvider: censoApi.provider
-                        ),
+                        payload,
                         devicePublicKey: try registeredDevice.devicePublicKey()
                     )
                 )
 
                 await MainActor.run {
-                    onStatusChange?()
+                    onApprove?()
                 }
             } catch {
                 await MainActor.run {
@@ -242,7 +244,7 @@ struct ApprovalRequestDetails<Content>: View where Content : View {
                 )
 
                 await MainActor.run {
-                    onStatusChange?()
+                    onDecline?()
                 }
             } catch {
                 await MainActor.run {
