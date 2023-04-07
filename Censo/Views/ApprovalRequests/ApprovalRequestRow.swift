@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 import CryptoKit
 import Combine
+import raygun4apple
 
 struct ApprovalRequestRow<Row, Detail>: View where Row : View, Detail: View {
     @Environment(\.censoApi) var censoApi
@@ -143,6 +144,8 @@ struct ApprovalRequestRow<Row, Detail>: View where Row : View, Detail: View {
                     onApprove?()
                 }
             } catch {
+                RaygunClient.sharedInstance().send(error: error, tags: ["approval-error"], customData: nil)
+
                 await MainActor.run {
                     print(error)
                     alert = .error(error)

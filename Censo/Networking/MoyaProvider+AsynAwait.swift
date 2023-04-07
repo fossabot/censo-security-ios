@@ -12,7 +12,14 @@ extension MoyaProvider {
     func request(_ target: Target) async throws -> Moya.Response {
         try await withCheckedThrowingContinuation { continuation in
             request(target) { result in
-                continuation.resume(with: result)
+                switch result {
+                case .success(let response) where response.statusCode < 400:
+                    continuation.resume(with: result)
+                case .success(let response):
+                    continuation.resume(throwing: MoyaError.statusCode(response))
+                case .failure(let error):
+                    continuation.resume(throwing: error)
+                }
             }
         }
     }

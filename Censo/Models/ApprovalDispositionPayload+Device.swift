@@ -34,8 +34,6 @@ extension CensoApi.ApprovalDispositionPayload {
             )
         case .addDevice(let addDevice):
             if let currentShardingPolicyRevisionGuid = addDevice.currentShardingPolicyRevisionGuid {
-                let devicePublicKey = try registeredDevice.devicePublicKey()
-
                 if let targetShardingPolicy = addDevice.targetShardingPolicy {
                     self.shards = try await reshareShards(
                         currentShardingPolicyGuid: currentShardingPolicyRevisionGuid,
@@ -43,15 +41,15 @@ extension CensoApi.ApprovalDispositionPayload {
                         registeredDevice: registeredDevice,
                         apiProvider: apiProvider
                     )
-                } else {
-                    self.recoveryShards = try await recoveryShards(
-                        forUserWithEmail: addDevice.email,
-                        newDeviceKey: try ECPublicKey(base58String: addDevice.deviceKey),
-                        currentShardingPolicyGuid: currentShardingPolicyRevisionGuid,
-                        registeredDevice: registeredDevice,
-                        apiProvider: apiProvider
-                    )
                 }
+
+                self.recoveryShards = try await recoveryShards(
+                    forUserWithEmail: addDevice.email,
+                    newDeviceKey: try ECPublicKey(base58String: addDevice.deviceKey),
+                    currentShardingPolicyGuid: currentShardingPolicyRevisionGuid,
+                    registeredDevice: registeredDevice,
+                    apiProvider: apiProvider
+                )
             }
         default:
             break

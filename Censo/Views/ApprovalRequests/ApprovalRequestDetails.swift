@@ -9,6 +9,7 @@ import Foundation
 import SwiftUI
 import CryptoKit
 import Combine
+import raygun4apple
 
 struct ApprovalRequestDetails<Content>: View where Content : View {
     @Environment(\.presentationMode) var presentationMode
@@ -213,6 +214,8 @@ struct ApprovalRequestDetails<Content>: View where Content : View {
                     onApprove?()
                 }
             } catch {
+                RaygunClient.sharedInstance().send(error: error, tags: ["approval-error"], customData: nil)
+
                 await MainActor.run {
                     print(error)
                     alert = .approveError(error)
@@ -247,6 +250,8 @@ struct ApprovalRequestDetails<Content>: View where Content : View {
                     onDecline?()
                 }
             } catch {
+                RaygunClient.sharedInstance().send(error: error, tags: ["approval-error"], customData: nil)
+                
                 await MainActor.run {
                     print(error)
                     alert = .ignoreError(error)

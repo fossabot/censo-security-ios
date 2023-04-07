@@ -8,6 +8,7 @@
 import SwiftUI
 import BIP39
 import Moya
+import raygun4apple
 
 struct KeyConfirmationSuccess: View {
     @Environment(\.censoApi) var censoApi
@@ -93,10 +94,12 @@ struct KeyConfirmationSuccess: View {
                 switch result {
                 case .failure(let error):
                     registrationState = .failure(error)
+                    RaygunClient.sharedInstance().send(error: error, tags: ["registration-error"], customData: nil)
                 case .success(let response) where response.statusCode == 409:
                     onConflict()
                 case .success(let response) where response.statusCode >= 400:
                     registrationState = .failure(MoyaError.statusCode(response))
+                    RaygunClient.sharedInstance().send(error: MoyaError.statusCode(response), tags: ["registration-error"], customData: nil)
                 case .success:
                     do {
                         try Keychain.saveRootSeed(rootSeed, email: user.loginName, deviceKey: deviceKey)
@@ -107,6 +110,8 @@ struct KeyConfirmationSuccess: View {
                 }
             }
         } catch {
+            RaygunClient.sharedInstance().send(error: error, tags: ["registration-error"], customData: nil)
+
             registrationState = .failure(error)
         }
     }

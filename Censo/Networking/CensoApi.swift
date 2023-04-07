@@ -193,7 +193,7 @@ extension CensoApi {
             let participantId: String
             let shardCopies: [ShardCopy]
             let shardId: String
-            let shardParentId: String?
+            let parentShardId: String?
         }
 
         let shards: [Shard]
@@ -371,7 +371,7 @@ extension CensoApi.Target: Moya.TargetType {
         case .shards(let policyRevisionId, let userId, _):
              var params: [String: Any] = [:]
              params["policy-revision-id"] = policyRevisionId
-             params["userId"] = userId
+             params["user-id"] = userId
              return .requestParameters(parameters: params, encoding: URLEncoding.queryString)
         case .addWalletSigners(let signers, _):
             return .requestJSONEncodable(signers)
