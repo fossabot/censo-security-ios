@@ -23,7 +23,13 @@ struct RegistrationView: View {
         case (_, _) where !user.canAddSigners:
             WaitingForDeviceApproval(onReload: onReloadUser)
         case (_, .none):
-            KeyGeneration(user: user, shardingPolicy: shardingPolicy, deviceKey: deviceKey, onSuccess: onReloadUser)
+            KeyGeneration(
+                user: user,
+                shardingPolicy: shardingPolicy,
+                deviceKey: deviceKey,
+                onConflict: onReloadUser,
+                onSuccess: onReloadUser
+            )
         case (.none, .complete):
             KeyRetrieval(user: user, registeredPublicKeys: user.publicKeys, deviceKey: deviceKey) {
                 onReloadPublicKeys()

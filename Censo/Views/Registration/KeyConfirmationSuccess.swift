@@ -25,6 +25,7 @@ struct KeyConfirmationSuccess: View {
     var deviceKey: DeviceKey
     var phrase: [String]
     var shardingPolicy: ShardingPolicy
+    var onConflict: () -> Void
     var onSuccess: () -> Void
 
     var body: some View {
@@ -92,6 +93,8 @@ struct KeyConfirmationSuccess: View {
                 switch result {
                 case .failure(let error):
                     registrationState = .failure(error)
+                case .success(let response) where response.statusCode == 409:
+                    onConflict()
                 case .success(let response) where response.statusCode >= 400:
                     registrationState = .failure(MoyaError.statusCode(response))
                 case .success:
@@ -147,7 +150,7 @@ extension PublicKeys {
 struct KeyConfirmationSuccess_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            KeyConfirmationSuccess(user: .sample, deviceKey: .sample, phrase: [], shardingPolicy: .sample, onSuccess: {})
+            KeyConfirmationSuccess(user: .sample, deviceKey: .sample, phrase: [], shardingPolicy: .sample, onConflict: {}, onSuccess: {})
         }
     }
 }

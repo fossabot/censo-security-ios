@@ -15,10 +15,11 @@ struct KeyGeneration: View {
     var user: CensoApi.User
     var shardingPolicy: ShardingPolicy
     var deviceKey: DeviceKey
+    var onConflict: () -> Void
     var onSuccess: () -> Void
 
     var body: some View {
-        KeyConfirmationSuccess(user: user, deviceKey: deviceKey, phrase: phrase, shardingPolicy: shardingPolicy, onSuccess: onSuccess)
+        KeyConfirmationSuccess(user: user, deviceKey: deviceKey, phrase: phrase, shardingPolicy: shardingPolicy, onConflict: onConflict, onSuccess: onSuccess)
     }
 }
 
@@ -26,7 +27,7 @@ struct KeyGeneration: View {
 struct KeyGeneration_Previews: PreviewProvider {
     static var previews: some View {
         NavigationView {
-            KeyGeneration(user: .sample, shardingPolicy: .sample, deviceKey: .sample, onSuccess: {})
+            KeyGeneration(user: .sample, shardingPolicy: .sample, deviceKey: .sample, onConflict: {}, onSuccess: {})
         }
     }
 }
