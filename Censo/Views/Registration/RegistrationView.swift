@@ -20,6 +20,8 @@ struct RegistrationView: View {
 
     var body: some View {
         switch (keyStore, user.registeredPublicKeys) {
+        case (_, _) where !user.canAddSigners:
+            WaitingForDeviceApproval(onReload: onReloadUser)
         case (_, .none):
             KeyGeneration(user: user, shardingPolicy: shardingPolicy, deviceKey: deviceKey, onSuccess: onReloadUser)
         case (.none, .complete):
