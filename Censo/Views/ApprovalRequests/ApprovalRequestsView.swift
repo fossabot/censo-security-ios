@@ -49,7 +49,7 @@ struct ApprovalRequestsView: View {
     }
 
     private var loader: MoyaLoader<[GracefullyDecoded<ApprovalRequest>], CensoApi.Target> {
-        censoApi.provider.loader(for: .approvalRequests)
+        censoApi.provider.loader(for: .approvalRequests(devicePublicKey: try! registeredDevice.devicePublicKey()))
     }
 
     private func reload() {

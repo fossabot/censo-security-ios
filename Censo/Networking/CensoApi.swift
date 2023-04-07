@@ -23,7 +23,7 @@ struct CensoApi {
         case registerDevice(UserDevice, devicePublicKey: String)
         case boostrapDeviceAndSigners(BootstrapUserDeviceAndSigners, devicePublicKey: String)
         case addWalletSigners(SignersInfo, devicePublicKey: String)
-        case approvalRequests
+        case approvalRequests(devicePublicKey: String)
         case registerApprovalDisposition(ApprovalDispositionPayload, devicePublicKey: String)
 
         case registerPushToken(String, deviceIdentifier: String)
@@ -427,7 +427,8 @@ extension CensoApi.Target: Moya.TargetType {
              .registerDevice(_, let devicePublicKey),
              .verifyUser(.some(let devicePublicKey)),
              .shards(_, _, let devicePublicKey),
-             .recoveryShards(let devicePublicKey):
+             .recoveryShards(let devicePublicKey),
+             .approvalRequests(let devicePublicKey):
             return [
                 "Content-Type": "application/json",
                 "X-IsApi": "true",
