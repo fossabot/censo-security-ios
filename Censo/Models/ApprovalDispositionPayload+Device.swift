@@ -146,7 +146,7 @@ extension CensoApi.ApprovalDispositionPayload {
                                 )
                             },
                             shardId: nil,
-                            shardParentId: shard.shardId
+                            parentShardId: shard.shardId
                         )
                     }
                 }

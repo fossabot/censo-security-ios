@@ -30,7 +30,7 @@ extension CensoApi.SignersInfo {
                         )
                     },
                     shardId: nil,
-                    shardParentId: nil
+                    parentShardId: nil
                 )
             }
         )

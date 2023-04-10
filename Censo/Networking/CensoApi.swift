@@ -169,7 +169,7 @@ extension CensoApi {
         let participantId: String
         let shardCopies: [ShardCopy]
         let shardId: String?
-        let shardParentId: String?
+        let parentShardId: String?
     }
 
     struct Share: Codable {
@@ -185,7 +185,7 @@ extension CensoApi {
     struct AncestorShard: Codable {
         let shardId: String
         let partitionId: String
-        let shardParentId: String?
+        let parentShardId: String?
     }
     
     struct ShardsResponse: Codable {
