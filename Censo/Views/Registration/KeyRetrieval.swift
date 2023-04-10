@@ -7,77 +7,99 @@
 
 import Foundation
 import SwiftUI
-
-struct ProfileButton: View {
-    var action: () -> Void
-
-    var body: some View {
-        HStack {
-            Button {
-                action()
-            } label: {
-                Image(systemName: "person")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .foregroundColor(.white)
-            }
-            .buttonStyle(PlainButtonStyle())
-            .frame(width: 20, height: 20)
-            .padding(5)
-
-            Spacer()
-        }
-        .padding()
-    }
-}
+import raygun4apple
 
 struct KeyRetrieval: View {
+    @Environment(\.censoApi) var censoApi
+
+    @RemoteResult private var recoveryShardsResponse: CensoApi.RecoveryShardsResponse?
+
     var user: CensoApi.User
     var registeredPublicKeys: [CensoApi.PublicKey]
     var deviceKey: DeviceKey
     var onSuccess: () -> Void
 
     var body: some View {
-        VStack {
-            Spacer()
+        Group {
+            switch $recoveryShardsResponse {
+            case .idle:
+                CensoProgressView(text: "Loading your recovery...")
+                    .onAppear(perform: reload)
+            case .loading:
+                CensoProgressView(text: "Loading your recovery...")
+            case .success(let response):
+                VStack {
+                    Spacer()
 
-            Image(systemName: "key")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(height: 150)
-                .padding(40)
+                    Image(systemName: "key")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(height: 150)
+                        .padding(40)
 
-            Text("It's time to restore your private key using your secret recovery phrase")
-                .font(.system(size: 26).bold())
-                .multilineTextAlignment(.center)
-                .padding(20)
+                    Text("It's time to restore your private key")
+                        .font(.system(size: 26).bold())
+                        .multilineTextAlignment(.center)
+                        .padding(20)
 
-            Text("How did you back it up?")
-                .padding()
+                    Button {
+                        recover(response: response)
+                    } label: {
+                        Text("Recover")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .padding([.leading, .trailing], 30)
 
-            NavigationLink {
-                PasswordManagerRecovery(user: user, registeredPublicKeys: registeredPublicKeys, deviceKey: deviceKey, onSuccess: onSuccess)
-            } label: {
-                Text("Password Manager")
-                    .frame(maxWidth: .infinity)
+                    Spacer()
+                }
+            case .failure(let error):
+                RetryView(error: error, action: reload)
             }
-            .padding([.leading, .trailing], 30)
-            .padding([.top, .bottom])
-
-            NavigationLink {
-                PenAndPaperRecovery(user: user, registeredPublicKeys: registeredPublicKeys, deviceKey: deviceKey, onSuccess: onSuccess)
-            } label: {
-                Text("Pen and Paper")
-                    .frame(maxWidth: .infinity)
-            }
-            .padding([.leading, .trailing], 30)
-
-            Spacer()
         }
         .buttonStyle(FilledButtonStyle())
-        .navigationBarHidden(true)
         .background(CensoBackground())
         .foregroundColor(.Censo.primaryForeground)
+    }
+
+    var loader: MoyaLoader<CensoApi.RecoveryShardsResponse, CensoApi.Target> {
+        MoyaLoader(provider: censoApi.provider, target: .recoveryShards(deviceIdentifier: try! deviceKey.publicExternalRepresentation().base58String))
+    }
+
+    private func reload() {
+        _recoveryShardsResponse.reload(using: loader)
+    }
+
+    func recover(response: CensoApi.RecoveryShardsResponse) {
+        do {
+            let bootstrapKey = SecureEnclaveWrapper.bootstrapKey(email: user.loginName)
+            let recoveredRootSeed = try ShardRecovery.recoverRootSeed(recoverShardResponse: response, deviceKey: deviceKey, bootstrapKey: bootstrapKey)
+            try registeredPublicKeys.validateRootSeed(recoveredRootSeed)
+            try Keychain.saveRootSeed(recoveredRootSeed, email: user.loginName, deviceKey: deviceKey)
+
+            onSuccess()
+        } catch {
+            RaygunClient.sharedInstance().send(error: error, tags: ["recovery-error"], customData: nil)
+
+            _recoveryShardsResponse.content = .failure(error)
+        }
+    }
+}
+
+extension Array where Element == CensoApi.PublicKey {
+    enum RootSeedValidationError: Error {
+        case publicKeysDontMatch
+    }
+
+    func validateRootSeed(_ rootSeed: [UInt8]) throws {
+        let privateKeys = try PrivateKeys(rootSeed: rootSeed)
+
+        for publicKey in self {
+            let chainKey = privateKeys.publicKey(for: publicKey.chain)
+
+            if publicKey.key != chainKey {
+                throw RootSeedValidationError.publicKeysDontMatch
+            }
+        }
     }
 }
 

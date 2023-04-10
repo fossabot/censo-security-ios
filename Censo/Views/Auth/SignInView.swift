@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct SignInView: View {
-    @AppStorage("email") private var username = ""
+    @State private var username = ""
     @State private var isAuthenticating: Bool = false
     @State private var showingPassword = false
     @State private var currentAlert: AlertType?

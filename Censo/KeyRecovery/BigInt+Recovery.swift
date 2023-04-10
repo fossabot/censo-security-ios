@@ -16,7 +16,11 @@ extension BigInt {
     }
 
     init(shardingParticipant: ShardingParticipant) throws {
-        guard let bigInt = BigInt(shardingParticipant.participantId, radix: 16) else {
+        try self.init(participantId: shardingParticipant.participantId)
+    }
+
+    init(participantId: String) throws {
+        guard let bigInt = BigInt(participantId, radix: 16) else {
             throw BigIntConversionError.badParticipantId
         }
 
@@ -42,14 +46,18 @@ extension BigInt {
 
 extension BigUInt {
     func to32PaddedHexString() -> String {
-        let data = self.serialize()
+        return self.serialize().padded(toByteCount: 32).toHexString()
+    }
+}
 
-        if data.count < 32 {
-            var paddedData = Data(repeating: 0, count: 32 - data.count)
-            paddedData.append(data)
-            return paddedData.toHexString()
+extension Data {
+    func padded(toByteCount byteCount: Int) -> Data {
+        if count < byteCount {
+            var paddedData = Data(repeating: 0, count: byteCount - count)
+            paddedData.append(self)
+            return paddedData
         } else {
-            return self.serialize().toHexString()
+            return self
         }
     }
 }

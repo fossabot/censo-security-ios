@@ -8,7 +8,7 @@
 import Foundation
 
 struct RegisteredDevice {
-    private var deviceKey: DeviceKey
+    private(set) var deviceKey: DeviceKey
     private var encryptedRootSeed: Data
 
     var email: String
