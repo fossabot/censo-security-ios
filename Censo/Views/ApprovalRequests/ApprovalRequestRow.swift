@@ -120,36 +120,43 @@ struct ApprovalRequestRow<Row, Detail>: View where Row : View, Detail: View {
     private func approve() {
         isLoading = true
 
-        Task {
-            defer {
-                isLoading = false
-            }
+        registeredDevice.withAuthenticatedDevice { result in
+            switch result {
+            case .success(let registeredDevice):
+                Task {
+                    defer {
+                        isLoading = false
+                    }
 
-            do {
-                let request = ApprovalDispositionRequest(disposition: .Approve, request: request)
-                let payload = try await CensoApi.ApprovalDispositionPayload(
-                    dispositionRequest: request,
-                    registeredDevice: registeredDevice,
-                    apiProvider: censoApi.provider
-                )
+                    do {
+                        let request = ApprovalDispositionRequest(disposition: .Approve, request: request)
+                        let payload = try await CensoApi.ApprovalDispositionPayload(
+                            dispositionRequest: request,
+                            registeredDevice: registeredDevice,
+                            apiProvider: censoApi.provider
+                        )
 
-                _ = try await censoApi.provider.request(
-                    .registerApprovalDisposition(
-                        payload,
-                        devicePublicKey: try registeredDevice.devicePublicKey()
-                    )
-                )
+                        _ = try await censoApi.provider.request(
+                            .registerApprovalDisposition(
+                                payload,
+                                devicePublicKey: try registeredDevice.devicePublicKey()
+                            )
+                        )
 
-                await MainActor.run {
-                    onApprove?()
+                        await MainActor.run {
+                            onApprove?()
+                        }
+                    } catch {
+                        RaygunClient.sharedInstance().send(error: error, tags: ["approval-error"], customData: nil)
+
+                        await MainActor.run {
+                            print(error)
+                            alert = .error(error)
+                        }
+                    }
                 }
-            } catch {
-                RaygunClient.sharedInstance().send(error: error, tags: ["approval-error"], customData: nil)
-
-                await MainActor.run {
-                    print(error)
-                    alert = .error(error)
-                }
+            case .failure(let error):
+                alert = .error(error)
             }
         }
     }

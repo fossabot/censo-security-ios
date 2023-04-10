@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import LocalAuthentication
 
 struct BootstrapKey: SecureEnclaveKey {
     let secKey: SecKey
@@ -21,19 +22,19 @@ extension SecureEnclaveWrapper {
         return "bootstrapKey-\(email)"
     }
 
-    static func bootstrapKey(email: String) -> BootstrapKey? {
-        guard let secKey = loadKey(name: bootstrapKeyIdentifier(email: email)) else {
+    static func bootstrapKey(email: String, authenticationContext: LAContext? = nil) -> BootstrapKey? {
+        guard let secKey = loadKey(name: bootstrapKeyIdentifier(email: email), authenticationContext: authenticationContext) else {
             return nil
         }
 
         return BootstrapKey(secKey: secKey)
     }
 
-    static func generateBootstrapKey(email: String) throws -> BootstrapKey {
-        if let bootstrapKey = bootstrapKey(email: email) {
+    static func generateBootstrapKey(email: String, authenticationContext: LAContext? = nil) throws -> BootstrapKey {
+        if let bootstrapKey = bootstrapKey(email: email, authenticationContext: authenticationContext) {
             return bootstrapKey
         } else {
-            let secKey = try makeAndStoreKey(name: bootstrapKeyIdentifier(email: email))
+            let secKey = try makeAndStoreKey(name: bootstrapKeyIdentifier(email: email), authenticationContext: authenticationContext)
             return BootstrapKey(secKey: secKey)
         }
     }

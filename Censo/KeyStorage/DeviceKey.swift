@@ -7,6 +7,7 @@
 
 import Foundation
 import Security
+import LocalAuthentication
 
 struct DeviceKey: SecureEnclaveKey {
     let secKey: SecKey
@@ -22,19 +23,19 @@ extension SecureEnclaveWrapper {
         return "deviceKey-\(email)"
     }
 
-    static func deviceKey(email: String) -> DeviceKey? {
-        guard let secKey = loadKey(name: deviceKeyIdentifier(email: email)) else {
+    static func deviceKey(email: String, authenticationContext: LAContext? = nil) -> DeviceKey? {
+        guard let secKey = loadKey(name: deviceKeyIdentifier(email: email), authenticationContext: authenticationContext) else {
             return nil
         }
 
         return DeviceKey(secKey: secKey)
     }
 
-    static func generateDeviceKey(email: String) throws -> DeviceKey {
-        if let deviceKey = deviceKey(email: email) {
+    static func generateDeviceKey(email: String, authenticationContext: LAContext? = nil) throws -> DeviceKey {
+        if let deviceKey = deviceKey(email: email, authenticationContext: authenticationContext) {
             return deviceKey
         } else {
-            let secKey = try makeAndStoreKey(name: deviceKeyIdentifier(email: email))
+            let secKey = try makeAndStoreKey(name: deviceKeyIdentifier(email: email), authenticationContext: authenticationContext)
             return DeviceKey(secKey: secKey)
         }
     }

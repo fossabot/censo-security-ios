@@ -190,37 +190,44 @@ struct ApprovalRequestDetails<Content>: View where Content : View {
     private func approve() {
         action = .approving
 
-        Task {
-            defer {
-                action = .none
-            }
+        registeredDevice.withAuthenticatedDevice { result in
+            switch result {
+            case .success(let registeredDevice):
+                Task {
+                    defer {
+                        action = .none
+                    }
 
-            do {
-                let request = ApprovalDispositionRequest(disposition: .Approve, request: request)
-                let payload = try await CensoApi.ApprovalDispositionPayload(
-                    dispositionRequest: request,
-                    registeredDevice: registeredDevice,
-                    apiProvider: censoApi.provider
-                )
+                    do {
+                        let request = ApprovalDispositionRequest(disposition: .Approve, request: request)
+                        let payload = try await CensoApi.ApprovalDispositionPayload(
+                            dispositionRequest: request,
+                            registeredDevice: registeredDevice,
+                            apiProvider: censoApi.provider
+                        )
 
-                _ = try await censoApi.provider.request(
-                    .registerApprovalDisposition(
-                        payload,
-                        devicePublicKey: try registeredDevice.devicePublicKey()
-                    )
-                )
+                        _ = try await censoApi.provider.request(
+                            .registerApprovalDisposition(
+                                payload,
+                                devicePublicKey: try registeredDevice.devicePublicKey()
+                            )
+                        )
 
-                await MainActor.run {
-                    onApprove?()
-                    dismiss()
+                        await MainActor.run {
+                            onApprove?()
+                            dismiss()
+                        }
+                    } catch {
+                        RaygunClient.sharedInstance().send(error: error, tags: ["approval-error"], customData: nil)
+
+                        await MainActor.run {
+                            print(error)
+                            alert = .approveError(error)
+                        }
+                    }
                 }
-            } catch {
-                RaygunClient.sharedInstance().send(error: error, tags: ["approval-error"], customData: nil)
-
-                await MainActor.run {
-                    print(error)
-                    alert = .approveError(error)
-                }
+            case .failure(let error):
+                alert = .approveError(error)
             }
         }
     }
@@ -228,36 +235,43 @@ struct ApprovalRequestDetails<Content>: View where Content : View {
     private func ignore() {
         action = .ignoring
 
-        Task {
-            defer {
-                action = .none
-            }
+        registeredDevice.withAuthenticatedDevice { result in
+            switch result {
+            case .success(let registeredDevice):
+                Task {
+                    defer {
+                        action = .none
+                    }
 
-            do {
-                let request = ApprovalDispositionRequest(disposition: .Deny, request: request)
+                    do {
+                        let request = ApprovalDispositionRequest(disposition: .Deny, request: request)
 
-                _ = try await censoApi.provider.request(
-                    .registerApprovalDisposition(
-                        CensoApi.ApprovalDispositionPayload(
-                            dispositionRequest: request,
-                            registeredDevice: registeredDevice,
-                            apiProvider: censoApi.provider
-                        ),
-                        devicePublicKey: try registeredDevice.devicePublicKey()
-                    )
-                )
+                        _ = try await censoApi.provider.request(
+                            .registerApprovalDisposition(
+                                CensoApi.ApprovalDispositionPayload(
+                                    dispositionRequest: request,
+                                    registeredDevice: registeredDevice,
+                                    apiProvider: censoApi.provider
+                                ),
+                                devicePublicKey: try registeredDevice.devicePublicKey()
+                            )
+                        )
 
-                await MainActor.run {
-                    onDecline?()
-                    dismiss()
+                        await MainActor.run {
+                            onDecline?()
+                            dismiss()
+                        }
+                    } catch {
+                        RaygunClient.sharedInstance().send(error: error, tags: ["approval-error"], customData: nil)
+
+                        await MainActor.run {
+                            print(error)
+                            alert = .ignoreError(error)
+                        }
+                    }
                 }
-            } catch {
-                RaygunClient.sharedInstance().send(error: error, tags: ["approval-error"], customData: nil)
-                
-                await MainActor.run {
-                    print(error)
-                    alert = .ignoreError(error)
-                }
+            case .failure(let error):
+                alert = .ignoreError(error)
             }
         }
     }

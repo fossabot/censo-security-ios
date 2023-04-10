@@ -70,17 +70,23 @@ struct KeyRetrieval: View {
     }
 
     func recover(response: CensoApi.RecoveryShardsResponse) {
-        do {
-            let bootstrapKey = SecureEnclaveWrapper.bootstrapKey(email: user.loginName)
-            let recoveredRootSeed = try ShardRecovery.recoverRootSeed(recoverShardResponse: response, deviceKey: deviceKey, bootstrapKey: bootstrapKey)
-            try registeredPublicKeys.validateRootSeed(recoveredRootSeed)
-            try Keychain.saveRootSeed(recoveredRootSeed, email: user.loginName, deviceKey: deviceKey)
+        AuthenticatedKeys.withAuhenticatedKeys(from: user.loginName) { result in
+            switch result {
+            case .success(let keys):
+                do {
+                    let recoveredRootSeed = try ShardRecovery.recoverRootSeed(recoverShardResponse: response, deviceKey: keys.deviceKey, bootstrapKey: keys.bootstrapKey)
+                    try registeredPublicKeys.validateRootSeed(recoveredRootSeed)
+                    try Keychain.saveRootSeed(recoveredRootSeed, email: user.loginName, deviceKey: deviceKey)
 
-            onSuccess()
-        } catch {
-            RaygunClient.sharedInstance().send(error: error, tags: ["recovery-error"], customData: nil)
+                    onSuccess()
+                } catch {
+                    RaygunClient.sharedInstance().send(error: error, tags: ["recovery-error"], customData: nil)
 
-            _recoveryShardsResponse.content = .failure(error)
+                    _recoveryShardsResponse.content = .failure(error)
+                }
+            case .failure(let error):
+                _recoveryShardsResponse.content = .failure(error)
+            }
         }
     }
 }
