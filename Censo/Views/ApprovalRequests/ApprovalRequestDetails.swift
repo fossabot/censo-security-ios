@@ -12,7 +12,7 @@ import Combine
 import raygun4apple
 
 struct ApprovalRequestDetails<Content>: View where Content : View {
-    @Environment(\.presentationMode) var presentationMode
+    @Environment(\.dismiss) var dismiss
     @Environment(\.censoApi) var censoApi
 
     @State private var action: Action = .none
@@ -155,7 +155,7 @@ struct ApprovalRequestDetails<Content>: View where Content : View {
         }
         .navigationBarItems(
             leading: Button {
-                presentationMode.wrappedValue.dismiss()
+                dismiss()
             } label: {
                 Image(systemName: "chevron.left")
                     .resizable()
@@ -212,6 +212,7 @@ struct ApprovalRequestDetails<Content>: View where Content : View {
 
                 await MainActor.run {
                     onApprove?()
+                    dismiss()
                 }
             } catch {
                 RaygunClient.sharedInstance().send(error: error, tags: ["approval-error"], customData: nil)
@@ -248,6 +249,7 @@ struct ApprovalRequestDetails<Content>: View where Content : View {
 
                 await MainActor.run {
                     onDecline?()
+                    dismiss()
                 }
             } catch {
                 RaygunClient.sharedInstance().send(error: error, tags: ["approval-error"], customData: nil)
