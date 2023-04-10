@@ -41,7 +41,15 @@ extension BigInt {
 }
 
 extension BigUInt {
-    func toHexString() -> String {
-        self.serialize().toHexString()
+    func to32PaddedHexString() -> String {
+        let data = self.serialize()
+
+        if data.count < 32 {
+            var paddedData = Data(repeating: 0, count: 32 - data.count)
+            paddedData.append(data)
+            return paddedData.toHexString()
+        } else {
+            return self.serialize().toHexString()
+        }
     }
 }

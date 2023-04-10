@@ -22,7 +22,7 @@ extension CensoApi.SignersInfo {
             policyRevisionId: shardingPolicy.policyRevisionGuid,
             shards: try secretSharer.shardsAndParticipants.map { point, participant in
                 CensoApi.Shard(
-                    participantId: point.x.magnitude.toHexString(),
+                    participantId: point.x.magnitude.to32PaddedHexString(),
                     shardCopies: try participant.devicePublicKeys.map { devicePublicKey in
                         CensoApi.ShardCopy(
                             encryptionPublicKey: devicePublicKey,
@@ -58,10 +58,10 @@ struct ShardingPolicySecretSharer {
             participants: shardingPolicy.participants.map { try BigInt(shardingParticipant: $0) }
         )
 
-        let participantIdToAdminUserMap = Dictionary(uniqueKeysWithValues: shardingPolicy.participants.map({ ($0.participantId, $0) }))
+        let participantIdToAdminUserMap = Dictionary(uniqueKeysWithValues: try shardingPolicy.participants.map({ (try BigInt(shardingParticipant: $0), $0) }))
 
         self.shardsAndParticipants = try secretSharer.shards.map { point in
-            if let participant = participantIdToAdminUserMap[point.x.magnitude.toHexString()] {
+            if let participant = participantIdToAdminUserMap[point.x] {
                 return (point, participant)
             } else {
                 throw PolicyShardingError.notAllParticipantsSharded
