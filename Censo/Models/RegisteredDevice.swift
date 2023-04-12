@@ -82,7 +82,7 @@ struct AuthenticatedKeys {
                 let bootstrapKey = SecureEnclaveWrapper.bootstrapKey(email: email, authenticationContext: context)
                 let registeredDevice = AuthenticatedKeys(context: context, deviceKey: deviceKey, bootstrapKey: bootstrapKey)
                 closure(.success(registeredDevice))
-                context.invalidate()
+                //context.invalidate()
             } else {
                 closure(.failure(AuthenticatedKeyError.keyNotFound))
             }
