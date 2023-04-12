@@ -22,13 +22,40 @@ struct BitcoinTransaction: Codable, Equatable {
     let version: Int
     let txIns: [TransactionInput]
     let txOuts: [TransactionOutput]
+    let feePerVByte: Int64
     let totalFee: Int64
 }
 
 struct BitcoinSigningData: Codable, Equatable {
     let childKeyIndex: UInt32
     let transaction: BitcoinTransaction
+    
+    enum CodingKeys: String, CodingKey {
+        case type
+        case childKeyIndex
+        case transaction
+    }
+    
+    init(childKeyIndex: UInt32, transaction: BitcoinTransaction) {
+        self.childKeyIndex = childKeyIndex
+        self.transaction = transaction
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.childKeyIndex = try container.decode(UInt32.self, forKey: .childKeyIndex)
+        self.transaction = try container.decode(BitcoinTransaction.self, forKey: .transaction)
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+        try container.encode("bitcoin", forKey: .type)
+        try container.encode(childKeyIndex, forKey: .childKeyIndex)
+        try container.encode(transaction, forKey: .transaction)
+    }
+    
 }
+
 
 struct BitcoinSymbolInfo: Codable, Equatable {
     let symbol: String
@@ -94,7 +121,7 @@ extension BitcoinSigningData {
 
 extension BitcoinTransaction {
     static var sample: Self {
-        BitcoinTransaction(version: 1, txIns: [], txOuts: [], totalFee: 2)
+        BitcoinTransaction(version: 1, txIns: [], txOuts: [], feePerVByte: 5, totalFee: 2)
     }
 }
 #endif
