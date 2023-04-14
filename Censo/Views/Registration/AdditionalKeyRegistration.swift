@@ -20,6 +20,7 @@ struct AdditionalKeyRegistration: View {
     var onSuccess: () -> Void
 
     var body: some View {
+        // Needs another screen for interaction here
         Group {
             switch $signers {
             case .idle:

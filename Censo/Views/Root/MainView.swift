@@ -10,13 +10,14 @@ import SwiftUI
 
 struct MainView: View {
     var email: String
+    var authProvider: CensoAuthProvider
     var onSignOut: () -> Void
 
     var body: some View {
         DeviceKeyGeneration(email: email) {
             ProgressView()
         } content: { deviceKey in
-            UserVerification(deviceKey: deviceKey, onSignOut: onSignOut)
+            UserVerification(deviceKey: deviceKey, authProvider: authProvider, onSignOut: onSignOut)
         }
     }
 }
@@ -27,6 +28,7 @@ struct UserVerification: View {
     @RemoteResult private var user: CensoApi.User?
 
     var deviceKey: DeviceKey
+    var authProvider: CensoAuthProvider
     var onSignOut: () -> Void
 
     var body: some View {
@@ -53,6 +55,7 @@ struct UserVerification: View {
                             shardingPolicy: shardingPolicy,
                             deviceKey: deviceKey,
                             keyStore: keyStore,
+                            authProvider: authProvider,
                             onReloadUser: reload,
                             onReloadPublicKeys: reloadPublicKeys
                         )
@@ -68,6 +71,7 @@ struct UserVerification: View {
                             uiImage: uiImage,
                             deviceKey: deviceKey,
                             bootstrapKey: bootstrapKey,
+                            authProvider: authProvider,
                             onSuccess: reload,
                             onRetake: retakeClosure
                         )

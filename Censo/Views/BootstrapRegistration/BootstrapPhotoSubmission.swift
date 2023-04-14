@@ -22,6 +22,7 @@ struct BootstrapPhotoSubmission: View {
     var uiImage: UIImage
     var deviceKey: DeviceKey
     var bootstrapKey: BootstrapKey
+    var authProvider: CensoAuthProvider
     var onSuccess: () -> Void
     var onRetake: () -> Void
 
@@ -60,46 +61,49 @@ struct BootstrapPhotoSubmission: View {
     private func submitPhoto() {
         let imageData = uiImage.jpegData(compressionQuality: 1) ?? Data()
 
-        do {
-            let rootSeed = try Mnemonic(phrase: phrase).seed
-            let devicePublicKeyData = try deviceKey.publicExternalRepresentation()
-            let devicePublicKey = devicePublicKeyData.base58String
+        inProgress = true
 
-            let bootstrapUserDeviceAndSigners = try CensoApi.BootstrapUserDeviceAndSigners(
-                imageData: imageData,
-                deviceKey: deviceKey,
-                bootstrapKey: bootstrapKey,
-                rootSeed: rootSeed
-            )
+        AuthenticatedKeys.withAuhenticatedKeys(from: email) { result in
+            switch result {
+            case .success(let keys):
+                do {
 
-            inProgress = true
+                    let rootSeed = try Mnemonic(phrase: phrase).seed
+                    let devicePublicKeyData = try deviceKey.publicExternalRepresentation()
+                    let devicePublicKey = devicePublicKeyData.base58String
 
-            censoApi.provider.request(.boostrapDeviceAndSigners(bootstrapUserDeviceAndSigners, devicePublicKey: devicePublicKey)) { result in
-                inProgress = false
+                    let bootstrapUserDeviceAndSigners = try CensoApi.BootstrapUserDeviceAndSigners(
+                        imageData: imageData,
+                        deviceKey: keys.deviceKey,
+                        bootstrapKey: keys.bootstrapKey!,
+                        rootSeed: rootSeed
+                    )
 
-                switch result {
-                case .failure(let error):
-                    self.error = error
-                    self.alertPresented = true
-                case .success(let response) where response.statusCode < 400:
-                    do {
+                    let response = try await censoApi.provider.request(.boostrapDeviceAndSigners(bootstrapUserDeviceAndSigners, devicePublicKey: devicePublicKey))
+
+                    if response.statusCode < 400 {
                         try Keychain.saveRootSeed(rootSeed, email: email, deviceKey: deviceKey)
 
-                        onSuccess()
-                    } catch {
-                        self.error = error
+                        try await authProvider.exchangeTokenIfNeeded(deviceKey: keys.deviceKey)
+
+                        await MainActor.run {
+                            onSuccess()
+                        }
+                    } else {
+                        self.error = MoyaError.statusCode(response)
                         self.alertPresented = true
                     }
-                case .success(let response):
-                    self.error = MoyaError.statusCode(response)
+                } catch {
+                    self.error = error
                     self.alertPresented = true
                 }
+            case .failure(let error):
+                self.error = error
+                self.alertPresented = true
             }
-        } catch {
-            self.error = error
-            self.alertPresented = true
-        }
 
+            inProgress = false
+        }
     }
 }
 

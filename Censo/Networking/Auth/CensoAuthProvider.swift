@@ -16,6 +16,7 @@ class CensoAuthProvider: ObservableObject {
         var email: String
         var token: String
         var expiration: Date
+        var emailVerificationLogin: Bool
 
         var isExpired: Bool {
             Date() > expiration
@@ -48,6 +49,12 @@ class CensoAuthProvider: ObservableObject {
             } else {
                 throw JWTError.noEmailInBody
             }
+
+            if let emailVerificationLogin = decodedJWT.body["emailVerificationLogin"] as? Bool {
+                self.emailVerificationLogin = emailVerificationLogin
+            } else {
+                self.emailVerificationLogin = true
+            }
         }
 
         func encode(to encoder: Encoder) throws {
@@ -68,6 +75,20 @@ class CensoAuthProvider: ObservableObject {
                 completion(error)
             }
         }
+    }
+
+    func exchangeTokenIfNeeded(deviceKey: DeviceKey) async throws {
+        guard let storedJWTToken = storedJWTToken else {
+            return
+        }
+
+        guard storedJWTToken.emailVerificationLogin else {
+            return
+        }
+
+        let newToken: JWTToken = try await apiProvider.request(.login(.signature(email: storedJWTToken.email, deviceKey: deviceKey)))
+
+        Self.storeCredentials(newToken)
     }
 }
 

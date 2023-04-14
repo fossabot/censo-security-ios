@@ -25,7 +25,7 @@ struct RootView: View {
         if let jwtToken = authProvider.storedJWTToken {
             SignedInNavigationView(onSignOut: signOut) {
                 NotificationCheck(email: jwtToken.email) {
-                    MainView(email: jwtToken.email, onSignOut: signOut)
+                    MainView(email: jwtToken.email, authProvider: authProvider, onSignOut: signOut)
                         .foregroundBiometryProtected(onFailure: signOut)
                 }
             }

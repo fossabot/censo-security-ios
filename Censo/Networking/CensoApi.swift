@@ -17,7 +17,7 @@ struct CensoApi {
         case minVersion
 
         case login(Credentials)
-        case resetPassword(String)
+        case emailVerification(String)
 
         case verifyUser(devicePublicKey: String?)
         case registerDevice(UserDevice, devicePublicKey: String)
@@ -68,7 +68,7 @@ enum ApiError: Error, Equatable {
 
 extension CensoApi {
     enum Credentials: Encodable {
-        case password(email: String, password: String)
+        case emailVerification(email: String, verificationToken: String)
         case signature(email: String, deviceKey: DeviceKey)
 
         enum CodingKeys: String, CodingKey {
@@ -79,7 +79,7 @@ extension CensoApi {
         enum CredentialsCodingKeys: String, CodingKey {
             case type
             case email
-            case password
+            case verificationToken
             case timestamp
             case timestampSignature
         }
@@ -91,10 +91,10 @@ extension CensoApi {
             var credentialsContainer = container.nestedContainer(keyedBy: CredentialsCodingKeys.self, forKey: .credentials)
 
             switch self {
-            case .password(let email, let password):
-                try credentialsContainer.encode("PasswordBased", forKey: .type)
+            case .emailVerification(let email, let password):
+                try credentialsContainer.encode("EmailVerificationBased", forKey: .type)
                 try credentialsContainer.encode(email, forKey: .email)
-                try credentialsContainer.encode(password, forKey: .password)
+                try credentialsContainer.encode(password, forKey: .verificationToken)
             case .signature(let email, let deviceKey):
                 let date = Date()
                 try credentialsContainer.encode("SignatureBased", forKey: .type)
@@ -294,8 +294,6 @@ extension CensoApi.Target {
 extension CensoApi.Target: Moya.TargetType {
     var baseURL: URL {
         switch self {
-        case .resetPassword:
-            return Configuration.censoAuthBaseURL
         case .minVersion:
             return Configuration.minVersionURL
         default:
@@ -327,8 +325,8 @@ extension CensoApi.Target: Moya.TargetType {
             return "v2/approval-requests/\(request.requestID)/dispositions"
         case .minVersion:
             return ""
-        case .resetPassword(let email):
-            return "email/\(email.addingPercentEncoding(withAllowedCharacters: .urlPathAllowed) ?? "[INVALID_EMAIL]")/reset"
+        case .emailVerification:
+            return "v1/verification-token"
         case .shards:
             return "v1/shards"
         case .recoveryShards:
@@ -348,7 +346,7 @@ extension CensoApi.Target: Moya.TargetType {
              .addWalletSigners,
              .boostrapDeviceAndSigners,
              .registerApprovalDisposition,
-             .resetPassword,
+             .emailVerification,
              .registerPushToken,
              .registerDevice,
              .login:
@@ -364,10 +362,13 @@ extension CensoApi.Target: Moya.TargetType {
             return .requestCustomJSONEncodable(credentials, encoder: encoder)
         case .verifyUser,
              .approvalRequests,
-             .resetPassword,
              .minVersion,
              .recoveryShards:
             return .requestPlain
+        case .emailVerification(let email):
+            return .requestJSONEncodable([
+                "email": email
+            ])
         case .shards(let policyRevisionId, let userId, _):
              var params: [String: Any] = [:]
              params["policy-revision-id"] = policyRevisionId

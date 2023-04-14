@@ -15,20 +15,21 @@ struct KeyGeneration: View {
     var user: CensoApi.User
     var shardingPolicy: ShardingPolicy
     var deviceKey: DeviceKey
+    var authProvider: CensoAuthProvider
     var onConflict: () -> Void
     var onSuccess: () -> Void
 
     var body: some View {
-        KeyConfirmationSuccess(user: user, deviceKey: deviceKey, phrase: phrase, shardingPolicy: shardingPolicy, onConflict: onConflict, onSuccess: onSuccess)
+        KeyConfirmationSuccess(user: user, deviceKey: deviceKey, phrase: phrase, shardingPolicy: shardingPolicy, authProvider: authProvider, onConflict: onConflict, onSuccess: onSuccess)
     }
 }
 
 #if DEBUG
-struct KeyGeneration_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationView {
-            KeyGeneration(user: .sample, shardingPolicy: .sample, deviceKey: .sample, onConflict: {}, onSuccess: {})
-        }
-    }
-}
+//struct KeyGeneration_Previews: PreviewProvider {
+//    static var previews: some View {
+//        NavigationView {
+//            KeyGeneration(user: .sample, shardingPolicy: .sample, deviceKey: .sample, onConflict: {}, onSuccess: {})
+//        }
+//    }
+//}
 #endif

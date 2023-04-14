@@ -6,11 +6,14 @@
 //
 
 import SwiftUI
+import Moya
 
 struct SignInView: View {
+    @Environment(\.censoApi) var censoApi
+
     @State private var username = ""
     @State private var isAuthenticating: Bool = false
-    @State private var showingPassword = false
+    @State private var showingVerification = false
     @State private var currentAlert: AlertType?
 
     var authProvider: CensoAuthProvider
@@ -21,6 +24,14 @@ struct SignInView: View {
 
     var canSignIn: Bool {
         return !(username.isEmpty || isAuthenticating)
+    }
+
+    var deviceKey: DeviceKey? {
+        if username.isEmpty {
+            return nil
+        }
+
+        return SecureEnclaveWrapper.deviceKey(email: username)
     }
 
     var body: some View {
@@ -61,7 +72,7 @@ struct SignInView: View {
                 Spacer()
 
                 Button(action: signIn) {
-                    Text("Sign in")
+                    Text(deviceKey == nil ? "Verify Email" : "Sign in")
                         .loadingIndicator(when: isAuthenticating)
                         .frame(maxWidth: .infinity)
                 }
@@ -70,8 +81,8 @@ struct SignInView: View {
                 .ignoresSafeArea(.keyboard, edges: .bottom)
                 .padding()
 
-                NavigationLink(isActive: $showingPassword) {
-                    PasswordView(username: username, authProvider: authProvider)
+                NavigationLink(isActive: $showingVerification) {
+                    VerificationTokenView(username: username, authProvider: authProvider)
                 } label: {
                     EmptyView()
                 }
@@ -87,9 +98,9 @@ struct SignInView: View {
                     return Alert(
                         title: Text("Sign In Error"),
                         message: Text("An error occured trying to sign you in"),
-                        primaryButton: .default(Text("Use Password"), action: {
-                            showingPassword = true
-                        }),
+                        primaryButton: .default(Text("Sign In with Email Verification")) {
+                            showingVerification = true
+                        },
                         secondaryButton: .cancel(Text("Try Again"))
                     )
                 }
@@ -110,7 +121,7 @@ struct SignInView: View {
                 }
             }
         } else {
-            showingPassword = true
+            showingVerification = true
         }
     }
 
@@ -120,23 +131,24 @@ struct SignInView: View {
 }
 
 
-struct PasswordView: View {
+struct VerificationTokenView: View {
     @Environment(\.presentationMode) var presentationMode
+    @Environment(\.censoApi) var censoApi
 
-    @State private var password = ""
+    @State private var token = ""
     @State private var isAuthenticating: Bool = false
-    @State private var showingPassword = false
     @State private var currentAlert: AlertType?
 
     enum AlertType {
         case signInError(Error)
+        case emailVerificationError(Error)
     }
 
     var username: String
     var authProvider: CensoAuthProvider
 
     var canSignIn: Bool {
-        return !(password.isEmpty || isAuthenticating)
+        return !(token.isEmpty || isAuthenticating)
     }
 
     var body: some View {
@@ -152,24 +164,36 @@ struct PasswordView: View {
                         .frame(maxHeight: 62)
                         .padding(50)
 
-                    (Text("Signing in as ") + Text(username).bold())
+                    (Text("A verification code has been sent to ") + Text(username).bold())
                         .multilineTextAlignment(.center)
                         .padding([.leading, .trailing], 60)
                         .padding([.bottom], 20)
 
-                    SecureField(text: $password, label: {
-                        Text("Password")
+                    TextField(text: $token, label: {
+                        Text("Enter code here")
                     })
                     .onSubmit {
                         if canSignIn { signIn() }
                     }
                     .textContentType(.password)
+                    .keyboardType(.numberPad)
                     .foregroundColor(Color.black)
                     .accentColor(Color.Censo.red)
                     .textFieldStyle(LightRoundedTextFieldStyle())
                     .autocapitalization(.none)
                     .disableAutocorrection(true)
                     .disabled(isAuthenticating)
+                    .padding()
+
+                    Button {
+
+                    } label: {
+                        Text("Resend Verification Code")
+                    }
+                    .disabled(isAuthenticating)
+                    .buttonStyle(FilledButtonStyle())
+                    .disabled(!canSignIn)
+                    .ignoresSafeArea(.keyboard, edges: .bottom)
                     .padding()
                 }
             }
@@ -193,19 +217,40 @@ struct PasswordView: View {
         )
         .alert(item: $currentAlert) { item in
             switch item {
+            case .emailVerificationError:
+                return Alert(
+                    title: Text("Verification Error"),
+                    message: Text("An error occured trying to send your verification code"),
+                    dismissButton: .cancel(Text("Try Again"))
+                )
             case .signInError:
-                return Alert.withDismissButton(title: Text("Sign In Error"), message: Text("Please check your username and password"))
+                return Alert.withDismissButton(title: Text("Verication Error"), message: Text("Please check your verification code"))
             }
         }
         .preferredColorScheme(.light)
     }
 
-    private func signIn() {
-        showingPassword = true
-
+    private func sendEmailVerification() {
         isAuthenticating = true
 
-        authProvider.authenticate(.password(email: username, password: password)) { error in
+        censoApi.provider.request(.emailVerification(username)) { result in
+            isAuthenticating = false
+
+            switch result {
+            case .success(let response) where response.statusCode < 400:
+                break
+            case .success(let response):
+                currentAlert = .emailVerificationError(MoyaError.statusCode(response))
+            case .failure(let error):
+                currentAlert = .emailVerificationError(error)
+            }
+        }
+    }
+
+    private func signIn() {
+        isAuthenticating = true
+
+        authProvider.authenticate(.emailVerification(email: username, verificationToken: token)) { error in
             isAuthenticating = false
 
             if let error = error {
@@ -219,11 +264,13 @@ struct PasswordView: View {
     }
 }
 
-extension PasswordView.AlertType: Identifiable {
+extension VerificationTokenView.AlertType: Identifiable {
     var id: Int {
         switch self {
         case .signInError:
             return 0
+        case .emailVerificationError:
+            return 1
         }
     }
 }
@@ -243,7 +290,7 @@ struct SignInView_Previews: PreviewProvider {
         SignInView(authProvider: CensoAuthProvider())
             .environment(\.colorScheme, .dark)
 
-        PasswordView(username: "john@hollywood.com", authProvider: CensoAuthProvider())
+        VerificationTokenView(username: "john@hollywood.com", authProvider: CensoAuthProvider())
     }
 }
 #endif

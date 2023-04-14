@@ -50,15 +50,19 @@ struct RegisteredDevice {
 }
 
 extension RegisteredDevice {
-    func withAuthenticatedDevice(_ closure: @escaping (Result<RegisteredDevice, Error>) -> Void) {
+    func withAuthenticatedDevice(_ closure: @escaping (Result<RegisteredDevice, Error>) async -> Void) {
         AuthenticatedKeys.withAuhenticatedKeys(from: email) { result in
             switch result {
             case .failure(let error):
-                closure(.failure(error))
+                Task {
+                    await closure(.failure(error))
+                }
             case .success(let keys):
-                var registeredDevice = RegisteredDevice(email: email, deviceKey: keys.deviceKey, encryptedRootSeed: encryptedRootSeed)
-                registeredDevice.authenticationContext = keys.context
-                closure(.success(registeredDevice))
+                Task {
+                    var registeredDevice = RegisteredDevice(email: email, deviceKey: keys.deviceKey, encryptedRootSeed: encryptedRootSeed)
+                    registeredDevice.authenticationContext = keys.context
+                    await closure(.success(registeredDevice))
+                }
             }
         }
     }
@@ -73,18 +77,24 @@ struct AuthenticatedKeys {
     var deviceKey: DeviceKey
     var bootstrapKey: BootstrapKey?
 
-    static func withAuhenticatedKeys(from email: String, closure: @escaping (Result<AuthenticatedKeys, Error>) -> Void) {
+    static func withAuhenticatedKeys(from email: String, closure: @escaping (Result<AuthenticatedKeys, Error>) async -> Void) {
         let context = LAContext()
         context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: "Verify your identity") { success, error in
             if let error = error {
-                closure(.failure(error))
+                Task {
+                    await closure(.failure(error))
+                }
             } else if let deviceKey = SecureEnclaveWrapper.deviceKey(email: email, authenticationContext: context) {
-                let bootstrapKey = SecureEnclaveWrapper.bootstrapKey(email: email, authenticationContext: context)
-                let registeredDevice = AuthenticatedKeys(context: context, deviceKey: deviceKey, bootstrapKey: bootstrapKey)
-                closure(.success(registeredDevice))
-                //context.invalidate()
+                Task {
+                    let bootstrapKey = SecureEnclaveWrapper.bootstrapKey(email: email, authenticationContext: context)
+                    let registeredDevice = AuthenticatedKeys(context: context, deviceKey: deviceKey, bootstrapKey: bootstrapKey)
+                    await closure(.success(registeredDevice))
+                    //context.invalidate()
+                }
             } else {
-                closure(.failure(AuthenticatedKeyError.keyNotFound))
+                Task {
+                    await closure(.failure(AuthenticatedKeyError.keyNotFound))
+                }
             }
         }
     }

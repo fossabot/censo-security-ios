@@ -26,6 +26,7 @@ struct KeyConfirmationSuccess: View {
     var deviceKey: DeviceKey
     var phrase: [String]
     var shardingPolicy: ShardingPolicy
+    var authProvider: CensoAuthProvider
     var onConflict: () -> Void
     var onSuccess: () -> Void
 
@@ -82,37 +83,51 @@ struct KeyConfirmationSuccess: View {
 
     private func reload() {
         registrationState = .loading
-        do {
-            let rootSeed = try Mnemonic(phrase: phrase).seed
-            let signersInfo = try CensoApi.SignersInfo(
-                shardingPolicy: shardingPolicy,
-                rootSeed: rootSeed,
-                deviceKey: deviceKey
-            )
-            
-            censoApi.provider.request(.addWalletSigners(signersInfo, devicePublicKey: try deviceKey.publicExternalRepresentation().base58String)) { result in
-                switch result {
-                case .failure(let error):
-                    registrationState = .failure(error)
-                    RaygunClient.sharedInstance().send(error: error, tags: ["registration-error"], customData: nil)
-                case .success(let response) where response.statusCode == 409:
-                    onConflict()
-                case .success(let response) where response.statusCode >= 400:
-                    registrationState = .failure(MoyaError.statusCode(response))
-                    RaygunClient.sharedInstance().send(error: MoyaError.statusCode(response), tags: ["registration-error"], customData: nil)
-                case .success:
-                    do {
+
+        AuthenticatedKeys.withAuhenticatedKeys(from: user.loginName) { result in
+            switch result {
+            case .success(let authenticatedKeys):
+                do {
+                    try await authProvider.exchangeTokenIfNeeded(deviceKey: authenticatedKeys.deviceKey)
+
+                    let rootSeed = try Mnemonic(phrase: phrase).seed
+                    let signersInfo = try CensoApi.SignersInfo(
+                        shardingPolicy: shardingPolicy,
+                        rootSeed: rootSeed,
+                        deviceKey: deviceKey
+                    )
+
+                    let response = try await censoApi.provider.request(.addWalletSigners(signersInfo, devicePublicKey: try deviceKey.publicExternalRepresentation().base58String))
+
+                    if response.statusCode == 409 {
+                        await MainActor.run {
+                            onConflict()
+                        }
+                    } else if response.statusCode < 400 {
                         try Keychain.saveRootSeed(rootSeed, email: user.loginName, deviceKey: deviceKey)
-                        registrationState = .success
-                    } catch {
+
+                        await MainActor.run {
+                            registrationState = .success
+                        }
+                    } else {
+                        RaygunClient.sharedInstance().send(error: MoyaError.statusCode(response), tags: ["registration-error"], customData: nil)
+
+                        await MainActor.run {
+                            registrationState = .failure(MoyaError.statusCode(response))
+                        }
+                    }
+                } catch {
+                    RaygunClient.sharedInstance().send(error: error, tags: ["registration-error"], customData: nil)
+
+                    await MainActor.run {
                         registrationState = .failure(error)
                     }
                 }
+            case .failure(let error):
+                await MainActor.run {
+                    registrationState = .failure(error)
+                }
             }
-        } catch {
-            RaygunClient.sharedInstance().send(error: error, tags: ["registration-error"], customData: nil)
-
-            registrationState = .failure(error)
         }
     }
 }
@@ -152,11 +167,11 @@ extension PublicKeys {
 }
 
 #if DEBUG
-struct KeyConfirmationSuccess_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationView {
-            KeyConfirmationSuccess(user: .sample, deviceKey: .sample, phrase: [], shardingPolicy: .sample, onConflict: {}, onSuccess: {})
-        }
-    }
-}
+//struct KeyConfirmationSuccess_Previews: PreviewProvider {
+//    static var previews: some View {
+//        NavigationView {
+//            KeyConfirmationSuccess(user: .sample, deviceKey: .sample, phrase: [], shardingPolicy: .sample, onConflict: {}, onSuccess: {})
+//        }
+//    }
+//}
 #endif
