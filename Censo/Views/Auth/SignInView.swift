@@ -98,10 +98,10 @@ struct SignInView: View {
                     return Alert(
                         title: Text("Sign In Error"),
                         message: Text("An error occured trying to sign you in"),
-                        primaryButton: .default(Text("Sign In with Email Verification")) {
+                        primaryButton: .cancel(Text("Try Again")),
+                        secondaryButton: .default(Text("Sign in with Email Verification")) {
                             showingVerification = true
-                        },
-                        secondaryButton: .cancel(Text("Try Again"))
+                        }
                     )
                 }
             }
@@ -167,7 +167,16 @@ struct VerificationTokenView: View {
                     (Text("A verification code has been sent to ") + Text(username).bold())
                         .multilineTextAlignment(.center)
                         .padding([.leading, .trailing], 60)
-                        .padding([.bottom], 20)
+
+                    Button {
+                        sendEmailVerification()
+                    } label: {
+                        Text("Resend Verification Code")
+                            .foregroundColor(.Censo.red)
+                    }
+                    .disabled(isAuthenticating)
+                    .ignoresSafeArea(.keyboard, edges: .bottom)
+                    .padding([.bottom], 20)
 
                     TextField(text: $token, label: {
                         Text("Enter code here")
@@ -185,16 +194,7 @@ struct VerificationTokenView: View {
                     .disabled(isAuthenticating)
                     .padding()
 
-                    Button {
 
-                    } label: {
-                        Text("Resend Verification Code")
-                    }
-                    .disabled(isAuthenticating)
-                    .buttonStyle(FilledButtonStyle())
-                    .disabled(!canSignIn)
-                    .ignoresSafeArea(.keyboard, edges: .bottom)
-                    .padding()
                 }
             }
 
