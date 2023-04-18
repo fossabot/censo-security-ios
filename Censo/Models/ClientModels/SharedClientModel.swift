@@ -161,6 +161,7 @@ struct AddDevice: Codable, Equatable  {
     var deviceType: DeviceType
     var currentShardingPolicyRevisionGuid: String?
     var targetShardingPolicy: ShardingPolicy?
+    var replacingDeviceGuid: String?
 }
 
 struct RemoveDevice: Codable, Equatable  {

@@ -71,8 +71,12 @@ extension ApprovalRequestType {
             return "Rename Organization"
         case .vaultUserRolesUpdate:
             return "Update User Roles in Vault"
-        case .addDevice:
-            return "Add New Device"
+        case .addDevice(let request):
+            if (request.replacingDeviceGuid == nil) {
+                return "Add New Device"
+            } else {
+                return "Add Replacement Device"
+            }
         case .removeDevice:
             return "Remove Device"
         case .suspendUser:
