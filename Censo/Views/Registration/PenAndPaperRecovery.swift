@@ -37,7 +37,7 @@ struct PenAndPaperRecovery: View {
             Spacer()
                 .frame(maxHeight: 50)
 
-            Text("Enter each word of your recovery phrase to restore your key")
+            Text("Enter each word of your recovery phrase to recover your key")
                 .font(.system(size: 18).bold())
                 .padding([.leading, .trailing], 40)
                 .fixedSize(horizontal: false, vertical: true)

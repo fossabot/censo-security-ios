@@ -36,7 +36,7 @@ struct PenAndPaperSignInRecovery: View {
                 Spacer()
                     .frame(height: 10)
 
-                Text("Enter each word of your recovery phrase to restore your key")
+                Text("Enter each word of your recovery phrase to recover your key")
                     .font(.system(size: 18).bold())
                     .padding(40)
                     .foregroundColor(.white.opacity(0.8))
