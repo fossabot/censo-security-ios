@@ -75,7 +75,7 @@ extension ApprovalRequestType {
             if (request.replacingDeviceGuid == nil) {
                 return "Add New Device"
             } else {
-                return "Add Replacement Device"
+                return "Replace Device"
             }
         case .removeDevice:
             return "Remove Device"
