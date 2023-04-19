@@ -37,7 +37,7 @@ struct KeyRetrieval: View {
                         .frame(height: 150)
                         .padding(40)
 
-                    Text("It's time to restore your private key")
+                    Text("It's time to recover your private key")
                         .font(.system(size: 26).bold())
                         .multilineTextAlignment(.center)
                         .padding(20)

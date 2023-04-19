@@ -27,7 +27,7 @@ struct KeyRetrievalSignInRecovery: View {
                 .frame(height: 150)
                 .padding(40)
 
-            Text("It's time to restore your private key using your secret recovery phrase")
+            Text("It's time to recover your private key using your secret recovery phrase")
                 .font(.system(size: 26).bold())
                 .multilineTextAlignment(.center)
                 .padding(20)
