@@ -20,7 +20,7 @@ struct AddOrRemoveDeviceDetails: View {
                 Fact("Device Type", userDevice.deviceType.description)
             }
             if let data = Data(base64Encoded: userDevice.jpegThumbnail), let uiImage = UIImage(data: data) {
-                Image(uiImage: uiImage)
+                Image(uiImage: uiImage).clipShape(Circle())
             }
         }
     }
