@@ -21,7 +21,7 @@ struct VaultUserRolesUpdateDetails: View {
 
             FactsSection(title: "User Roles") {
                 for userRole in update.userRoles {
-                    Fact(userRole.name, userRole.role.description)
+                    Fact(userRole.name, userRole.email, userRole.jpegThumbnail, userRole.role.description)
                 }
             }
         }

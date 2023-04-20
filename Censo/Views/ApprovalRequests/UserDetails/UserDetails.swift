@@ -19,7 +19,7 @@ struct UserDetails: View {
                 Fact("Email", user.email)
             }
             if user.jpegThumbnail != nil, let data = Data(base64Encoded: user.jpegThumbnail!), let uiImage = UIImage(data: data) {
-                Image(uiImage: uiImage)
+                Image(uiImage: uiImage).clipShape(Circle())
             }
         }
     }

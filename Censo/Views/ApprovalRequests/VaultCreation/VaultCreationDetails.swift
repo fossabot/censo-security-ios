@@ -26,7 +26,7 @@ struct VaultCreationDetails: View {
             FactsSection(title: "Vault Managers") {
                 if vaultCreation.approvalPolicy.approvers.count > 0 {
                     for approver in vaultCreation.approvalPolicy.approvers {
-                        Fact(approver.name, approver.email)
+                        Fact(approver.name, approver.email, approver.jpegThumbnail)
                     }
                 } else {
                     Fact("No users may approve requests", "")

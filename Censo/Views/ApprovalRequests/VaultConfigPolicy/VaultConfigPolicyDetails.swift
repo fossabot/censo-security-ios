@@ -22,7 +22,7 @@ struct VaultConfigPolicyDetails: View {
             FactsSection(title: "Vault Managers") {
                 if update.approvalPolicy.approvers.count > 0 {
                     for approver in update.approvalPolicy.approvers.sorted(by: { $0.name < $1.name }) {
-                        Fact(approver.name, approver.email)
+                        Fact(approver.name, approver.email, approver.jpegThumbnail)
                     }
                 } else {
                     Fact("No users may approve requests", "")
