@@ -7,6 +7,7 @@
 
 import SwiftUI
 import Moya
+import LocalAuthentication
 
 struct SignInView: View {
     @Environment(\.censoApi) var censoApi
@@ -110,14 +111,48 @@ struct SignInView: View {
     }
 
     private func signIn() {
-        if let key = SecureEnclaveWrapper.deviceKey(email: username) {
-            isAuthenticating = true
-
-            authProvider.authenticate(.signature(email: username, deviceKey: key)) { error in
-                isAuthenticating = false
-
+        if let deviceKey = SecureEnclaveWrapper.deviceKey(email: username) {
+            let context = LAContext()
+            context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: "Verify your identity") { success, error in
                 if let error = error {
                     showSignInError(error)
+                } else {
+                    isAuthenticating = true
+
+                    _Concurrency.Task {
+                        do {
+                            let timestamp = Date()
+                            let dateString = DateFormatter.iso8601Full.string(from: timestamp)
+                            let preauthenticatedKey = try deviceKey.preauthenticatedKey(context: context)
+                            let signature = try preauthenticatedKey.signature(for: dateString.data(using: .utf8)!).base64EncodedString()
+
+                            let token: CensoAuthProvider.JWTToken = try await censoApi.provider.request(.login(.signature(email: username, timestamp: timestamp, signature: signature, publicKey: try deviceKey.publicExternalRepresentation().base58String)))
+
+                            if let encryptedRootSeed = try Keychain.encryptedRootSeed(email: username),
+                               let rootSeed = try? preauthenticatedKey.decrypt(data: encryptedRootSeed),
+                               let publicKeys = try? PrivateKeys(rootSeed: rootSeed.bytes).publicKeys {
+                                // registered and authenticated
+                                let registeredDevice = RegisteredDevice(email: username, deviceKey: deviceKey, encryptedRootSeed: encryptedRootSeed, publicKeys: publicKeys)
+
+                                await MainActor.run {
+                                    authProvider.authenticatedState = .deviceAuthenticatedRegistered(registeredDevice, token: token)
+                                }
+                            } else {
+                                // authenticated but not yet registered
+
+                                await MainActor.run {
+                                    authProvider.authenticatedState = .deviceAuthenticatedUnregistered(deviceKey, token: token)
+                                }
+                            }
+                        } catch {
+
+                            await MainActor.run {
+                                showSignInError(error)
+                            }
+                        }
+
+                        isAuthenticating = false
+                    }
                 }
             }
         } else {
@@ -127,151 +162,6 @@ struct SignInView: View {
 
     private func showSignInError(_ error: Error) {
         currentAlert = .signInError(error)
-    }
-}
-
-
-struct VerificationTokenView: View {
-    @Environment(\.presentationMode) var presentationMode
-    @Environment(\.censoApi) var censoApi
-
-    @State private var token = ""
-    @State private var isAuthenticating: Bool = false
-    @State private var currentAlert: AlertType?
-
-    enum AlertType {
-        case signInError(Error)
-        case emailVerificationError(Error)
-    }
-
-    var username: String
-    var authProvider: CensoAuthProvider
-
-    var canSignIn: Bool {
-        return !(token.isEmpty || isAuthenticating)
-    }
-
-    var body: some View {
-        VStack(spacing: 0) {
-            BackButtonBar(caption: "Email", presentationMode: presentationMode)
-                .frame(height: 50)
-
-            ScrollView {
-                VStack {
-                    Image("LogoColor")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(maxHeight: 62)
-                        .padding(50)
-
-                    (Text("A verification code has been sent to ") + Text(username).bold())
-                        .multilineTextAlignment(.center)
-                        .padding([.leading, .trailing], 60)
-
-                    Button {
-                        sendEmailVerification()
-                    } label: {
-                        Text("Resend Verification Code")
-                            .foregroundColor(.Censo.red)
-                    }
-                    .disabled(isAuthenticating)
-                    .ignoresSafeArea(.keyboard, edges: .bottom)
-                    .padding([.bottom], 20)
-
-                    TextField(text: $token, label: {
-                        Text("Enter code here")
-                    })
-                    .onSubmit {
-                        if canSignIn { signIn() }
-                    }
-                    .textContentType(.password)
-                    .keyboardType(.numberPad)
-                    .foregroundColor(Color.black)
-                    .accentColor(Color.Censo.red)
-                    .textFieldStyle(LightRoundedTextFieldStyle())
-                    .autocapitalization(.none)
-                    .disableAutocorrection(true)
-                    .disabled(isAuthenticating)
-                    .padding()
-
-
-                }
-            }
-
-            Spacer()
-
-            Button(action: signIn) {
-                Text("Sign in")
-                    .loadingIndicator(when: isAuthenticating)
-                    .frame(maxWidth: .infinity)
-            }
-            .buttonStyle(FilledButtonStyle())
-            .disabled(!canSignIn)
-            .ignoresSafeArea(.keyboard, edges: .bottom)
-            .padding()
-        }
-        .foregroundColor(.Censo.primaryForeground)
-        .navigationBarHidden(true)
-        .background(
-            CensoBackground()
-        )
-        .alert(item: $currentAlert) { item in
-            switch item {
-            case .emailVerificationError:
-                return Alert(
-                    title: Text("Verification Error"),
-                    message: Text("An error occured trying to send your verification code"),
-                    dismissButton: .cancel(Text("Try Again"))
-                )
-            case .signInError:
-                return Alert.withDismissButton(title: Text("Verication Error"), message: Text("Please check your verification code"))
-            }
-        }
-        .preferredColorScheme(.light)
-    }
-
-    private func sendEmailVerification() {
-        isAuthenticating = true
-
-        censoApi.provider.request(.emailVerification(username)) { result in
-            isAuthenticating = false
-
-            switch result {
-            case .success(let response) where response.statusCode < 400:
-                break
-            case .success(let response):
-                currentAlert = .emailVerificationError(MoyaError.statusCode(response))
-            case .failure(let error):
-                currentAlert = .emailVerificationError(error)
-            }
-        }
-    }
-
-    private func signIn() {
-        isAuthenticating = true
-
-        authProvider.authenticate(.emailVerification(email: username, verificationToken: token)) { error in
-            isAuthenticating = false
-
-            if let error = error {
-                showSignInError(error)
-            }
-        }
-    }
-
-    private func showSignInError(_ error: Error) {
-        currentAlert = .signInError(error)
-    }
-}
-
-extension VerificationTokenView.AlertType: Identifiable {
-    var id: Int {
-        switch self {
-        case .signInError:
-            return 0
-        case .emailVerificationError:
-            return 1
-        }
     }
 }
 

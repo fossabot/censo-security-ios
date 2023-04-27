@@ -81,15 +81,15 @@ struct ApprovalRequestsView: View {
 }
 
 #if DEBUG
-struct ApprovalRequestsView_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationView {
-            ApprovalRequestsView(registeredDevice: RegisteredDevice(email: "test@test.com", deviceKey: .sample, encryptedRootSeed: Data()), user: .sample)
-                .navigationTitle("Approvals")
-        }
-        .withMessageSupport()
-    }
-}
+//struct ApprovalRequestsView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        NavigationView {
+//            ApprovalRequestsView(registeredDevice: RegisteredDevice(email: "test@test.com", deviceKey: .sample, encryptedRootSeed: Data()), user: .sample)
+//                .navigationTitle("Approvals")
+//        }
+//        .withMessageSupport()
+//    }
+//}
 #endif
 
 extension Notification.Name {

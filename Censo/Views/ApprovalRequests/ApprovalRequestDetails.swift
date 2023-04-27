@@ -10,6 +10,7 @@ import SwiftUI
 import CryptoKit
 import Combine
 import raygun4apple
+import LocalAuthentication
 
 struct ApprovalRequestDetails<Content>: View where Content : View {
     @Environment(\.dismiss) var dismiss
@@ -188,21 +189,27 @@ struct ApprovalRequestDetails<Content>: View where Content : View {
     }
 
     private func approve() {
-        action = .approving
+        let context = LAContext()
+        context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: "Verify your identity") { success, error in
+            if let error = error {
+                alert = .approveError(error)
+            } else {
+                action = .approving
 
-        registeredDevice.withAuthenticatedDevice { result in
-            switch result {
-            case .success(let registeredDevice):
                 Task {
                     defer {
                         action = .none
                     }
 
                     do {
+                        let preauthenticatedDeviceKey = try registeredDevice.deviceKey.preauthenticatedKey(context: context)
+                        let preauthenticatedBootstrapKey = try registeredDevice.bootstrapKey?.preauthenticatedKey(context: context)
                         let request = ApprovalDispositionRequest(disposition: .Approve, request: request)
                         let payload = try await CensoApi.ApprovalDispositionPayload(
                             dispositionRequest: request,
-                            registeredDevice: registeredDevice,
+                            deviceKey: preauthenticatedDeviceKey,
+                            bootstrapKey: preauthenticatedBootstrapKey,
+                            encryptedRootSeed: registeredDevice.encryptedRootSeed,
                             apiProvider: censoApi.provider
                         )
 
@@ -226,31 +233,35 @@ struct ApprovalRequestDetails<Content>: View where Content : View {
                         }
                     }
                 }
-            case .failure(let error):
-                alert = .approveError(error)
             }
         }
     }
 
     private func ignore() {
-        action = .ignoring
+        let context = LAContext()
+        context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: "Verify your identity") { success, error in
+            if let error = error {
+                alert = .approveError(error)
+            } else {
+                action = .ignoring
 
-        registeredDevice.withAuthenticatedDevice { result in
-            switch result {
-            case .success(let registeredDevice):
                 Task {
                     defer {
                         action = .none
                     }
 
                     do {
+                        let preauthenticatedDeviceKey = try registeredDevice.deviceKey.preauthenticatedKey(context: context)
+                        let preauthenticatedBootstrapKey = try registeredDevice.bootstrapKey?.preauthenticatedKey(context: context)
                         let request = ApprovalDispositionRequest(disposition: .Deny, request: request)
 
                         _ = try await censoApi.provider.request(
                             .registerApprovalDisposition(
                                 CensoApi.ApprovalDispositionPayload(
                                     dispositionRequest: request,
-                                    registeredDevice: registeredDevice,
+                                    deviceKey: preauthenticatedDeviceKey,
+                                    bootstrapKey: preauthenticatedBootstrapKey,
+                                    encryptedRootSeed: registeredDevice.encryptedRootSeed,
                                     apiProvider: censoApi.provider
                                 ),
                                 devicePublicKey: try registeredDevice.devicePublicKey()
@@ -270,8 +281,6 @@ struct ApprovalRequestDetails<Content>: View where Content : View {
                         }
                     }
                 }
-            case .failure(let error):
-                alert = .ignoreError(error)
             }
         }
     }
@@ -314,16 +323,16 @@ extension ApprovalRequest {
 
 
 #if DEBUG
-struct ApprovalRequestDetails_Previews: PreviewProvider {
-    static var previews: some View {
-        let timerPublisher = Timer.TimerPublisher(interval: 1, runLoop: .current, mode: .default).autoconnect()
-
-        NavigationView {
-            ApprovalRequestDetails(registeredDevice: RegisteredDevice(email: "test@test.com", deviceKey: .sample, encryptedRootSeed: Data()), user: .sample, request: .sample, timerPublisher: timerPublisher) {
-                WithdrawalDetails(request: .sample, withdrawal: EthereumWithdrawalRequest.sample)
-            }
-        }
-        .preferredColorScheme(.light)
-    }
-}
+//struct ApprovalRequestDetails_Previews: PreviewProvider {
+//    static var previews: some View {
+//        let timerPublisher = Timer.TimerPublisher(interval: 1, runLoop: .current, mode: .default).autoconnect()
+//
+//        NavigationView {
+//            ApprovalRequestDetails(registeredDevice: RegisteredDevice(email: "test@test.com", deviceKey: .sample, encryptedRootSeed: Data()), user: .sample, request: .sample, timerPublisher: timerPublisher) {
+//                WithdrawalDetails(request: .sample, withdrawal: EthereumWithdrawalRequest.sample)
+//            }
+//        }
+//        .preferredColorScheme(.light)
+//    }
+//}
 #endif

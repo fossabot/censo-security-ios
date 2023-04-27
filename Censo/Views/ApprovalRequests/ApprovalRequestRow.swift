@@ -10,6 +10,7 @@ import SwiftUI
 import CryptoKit
 import Combine
 import raygun4apple
+import LocalAuthentication
 
 struct ApprovalRequestRow<Row, Detail>: View where Row : View, Detail: View {
     @Environment(\.censoApi) var censoApi
@@ -118,21 +119,27 @@ struct ApprovalRequestRow<Row, Detail>: View where Row : View, Detail: View {
     }
 
     private func approve() {
-        isLoading = true
+        let context = LAContext()
+        context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: "Verify your identity") { success, error in
+            if let error = error {
+                alert = .error(error)
+            } else {
+                isLoading = true
 
-        registeredDevice.withAuthenticatedDevice { result in
-            switch result {
-            case .success(let registeredDevice):
                 Task {
                     defer {
                         isLoading = false
                     }
 
                     do {
+                        let preauthenticatedDeviceKey = try registeredDevice.deviceKey.preauthenticatedKey(context: context)
+                        let preauthenticatedBootstrapKey = try registeredDevice.bootstrapKey?.preauthenticatedKey(context: context)
                         let request = ApprovalDispositionRequest(disposition: .Approve, request: request)
                         let payload = try await CensoApi.ApprovalDispositionPayload(
                             dispositionRequest: request,
-                            registeredDevice: registeredDevice,
+                            deviceKey: preauthenticatedDeviceKey,
+                            bootstrapKey: preauthenticatedBootstrapKey,
+                            encryptedRootSeed: registeredDevice.encryptedRootSeed,
                             apiProvider: censoApi.provider
                         )
 
@@ -155,8 +162,6 @@ struct ApprovalRequestRow<Row, Detail>: View where Row : View, Detail: View {
                         }
                     }
                 }
-            case .failure(let error):
-                alert = .error(error)
             }
         }
     }
@@ -195,17 +200,17 @@ extension ApprovalRequest {
 }
 
 #if DEBUG
-struct ApprovalRequestRow_Previews: PreviewProvider {
-    static var previews: some View {
-        let timerPublisher = Timer.TimerPublisher(interval: 1, runLoop: .current, mode: .default).autoconnect()
-
-        ApprovalRequestRow(registeredDevice: .init(email: "test@test.com", deviceKey: .sample, encryptedRootSeed: Data()), user: .sample, request: .sample, timerPublisher: timerPublisher) {
-            WithdrawalRow(requestType: .ethereumWithdrawalRequest(.sample), withdrawal: EthereumWithdrawalRequest.sample)
-        } detail: {
-            WithdrawalDetails(request: .sample, withdrawal: EthereumWithdrawalRequest.sample)
-        }
-    }
-}
+//struct ApprovalRequestRow_Previews: PreviewProvider {
+//    static var previews: some View {
+//        let timerPublisher = Timer.TimerPublisher(interval: 1, runLoop: .current, mode: .default).autoconnect()
+//
+//        ApprovalRequestRow(registeredDevice: .init(email: "test@test.com", deviceKey: .sample, encryptedRootSeed: Data()), user: .sample, request: .sample, timerPublisher: timerPublisher) {
+//            WithdrawalRow(requestType: .ethereumWithdrawalRequest(.sample), withdrawal: EthereumWithdrawalRequest.sample)
+//        } detail: {
+//            WithdrawalDetails(request: .sample, withdrawal: EthereumWithdrawalRequest.sample)
+//        }
+//    }
+//}
 
 extension EthereumWithdrawalRequest {
     static var sample: Self {

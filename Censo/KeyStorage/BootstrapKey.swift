@@ -9,10 +9,12 @@ import Foundation
 import LocalAuthentication
 
 struct BootstrapKey: SecureEnclaveKey {
+    let identifier: String
     let secKey: SecKey
 
-    fileprivate init(secKey: SecKey) {
+    fileprivate init(identifier: String, secKey: SecKey) {
         self.secKey = secKey
+        self.identifier = identifier
     }
 }
 
@@ -27,7 +29,7 @@ extension SecureEnclaveWrapper {
             return nil
         }
 
-        return BootstrapKey(secKey: secKey)
+        return BootstrapKey(identifier: bootstrapKeyIdentifier(email: email), secKey: secKey)
     }
 
     static func generateBootstrapKey(email: String, authenticationContext: LAContext? = nil) throws -> BootstrapKey {
@@ -35,7 +37,7 @@ extension SecureEnclaveWrapper {
             return bootstrapKey
         } else {
             let secKey = try makeAndStoreKey(name: bootstrapKeyIdentifier(email: email), authenticationContext: authenticationContext)
-            return BootstrapKey(secKey: secKey)
+            return BootstrapKey(identifier: bootstrapKeyIdentifier(email: email), secKey: secKey)
         }
     }
 

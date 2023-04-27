@@ -69,7 +69,7 @@ enum ApiError: Error, Equatable {
 extension CensoApi {
     enum Credentials: Encodable {
         case emailVerification(email: String, verificationToken: String)
-        case signature(email: String, deviceKey: DeviceKey)
+        case signature(email: String, timestamp: Date, signature: String, publicKey: String)
 
         enum CodingKeys: String, CodingKey {
             case credentials
@@ -95,15 +95,10 @@ extension CensoApi {
                 try credentialsContainer.encode("EmailVerificationBased", forKey: .type)
                 try credentialsContainer.encode(email, forKey: .email)
                 try credentialsContainer.encode(password, forKey: .verificationToken)
-            case .signature(let email, let deviceKey):
-                let date = Date()
+            case .signature(let email, let timestamp, let signature, _):
                 try credentialsContainer.encode("SignatureBased", forKey: .type)
                 try credentialsContainer.encode(email, forKey: .email)
-                try credentialsContainer.encode(date, forKey: .timestamp)
-
-                let dateString = DateFormatter.iso8601Full.string(from: date)
-                let signature = try deviceKey.signature(for: dateString.data(using: .utf8)!).base64EncodedString()
-
+                try credentialsContainer.encode(timestamp, forKey: .timestamp)
                 try credentialsContainer.encode(signature, forKey: .timestampSignature)
             }
         }
@@ -256,7 +251,8 @@ struct AuthProviderPlugin: Moya.PluginType {
         var request = request
 
         switch target {
-        case CensoApi.Target.minVersion:
+        case CensoApi.Target.minVersion,
+             CensoApi.Target.login:
             break
         default:
             if let authProvider = authProvider, authProvider.isAuthenticated, let token = authProvider.bearerToken {
@@ -416,11 +412,11 @@ extension CensoApi.Target: Moya.TargetType {
     
     var headers: [String: String]? {
         switch self {
-        case .login(.signature(_, let deviceKey)):
+        case .login(.signature(_, _, _, let devicePublicKey)):
             return [
                 "Content-Type": "application/json",
                 "X-IsApi": "true",
-                "X-Censo-Device-Identifier": (try? deviceKey.publicExternalRepresentation().base58String) ?? "[DEVICE_KEY_ERROR]"
+                "X-Censo-Device-Identifier": devicePublicKey
             ]
         case .addWalletSigners(_, let devicePublicKey),
              .boostrapDeviceAndSigners(_, let devicePublicKey),

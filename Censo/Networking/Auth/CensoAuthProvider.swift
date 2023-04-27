@@ -12,6 +12,27 @@ import Moya
 class CensoAuthProvider: ObservableObject {
     private let apiProvider = MoyaProvider<CensoApi.Target>()
 
+    enum AuthenticatedState {
+        case deviceAuthenticatedRegistered(RegisteredDevice, token: JWTToken)
+        case deviceAuthenticatedUnregistered(DeviceKey, token: JWTToken)
+        case emailAuthenticated(DeviceKey, token: JWTToken)
+    }
+
+    @Published var authenticatedState: AuthenticatedState? {
+        didSet {
+            switch authenticatedState {
+            case .none:
+                self.token = nil
+            case .deviceAuthenticatedRegistered(_, let token),
+                 .deviceAuthenticatedUnregistered(_, let token),
+                 .emailAuthenticated(_, let token):
+                self.token = token
+            }
+        }
+    }
+
+    private var token: JWTToken?
+
     struct JWTToken: Codable {
         var email: String
         var token: String
@@ -63,80 +84,70 @@ class CensoAuthProvider: ObservableObject {
         }
     }
 
-    func authenticate(_ credentials: CensoApi.Credentials, completion: @escaping (Error?) -> Void) {
-        apiProvider.decodableRequest(.login(credentials)) { [weak self] (result: Result<JWTToken, MoyaError>) in
-            self?.objectWillChange.send()
-
-            switch result {
-            case .success(let token):
-                Self.storeCredentials(token)
-                completion(nil)
-            case .failure(let error): // TODO: ParsErrors
-                completion(error)
-            }
+    func exchangeTokenIfNeeded(deviceKey: PreauthenticatedKey<DeviceKey>) async throws {
+        switch authenticatedState {
+        case .some(.deviceAuthenticatedRegistered),
+             .some(.deviceAuthenticatedUnregistered),
+             .none:
+            break
+        case .emailAuthenticated(_, let token):
+            let timestamp = Date()
+            let dateString = DateFormatter.iso8601Full.string(from: timestamp)
+            let signature = try deviceKey.signature(for: dateString.data(using: .utf8)!).base64EncodedString()
+            let newToken: JWTToken = try await apiProvider.request(.login(.signature(email: token.email, timestamp: timestamp, signature: signature, publicKey: try deviceKey.key.publicExternalRepresentation().base58String)))
+            self.token = newToken
         }
-    }
-
-    func exchangeTokenIfNeeded(deviceKey: DeviceKey) async throws {
-        guard let storedJWTToken = storedJWTToken else {
-            return
-        }
-
-        guard storedJWTToken.emailVerificationLogin else {
-            return
-        }
-
-        let newToken: JWTToken = try await apiProvider.request(.login(.signature(email: storedJWTToken.email, deviceKey: deviceKey)))
-
-        Self.storeCredentials(newToken)
     }
 }
 
-extension CensoAuthProvider {
-    static private let credentialsService = "com.censocustody.credentials"
-
-    var storedJWTToken: JWTToken? {
-        do {
-            guard let tokenData = try Keychain.load(account: Self.credentialsService, service: Self.credentialsService) else {
-                return nil
-            }
-
-            let decoder = JSONDecoder()
-
-            return try decoder.decode(JWTToken.self, from: tokenData)
-        } catch {
-            return nil
-        }
-    }
-
-    @discardableResult
-    static func storeCredentials(_ jwtToken: JWTToken) -> Bool {
-        let encoder = JSONEncoder()
-        do {
-            let data = try encoder.encode(jwtToken)
-            try Keychain.save(account: Self.credentialsService, service: Self.credentialsService, data: data)
-            return true
-        } catch {
-            return false
-        }
-    }
-
-    static func clearStoredCredentials() {
-        Keychain.clear(account: Self.credentialsService, service: Self.credentialsService)
-    }
-}
+//extension CensoAuthProvider {
+//    static private let credentialsService = "com.censocustody.credentials"
+//
+//    var storedJWTToken: JWTToken? {
+//        do {
+//            guard let tokenData = try Keychain.load(account: Self.credentialsService, service: Self.credentialsService) else {
+//                return nil
+//            }
+//
+//            let decoder = JSONDecoder()
+//
+//            return try decoder.decode(JWTToken.self, from: tokenData)
+//        } catch {
+//            return nil
+//        }
+//    }
+//
+//    @discardableResult
+//    static func storeCredentials(_ jwtToken: JWTToken) -> Bool {
+//        let encoder = JSONEncoder()
+//        do {
+//            let data = try encoder.encode(jwtToken)
+//            try Keychain.save(account: Self.credentialsService, service: Self.credentialsService, data: data)
+//            return true
+//        } catch {
+//            return false
+//        }
+//    }
+//
+//    static func clearStoredCredentials() {
+//        Keychain.clear(account: Self.credentialsService, service: Self.credentialsService)
+//    }
+//}
 
 extension CensoAuthProvider: AuthProvider {
     var isAuthenticated: Bool {
-        storedJWTToken != nil
+        //storedJWTToken != nil
+        token != nil
     }
 
     var isExpired: Bool {
-        storedJWTToken?.isExpired ?? false
+        //storedJWTToken?.isExpired ?? false
+        token?.isExpired ?? false
     }
 
     var bearerToken: String? {
-        storedJWTToken?.token
+        //storedJWTToken?.token
+        token?.token
     }
 
     enum RefreshError: Error {
@@ -154,6 +165,7 @@ extension CensoAuthProvider: AuthProvider {
             self.objectWillChange.send()
         }
         
-        Self.clearStoredCredentials()
+        //Self.clearStoredCredentials()
+        authenticatedState = nil
     }
 }

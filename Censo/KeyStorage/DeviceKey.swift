@@ -10,10 +10,12 @@ import Security
 import LocalAuthentication
 
 struct DeviceKey: SecureEnclaveKey {
+    let identifier: String
     let secKey: SecKey
 
-    fileprivate init(secKey: SecKey) {
+    fileprivate init(identifier: String, secKey: SecKey) {
         self.secKey = secKey
+        self.identifier = identifier
     }
 }
 
@@ -28,7 +30,7 @@ extension SecureEnclaveWrapper {
             return nil
         }
 
-        return DeviceKey(secKey: secKey)
+        return DeviceKey(identifier: deviceKeyIdentifier(email: email), secKey: secKey)
     }
 
     static func generateDeviceKey(email: String, authenticationContext: LAContext? = nil) throws -> DeviceKey {
@@ -36,9 +38,41 @@ extension SecureEnclaveWrapper {
             return deviceKey
         } else {
             let secKey = try makeAndStoreKey(name: deviceKeyIdentifier(email: email), authenticationContext: authenticationContext)
-            return DeviceKey(secKey: secKey)
+            return DeviceKey(identifier: deviceKeyIdentifier(email: email), secKey: secKey)
         }
     }
+}
+
+
+
+extension DeviceKey {
+//    func preauthenticated(with context: LAContext) throws -> DeviceKey {
+//        if let key = SecureEnclaveWrapper.loadKey(name: identifier, authenticationContext: context) {
+//            return DeviceKey(identifier: identifier, secKey: secKey)
+//        } else {
+//            throw PreauthSecureEnclaveKeyError.keyNoLongerExists
+//        }
+//    }
+//
+//    func withPreauthenticatedKey(_ closure: @escaping (Result<Self, Error>) async -> Void) {
+//        let context = LAContext()
+//        context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: "Verify your identity") { success, error in
+//            if let error = error {
+//                Task {
+//                    await closure(.failure(error))
+//                }
+//            } else if let key = SecureEnclaveWrapper.loadKey(name: identifier, authenticationContext: context) {
+//                Task {
+//                    await closure(.success(DeviceKey(identifier: identifier, secKey: key)))
+//                    //context.invalidate()
+//                }
+//            } else {
+//                Task {
+//                    await closure(.failure(PreauthSecureEnclaveKeyError.keyNoLongerExists))
+//                }
+//            }
+//        }
+//    }
 }
 
 #if DEBUG
@@ -56,7 +90,7 @@ extension DeviceKey {
         var error: Unmanaged<CFError>?
         let privateKey = SecKeyCreateRandomKey(attributes as CFDictionary, &error)!
 
-        return DeviceKey(secKey: privateKey)
+        return DeviceKey(identifier: "test", secKey: privateKey)
     }
 }
 #endif

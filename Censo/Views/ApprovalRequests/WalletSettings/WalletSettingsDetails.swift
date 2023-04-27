@@ -25,21 +25,21 @@ struct WalletSettingsDetails: View {
 }
 
 #if DEBUG
-struct WalletSettingsDetails_Previews: PreviewProvider {
-    static var previews: some View {
-        WalletSettingsDetails(request: .sample, update: EthereumWalletSettingsUpdate.sample, user: .sample)
-
-        let timerPublisher = Timer.TimerPublisher(interval: 1, runLoop: .current, mode: .default).autoconnect()
-
-        NavigationView {
-            ApprovalRequestDetails(registeredDevice: RegisteredDevice(email: "test@test.com", deviceKey: .sample, encryptedRootSeed: Data()), user: .sample, request: .sample, timerPublisher: timerPublisher) {
-                WalletSettingsDetails(request: .sample,
-                                      update: EthereumWalletSettingsUpdate.sample,
-                                      user: .sample)
-            }
-        }
-    }
-}
+//struct WalletSettingsDetails_Previews: PreviewProvider {
+//    static var previews: some View {
+//        WalletSettingsDetails(request: .sample, update: EthereumWalletSettingsUpdate.sample, user: .sample)
+//
+//        let timerPublisher = Timer.TimerPublisher(interval: 1, runLoop: .current, mode: .default).autoconnect()
+//
+//        NavigationView {
+//            ApprovalRequestDetails(registeredDevice: RegisteredDevice(email: "test@test.com", deviceKey: .sample, encryptedRootSeed: Data()), user: .sample, request: .sample, timerPublisher: timerPublisher) {
+//                WalletSettingsDetails(request: .sample,
+//                                      update: EthereumWalletSettingsUpdate.sample,
+//                                      user: .sample)
+//            }
+//        }
+//    }
+//}
 
 extension EthereumWalletSettingsUpdate {
     static var sample: Self {

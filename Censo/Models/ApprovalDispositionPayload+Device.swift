@@ -17,19 +17,22 @@ enum ApprovalDispositionPayloadError: Error {
 extension CensoApi.ApprovalDispositionPayload {
     init(
         dispositionRequest: ApprovalDispositionRequest,
-        registeredDevice: RegisteredDevice,
+        deviceKey: PreauthenticatedKey<DeviceKey>,
+        bootstrapKey: PreauthenticatedKey<BootstrapKey>?,
+        encryptedRootSeed: Data,
         apiProvider: MoyaProvider<CensoApi.Target>
     ) async throws {
         self.approvalDisposition = dispositionRequest.disposition
         self.requestID = dispositionRequest.request.id
-        self.signatures = try await dispositionRequest.signatureInfos(using: registeredDevice, apiProvider: apiProvider)
+        self.signatures = try await dispositionRequest.signatureInfos(using: deviceKey, encryptedRootSeed: encryptedRootSeed, apiProvider: apiProvider)
 
         switch dispositionRequest.request.details {
         case .orgAdminPolicyUpdate(let policyUpdate):
             self.shards = try await reshareShards(
                 currentShardingPolicyGuid: policyUpdate.shardingPolicyChangeInfo.currentPolicyRevisionGuid,
                 targetShardingPolicy: policyUpdate.shardingPolicyChangeInfo.targetPolicy,
-                registeredDevice: registeredDevice,
+                deviceKey: deviceKey,
+                bootstrapKey: bootstrapKey,
                 apiProvider: apiProvider
             )
         case .enableDevice(let enableDevice):
@@ -38,7 +41,8 @@ extension CensoApi.ApprovalDispositionPayload {
                     self.shards = try await reshareShards(
                         currentShardingPolicyGuid: currentShardingPolicyRevisionGuid,
                         targetShardingPolicy: targetShardingPolicy,
-                        registeredDevice: registeredDevice,
+                        deviceKey: deviceKey,
+                        bootstrapKey: bootstrapKey,
                         apiProvider: apiProvider
                     )
                 }
@@ -47,7 +51,8 @@ extension CensoApi.ApprovalDispositionPayload {
                     forUserWithEmail: enableDevice.email,
                     newDeviceKey: try ECPublicKey(base58String: enableDevice.deviceKey),
                     currentShardingPolicyGuid: currentShardingPolicyRevisionGuid,
-                    registeredDevice: registeredDevice,
+                    deviceKey: deviceKey,
+                    bootstrapKey: bootstrapKey,
                     apiProvider: apiProvider
                 )
             }
@@ -60,10 +65,11 @@ extension CensoApi.ApprovalDispositionPayload {
         forUserWithEmail userEmail: String,
         newDeviceKey: ECPublicKey,
         currentShardingPolicyGuid: String,
-        registeredDevice: RegisteredDevice,
+        deviceKey: PreauthenticatedKey<DeviceKey>,
+        bootstrapKey: PreauthenticatedKey<BootstrapKey>?,
         apiProvider: MoyaProvider<CensoApi.Target>
     ) async throws -> [CensoApi.RecoveryShard] {
-        let devicePublicKey = try registeredDevice.devicePublicKey()
+        let devicePublicKey = try deviceKey.key.publicExternalRepresentation().base58String
 
         let shardsResponse: CensoApi.ShardsResponse = try await apiProvider.request(
             .shards(
@@ -83,10 +89,10 @@ extension CensoApi.ApprovalDispositionPayload {
                         return CensoApi.RecoveryShard(
                             shardId: shard.shardId,
                             encryptedData: try newDeviceKey.encrypt(
-                                data: try registeredDevice.decrypt(encryptedShardData)
+                                data: try deviceKey.decrypt(data: encryptedShardData)
                             ).base64EncodedString()
                         )
-                    } else if let bootstrapKey = registeredDevice.bootstrapKey, try shardCopy.encryptionPublicKey == bootstrapKey.publicExternalRepresentation().base58String {
+                    } else if let bootstrapKey = bootstrapKey, try shardCopy.encryptionPublicKey == bootstrapKey.key.publicExternalRepresentation().base58String {
                         return CensoApi.RecoveryShard(
                             shardId: shard.shardId,
                             encryptedData: try newDeviceKey.encrypt(
@@ -104,10 +110,11 @@ extension CensoApi.ApprovalDispositionPayload {
     private func reshareShards(
         currentShardingPolicyGuid: String,
         targetShardingPolicy: ShardingPolicy,
-        registeredDevice: RegisteredDevice,
+        deviceKey: PreauthenticatedKey<DeviceKey>,
+        bootstrapKey: PreauthenticatedKey<BootstrapKey>?,
         apiProvider: MoyaProvider<CensoApi.Target>
     ) async throws -> [CensoApi.Shard] {
-        let devicePublicKey = try registeredDevice.devicePublicKey()
+        let devicePublicKey = try deviceKey.key.publicExternalRepresentation().base58String
         let shardsResponse: CensoApi.ShardsResponse = try await apiProvider.request(
             .shards(
                 policyRevisionId: currentShardingPolicyGuid,
@@ -123,8 +130,8 @@ extension CensoApi.ApprovalDispositionPayload {
                     let encryptedShardData = Data(base64Encoded: shardCopy.encryptedData)!
                     let decryptedShard = try {
                         if shardCopy.encryptionPublicKey == devicePublicKey {
-                            return try registeredDevice.decrypt(encryptedShardData)
-                        } else if let bootstrapKey = registeredDevice.bootstrapKey, try shardCopy.encryptionPublicKey == bootstrapKey.publicExternalRepresentation().base58String {
+                            return try deviceKey.decrypt(data: encryptedShardData)
+                        } else if let bootstrapKey = bootstrapKey, try shardCopy.encryptionPublicKey == bootstrapKey.key.publicExternalRepresentation().base58String {
                             return try bootstrapKey.decrypt(data: encryptedShardData)
                         } else {
                             throw ApprovalDispositionPayloadError.unknownDeviceKey(shardCopy.encryptionPublicKey)

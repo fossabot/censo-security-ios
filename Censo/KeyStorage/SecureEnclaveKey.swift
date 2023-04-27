@@ -6,8 +6,10 @@
 //
 
 import Foundation
+import LocalAuthentication
 
 protocol SecureEnclaveKey {
+    var identifier: String { get }
     var secKey: SecKey { get }
 }
 
@@ -16,20 +18,9 @@ enum SecKeyError: Error {
     case algorithmNotSupported
 }
 
-extension SecureEnclaveKey {
-    public func publicExternalRepresentation() throws -> Data {
-        guard let publicKey = SecKeyCopyPublicKey(secKey) else {
-            throw SecKeyError.invalidKey
-        }
-
-        var error: Unmanaged<CFError>?
-        let data = SecKeyCopyExternalRepresentation(publicKey, &error) as Data?
-        guard data != nil else {
-            throw error!.takeRetainedValue() as Error
-        }
-
-        return data!
-    }
+struct PreauthenticatedKey<Key> where Key : SecureEnclaveKey {
+    fileprivate(set) var key: Key
+    fileprivate var secKey: SecKey
 
     public func encrypt(data: Data) throws -> Data {
         guard let publicKey = SecKeyCopyPublicKey(secKey) else {
@@ -92,5 +83,33 @@ extension SecureEnclaveKey {
         }
 
         return signature!
+    }
+}
+
+enum PreauthSecureEnclaveKeyError: Error {
+    case keyNoLongerExists
+}
+
+extension SecureEnclaveKey {
+    public func publicExternalRepresentation() throws -> Data {
+        guard let publicKey = SecKeyCopyPublicKey(secKey) else {
+            throw SecKeyError.invalidKey
+        }
+
+        var error: Unmanaged<CFError>?
+        let data = SecKeyCopyExternalRepresentation(publicKey, &error) as Data?
+        guard data != nil else {
+            throw error!.takeRetainedValue() as Error
+        }
+
+        return data!
+    }
+
+    public func preauthenticatedKey(context: LAContext) throws -> PreauthenticatedKey<Self> {
+        if let key = SecureEnclaveWrapper.loadKey(name: identifier, authenticationContext: context) {
+            return PreauthenticatedKey(key: self, secKey: key)
+        } else {
+            throw PreauthSecureEnclaveKeyError.keyNoLongerExists
+        }
     }
 }

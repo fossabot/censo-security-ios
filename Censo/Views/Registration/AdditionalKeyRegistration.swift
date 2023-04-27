@@ -7,6 +7,7 @@
 
 import Foundation
 import SwiftUI
+import LocalAuthentication
 
 struct AdditionalKeyRegistration: View {
     @Environment(\.censoApi) var censoApi
@@ -14,18 +15,36 @@ struct AdditionalKeyRegistration: View {
     @RemoteResult private var signers: CensoApi.SignersInfo?
 
     var user: CensoApi.User
-    var encryptedRootSeed: Data
-    var deviceKey: DeviceKey
+    var registeredDevice: RegisteredDevice
     var shardingPolicy: ShardingPolicy
     var onSuccess: () -> Void
 
     var body: some View {
-        // Needs another screen for interaction here
         Group {
             switch $signers {
             case .idle:
+                VStack {
+                    Spacer()
+
+                    Text("We need to register some additional keys to continue")
+                        .font(.system(size: 26).bold())
+                        .padding()
+
+                    Spacer()
+
+                    Button {
+                        reload()
+                    } label: {
+                        Text("Continue")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .padding()
+
+                    Spacer()
+                        .frame(height: 20)
+                }
+            case .loading:
                 CensoProgressView(text: "Registering your additional keys with Censo...")
-                    .onAppear(perform: reload)
             case .failure(let error):
                 RetryView(error: error, action: reload)
             default:
@@ -39,36 +58,48 @@ struct AdditionalKeyRegistration: View {
     }
 
     private func reload() {
-        do {
-            let rootSeed = try deviceKey.encrypt(data: encryptedRootSeed).bytes
+        let deviceKey = registeredDevice.deviceKey
+        let encryptedRootSeed = registeredDevice.encryptedRootSeed
 
-            let signers = try CensoApi.SignersInfo(
-                shardingPolicy: shardingPolicy,
-                rootSeed: rootSeed,
-                deviceKey: deviceKey
-            )
+        let context = LAContext()
+        context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: "Verify your identity") { success, error in
+            if let error = error {
+                _signers.content = .failure(error)
+            } else {
+                do {
+                    let preauthenticatedKey = try deviceKey.preauthenticatedKey(context: context)
+                    let rootSeed = try preauthenticatedKey.encrypt(data: encryptedRootSeed).bytes
 
-            _signers.reload(
-                using: censoApi.provider.loader(
-                    for: .addWalletSigners(signers, devicePublicKey: try deviceKey.publicExternalRepresentation().base58String)
-                )
-            ) { error in
-                if error == nil {
-                    onSuccess()
+                    let signers = try CensoApi.SignersInfo(
+                        shardingPolicy: shardingPolicy,
+                        rootSeed: rootSeed,
+                        deviceKey: preauthenticatedKey
+                    )
+
+                    _signers.reload(
+                        using: censoApi.provider.loader(
+                            for: .addWalletSigners(signers, devicePublicKey: try deviceKey.publicExternalRepresentation().base58String)
+                        )
+                    ) { error in
+                        if error == nil {
+                            onSuccess()
+                        }
+                    }
+                } catch {
+                    _signers.content = .failure(error)
                 }
             }
-        } catch {
-            _signers.content = .failure(error)
         }
+
     }
 }
 
 #if DEBUG
-struct AdditionalKeyRegistration_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationView {
-            AdditionalKeyRegistration(user: .sample, encryptedRootSeed: Data(), deviceKey: .sample, shardingPolicy: .sample, onSuccess: {})
-        }
-    }
-}
+//struct AdditionalKeyRegistration_Previews: PreviewProvider {
+//    static var previews: some View {
+//        NavigationView {
+//            AdditionalKeyRegistration(user: .sample, encryptedRootSeed: Data(), deviceKey: .sample, shardingPolicy: .sample, onSuccess: {})
+//        }
+//    }
+//}
 #endif

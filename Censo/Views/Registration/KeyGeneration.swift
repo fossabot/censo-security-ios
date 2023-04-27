@@ -15,12 +15,12 @@ struct KeyGeneration: View {
     var user: CensoApi.User
     var shardingPolicy: ShardingPolicy
     var deviceKey: DeviceKey
-    var authProvider: CensoAuthProvider
+    var registrationController: DeviceRegistrationController
     var onConflict: () -> Void
     var onSuccess: () -> Void
 
     var body: some View {
-        KeyConfirmationSuccess(user: user, deviceKey: deviceKey, phrase: phrase, shardingPolicy: shardingPolicy, authProvider: authProvider, onConflict: onConflict, onSuccess: onSuccess)
+        KeyConfirmationSuccess(user: user, deviceKey: deviceKey, registrationController: registrationController, phrase: phrase, shardingPolicy: shardingPolicy, onConflict: onConflict, onSuccess: onSuccess)
     }
 }
 

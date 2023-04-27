@@ -53,18 +53,18 @@ extension DateFormatter {
 }
 
 #if DEBUG
-struct WithdrawalDetails_Previews: PreviewProvider {
-    static var previews: some View {
-        WithdrawalDetails(request: .sample, withdrawal: EthereumWithdrawalRequest.sample)
-        let timerPublisher = Timer.TimerPublisher(interval: 1, runLoop: .current, mode: .default).autoconnect()
-
-        NavigationView {
-            ApprovalRequestDetails(registeredDevice: RegisteredDevice(email: "test@test.com", deviceKey: .sample, encryptedRootSeed: Data()), user: .sample, request: .sample, timerPublisher: timerPublisher) {
-                WithdrawalDetails(request: .sample, withdrawal: EthereumWithdrawalRequest.sample)
-            }
-        }
-    }
-}
+//struct WithdrawalDetails_Previews: PreviewProvider {
+//    static var previews: some View {
+//        WithdrawalDetails(request: .sample, withdrawal: EthereumWithdrawalRequest.sample)
+//        let timerPublisher = Timer.TimerPublisher(interval: 1, runLoop: .current, mode: .default).autoconnect()
+//
+//        NavigationView {
+//            ApprovalRequestDetails(registeredDevice: RegisteredDevice(email: "test@test.com", deviceKey: .sample, encryptedRootSeed: Data()), user: .sample, request: .sample, timerPublisher: timerPublisher) {
+//                WithdrawalDetails(request: .sample, withdrawal: EthereumWithdrawalRequest.sample)
+//            }
+//        }
+//    }
+//}
 #endif
 
 

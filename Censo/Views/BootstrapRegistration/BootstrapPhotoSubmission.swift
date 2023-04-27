@@ -22,7 +22,7 @@ struct BootstrapPhotoSubmission: View {
     var uiImage: UIImage
     var deviceKey: DeviceKey
     var bootstrapKey: BootstrapKey
-    var authProvider: CensoAuthProvider
+    var registrationController: DeviceRegistrationController
     var onSuccess: () -> Void
     var onRetake: () -> Void
 
@@ -61,56 +61,34 @@ struct BootstrapPhotoSubmission: View {
     private func submitPhoto() {
         let imageData = uiImage.jpegData(compressionQuality: 1) ?? Data()
 
-        inProgress = true
+        do {
+            let rootSeed = try Mnemonic(phrase: phrase).seed
 
-        AuthenticatedKeys.withAuhenticatedKeys(from: email) { result in
-            switch result {
-            case .success(let keys):
-                do {
+            inProgress = true
 
-                    let rootSeed = try Mnemonic(phrase: phrase).seed
-                    let devicePublicKeyData = try deviceKey.publicExternalRepresentation()
-                    let devicePublicKey = devicePublicKeyData.base58String
+            registrationController.register(rootSeed: rootSeed, deviceKey: deviceKey, bootstrapKey: bootstrapKey, imageData: imageData) { result in
+                inProgress = false
 
-                    let bootstrapUserDeviceAndSigners = try CensoApi.BootstrapUserDeviceAndSigners(
-                        imageData: imageData,
-                        deviceKey: keys.deviceKey,
-                        bootstrapKey: keys.bootstrapKey!,
-                        rootSeed: rootSeed
-                    )
-
-                    let response = try await censoApi.provider.request(.boostrapDeviceAndSigners(bootstrapUserDeviceAndSigners, devicePublicKey: devicePublicKey))
-
-                    if response.statusCode < 400 {
-                        try Keychain.saveRootSeed(rootSeed, email: email, deviceKey: deviceKey)
-
-                        try await authProvider.exchangeTokenIfNeeded(deviceKey: keys.deviceKey)
-
-                        await MainActor.run {
-                            onSuccess()
-                        }
-                    } else {
-                        self.error = MoyaError.statusCode(response)
-                        self.alertPresented = true
-                    }
-                } catch {
+                switch result {
+                case .success(let registeredDevice):
+                    registrationController.completeRegistration(with: registeredDevice)
+                    onSuccess()
+                case .failure(let error):
                     self.error = error
                     self.alertPresented = true
                 }
-            case .failure(let error):
-                self.error = error
-                self.alertPresented = true
             }
-
-            inProgress = false
+        } catch {
+            self.error = error
+            self.alertPresented = true
         }
     }
 }
 
 extension CensoApi.BootstrapUserDeviceAndSigners {
-    init(imageData: Data, deviceKey: DeviceKey, bootstrapKey: BootstrapKey, rootSeed: [UInt8]) throws {
+    init(imageData: Data, deviceKey: PreauthenticatedKey<DeviceKey>, bootstrapKey: PreauthenticatedKey<BootstrapKey>, rootSeed: [UInt8]) throws {
         self.userDevice = CensoApi.UserDevice(
-            publicKey: try deviceKey.publicExternalRepresentation().base58String,
+            publicKey: try deviceKey.key.publicExternalRepresentation().base58String,
             deviceType: .ios,
             userImage: CensoApi.UserImage(
                 image: imageData.base64EncodedString(),
@@ -129,7 +107,7 @@ extension CensoApi.BootstrapUserDeviceAndSigners {
         )
 
         self.bootstrapDevice = CensoApi.BootstrapDevice(
-            publicKey: try bootstrapKey.publicExternalRepresentation().base58String,
+            publicKey: try bootstrapKey.key.publicExternalRepresentation().base58String,
             signature: try bootstrapKey.signature(for: signersInfo.signers.dataToSign).base64EncodedString()
         )
     }

@@ -8,6 +8,7 @@
 import SwiftUI
 import Moya
 import CryptoKit
+import LocalAuthentication
 
 struct DevicePhotoSubmission: View {
     @Environment(\.censoApi) var censoApi
@@ -56,38 +57,49 @@ struct DevicePhotoSubmission: View {
     private func submitPhoto() {
         let imageData = uiImage.jpegData(compressionQuality: 1) ?? Data()
 
-        do {
-            let userDevice = CensoApi.UserDevice(
-                publicKey: try deviceKey.publicExternalRepresentation().base58String,
-                deviceType: .ios,
-                userImage: CensoApi.UserImage(
-                    image: imageData.base64EncodedString(),
-                    type: .jpeg,
-                    signature: try deviceKey.signature(for: Data(SHA256.hash(data: imageData))).base64EncodedString()
-                ),
-                replacingDeviceIdentifier: nil
-            )
+        let context = LAContext()
+        context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: "Verify your identity") { success, error in
+            if let error = error {
+                self.error = error
+                self.alertPresented = true
+            } else {
+                do {
+                    let preauthenticatedDeviceKey = try deviceKey.preauthenticatedKey(context: context)
+                    let userDevice = CensoApi.UserDevice(
+                        publicKey: try deviceKey.publicExternalRepresentation().base58String,
+                        deviceType: .ios,
+                        userImage: CensoApi.UserImage(
+                            image: imageData.base64EncodedString(),
+                            type: .jpeg,
+                            signature: try preauthenticatedDeviceKey.signature(for: Data(SHA256.hash(data: imageData))).base64EncodedString()
+                        ),
+                        replacingDeviceIdentifier: nil
+                    )
 
-            inProgress = true
+                    inProgress = true
 
-            censoApi.provider.request(.registerDevice(userDevice, devicePublicKey: try deviceKey.publicExternalRepresentation().base58String)) { result in
-                inProgress = false
+                    censoApi.provider.request(.registerDevice(userDevice, devicePublicKey: try deviceKey.publicExternalRepresentation().base58String)) { result in
+                        inProgress = false
 
-                switch result {
-                case .failure(let error):
+                        switch result {
+                        case .failure(let error):
+                            self.error = error
+                            self.alertPresented = true
+                        case .success(let response) where response.statusCode < 400:
+                            onSuccess()
+                        case .success(let response):
+                            self.error = MoyaError.statusCode(response)
+                            self.alertPresented = true
+                        }
+                    }
+                } catch {
                     self.error = error
-                    self.alertPresented = true
-                case .success(let response) where response.statusCode < 400:
-                    onSuccess()
-                case .success(let response):
-                    self.error = MoyaError.statusCode(response)
                     self.alertPresented = true
                 }
             }
-        } catch {
-            self.error = error
-            self.alertPresented = true
         }
+
+
 
     }
 }

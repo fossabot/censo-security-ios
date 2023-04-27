@@ -19,7 +19,7 @@ struct KeyRetrieval: View {
     var user: CensoApi.User
     var registeredPublicKeys: [CensoApi.PublicKey]
     var deviceKey: DeviceKey
-    var authProvider: CensoAuthProvider
+    var registrationController: DeviceRegistrationController
     var onSuccess: () -> Void
 
     var body: some View {
@@ -61,30 +61,19 @@ struct KeyRetrieval: View {
     func recover() {
         recovering = true
 
-        AuthenticatedKeys.withAuhenticatedKeys(from: user.loginName) { result in
+        let bootstrapKey = SecureEnclaveWrapper.bootstrapKey(email: user.loginName)
+
+        registrationController.recover(deviceKey: deviceKey, bootstrapKey: bootstrapKey, registeredPublicKeys: registeredPublicKeys) { result in
+            recovering = false
+
             switch result {
-            case .success(let keys):
-                do {
-                    try await authProvider.exchangeTokenIfNeeded(deviceKey: keys.deviceKey)
-
-                    let response: CensoApi.RecoveryShardsResponse = try await censoApi.provider.request(.recoveryShards(deviceIdentifier: try! deviceKey.publicExternalRepresentation().base58String))
-                    let recoveredRootSeed = try ShardRecovery.recoverRootSeed(recoverShardResponse: response, deviceKey: keys.deviceKey, bootstrapKey: keys.bootstrapKey)
-                    try registeredPublicKeys.validateRootSeed(recoveredRootSeed)
-                    try Keychain.saveRootSeed(recoveredRootSeed, email: user.loginName, deviceKey: deviceKey)
-
-                    onSuccess()
-                } catch {
-                    RaygunClient.sharedInstance().send(error: error, tags: ["recovery-error"], customData: nil)
-
-                    showingErrorAlert = true
-                    self.error = error
-                }
+            case .success(let registeredDevice):
+                registrationController.completeRegistration(with: registeredDevice)
+                onSuccess()
             case .failure(let error):
                 showingErrorAlert = true
                 self.error = error
             }
-
-            recovering = false
         }
     }
 }

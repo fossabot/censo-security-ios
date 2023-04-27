@@ -10,23 +10,38 @@ import SwiftUI
 import Moya
 
 struct RootView: View {
-    #if STUBBED
-    var body: some View {
-        MainView(onSignOut: {})
-            .environment(\.censoApi, CensoApi(authProvider: nil, stubClosure: MoyaProvider.delayedStub(0.5)))
-            .onFirstTimeAppear(perform: registerForRemoteNotifications)
-            .foregroundBiometryProtected(onFailure: {})
-    }
-    #else
-
     @ObservedObject var authProvider: CensoAuthProvider
 
     var body: some View {
-        if let jwtToken = authProvider.storedJWTToken {
+        if let authenticatedState = authProvider.authenticatedState {
             SignedInNavigationView(onSignOut: signOut) {
-                NotificationCheck(email: jwtToken.email) {
-                    MainView(email: jwtToken.email, authProvider: authProvider, onSignOut: signOut)
-                        .foregroundBiometryProtected(onFailure: signOut)
+                NotificationCheck(email: authenticatedState.token.email) {
+                    MainView(registrationController: {
+                        switch authenticatedState {
+                        case .deviceAuthenticatedRegistered(let registeredDevice, _):
+                            return DeviceRegistrationController(
+                                email: authenticatedState.token.email,
+                                authProvider: authProvider,
+                                censoApi: CensoApi(authProvider: authProvider),
+                                registeredDevice: registeredDevice
+                            )
+                        case .deviceAuthenticatedUnregistered(let deviceKey, _):
+                            return DeviceRegistrationController(
+                                email: authenticatedState.token.email,
+                                authProvider: authProvider,
+                                censoApi: CensoApi(authProvider: authProvider),
+                                deviceKey: deviceKey
+                            )
+                        case .emailAuthenticated(let deviceKey, _):
+                            return DeviceRegistrationController(
+                                email: authenticatedState.token.email,
+                                authProvider: authProvider,
+                                censoApi: CensoApi(authProvider: authProvider),
+                                deviceKey: deviceKey
+                            )
+                        }
+                    }())
+                    .foregroundBiometryProtected(onFailure: signOut)
                 }
             }
             .environment(\.censoApi, CensoApi(authProvider: authProvider))
@@ -39,18 +54,25 @@ struct RootView: View {
         NotificationCenter.default.post(name: .userWillSignOut, object: nil)
         authProvider.invalidate()
     }
-    #endif
 }
 
+extension CensoAuthProvider.AuthenticatedState {
+    var token: CensoAuthProvider.JWTToken {
+        switch self {
+        case .deviceAuthenticatedRegistered(_, let token):
+            return token
+        case .deviceAuthenticatedUnregistered(_, let token):
+            return token
+        case .emailAuthenticated(_, let token):
+            return token
+        }
+    }
+}
 
 #if DEBUG
 struct RootView_Previews: PreviewProvider {
     static var previews: some View {
-        #if STUBBED
-        RootView()
-        #else
         RootView(authProvider: .init())
-        #endif
     }
 }
 #endif
