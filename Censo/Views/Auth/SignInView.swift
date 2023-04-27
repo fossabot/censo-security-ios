@@ -12,7 +12,7 @@ import LocalAuthentication
 struct SignInView: View {
     @Environment(\.censoApi) var censoApi
 
-    @State private var username = ""
+    @AppStorage("email") private var username = ""
     @State private var isAuthenticating: Bool = false
     @State private var showingVerification = false
     @State private var currentAlert: AlertType?
@@ -36,78 +36,76 @@ struct SignInView: View {
     }
 
     var body: some View {
-        NavStackWorkaround {
-            VStack(spacing: 0) {
-                ScrollView {
-                    VStack {
-                        Image("LogoColor")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(maxHeight: 62)
-                            .padding(50)
+        VStack(spacing: 0) {
+            ScrollView {
+                VStack {
+                    Image("LogoColor")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(maxHeight: 62)
+                        .padding(50)
 
-                        Text("Sign in with the account you created on the web")
-                            .multilineTextAlignment(.center)
-                            .padding([.leading, .trailing], 60)
-                            .padding([.bottom], 20)
+                    Text("Sign in with the account you created on the web")
+                        .multilineTextAlignment(.center)
+                        .padding([.leading, .trailing], 60)
+                        .padding([.bottom], 20)
 
 
-                        TextField(text: $username, label: {
-                            Text("Email Address")
-                        })
-                        .onSubmit {
-                            if canSignIn { signIn() }
-                        }
-                        .keyboardType(.emailAddress)
-                        .textContentType(.emailAddress)
-                        .autocapitalization(.none)
-                        .disableAutocorrection(true)
-                        .foregroundColor(Color.black)
-                        .accentColor(Color.Censo.red)
-                        .textFieldStyle(LightRoundedTextFieldStyle())
-                        .disabled(isAuthenticating)
-                        .padding()
+                    TextField(text: $username, label: {
+                        Text("Email Address")
+                    })
+                    .onSubmit {
+                        if canSignIn { signIn() }
                     }
-                }
-
-                Spacer()
-
-                Button(action: signIn) {
-                    Text(deviceKey == nil ? "Verify Email" : "Sign in")
-                        .loadingIndicator(when: isAuthenticating)
-                        .frame(maxWidth: .infinity)
-                }
-                .buttonStyle(FilledButtonStyle())
-                .disabled(!canSignIn)
-                .ignoresSafeArea(.keyboard, edges: .bottom)
-                .padding()
-
-                NavigationLink(isActive: $showingVerification) {
-                    VerificationTokenView(username: username, authProvider: authProvider)
-                } label: {
-                    EmptyView()
+                    .keyboardType(.emailAddress)
+                    .textContentType(.emailAddress)
+                    .autocapitalization(.none)
+                    .disableAutocorrection(true)
+                    .foregroundColor(Color.black)
+                    .accentColor(Color.Censo.red)
+                    .textFieldStyle(LightRoundedTextFieldStyle())
+                    .disabled(isAuthenticating)
+                    .padding()
                 }
             }
-            .foregroundColor(.Censo.primaryForeground)
-            .navigationBarHidden(true)
-            .background(
-                CensoBackground()
-            )
-            .alert(item: $currentAlert) { item in
-                switch item {
-                case .signInError:
-                    return Alert(
-                        title: Text("Sign In Error"),
-                        message: Text("An error occured trying to sign you in"),
-                        primaryButton: .cancel(Text("Try Again")),
-                        secondaryButton: .default(Text("Sign in with Email Verification")) {
-                            showingVerification = true
-                        }
-                    )
-                }
+
+            Spacer()
+
+            Button(action: signIn) {
+                Text(deviceKey == nil ? "Verify Email" : "Sign in")
+                    .loadingIndicator(when: isAuthenticating)
+                    .frame(maxWidth: .infinity)
+            }
+            .buttonStyle(FilledButtonStyle())
+            .disabled(!canSignIn)
+            .ignoresSafeArea(.keyboard, edges: .bottom)
+            .padding()
+
+            NavigationLink(isActive: $showingVerification) {
+                VerificationTokenView(username: username, authProvider: authProvider)
+            } label: {
+                EmptyView()
             }
         }
-        .preferredColorScheme(.light)
+        .foregroundColor(.Censo.primaryForeground)
+        .navigationBarHidden(true)
+        .background(
+            CensoBackground()
+        )
+        .alert(item: $currentAlert) { item in
+            switch item {
+            case .signInError:
+                return Alert(
+                    title: Text("Sign In Error"),
+                    message: Text("An error occured trying to sign you in"),
+                    primaryButton: .cancel(Text("Try Again")),
+                    secondaryButton: .default(Text("Sign in with Email Verification")) {
+                        showingVerification = true
+                    }
+                )
+            }
+        }
+
     }
 
     private func signIn() {

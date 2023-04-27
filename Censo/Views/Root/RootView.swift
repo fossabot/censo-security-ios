@@ -46,7 +46,10 @@ struct RootView: View {
             }
             .environment(\.censoApi, CensoApi(authProvider: authProvider))
         } else {
-            SignInView(authProvider: authProvider)
+            NavStackWorkaround {
+                SignInView(authProvider: authProvider)
+            }
+            .preferredColorScheme(.light)
         }
     }
 
