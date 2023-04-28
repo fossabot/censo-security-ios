@@ -72,7 +72,7 @@ struct ApprovalRequestItem: View {
             } detail: {
                 AddressBookUpdateDetails(request: request, update: addressBookUpdate)
             }
-        case .addDevice(let userDevice):
+        case .enableDevice(let userDevice):
             ApprovalRequestRow(registeredDevice: registeredDevice, user: user, request: request, timerPublisher: timerPublisher, onApprove: {
                 if userDevice.targetShardingPolicy != nil {
                     registeredDevice.removeBootstrapKey()
@@ -80,15 +80,15 @@ struct ApprovalRequestItem: View {
 
                 onStatusChange?()
             }, onDecline: onStatusChange) {
-                AddOrRemoveDeviceRow(requestType: request.details, userDevice: userDevice)
+                EnableOrDisableDeviceRow(requestType: request.details, userDevice: userDevice)
             } detail: {
-                AddOrRemoveDeviceDetails(request: request, userDevice: userDevice)
+                EnableOrDisableDeviceDetails(request: request, userDevice: userDevice)
             }
-        case .removeDevice(let userDevice as UserDevice):
+        case .disableDevice(let userDevice as UserDevice):
             ApprovalRequestRow(registeredDevice: registeredDevice, user: user, request: request, timerPublisher: timerPublisher, onApprove: onStatusChange, onDecline: onStatusChange) {
-                AddOrRemoveDeviceRow(requestType: request.details, userDevice: userDevice)
+                EnableOrDisableDeviceRow(requestType: request.details, userDevice: userDevice)
             } detail: {
-                AddOrRemoveDeviceDetails(request: request, userDevice: userDevice)
+                EnableOrDisableDeviceDetails(request: request, userDevice: userDevice)
             }
         case .vaultPolicyUpdate(let vaultPolicyUpdate): // 1
             ApprovalRequestRow(registeredDevice: registeredDevice, user: user, request: request, timerPublisher: timerPublisher, onApprove: onStatusChange, onDecline: onStatusChange) {
@@ -369,5 +369,5 @@ protocol UserDevice {
     var deviceType: DeviceType { get }
 }
 
-extension AddDevice: UserDevice { }
-extension RemoveDevice: UserDevice { }
+extension EnableDevice: UserDevice { }
+extension DisableDevice: UserDevice { }
