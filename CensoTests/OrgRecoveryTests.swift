@@ -152,7 +152,6 @@ class OrgRecoveryTests: XCTestCase {
     }
     
     private func getDataToSign(_ recoverySignature: RecoverySignature) -> String {
-        print(recoverySignature)
         switch recoverySignature {
         case .offchain(_, let dataToSign):
             return dataToSign

@@ -295,6 +295,11 @@ struct EthSignTypedData: Codable, Equatable {
     let messageHash: String
 }
 
+struct PublicKey: Codable, Equatable {
+    let key: String
+    let chain: Chain
+}
+
 #if DEBUG
 extension ApprovalRequest {
     static var sample: Self {
@@ -382,11 +387,6 @@ extension Amount {
             usdEquivalent: "6.53"
         )
     }
-}
-
-struct PublicKey: Codable, Equatable {
-    let key: String
-    let chain: Chain
 }
 
 

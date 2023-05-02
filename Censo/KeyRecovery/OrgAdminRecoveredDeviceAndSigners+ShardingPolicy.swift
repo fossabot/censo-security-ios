@@ -35,7 +35,7 @@ extension CensoApi.OrgAdminRecoveredDeviceAndSigners {
         )
 
         self.signersInfo = try CensoApi.SignersInfo(
-            shardingPolicy: shardingPolicy,
+            shardingPolicy: updatedShardingPolicy,
             rootSeed: rootSeed,
             deviceKey: deviceKey
         )
