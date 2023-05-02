@@ -154,7 +154,20 @@ struct SignInView: View {
                 }
             }
         } else {
-            showingVerification = true
+            isAuthenticating = true
+
+            censoApi.provider.request(.emailVerification(username)) { result in
+                isAuthenticating = false
+
+                switch result {
+                case .failure(let error):
+                    showSignInError(error)
+                case .success(let response) where response.statusCode < 400:
+                    showingVerification = true
+                case .success(let response):
+                    showSignInError(MoyaError.statusCode(response))
+                }
+            }
         }
     }
 

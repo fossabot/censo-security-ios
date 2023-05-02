@@ -69,8 +69,6 @@ struct VerificationTokenView: View {
                     .disableAutocorrection(true)
                     .disabled(isAuthenticating)
                     .padding()
-
-
                 }
             }
 
