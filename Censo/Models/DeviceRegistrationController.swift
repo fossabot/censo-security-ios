@@ -44,7 +44,8 @@ class DeviceRegistrationController: ObservableObject {
         state = .registered(device: registeredDevice)
     }
 
-    func recover(deviceKey: DeviceKey, bootstrapKey: BootstrapKey?, registeredPublicKeys: [CensoApi.PublicKey], completion: @escaping (Result<RegisteredDevice, Error>) -> Void) {
+    func recover(deviceKey: DeviceKey, registeredPublicKeys: [CensoApi.PublicKey], completion: @escaping (Result<RegisteredDevice, Error>) -> Void) {
+        let bootstrapKey = try? deviceKey.bootstrapKey()
         let context = LAContext()
         context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: "Verify your identity") { [authProvider, censoApi, email] success, error in
             if let error = error {
@@ -97,40 +98,47 @@ class DeviceRegistrationController: ObservableObject {
             } else if let authenticatedDeviceKey = try? deviceKey.preauthenticatedKey(context: context), let authenticatedBootstrapKey = try? bootstrapKey.preauthenticatedKey(context: context) {
 
                 _Concurrency.Task {
-                    let devicePublicKeyData = try deviceKey.publicExternalRepresentation()
-                    let devicePublicKey = devicePublicKeyData.base58String
+                    do {
+                        let devicePublicKeyData = try deviceKey.publicExternalRepresentation()
+                        let devicePublicKey = devicePublicKeyData.base58String
 
-                    let bootstrapUserDeviceAndSigners = try CensoApi.BootstrapUserDeviceAndSigners(
-                        imageData: imageData,
-                        deviceKey: authenticatedDeviceKey,
-                        bootstrapKey: authenticatedBootstrapKey,
-                        rootSeed: rootSeed
-                    )
+                        let bootstrapUserDeviceAndSigners = try CensoApi.BootstrapUserDeviceAndSigners(
+                            imageData: imageData,
+                            deviceKey: authenticatedDeviceKey,
+                            bootstrapKey: authenticatedBootstrapKey,
+                            rootSeed: rootSeed
+                        )
 
-                    let publicKeys = try PrivateKeys(rootSeed: rootSeed).publicKeys
-                    let encryptedRootSeed = try authenticatedDeviceKey.encrypt(data: Data(rootSeed))
+                        let publicKeys = try PrivateKeys(rootSeed: rootSeed).publicKeys
+                        let encryptedRootSeed = try authenticatedDeviceKey.encrypt(data: Data(rootSeed))
 
-                    let response = try await censoApi.provider.request(.boostrapDeviceAndSigners(bootstrapUserDeviceAndSigners, devicePublicKey: devicePublicKey))
+                        let response = try await censoApi.provider.request(.boostrapDeviceAndSigners(bootstrapUserDeviceAndSigners, devicePublicKey: devicePublicKey))
 
-                    if response.statusCode < 400 {
-                        try Keychain.saveEncryptedRootSeed(encryptedRootSeed, email: email)
+                        if response.statusCode < 400 {
+                            try Keychain.saveEncryptedRootSeed(encryptedRootSeed, email: email)
 
-                        try await authProvider.exchangeTokenIfNeeded(deviceKey: authenticatedDeviceKey)
+                            try await authProvider.exchangeTokenIfNeeded(deviceKey: authenticatedDeviceKey)
 
-                        await MainActor.run {
-                            completion(.success(
-                                RegisteredDevice(
-                                    email: email,
-                                    deviceKey: deviceKey,
-                                    encryptedRootSeed: encryptedRootSeed,
-                                    publicKeys: publicKeys
+                            await MainActor.run {
+                                completion(.success(
+                                    RegisteredDevice(
+                                        email: email,
+                                        deviceKey: deviceKey,
+                                        encryptedRootSeed: encryptedRootSeed,
+                                        publicKeys: publicKeys
+                                    )
                                 )
-                            )
-                            )
+                                )
+                            }
+                        } else {
+                            await MainActor.run {
+                                completion(.failure(MoyaError.statusCode(response)))
+                            }
                         }
-                    } else {
+                    } catch {
+                        print(error)
                         await MainActor.run {
-                            completion(.failure(MoyaError.statusCode(response)))
+                            completion(.failure(error))
                         }
                     }
                 }

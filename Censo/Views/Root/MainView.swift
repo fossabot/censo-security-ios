@@ -52,7 +52,7 @@ struct MainView: View {
                     }
                 }
             case (.needsToRegister(let deviceKey), .none):
-                BootstrapKeyGeneration(email: user.loginName) {
+                BootstrapKeyGeneration(deviceKey: deviceKey) {
                     ProgressView()
                 } content: { bootstrapKey in
                     PhotoCapture(deviceKey: deviceKey) { uiImage, retakeClosure in

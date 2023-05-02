@@ -16,7 +16,7 @@ struct BootstrapKeyGeneration<Loading, Success>: View where Loading : View, Succ
 
     @State private var storage: Storage = .notLoaded
 
-    var email: String
+    var deviceKey: DeviceKey
     @ViewBuilder var loading: () -> Loading
     @ViewBuilder var content: (BootstrapKey) -> Success
 
@@ -25,7 +25,7 @@ struct BootstrapKeyGeneration<Loading, Success>: View where Loading : View, Succ
         case .notLoaded:
             loading()
                 .onAppear {
-                    self.storage = .success(SecureEnclaveWrapper.bootstrapKey(email: email))
+                    self.storage = .success(try? deviceKey.bootstrapKey())
                 }
         case .success(.none):
             loading()
@@ -43,7 +43,7 @@ struct BootstrapKeyGeneration<Loading, Success>: View where Loading : View, Succ
 
     private func generateBootstrapKey() {
         do {
-            self.storage = .success(try SecureEnclaveWrapper.generateBootstrapKey(email: email))
+            self.storage = .success(try deviceKey.generateBootstrapKey())
         } catch {
             self.storage = .failedToCreate(error)
         }

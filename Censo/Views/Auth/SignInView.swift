@@ -8,6 +8,7 @@
 import SwiftUI
 import Moya
 import LocalAuthentication
+import CryptoKit
 
 struct SignInView: View {
     @Environment(\.censoApi) var censoApi
@@ -110,18 +111,15 @@ struct SignInView: View {
 
     private func signIn() {
         if let deviceKey = SecureEnclaveWrapper.deviceKey(email: username) {
-            let context = LAContext()
-            context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: "Verify your identity") { success, error in
-                if let error = error {
-                    showSignInError(error)
-                } else {
+            deviceKey.preauthenticatedKey { result in
+                switch result {
+                case .success(let preauthenticatedKey):
                     isAuthenticating = true
 
                     _Concurrency.Task {
                         do {
                             let timestamp = Date()
                             let dateString = DateFormatter.iso8601Full.string(from: timestamp)
-                            let preauthenticatedKey = try deviceKey.preauthenticatedKey(context: context)
                             let signature = try preauthenticatedKey.signature(for: dateString.data(using: .utf8)!).base64EncodedString()
 
                             let token: CensoAuthProvider.JWTToken = try await censoApi.provider.request(.login(.signature(email: username, timestamp: timestamp, signature: signature, publicKey: try deviceKey.publicExternalRepresentation().base58String)))
@@ -143,7 +141,7 @@ struct SignInView: View {
                                 }
                             }
                         } catch {
-
+                            print(error)
                             await MainActor.run {
                                 showSignInError(error)
                             }
@@ -151,6 +149,8 @@ struct SignInView: View {
 
                         isAuthenticating = false
                     }
+                case .failure(let error):
+                    showSignInError(error)
                 }
             }
         } else {
@@ -160,6 +160,44 @@ struct SignInView: View {
 
     private func showSignInError(_ error: Error) {
         currentAlert = .signInError(error)
+    }
+}
+
+import CryptoTokenKit
+
+extension DeviceKey {
+    enum DeviceKeyError: Error {
+        case keyInvalidatedByBiometryChange
+    }
+
+    func preauthenticatedKey(_ completion: @escaping (Result<PreauthenticatedKey<DeviceKey>, Error>) -> Void) {
+        let context = LAContext()
+        context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: "Identify Yourself") { success, error in
+            if let error = error {
+                // not authenticated
+                completion(.failure(error))
+            } else {
+                do {
+                    let preauthenticatedKey = try self.preauthenticatedKey(context: context)
+                    let sampleData = Data(repeating: 1, count: 8)
+                    _ = try preauthenticatedKey.signature(for: sampleData)
+
+                    completion(.success(preauthenticatedKey))
+                } catch (let error as NSError) where error._domain == "CryptoTokenKit" && error._code == -3 {
+                    // key no longer valid
+                    do {
+                        try SecureEnclaveWrapper.removeDeviceKey(self)
+                        completion(.failure(DeviceKeyError.keyInvalidatedByBiometryChange))
+                    } catch {
+                        completion(.failure(error))
+                    }
+                } catch {
+                    // other error
+                    print(error)
+                    completion(.failure(error))
+                }
+            }
+        }
     }
 }
 

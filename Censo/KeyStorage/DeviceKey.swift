@@ -41,39 +41,13 @@ extension SecureEnclaveWrapper {
             return DeviceKey(identifier: deviceKeyIdentifier(email: email), secKey: secKey)
         }
     }
+
+    static func removeDeviceKey(_ deviceKey: DeviceKey) throws {
+        try deviceKey.removeBootstrapKey()
+        SecureEnclaveWrapper.removeKey(name: deviceKey.identifier)
+    }
 }
 
-
-
-extension DeviceKey {
-//    func preauthenticated(with context: LAContext) throws -> DeviceKey {
-//        if let key = SecureEnclaveWrapper.loadKey(name: identifier, authenticationContext: context) {
-//            return DeviceKey(identifier: identifier, secKey: secKey)
-//        } else {
-//            throw PreauthSecureEnclaveKeyError.keyNoLongerExists
-//        }
-//    }
-//
-//    func withPreauthenticatedKey(_ closure: @escaping (Result<Self, Error>) async -> Void) {
-//        let context = LAContext()
-//        context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: "Verify your identity") { success, error in
-//            if let error = error {
-//                Task {
-//                    await closure(.failure(error))
-//                }
-//            } else if let key = SecureEnclaveWrapper.loadKey(name: identifier, authenticationContext: context) {
-//                Task {
-//                    await closure(.success(DeviceKey(identifier: identifier, secKey: key)))
-//                    //context.invalidate()
-//                }
-//            } else {
-//                Task {
-//                    await closure(.failure(PreauthSecureEnclaveKeyError.keyNoLongerExists))
-//                }
-//            }
-//        }
-//    }
-}
 
 #if DEBUG
 extension DeviceKey {

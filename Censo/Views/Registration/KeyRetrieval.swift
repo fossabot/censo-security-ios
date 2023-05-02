@@ -61,9 +61,7 @@ struct KeyRetrieval: View {
     func recover() {
         recovering = true
 
-        let bootstrapKey = SecureEnclaveWrapper.bootstrapKey(email: user.loginName)
-
-        registrationController.recover(deviceKey: deviceKey, bootstrapKey: bootstrapKey, registeredPublicKeys: registeredPublicKeys) { result in
+        registrationController.recover(deviceKey: deviceKey, registeredPublicKeys: registeredPublicKeys) { result in
             recovering = false
 
             switch result {

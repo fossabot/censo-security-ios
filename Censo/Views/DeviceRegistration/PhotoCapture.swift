@@ -25,7 +25,7 @@ struct PhotoCapture<Submission>: View where Submission : View {
             CameraNotAvailable()
         case (.none, .running(let session, _)):
             VStack(spacing: 40) {
-                Text("Lets take your photo")
+                Text("Let's take your photo")
 
                 CameraPreview(session: session)
                     .aspectRatio(1, contentMode: .fit)

@@ -133,7 +133,7 @@ struct ApprovalRequestRow<Row, Detail>: View where Row : View, Detail: View {
 
                     do {
                         let preauthenticatedDeviceKey = try registeredDevice.deviceKey.preauthenticatedKey(context: context)
-                        let preauthenticatedBootstrapKey = try registeredDevice.bootstrapKey?.preauthenticatedKey(context: context)
+                        let preauthenticatedBootstrapKey = try registeredDevice.deviceKey.bootstrapKey()?.preauthenticatedKey(context: context)
                         let request = ApprovalDispositionRequest(disposition: .Approve, request: request)
                         let payload = try await CensoApi.ApprovalDispositionPayload(
                             dispositionRequest: request,

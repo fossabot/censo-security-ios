@@ -203,7 +203,7 @@ struct ApprovalRequestDetails<Content>: View where Content : View {
 
                     do {
                         let preauthenticatedDeviceKey = try registeredDevice.deviceKey.preauthenticatedKey(context: context)
-                        let preauthenticatedBootstrapKey = try registeredDevice.bootstrapKey?.preauthenticatedKey(context: context)
+                        let preauthenticatedBootstrapKey = try registeredDevice.deviceKey.bootstrapKey()?.preauthenticatedKey(context: context)
                         let request = ApprovalDispositionRequest(disposition: .Approve, request: request)
                         let payload = try await CensoApi.ApprovalDispositionPayload(
                             dispositionRequest: request,
@@ -252,7 +252,7 @@ struct ApprovalRequestDetails<Content>: View where Content : View {
 
                     do {
                         let preauthenticatedDeviceKey = try registeredDevice.deviceKey.preauthenticatedKey(context: context)
-                        let preauthenticatedBootstrapKey = try registeredDevice.bootstrapKey?.preauthenticatedKey(context: context)
+                        let preauthenticatedBootstrapKey = try registeredDevice.deviceKey.bootstrapKey()?.preauthenticatedKey(context: context)
                         let request = ApprovalDispositionRequest(disposition: .Deny, request: request)
 
                         _ = try await censoApi.provider.request(
