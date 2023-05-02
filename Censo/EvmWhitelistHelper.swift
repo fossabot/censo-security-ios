@@ -53,7 +53,7 @@ struct EvmWhitelistHelper {
         )
         let targetSettings = WhitelistSettings(whitelistEnabled: whitelistEnabled ?? currentSettings.whitelistEnabled,
                                                dAppsEnabled: dappsEnabled ?? currentSettings.dAppsEnabled)
-        return guardAddresses.first(where: { $0.name == getGuardNameForTargetSettings(targetSettings) })?.address ?? currentGuardAddress
+        return guardAddresses.first(where: { $0.name == getGuardNameForTargetSettings(targetSettings) && !$0.deprecated })?.address ?? currentGuardAddress
     }
     
     static func getCurrentSettingsForGuardName(_ guardName: String) -> WhitelistSettings {

@@ -65,6 +65,7 @@ struct OnChainPolicy: Codable, Equatable {
 struct ContractNameAndAddress: Codable, Equatable {
     let name: String
     let address: String
+    let deprecated: Bool
 }
 
 struct EvmTransaction: Codable, Equatable {
