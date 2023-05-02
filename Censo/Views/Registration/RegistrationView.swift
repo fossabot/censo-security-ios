@@ -56,7 +56,7 @@ struct RegistrationView: View {
 extension CensoApi.User {
     enum RegisteredPublicKeys {
         case none
-        case incomplete([CensoApi.PublicKey])
+        case incomplete([PublicKey])
         case complete(PublicKeys)
     }
 

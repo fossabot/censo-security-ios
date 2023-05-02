@@ -37,6 +37,28 @@ public class EvmTransactionUtil {
         return "0x" + Crypto.sha3keccak256(data: Data(Base58.decode(base58Key)).dropFirst(1)).suffix(20).toHexString()
     }
     
+    class func getEthereumAddress(publicKey: Data) -> String {
+        return "0x" + Crypto.sha3keccak256(data: publicKey).suffix(20).toHexString()
+    }
+    
+    class func toChecksumAddress(_ address: String) -> String {
+        let rawAddress = address.starts(with: "0x") ? String(address.dropFirst(2)) : address
+        let hash = Crypto.sha3keccak256(data: rawAddress.data(using: .ascii)!).toHexString()
+        
+        return "0x" + zip(rawAddress, hash)
+            .map { a, h -> String in
+                switch (a, h) {
+                case ("0", _), ("1", _), ("2", _), ("3", _), ("4", _), ("5", _), ("6", _), ("7", _), ("8", _), ("9", _):
+                    return String(a)
+                case (_, "8"), (_, "9"), (_, "a"), (_, "b"), (_, "c"), (_, "d"), (_, "e"), (_, "f"):
+                    return String(a).uppercased()
+                default:
+                    return String(a).lowercased()
+                }
+            }
+            .joined()
+    }
+    
     
     class func normalizeAddress(_ address: String) -> Data {
         var txData = Data(capacity: 20)

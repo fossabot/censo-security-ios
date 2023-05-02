@@ -34,6 +34,10 @@ struct CensoApi {
 
         case shards(policyRevisionId: String, userId: String?, deviceIdentifier: String)
         case recoveryShards(deviceIdentifier: String)
+        
+        case orgAdminRecoveredDeviceAndSigners(OrgAdminRecoveredDeviceAndSigners, devicePublicKey: String)
+        case myOrgAdminRecoveryRequest(devicePublicKey: String)
+        case registerOrgAdminRecoverySignatures(OrgAdminRecoverySignaturesRequest, devicePublicKey: String)
     }
     
     /// The provider for the Moya Target definition for this API.
@@ -111,6 +115,13 @@ extension CensoApi {
         let approved: Bool
         let bootstrapKey: String?
     }
+    
+    struct OrgAdminInfo: Codable {
+        let hasRecoveryContract: Bool
+        let participantId: String
+        let hasPendingOrgRecovery: Bool
+        let canInitiateOrgRecovery: Bool
+    }
 
     struct User: Codable, Identifiable {
         let id: String
@@ -120,13 +131,10 @@ extension CensoApi {
         let organization: Organization
         let publicKeys: [PublicKey]
         let deviceKeyInfo: DeviceKeyInfo?
+        let userShardedToPolicyGuid: String?
         let shardingPolicy: ShardingPolicy?
         let canAddSigners: Bool
-    }
-
-    struct PublicKey: Codable {
-        let key: String
-        let chain: Chain
+        let orgAdminInfo: OrgAdminInfo?
     }
     
     struct Organization: Codable {
@@ -215,6 +223,11 @@ extension CensoApi {
     struct BootstrapUserDeviceAndSigners: Codable {
         let userDevice: UserDevice
         let bootstrapDevice: BootstrapDevice
+        let signersInfo: SignersInfo
+    }
+    
+    struct OrgAdminRecoveredDeviceAndSigners: Codable {
+        let userDevice: UserDevice
         let signersInfo: SignersInfo
     }
 
@@ -348,6 +361,12 @@ extension CensoApi.Target: Moya.TargetType {
             return "v1/shards"
         case .recoveryShards:
             return "v1/recovery-shards"
+        case .orgAdminRecoveredDeviceAndSigners:
+            return "v1/org-admin-recovered-devices"
+        case .myOrgAdminRecoveryRequest:
+            return "v1/my-org-admin-recovery-request"
+        case .registerOrgAdminRecoverySignatures:
+            return "v1/org-admin-recovery-signatures"
         }
     }
     
@@ -358,15 +377,18 @@ extension CensoApi.Target: Moya.TargetType {
              .minVersion,
              .shards,
              .recoveryShards,
-             .checkDAppConnection:
+             .checkDAppConnection,
+             .myOrgAdminRecoveryRequest:
             return .get
         case .connectDApp,
              .addWalletSigners,
              .boostrapDeviceAndSigners,
+             .orgAdminRecoveredDeviceAndSigners,
              .registerApprovalDisposition,
              .emailVerification,
              .registerPushToken,
              .registerDevice,
+             .registerOrgAdminRecoverySignatures,
              .login:
             return .post
         case .unregisterPushToken:
@@ -382,7 +404,8 @@ extension CensoApi.Target: Moya.TargetType {
              .approvalRequests,
              .minVersion,
              .recoveryShards,
-             .checkDAppConnection:
+             .checkDAppConnection,
+             .myOrgAdminRecoveryRequest:
             return .requestPlain
         case .emailVerification(let email):
             return .requestJSONEncodable([
@@ -415,6 +438,10 @@ extension CensoApi.Target: Moya.TargetType {
             return .requestJSONEncodable(userDevice)
         case .boostrapDeviceAndSigners(let bootstrapDeviceAndSigners, _):
             return .requestJSONEncodable(bootstrapDeviceAndSigners)
+        case .orgAdminRecoveredDeviceAndSigners(let orgAdminRecoveredDeviceAndSigners, _):
+            return .requestJSONEncodable(orgAdminRecoveredDeviceAndSigners)
+        case .registerOrgAdminRecoverySignatures(let orgAdminRecoverySignaturesRequest, _):
+            return .requestJSONEncodable(orgAdminRecoverySignaturesRequest)
         case .connectDApp(let code):
             return .requestJSONEncodable([
                 "uri": code
@@ -448,7 +475,10 @@ extension CensoApi.Target: Moya.TargetType {
              .verifyUser(.some(let devicePublicKey)),
              .shards(_, _, let devicePublicKey),
              .recoveryShards(let devicePublicKey),
-             .approvalRequests(let devicePublicKey):
+             .approvalRequests(let devicePublicKey),
+             .orgAdminRecoveredDeviceAndSigners(_, let devicePublicKey),
+             .registerOrgAdminRecoverySignatures(_, let devicePublicKey),
+             .myOrgAdminRecoveryRequest(let devicePublicKey):
             return [
                 "Content-Type": "application/json",
                 "X-IsApi": "true",

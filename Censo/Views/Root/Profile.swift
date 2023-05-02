@@ -140,8 +140,10 @@ extension CensoApi.User {
             ),
             publicKeys: [],
             deviceKeyInfo: nil,
+            userShardedToPolicyGuid: nil,
             shardingPolicy: nil,
-            canAddSigners: true
+            canAddSigners: true,
+            orgAdminInfo: nil
         )
     }
 }

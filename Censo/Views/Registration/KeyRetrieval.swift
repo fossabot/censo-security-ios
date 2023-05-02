@@ -17,7 +17,7 @@ struct KeyRetrieval: View {
     @State private var recovering = false
 
     var user: CensoApi.User
-    var registeredPublicKeys: [CensoApi.PublicKey]
+    var registeredPublicKeys: [PublicKey]
     var deviceKey: DeviceKey
     var registrationController: DeviceRegistrationController
     var onSuccess: () -> Void
@@ -76,7 +76,7 @@ struct KeyRetrieval: View {
     }
 }
 
-extension Array where Element == CensoApi.PublicKey {
+extension Array where Element == PublicKey {
     enum RootSeedValidationError: Error {
         case publicKeysDontMatch
     }

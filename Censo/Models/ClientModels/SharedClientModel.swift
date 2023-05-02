@@ -384,5 +384,10 @@ extension Amount {
     }
 }
 
+struct PublicKey: Codable, Equatable {
+    let key: String
+    let chain: Chain
+}
+
 
 #endif

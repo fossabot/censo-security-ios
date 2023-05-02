@@ -51,6 +51,11 @@
 		3D1C762227DA850A0016BB32 /* Base58.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1C762127DA850A0016BB32 /* Base58.swift */; };
 		3D1C762627DA89690016BB32 /* MoyaProvider+AsynAwait.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1C762527DA89690016BB32 /* MoyaProvider+AsynAwait.swift */; };
 		3D2A2A822A0419C60024BA88 /* ConnectingWallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2A2A812A0419C60024BA88 /* ConnectingWallet.swift */; };
+		3D2A2A842A093B180024BA88 /* OrgAdminRecoverySignaturesRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2A2A832A093B180024BA88 /* OrgAdminRecoverySignaturesRequest.swift */; };
+		3D2A2A862A093B280024BA88 /* RecoverySignable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2A2A852A093B280024BA88 /* RecoverySignable.swift */; };
+		3D2A2A882A093B500024BA88 /* RecoveryAppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2A2A872A093B4F0024BA88 /* RecoveryAppModel.swift */; };
+		3D2A2A8A2A093B6C0024BA88 /* OrgAdminRecoveredDeviceAndSigners+ShardingPolicy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2A2A892A093B6C0024BA88 /* OrgAdminRecoveredDeviceAndSigners+ShardingPolicy.swift */; };
+		3D2A2A8C2A093BD40024BA88 /* EvmRecoveryTransactionBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2A2A8B2A093BD40024BA88 /* EvmRecoveryTransactionBuilder.swift */; };
 		3D2BCA08264D7A79000A6D56 /* ChangeDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2BCA07264D7A79000A6D56 /* ChangeDetails.swift */; };
 		3D2CE49925F8423800137E05 /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2CE49625F8423800137E05 /* SignInView.swift */; };
 		3D2CE49A25F8423800137E05 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2CE49825F8423800137E05 /* RootView.swift */; };
@@ -267,6 +272,11 @@
 		3D1C762127DA850A0016BB32 /* Base58.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Base58.swift; sourceTree = "<group>"; };
 		3D1C762527DA89690016BB32 /* MoyaProvider+AsynAwait.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MoyaProvider+AsynAwait.swift"; sourceTree = "<group>"; };
 		3D2A2A812A0419C60024BA88 /* ConnectingWallet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectingWallet.swift; sourceTree = "<group>"; };
+		3D2A2A832A093B180024BA88 /* OrgAdminRecoverySignaturesRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrgAdminRecoverySignaturesRequest.swift; sourceTree = "<group>"; };
+		3D2A2A852A093B280024BA88 /* RecoverySignable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecoverySignable.swift; sourceTree = "<group>"; };
+		3D2A2A872A093B4F0024BA88 /* RecoveryAppModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecoveryAppModel.swift; sourceTree = "<group>"; };
+		3D2A2A892A093B6C0024BA88 /* OrgAdminRecoveredDeviceAndSigners+ShardingPolicy.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "OrgAdminRecoveredDeviceAndSigners+ShardingPolicy.swift"; sourceTree = "<group>"; };
+		3D2A2A8B2A093BD40024BA88 /* EvmRecoveryTransactionBuilder.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EvmRecoveryTransactionBuilder.swift; sourceTree = "<group>"; };
 		3D2BCA07264D7A79000A6D56 /* ChangeDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeDetails.swift; sourceTree = "<group>"; };
 		3D2CE49625F8423800137E05 /* SignInView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
 		3D2CE49825F8423800137E05 /* RootView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
@@ -460,6 +470,7 @@
 		3D1028E629DDD0CC00EC5A6C /* KeyRecovery */ = {
 			isa = PBXGroup;
 			children = (
+				3D2A2A892A093B6C0024BA88 /* OrgAdminRecoveredDeviceAndSigners+ShardingPolicy.swift */,
 				3D1028EB29DDD10300EC5A6C /* BigInt+Recovery.swift */,
 				3D1028EC29DDD10300EC5A6C /* ShardingParticipant+PublicKey.swift */,
 				3D1028EA29DDD10300EC5A6C /* ShardingPolicy+Bootstrap.swift */,
@@ -697,6 +708,7 @@
 		3D79C8602645C3CD00FE5D9C /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				3D2A2A832A093B180024BA88 /* OrgAdminRecoverySignaturesRequest.swift */,
 				3D10291029E0712F00EC5A6C /* ApprovalDispositionPayload+Device.swift */,
 				3D10290F29E0712F00EC5A6C /* RegisteredDevice.swift */,
 				6CBA96D528E63D96000A3727 /* Secp256k1 */,
@@ -795,6 +807,7 @@
 		3DC205CD2988A7C900BD8BB0 /* ClientModels */ = {
 			isa = PBXGroup;
 			children = (
+				3D2A2A872A093B4F0024BA88 /* RecoveryAppModel.swift */,
 				3DC7A74427D67E8800A2BBA7 /* SharedClientModel.swift */,
 				3DC205C329882EA200BD8BB0 /* EthereumClientModel.swift */,
 				3DC205C52988450400BD8BB0 /* BitcoinClientModel.swift */,
@@ -819,6 +832,7 @@
 		3DE1610B2970879900F48930 /* Signing */ = {
 			isa = PBXGroup;
 			children = (
+				3D2A2A852A093B280024BA88 /* RecoverySignable.swift */,
 				3DE16107296F981200F48930 /* SignatureInfo.swift */,
 				3D0F3D5D2979D22C006C3328 /* BitcoinSignable.swift */,
 				3D0F3D5B2979D20F006C3328 /* EthereumSignable.swift */,
@@ -970,6 +984,7 @@
 		6C8CE73A298B5EC100834978 /* evm */ = {
 			isa = PBXGroup;
 			children = (
+				3D2A2A8B2A093BD40024BA88 /* EvmRecoveryTransactionBuilder.swift */,
 				6C8CE7322989D01200834978 /* EvmConfigTransactionBuilder.swift */,
 				6C0CD5F52989C3640028EF9C /* EvmTransactionUtil.swift */,
 				BD072F7C292E7E9E00B36C5A /* EvmTransferTransactionBuilder.swift */,
@@ -1253,6 +1268,7 @@
 				3D1028EE29DDD10300EC5A6C /* ShardingPolicy+Bootstrap.swift in Sources */,
 				6CBA96D028E63C11000A3727 /* SecpResult.swift in Sources */,
 				6C8BA2542990A83D00D24E00 /* EvmClientModel.swift in Sources */,
+				3D2A2A862A093B280024BA88 /* RecoverySignable.swift in Sources */,
 				3DAF53C4262E1ACF000DD558 /* WithdrawalDetails.swift in Sources */,
 				3D11A60527580D81008C03B1 /* CameraPreview.swift in Sources */,
 				3D0F3D5C2979D20F006C3328 /* EthereumSignable.swift in Sources */,
@@ -1276,6 +1292,7 @@
 				3D311D43260A336A007A0B98 /* RoundedCell.swift in Sources */,
 				3D952408283D0FB800D42243 /* WalletWhitelistRow.swift in Sources */,
 				40A9AF0E25DF5F0E004320EF /* ComposeMail.swift in Sources */,
+				3D2A2A8C2A093BD40024BA88 /* EvmRecoveryTransactionBuilder.swift in Sources */,
 				6CBA96CD28E63B35000A3727 /* ECDSA.swift in Sources */,
 				3D517A502965D6C000A2733A /* PhotoCaptureController.swift in Sources */,
 				3D517A512965D6C000A2733A /* SecureEnclave.swift in Sources */,
@@ -1296,6 +1313,7 @@
 				3D0F3D5E2979D22C006C3328 /* BitcoinSignable.swift in Sources */,
 				6C8CE737298AC8A800834978 /* EvmWhitelistHelper.swift in Sources */,
 				6CD5B4A428A455E900CD1A62 /* PasswordResetDetails.swift in Sources */,
+				3D2A2A882A093B500024BA88 /* RecoveryAppModel.swift in Sources */,
 				3D6334EE2885C299002CEC5A /* KeyConfirmationSuccess.swift in Sources */,
 				6CF52A13299426D7004EC3F3 /* PolgygonClientModel.swift in Sources */,
 				3DB9960127EE1A1B005655F0 /* Data+Extensions.swift in Sources */,
@@ -1324,6 +1342,7 @@
 				6CBA96CC28E63B32000A3727 /* Crypto.swift in Sources */,
 				3DE53C8C28A2B45D00B4F014 /* VersionCheck.swift in Sources */,
 				3DAF53C0262E158B000DD558 /* WithdrawalRow.swift in Sources */,
+				3D2A2A8A2A093B6C0024BA88 /* OrgAdminRecoveredDeviceAndSigners+ShardingPolicy.swift in Sources */,
 				3DB995F827EB71FA005655F0 /* SignerUpdateDetails.swift in Sources */,
 				3D61A0FE2655B50700AD1EE7 /* MessageSupport.swift in Sources */,
 				3D9E4FD329CCB69A00B42C83 /* NavStackWorkaround.swift in Sources */,
@@ -1358,6 +1377,7 @@
 				3D11A60727581510008C03B1 /* CameraAccessRequired.swift in Sources */,
 				3DC205C829887B6400BD8BB0 /* ApprovalRequestType+Language.swift in Sources */,
 				3D3D6D162616449C00FEEE0B /* HelpView.swift in Sources */,
+				3D2A2A842A093B180024BA88 /* OrgAdminRecoverySignaturesRequest.swift in Sources */,
 				3D845E0D2910159B000C9E81 /* PrivateKeys.swift in Sources */,
 				E42F566129D32B8B00C6922B /* RestoreUserRow.swift in Sources */,
 				3D115211282176FD007CD43D /* AddressBookUpdateRow.swift in Sources */,

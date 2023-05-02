@@ -44,7 +44,7 @@ class DeviceRegistrationController: ObservableObject {
         state = .registered(device: registeredDevice)
     }
 
-    func recover(deviceKey: DeviceKey, registeredPublicKeys: [CensoApi.PublicKey], completion: @escaping (Result<RegisteredDevice, Error>) -> Void) {
+    func recover(deviceKey: DeviceKey, registeredPublicKeys: [PublicKey], completion: @escaping (Result<RegisteredDevice, Error>) -> Void) {
         let bootstrapKey = try? deviceKey.bootstrapKey()
         let context = LAContext()
         context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: "Verify your identity") { [authProvider, censoApi, email] success, error in

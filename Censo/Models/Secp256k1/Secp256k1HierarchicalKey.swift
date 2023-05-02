@@ -78,6 +78,12 @@ public struct Secp256k1HierarchicalKey {
         return Base58.encode([UInt8](data))
     }
     
+    func getEthereumAddress() -> String {
+        return EvmTransactionUtil.toChecksumAddress(
+            EvmTransactionUtil.getEthereumAddress(publicKey: privateKey.getUncompressedPublicKeyBytes().dropFirst(1))
+        )
+    }
+    
     public static func fromRootSeed(rootSeed: [UInt8], derivationPath: [DerivationNode]) throws -> Secp256k1HierarchicalKey {
         var derivedKey = Secp256k1PrivateKey(seed: Data(rootSeed), chainPhrase: "Bitcoin seed")
 

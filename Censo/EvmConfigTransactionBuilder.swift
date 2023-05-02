@@ -166,6 +166,15 @@ public class EvmConfigTransactionBuilder {
         )
     }
     
+    static func getPolicyUpdateExecutionFromModuleData(safeAddress: String, data: Data) -> Data {
+        return execTransactionFromModuleTx(
+            to: safeAddress,
+            value: Bignum(0),
+            data: data,
+            operation: .call
+        )
+    }
+    
     static func getNameUpdateExecutionFromModuleData(safeAddress: String, newName: String) -> Data {
         let data = setNameHash(name: newName)
         return execTransactionFromModuleTx(
@@ -276,7 +285,7 @@ public class EvmConfigTransactionBuilder {
         return txData
     }
 
-    private class func execTransactionFromModuleTx(to: String, value: Bignum, data: Data, operation: Operation) -> Data {
+    class func execTransactionFromModuleTx(to: String, value: Bignum, data: Data, operation: Operation) -> Data {
         // execTransactionFromModule(address,uint256,bytes,unit256)
         let mod = data.count % 32
         let padding = mod > 0 ? 32 - mod : 0
@@ -313,7 +322,7 @@ public class EvmConfigTransactionBuilder {
         return txData
     }
 
-    private class func swapOwnerTx(prev: String, old: String, new: String) -> Data {
+    class func swapOwnerTx(prev: String, old: String, new: String) -> Data {
         // swapOwner(address,address,address)
         var txData = Data(capacity: 4 + 32 * 3)
         txData.append("e318b52b".data(using: .hexadecimal)!)
@@ -331,7 +340,7 @@ public class EvmConfigTransactionBuilder {
         return txData
     }
 
-    private class func multiSendTx(_ data: Data) -> Data {
+    class func multiSendTx(_ data: Data) -> Data {
         // multiSend(bytes)
         let mod = data.count % 32
         let padding = mod > 0 ? 32 - mod : 0
@@ -346,7 +355,7 @@ public class EvmConfigTransactionBuilder {
         return txData
     }
 
-    private class func encodeTransaction(address: Data, data: Data) -> Data {
+    class func encodeTransaction(address: Data, data: Data) -> Data {
         var txData = Data(capacity: 1 + 20 + 32 + 32 + data.count)
         txData.append(contentsOf: [UInt8(0)])
         txData.append(address)

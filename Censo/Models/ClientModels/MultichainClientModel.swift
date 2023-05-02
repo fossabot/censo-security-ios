@@ -107,3 +107,73 @@ struct EnableRecoveryContract: Codable, Equatable {
     var signingData: [SigningData]
     var chainFees: [ChainFee]
 }
+
+
+enum RecoverySafeTx: Codable, Equatable {
+    case orgVaultSwapOwner(prev: String)
+    case vaultSwapOwner(prev: String, vaultSafeAddress: String)
+    case walletSwapOwner(prev: String, vaultSafeAddress: String, walletSafeAddress: String)
+    
+    enum CodingKeys: String, CodingKey {
+        case type
+        case prev
+        case vaultSafeAddress
+        case walletSafeAddress
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let type = try container.decode(String.self, forKey: .type)
+        let prev = try container.decode(String.self, forKey: .prev)
+        switch type {
+        case "OrgVaultSwapOwner":
+            self = .orgVaultSwapOwner(prev: prev)
+        case "VaultSwapOwner":
+            let vaultSafeAddress = try container.decode(String.self, forKey: .vaultSafeAddress)
+            self = .vaultSwapOwner(prev: prev, vaultSafeAddress: vaultSafeAddress)
+        case "WalletSwapOwner":
+            let vaultSafeAddress = try container.decode(String.self, forKey: .vaultSafeAddress)
+            let walletSafeAddress = try container.decode(String.self, forKey: .walletSafeAddress)
+            self = .walletSwapOwner(prev: prev, vaultSafeAddress: vaultSafeAddress, walletSafeAddress: walletSafeAddress)
+        default:
+            throw DecodingError.dataCorruptedError(forKey: .type, in: container, debugDescription: "unrecognized type \(type)")
+        }
+    }
+
+    
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: CodingKeys.self)
+
+        switch self {
+        case .orgVaultSwapOwner(let prev):
+            try container.encode("OrgVaultSwapOwner", forKey: .type)
+            try container.encode(prev, forKey: .prev)
+        case .vaultSwapOwner(let prev, let vaultSafeAddress):
+            try container.encode("VaultSwapOwner", forKey: .type)
+            try container.encode(prev, forKey: .prev)
+            try container.encode(vaultSafeAddress, forKey: .vaultSafeAddress)
+        case .walletSwapOwner(let prev, let vaultSafeAddress, let walletSafeAddress):
+            try container.encode("WalletSwapOwner", forKey: .type)
+            try container.encode(prev, forKey: .prev)
+            try container.encode(vaultSafeAddress, forKey: .vaultSafeAddress)
+            try container.encode(walletSafeAddress, forKey: .walletSafeAddress)
+        }
+    }
+}
+
+struct AdminRecoveryTxs: Codable, Equatable  {
+    var chain: Chain
+    var recoveryContractAddress: String
+    var orgVaultSafeAddress: String
+    var oldOwnerAddress: String
+    var newOwnerAddress: String
+    var txs: [RecoverySafeTx]
+}
+
+struct OrgAdminRecoveryRequest: Codable, Equatable  {
+    var deviceKey: String
+    var chainKeys: [PublicKey]
+    var recoveryTxs: [AdminRecoveryTxs]
+    var signingData: [SigningData]
+}
+
