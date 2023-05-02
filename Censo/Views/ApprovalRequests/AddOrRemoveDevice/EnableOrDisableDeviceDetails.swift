@@ -1,5 +1,5 @@
 //
-//  AddDeviceDetails.swift
+//  EnableOrDisableDeviceDetails.swift
 //  Censo
 //
 //  Created by Brendan Flood on 2/28/23.
@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-struct AddOrRemoveDeviceDetails: View {
+struct EnableOrDisableDeviceDetails: View {
     var request: ApprovalRequest
     var userDevice: UserDevice
 
@@ -27,9 +27,9 @@ struct AddOrRemoveDeviceDetails: View {
 }
 
 #if DEBUG
-struct AddDeviceDetails_Previews: PreviewProvider {
+struct EnableDeviceDetails_Previews: PreviewProvider {
     static var previews: some View {
-        AddOrRemoveDeviceDetails(request: .sample, userDevice: AddDevice.sample)
+        EnableOrDisableDeviceDetails(request: .sample, userDevice: EnableDevice.sample)
     }
 }
 #endif

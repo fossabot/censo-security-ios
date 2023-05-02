@@ -152,19 +152,20 @@ enum DeviceType: String, Codable {
       }
 }
 
-struct AddDevice: Codable, Equatable  {
+struct EnableDevice: Codable, Equatable  {
     var name: String
     var email: String
     var jpegThumbnail: String
     var deviceGuid: String
     var deviceKey: String
     var deviceType: DeviceType
+    var firstTime: Bool
     var currentShardingPolicyRevisionGuid: String?
     var targetShardingPolicy: ShardingPolicy?
     var replacingDeviceGuid: String?
 }
 
-struct RemoveDevice: Codable, Equatable  {
+struct DisableDevice: Codable, Equatable  {
     var name: String
     var email: String
     var jpegThumbnail: String

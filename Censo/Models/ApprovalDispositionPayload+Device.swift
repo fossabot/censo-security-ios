@@ -32,9 +32,9 @@ extension CensoApi.ApprovalDispositionPayload {
                 registeredDevice: registeredDevice,
                 apiProvider: apiProvider
             )
-        case .addDevice(let addDevice):
-            if let currentShardingPolicyRevisionGuid = addDevice.currentShardingPolicyRevisionGuid {
-                if let targetShardingPolicy = addDevice.targetShardingPolicy {
+        case .enableDevice(let enableDevice):
+            if let currentShardingPolicyRevisionGuid = enableDevice.currentShardingPolicyRevisionGuid {
+                if let targetShardingPolicy = enableDevice.targetShardingPolicy {
                     self.shards = try await reshareShards(
                         currentShardingPolicyGuid: currentShardingPolicyRevisionGuid,
                         targetShardingPolicy: targetShardingPolicy,
@@ -44,8 +44,8 @@ extension CensoApi.ApprovalDispositionPayload {
                 }
 
                 self.recoveryShards = try await recoveryShards(
-                    forUserWithEmail: addDevice.email,
-                    newDeviceKey: try ECPublicKey(base58String: addDevice.deviceKey),
+                    forUserWithEmail: enableDevice.email,
+                    newDeviceKey: try ECPublicKey(base58String: enableDevice.deviceKey),
                     currentShardingPolicyGuid: currentShardingPolicyRevisionGuid,
                     registeredDevice: registeredDevice,
                     apiProvider: apiProvider
