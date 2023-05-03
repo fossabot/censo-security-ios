@@ -6,11 +6,16 @@
 //
 
 import SwiftUI
+import Moya
+import LocalAuthentication
+import CryptoKit
 
 struct SignInView: View {
-    @State private var username = ""
+    @Environment(\.censoApi) var censoApi
+
+    @AppStorage("email") private var username = ""
     @State private var isAuthenticating: Bool = false
-    @State private var showingPassword = false
+    @State private var showingVerification = false
     @State private var currentAlert: AlertType?
 
     var authProvider: CensoAuthProvider
@@ -23,127 +28,16 @@ struct SignInView: View {
         return !(username.isEmpty || isAuthenticating)
     }
 
-    var body: some View {
-        NavStackWorkaround {
-            VStack(spacing: 0) {
-                ScrollView {
-                    VStack {
-                        Image("LogoColor")
-                            .resizable()
-                            .aspectRatio(contentMode: .fit)
-                            .frame(maxHeight: 62)
-                            .padding(50)
-
-                        Text("Sign in with the account you created on the web")
-                            .multilineTextAlignment(.center)
-                            .padding([.leading, .trailing], 60)
-                            .padding([.bottom], 20)
-
-
-                        TextField(text: $username, label: {
-                            Text("Email Address")
-                        })
-                        .onSubmit {
-                            if canSignIn { signIn() }
-                        }
-                        .keyboardType(.emailAddress)
-                        .textContentType(.emailAddress)
-                        .autocapitalization(.none)
-                        .disableAutocorrection(true)
-                        .foregroundColor(Color.black)
-                        .accentColor(Color.Censo.red)
-                        .textFieldStyle(LightRoundedTextFieldStyle())
-                        .disabled(isAuthenticating)
-                        .padding()
-                    }
-                }
-
-                Spacer()
-
-                Button(action: signIn) {
-                    Text("Sign in")
-                        .loadingIndicator(when: isAuthenticating)
-                        .frame(maxWidth: .infinity)
-                }
-                .buttonStyle(FilledButtonStyle())
-                .disabled(!canSignIn)
-                .ignoresSafeArea(.keyboard, edges: .bottom)
-                .padding()
-
-                NavigationLink(isActive: $showingPassword) {
-                    PasswordView(username: username, authProvider: authProvider)
-                } label: {
-                    EmptyView()
-                }
-            }
-            .foregroundColor(.Censo.primaryForeground)
-            .navigationBarHidden(true)
-            .background(
-                CensoBackground()
-            )
-            .alert(item: $currentAlert) { item in
-                switch item {
-                case .signInError:
-                    return Alert(
-                        title: Text("Sign In Error"),
-                        message: Text("An error occured trying to sign you in"),
-                        primaryButton: .default(Text("Use Password"), action: {
-                            showingPassword = true
-                        }),
-                        secondaryButton: .cancel(Text("Try Again"))
-                    )
-                }
-            }
+    var deviceKey: DeviceKey? {
+        if username.isEmpty {
+            return nil
         }
-        .preferredColorScheme(.light)
-    }
 
-    private func signIn() {
-        if let key = SecureEnclaveWrapper.deviceKey(email: username) {
-            isAuthenticating = true
-
-            authProvider.authenticate(.signature(email: username, deviceKey: key)) { error in
-                isAuthenticating = false
-
-                if let error = error {
-                    showSignInError(error)
-                }
-            }
-        } else {
-            showingPassword = true
-        }
-    }
-
-    private func showSignInError(_ error: Error) {
-        currentAlert = .signInError(error)
-    }
-}
-
-
-struct PasswordView: View {
-    @Environment(\.presentationMode) var presentationMode
-
-    @State private var password = ""
-    @State private var isAuthenticating: Bool = false
-    @State private var showingPassword = false
-    @State private var currentAlert: AlertType?
-
-    enum AlertType {
-        case signInError(Error)
-    }
-
-    var username: String
-    var authProvider: CensoAuthProvider
-
-    var canSignIn: Bool {
-        return !(password.isEmpty || isAuthenticating)
+        return SecureEnclaveWrapper.deviceKey(email: username)
     }
 
     var body: some View {
         VStack(spacing: 0) {
-            BackButtonBar(caption: "Email", presentationMode: presentationMode)
-                .frame(height: 50)
-
             ScrollView {
                 VStack {
                     Image("LogoColor")
@@ -152,23 +46,25 @@ struct PasswordView: View {
                         .frame(maxHeight: 62)
                         .padding(50)
 
-                    (Text("Signing in as ") + Text(username).bold())
+                    Text("Sign in with the account you created on the web")
                         .multilineTextAlignment(.center)
                         .padding([.leading, .trailing], 60)
                         .padding([.bottom], 20)
 
-                    SecureField(text: $password, label: {
-                        Text("Password")
+
+                    TextField(text: $username, label: {
+                        Text("Email Address")
                     })
                     .onSubmit {
                         if canSignIn { signIn() }
                     }
-                    .textContentType(.password)
+                    .keyboardType(.emailAddress)
+                    .textContentType(.emailAddress)
+                    .autocapitalization(.none)
+                    .disableAutocorrection(true)
                     .foregroundColor(Color.black)
                     .accentColor(Color.Censo.red)
                     .textFieldStyle(LightRoundedTextFieldStyle())
-                    .autocapitalization(.none)
-                    .disableAutocorrection(true)
                     .disabled(isAuthenticating)
                     .padding()
                 }
@@ -177,7 +73,7 @@ struct PasswordView: View {
             Spacer()
 
             Button(action: signIn) {
-                Text("Sign in")
+                Text(deviceKey == nil ? "Verify Email" : "Sign in")
                     .loadingIndicator(when: isAuthenticating)
                     .frame(maxWidth: .infinity)
             }
@@ -185,6 +81,12 @@ struct PasswordView: View {
             .disabled(!canSignIn)
             .ignoresSafeArea(.keyboard, edges: .bottom)
             .padding()
+
+            NavigationLink(isActive: $showingVerification) {
+                VerificationTokenView(username: username, authProvider: authProvider)
+            } label: {
+                EmptyView()
+            }
         }
         .foregroundColor(.Censo.primaryForeground)
         .navigationBarHidden(true)
@@ -194,22 +96,77 @@ struct PasswordView: View {
         .alert(item: $currentAlert) { item in
             switch item {
             case .signInError:
-                return Alert.withDismissButton(title: Text("Sign In Error"), message: Text("Please check your username and password"))
+                return Alert(
+                    title: Text("Sign In Error"),
+                    message: Text("An error occured trying to sign you in"),
+                    primaryButton: .cancel(Text("Try Again")),
+                    secondaryButton: .default(Text("Sign in with Email Verification")) {
+                        showingVerification = true
+                    }
+                )
             }
         }
-        .preferredColorScheme(.light)
+
     }
 
     private func signIn() {
-        showingPassword = true
+        if let deviceKey = SecureEnclaveWrapper.deviceKey(email: username) {
+            deviceKey.preauthenticatedKey { result in
+                switch result {
+                case .success(let preauthenticatedKey):
+                    isAuthenticating = true
 
-        isAuthenticating = true
+                    _Concurrency.Task {
+                        do {
+                            let timestamp = Date()
+                            let dateString = DateFormatter.iso8601Full.string(from: timestamp)
+                            let signature = try preauthenticatedKey.signature(for: dateString.data(using: .utf8)!).base64EncodedString()
 
-        authProvider.authenticate(.password(email: username, password: password)) { error in
-            isAuthenticating = false
+                            let token: CensoAuthProvider.JWTToken = try await censoApi.provider.request(.login(.signature(email: username, timestamp: timestamp, signature: signature, publicKey: try deviceKey.publicExternalRepresentation().base58String)))
 
-            if let error = error {
-                showSignInError(error)
+                            if let encryptedRootSeed = try Keychain.encryptedRootSeed(email: username),
+                               let rootSeed = try? preauthenticatedKey.decrypt(data: encryptedRootSeed),
+                               let publicKeys = try? PrivateKeys(rootSeed: rootSeed.bytes).publicKeys {
+                                // registered and authenticated
+                                let registeredDevice = RegisteredDevice(email: username, deviceKey: deviceKey, encryptedRootSeed: encryptedRootSeed, publicKeys: publicKeys)
+
+                                await MainActor.run {
+                                    authProvider.authenticatedState = .deviceAuthenticatedRegistered(registeredDevice, token: token)
+                                }
+                            } else {
+                                // authenticated but not yet registered
+
+                                await MainActor.run {
+                                    authProvider.authenticatedState = .deviceAuthenticatedUnregistered(deviceKey, token: token)
+                                }
+                            }
+                        } catch {
+                            print(error)
+                            await MainActor.run {
+                                showSignInError(error)
+                            }
+                        }
+
+                        isAuthenticating = false
+                    }
+                case .failure(let error):
+                    showSignInError(error)
+                }
+            }
+        } else {
+            isAuthenticating = true
+
+            censoApi.provider.request(.emailVerification(username)) { result in
+                isAuthenticating = false
+
+                switch result {
+                case .failure(let error):
+                    showSignInError(error)
+                case .success(let response) where response.statusCode < 400:
+                    showingVerification = true
+                case .success(let response):
+                    showSignInError(MoyaError.statusCode(response))
+                }
             }
         }
     }
@@ -219,11 +176,40 @@ struct PasswordView: View {
     }
 }
 
-extension PasswordView.AlertType: Identifiable {
-    var id: Int {
-        switch self {
-        case .signInError:
-            return 0
+import CryptoTokenKit
+
+extension DeviceKey {
+    enum DeviceKeyError: Error {
+        case keyInvalidatedByBiometryChange
+    }
+
+    func preauthenticatedKey(_ completion: @escaping (Result<PreauthenticatedKey<DeviceKey>, Error>) -> Void) {
+        let context = LAContext()
+        context.evaluatePolicy(.deviceOwnerAuthenticationWithBiometrics, localizedReason: "Identify Yourself") { success, error in
+            if let error = error {
+                // not authenticated
+                completion(.failure(error))
+            } else {
+                do {
+                    let preauthenticatedKey = try self.preauthenticatedKey(context: context)
+                    let sampleData = Data(repeating: 1, count: 8)
+                    _ = try preauthenticatedKey.signature(for: sampleData)
+
+                    completion(.success(preauthenticatedKey))
+                } catch (let error as NSError) where error._domain == "CryptoTokenKit" && error._code == -3 {
+                    // key no longer valid
+                    do {
+                        try SecureEnclaveWrapper.removeDeviceKey(self)
+                        completion(.failure(DeviceKeyError.keyInvalidatedByBiometryChange))
+                    } catch {
+                        completion(.failure(error))
+                    }
+                } catch {
+                    // other error
+                    print(error)
+                    completion(.failure(error))
+                }
+            }
         }
     }
 }
@@ -243,7 +229,7 @@ struct SignInView_Previews: PreviewProvider {
         SignInView(authProvider: CensoAuthProvider())
             .environment(\.colorScheme, .dark)
 
-        PasswordView(username: "john@hollywood.com", authProvider: CensoAuthProvider())
+        VerificationTokenView(username: "john@hollywood.com", authProvider: CensoAuthProvider())
     }
 }
 #endif

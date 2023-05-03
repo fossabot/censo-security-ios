@@ -43,6 +43,7 @@
 		3D11A60B275851BA008C03B1 /* WalletConnected.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D11A60A275851BA008C03B1 /* WalletConnected.swift */; };
 		3D11A60D27585F72008C03B1 /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D11A60C27585F72008C03B1 /* ImageLoader.swift */; };
 		3D1436C729E4A4D000CDB6CE /* ShardRecovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1436C629E4A4D000CDB6CE /* ShardRecovery.swift */; };
+		3D1436C929EE406200CDB6CE /* VerificationTokenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1436C829EE406100CDB6CE /* VerificationTokenView.swift */; };
 		3D1AD40728DC007D0085ACAA /* ForegroundBiometryLock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1AD40628DC007D0085ACAA /* ForegroundBiometryLock.swift */; };
 		3D1AF113298C2CE700A01E43 /* DeviceKeyRegistration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1AF112298C2CE700A01E43 /* DeviceKeyRegistration.swift */; };
 		3D1AF115298C2D0000A01E43 /* PhotoCapture.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1AF114298C2D0000A01E43 /* PhotoCapture.swift */; };
@@ -57,7 +58,6 @@
 		3D311D57260A3A1A007A0B98 /* MockAuthProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D311D55260A3A1A007A0B98 /* MockAuthProvider.swift */; };
 		3D311DEA260BD14A007A0B98 /* Moya+AuthProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D311DE9260BD14A007A0B98 /* Moya+AuthProvider.swift */; };
 		3D3854222639BD7F00C8693C /* Data+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3854212639BD7F00C8693C /* Data+Hex.swift */; };
-		3D39B3EA2912E89A00948D3A /* PublicKeysStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D39B3E92912E89A00948D3A /* PublicKeysStorage.swift */; };
 		3D3B4BDE262F4E57006E8619 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3D3B4BDD262F4E57006E8619 /* Preview Assets.xcassets */; };
 		3D3D6CEC2616432000FEEE0B /* RecoverPasswordView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3D6CE82616432000FEEE0B /* RecoverPasswordView.swift */; };
 		3D3D6CF12616437400FEEE0B /* AuthProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D3D6CF02616437400FEEE0B /* AuthProvider.swift */; };
@@ -74,13 +74,9 @@
 		3D61A0FC2655B4FF00AD1EE7 /* SignedInNavigationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D61A0FA2655B4FF00AD1EE7 /* SignedInNavigationView.swift */; };
 		3D61A0FE2655B50700AD1EE7 /* MessageSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D61A0FD2655B50700AD1EE7 /* MessageSupport.swift */; };
 		3D6334EC2885C299002CEC5A /* PenAndPaperConfirm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6334E42885C298002CEC5A /* PenAndPaperConfirm.swift */; };
-		3D6334ED2885C299002CEC5A /* PenAndPaperRecovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6334E52885C298002CEC5A /* PenAndPaperRecovery.swift */; };
 		3D6334EE2885C299002CEC5A /* KeyConfirmationSuccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6334E62885C298002CEC5A /* KeyConfirmationSuccess.swift */; };
 		3D6334EF2885C299002CEC5A /* KeyRecoverySuccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6334E72885C298002CEC5A /* KeyRecoverySuccess.swift */; };
-		3D6334F02885C299002CEC5A /* PasswordManagerRecovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6334E82885C298002CEC5A /* PasswordManagerRecovery.swift */; };
-		3D6334F12885C299002CEC5A /* PasswordManagerConfirm.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6334E92885C299002CEC5A /* PasswordManagerConfirm.swift */; };
 		3D6334F22885C299002CEC5A /* PenAndPaper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6334EA2885C299002CEC5A /* PenAndPaper.swift */; };
-		3D6334F32885C299002CEC5A /* PasswordManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6334EB2885C299002CEC5A /* PasswordManager.swift */; };
 		3D6334F92885C2C9002CEC5A /* CensoProgressView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6334F42885C2C9002CEC5A /* CensoProgressView.swift */; };
 		3D6334FA2885C2C9002CEC5A /* FocusedOnAppear.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6334F52885C2C9002CEC5A /* FocusedOnAppear.swift */; };
 		3D6334FB2885C2C9002CEC5A /* DarkRoundedTextFieldStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D6334F62885C2C9002CEC5A /* DarkRoundedTextFieldStyle.swift */; };
@@ -115,9 +111,6 @@
 		3DBC44E3280F17660016E1AB /* LoginRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBC44E2280F17660016E1AB /* LoginRow.swift */; };
 		3DBC44E5280F18830016E1AB /* LoginDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBC44E4280F18830016E1AB /* LoginDetails.swift */; };
 		3DBD7DCE2655CE0F00662C62 /* ApprovalsNeeded.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBD7DCD2655CE0F00662C62 /* ApprovalsNeeded.swift */; };
-		3DBE36ED28B52C820096850B /* PasswordManagerSignInRecovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBE36EC28B52C810096850B /* PasswordManagerSignInRecovery.swift */; };
-		3DBE36EF28B539C40096850B /* PenAndPaperSignInRecovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBE36EE28B539C40096850B /* PenAndPaperSignInRecovery.swift */; };
-		3DBE36F128B53B3B0096850B /* KeyRetrievalSignInRecovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBE36F028B53B3B0096850B /* KeyRetrievalSignInRecovery.swift */; };
 		3DBF9DAF26DE7A0E00D7683E /* ViewRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBF9DAE26DE7A0E00D7683E /* ViewRouter.swift */; };
 		3DBF9DC326E000CC00D7683E /* EmptyApprovalRequestsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBF9DC226E000CC00D7683E /* EmptyApprovalRequestsList.swift */; };
 		3DBF9DC526E0020300D7683E /* ApprovalRequestItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DBF9DC426E0020300D7683E /* ApprovalRequestItem.swift */; };
@@ -148,6 +141,7 @@
 		3DE66E80299C2E9B00E64808 /* Moya in Frameworks */ = {isa = PBXBuildFile; productRef = 3DE66E7F299C2E9B00E64808 /* Moya */; };
 		3DEC0C8F2641B4DB00309A0F /* FactsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DEC0C8E2641B4DB00309A0F /* FactsSection.swift */; };
 		3DED50D229103D1B00904DBA /* Keychain+Storage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DED50D129103D1B00904DBA /* Keychain+Storage.swift */; };
+		3DF5F69C29F75908005B3D85 /* DeviceRegistrationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5F69B29F75908005B3D85 /* DeviceRegistrationController.swift */; };
 		4006422F259A422400A8D8D3 /* CensoApi.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4006422E259A422400A8D8D3 /* CensoApi.swift */; };
 		40328E102593ED9900F2EE41 /* CensoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40328E0F2593ED9900F2EE41 /* CensoApp.swift */; };
 		40328E142593ED9D00F2EE41 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 40328E132593ED9D00F2EE41 /* Assets.xcassets */; };
@@ -263,6 +257,7 @@
 		3D11A60A275851BA008C03B1 /* WalletConnected.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletConnected.swift; sourceTree = "<group>"; };
 		3D11A60C27585F72008C03B1 /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
 		3D1436C629E4A4D000CDB6CE /* ShardRecovery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShardRecovery.swift; sourceTree = "<group>"; };
+		3D1436C829EE406100CDB6CE /* VerificationTokenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationTokenView.swift; sourceTree = "<group>"; };
 		3D1AD40628DC007D0085ACAA /* ForegroundBiometryLock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForegroundBiometryLock.swift; sourceTree = "<group>"; };
 		3D1AF112298C2CE700A01E43 /* DeviceKeyRegistration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceKeyRegistration.swift; sourceTree = "<group>"; };
 		3D1AF114298C2D0000A01E43 /* PhotoCapture.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoCapture.swift; sourceTree = "<group>"; };
@@ -277,7 +272,6 @@
 		3D311D55260A3A1A007A0B98 /* MockAuthProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockAuthProvider.swift; sourceTree = "<group>"; };
 		3D311DE9260BD14A007A0B98 /* Moya+AuthProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Moya+AuthProvider.swift"; sourceTree = "<group>"; };
 		3D3854212639BD7F00C8693C /* Data+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+Hex.swift"; sourceTree = "<group>"; };
-		3D39B3E92912E89A00948D3A /* PublicKeysStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublicKeysStorage.swift; sourceTree = "<group>"; };
 		3D3B4BDD262F4E57006E8619 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		3D3D6CE82616432000FEEE0B /* RecoverPasswordView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RecoverPasswordView.swift; sourceTree = "<group>"; };
 		3D3D6CF02616437400FEEE0B /* AuthProvider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AuthProvider.swift; sourceTree = "<group>"; };
@@ -294,13 +288,9 @@
 		3D61A0FA2655B4FF00AD1EE7 /* SignedInNavigationView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignedInNavigationView.swift; sourceTree = "<group>"; };
 		3D61A0FD2655B50700AD1EE7 /* MessageSupport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageSupport.swift; sourceTree = "<group>"; };
 		3D6334E42885C298002CEC5A /* PenAndPaperConfirm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PenAndPaperConfirm.swift; sourceTree = "<group>"; };
-		3D6334E52885C298002CEC5A /* PenAndPaperRecovery.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PenAndPaperRecovery.swift; sourceTree = "<group>"; };
 		3D6334E62885C298002CEC5A /* KeyConfirmationSuccess.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyConfirmationSuccess.swift; sourceTree = "<group>"; };
 		3D6334E72885C298002CEC5A /* KeyRecoverySuccess.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeyRecoverySuccess.swift; sourceTree = "<group>"; };
-		3D6334E82885C298002CEC5A /* PasswordManagerRecovery.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PasswordManagerRecovery.swift; sourceTree = "<group>"; };
-		3D6334E92885C299002CEC5A /* PasswordManagerConfirm.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PasswordManagerConfirm.swift; sourceTree = "<group>"; };
 		3D6334EA2885C299002CEC5A /* PenAndPaper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PenAndPaper.swift; sourceTree = "<group>"; };
-		3D6334EB2885C299002CEC5A /* PasswordManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PasswordManager.swift; sourceTree = "<group>"; };
 		3D6334F42885C2C9002CEC5A /* CensoProgressView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CensoProgressView.swift; sourceTree = "<group>"; };
 		3D6334F52885C2C9002CEC5A /* FocusedOnAppear.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FocusedOnAppear.swift; sourceTree = "<group>"; };
 		3D6334F62885C2C9002CEC5A /* DarkRoundedTextFieldStyle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DarkRoundedTextFieldStyle.swift; sourceTree = "<group>"; };
@@ -335,9 +325,6 @@
 		3DBC44E2280F17660016E1AB /* LoginRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginRow.swift; sourceTree = "<group>"; };
 		3DBC44E4280F18830016E1AB /* LoginDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginDetails.swift; sourceTree = "<group>"; };
 		3DBD7DCD2655CE0F00662C62 /* ApprovalsNeeded.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApprovalsNeeded.swift; sourceTree = "<group>"; };
-		3DBE36EC28B52C810096850B /* PasswordManagerSignInRecovery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordManagerSignInRecovery.swift; sourceTree = "<group>"; };
-		3DBE36EE28B539C40096850B /* PenAndPaperSignInRecovery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PenAndPaperSignInRecovery.swift; sourceTree = "<group>"; };
-		3DBE36F028B53B3B0096850B /* KeyRetrievalSignInRecovery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyRetrievalSignInRecovery.swift; sourceTree = "<group>"; };
 		3DBF9DAE26DE7A0E00D7683E /* ViewRouter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewRouter.swift; sourceTree = "<group>"; };
 		3DBF9DC226E000CC00D7683E /* EmptyApprovalRequestsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmptyApprovalRequestsList.swift; sourceTree = "<group>"; };
 		3DBF9DC426E0020300D7683E /* ApprovalRequestItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApprovalRequestItem.swift; sourceTree = "<group>"; };
@@ -365,6 +352,7 @@
 		3DE53CCC28AADEB300B4F014 /* CensoAuthProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CensoAuthProvider.swift; sourceTree = "<group>"; };
 		3DEC0C8E2641B4DB00309A0F /* FactsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FactsSection.swift; sourceTree = "<group>"; };
 		3DED50D129103D1B00904DBA /* Keychain+Storage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Keychain+Storage.swift"; sourceTree = "<group>"; };
+		3DF5F69B29F75908005B3D85 /* DeviceRegistrationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceRegistrationController.swift; sourceTree = "<group>"; };
 		4006422E259A422400A8D8D3 /* CensoApi.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CensoApi.swift; sourceTree = "<group>"; };
 		40328E0C2593ED9900F2EE41 /* Censo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Censo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		40328E0F2593ED9900F2EE41 /* CensoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CensoApp.swift; sourceTree = "<group>"; };
@@ -581,10 +569,8 @@
 			isa = PBXGroup;
 			children = (
 				3D2CE49625F8423800137E05 /* SignInView.swift */,
+				3D1436C829EE406100CDB6CE /* VerificationTokenView.swift */,
 				3D3D6CE82616432000FEEE0B /* RecoverPasswordView.swift */,
-				3DBE36EC28B52C810096850B /* PasswordManagerSignInRecovery.swift */,
-				3DBE36EE28B539C40096850B /* PenAndPaperSignInRecovery.swift */,
-				3DBE36F028B53B3B0096850B /* KeyRetrievalSignInRecovery.swift */,
 			);
 			path = Auth;
 			sourceTree = "<group>";
@@ -599,7 +585,6 @@
 				3D633E152748656500BACCCE /* BiometryCheck.swift */,
 				3DE53C8B28A2B45D00B4F014 /* VersionCheck.swift */,
 				3DE53C8D28A2BF9500B4F014 /* UpdateApp.swift */,
-				3D39B3E92912E89A00948D3A /* PublicKeysStorage.swift */,
 				3D4BFF63299D36540031F99B /* NotificationCheck.swift */,
 			);
 			path = Root;
@@ -662,12 +647,8 @@
 				3DC7A74227D006A900A2BBA7 /* KeyRetrieval.swift */,
 				3D6334E62885C298002CEC5A /* KeyConfirmationSuccess.swift */,
 				3D6334E72885C298002CEC5A /* KeyRecoverySuccess.swift */,
-				3D6334EB2885C299002CEC5A /* PasswordManager.swift */,
-				3D6334E92885C299002CEC5A /* PasswordManagerConfirm.swift */,
-				3D6334E82885C298002CEC5A /* PasswordManagerRecovery.swift */,
 				3D6334EA2885C299002CEC5A /* PenAndPaper.swift */,
 				3D6334E42885C298002CEC5A /* PenAndPaperConfirm.swift */,
-				3D6334E52885C298002CEC5A /* PenAndPaperRecovery.swift */,
 				6CCDBD5728EF8BBD00BBB5B6 /* AdditionalKeyRegistration.swift */,
 			);
 			path = Registration;
@@ -721,6 +702,7 @@
 				3DE16109296F98CD00F48930 /* ApprovalDispositionRequest.swift */,
 				3DE1610C297087AE00F48930 /* ApprovalRequest.swift */,
 				3DC205C92988912000BD8BB0 /* HelperExtensions.swift */,
+				3DF5F69B29F75908005B3D85 /* DeviceRegistrationController.swift */,
 				3DC205CD2988A7C900BD8BB0 /* ClientModels */,
 				3DE1610B2970879900F48930 /* Signing */,
 			);
@@ -1221,12 +1203,10 @@
 				3DB7F9C026D6C2CD00A49B4E /* UnknownRequestRow.swift in Sources */,
 				40CB67F925C3195D00DB15D6 /* Mock.swift in Sources */,
 				3DAF53BC262E1421000DD558 /* Countdown.swift in Sources */,
-				3D6334F32885C299002CEC5A /* PasswordManager.swift in Sources */,
 				3D10290429E06D2400EC5A6C /* DeviceKeyGeneration.swift in Sources */,
 				3D6334F92885C2C9002CEC5A /* CensoProgressView.swift in Sources */,
 				E42F565D29D3289500C6922B /* SuspendUserRow.swift in Sources */,
 				3DE1610A296F98CD00F48930 /* ApprovalDispositionRequest.swift in Sources */,
-				3DBE36EF28B539C40096850B /* PenAndPaperSignInRecovery.swift in Sources */,
 				3DBC44E3280F17660016E1AB /* LoginRow.swift in Sources */,
 				6C8BA246298EE78A00D24E00 /* MultichainSign.swift in Sources */,
 				3DC7A74327D006A900A2BBA7 /* KeyRetrieval.swift in Sources */,
@@ -1241,6 +1221,7 @@
 				6C7627C129AE3E0C00FE1CC2 /* OrgAdminPolicyDetails.swift in Sources */,
 				3D1028F229DDD14400EC5A6C /* ECPublicKey.swift in Sources */,
 				3DBD7DCE2655CE0F00662C62 /* ApprovalsNeeded.swift in Sources */,
+				3D1436C929EE406200CDB6CE /* VerificationTokenView.swift in Sources */,
 				3DC7A74127D0067D00A2BBA7 /* KeyGeneration.swift in Sources */,
 				6C7627C529AE674600FE1CC2 /* VaultCreationDetails.swift in Sources */,
 				6C0CD5F62989C3650028EF9C /* EvmTransactionUtil.swift in Sources */,
@@ -1248,7 +1229,6 @@
 				3D3854222639BD7F00C8693C /* Data+Hex.swift in Sources */,
 				40CB67D725C1B75A00DB15D6 /* CensoTheme.swift in Sources */,
 				6CBA96CE28E63B37000A3727 /* EllipticCurveEncrypterSecp256k1.swift in Sources */,
-				3DBE36F128B53B3B0096850B /* KeyRetrievalSignInRecovery.swift in Sources */,
 				3DC205CA2988912000BD8BB0 /* HelperExtensions.swift in Sources */,
 				6C8BA248298EEC1F00D24E00 /* MultichainClientModel.swift in Sources */,
 				3D311DEA260BD14A007A0B98 /* Moya+AuthProvider.swift in Sources */,
@@ -1273,7 +1253,6 @@
 				BD072F7D292E7E9E00B36C5A /* EvmTransferTransactionBuilder.swift in Sources */,
 				3D10291429E0714E00EC5A6C /* WaitingForDeviceApproval.swift in Sources */,
 				BDFBBC3029D5FDF90054286C /* EnableRecoveryPolicyDetails.swift in Sources */,
-				3D6334F12885C299002CEC5A /* PasswordManagerConfirm.swift in Sources */,
 				3DC2F3FF25F896C40061BB3A /* RemoteResult.swift in Sources */,
 				3DBF9DC526E0020300D7683E /* ApprovalRequestItem.swift in Sources */,
 				3D115204282169E1007CD43D /* VaultConfigPolicyDetails.swift in Sources */,
@@ -1282,15 +1261,12 @@
 				3DE1610D297087AE00F48930 /* ApprovalRequest.swift in Sources */,
 				3DED50D229103D1B00904DBA /* Keychain+Storage.swift in Sources */,
 				6C8CE73D298B5FC600834978 /* EvmPolicyHelper.swift in Sources */,
-				3D39B3EA2912E89A00948D3A /* PublicKeysStorage.swift in Sources */,
 				E42F565F29D3297900C6922B /* UserDetails.swift in Sources */,
-				3D6334F02885C299002CEC5A /* PasswordManagerRecovery.swift in Sources */,
 				3DAA26F0262F5147000F453D /* PrimaryButtonStyle.swift in Sources */,
 				3D10290929E06D3100EC5A6C /* BootstrapPhotoSubmission.swift in Sources */,
 				3D1AF113298C2CE700A01E43 /* DeviceKeyRegistration.swift in Sources */,
 				6CBA96E128E743A4000A3727 /* Secp256k1HierarchicalKey.swift in Sources */,
 				3D311D43260A336A007A0B98 /* RoundedCell.swift in Sources */,
-				3DBE36ED28B52C820096850B /* PasswordManagerSignInRecovery.swift in Sources */,
 				3D952408283D0FB800D42243 /* WalletWhitelistRow.swift in Sources */,
 				40A9AF0E25DF5F0E004320EF /* ComposeMail.swift in Sources */,
 				6CBA96CD28E63B35000A3727 /* ECDSA.swift in Sources */,
@@ -1327,6 +1303,7 @@
 				3D10290529E06D2400EC5A6C /* DevicePhotoSubmission.swift in Sources */,
 				3D1C762627DA89690016BB32 /* MoyaProvider+AsynAwait.swift in Sources */,
 				40A9AF0425DF32B9004320EF /* FactList.swift in Sources */,
+				3DF5F69C29F75908005B3D85 /* DeviceRegistrationController.swift in Sources */,
 				3D1028E829DDD0CC00EC5A6C /* SeedRecovery.swift in Sources */,
 				6CD5B4A228A453DB00CD1A62 /* PasswordResetRow.swift in Sources */,
 				3D3D6D122616447200FEEE0B /* LoadingModifier.swift in Sources */,
@@ -1379,7 +1356,6 @@
 				3DC2F42D25FAAFD00061BB3A /* MoyaLoader.swift in Sources */,
 				BD072F78292E6DF100B36C5A /* String+Hex.swift in Sources */,
 				3D61A0FC2655B4FF00AD1EE7 /* SignedInNavigationView.swift in Sources */,
-				3D6334ED2885C299002CEC5A /* PenAndPaperRecovery.swift in Sources */,
 				3DC2F42925FAAA4E0061BB3A /* Networking+Environment.swift in Sources */,
 				6C72A2EA29CE367F00678912 /* VaultUserRolesUpdateRow.swift in Sources */,
 			);

@@ -20,7 +20,7 @@ struct ShardRecovery {
         case couldNotRecover
     }
 
-    static func recoverRootSeed(recoverShardResponse: CensoApi.RecoveryShardsResponse, deviceKey: DeviceKey, bootstrapKey: BootstrapKey?) throws -> [UInt8] {
+    static func recoverRootSeed(recoverShardResponse: CensoApi.RecoveryShardsResponse, deviceKey: PreauthenticatedKey<DeviceKey>, bootstrapKey: PreauthenticatedKey<BootstrapKey>?) throws -> [UInt8] {
         let allParentShards = Dictionary(
             uniqueKeysWithValues: recoverShardResponse.ancestors.map { ancestor in
                 (ancestor.shardId, ancestor)
@@ -86,9 +86,9 @@ extension CensoApi.Shard {
         case noMatchedKeys
     }
 
-    func decryptedShardData(with deviceKey: DeviceKey, bootstrapKey: BootstrapKey?) throws -> Data {
-        let devicePublicKey = try deviceKey.publicExternalRepresentation().base58String
-        let bootstrapKeyPublicKey = try bootstrapKey?.publicExternalRepresentation().base58String
+    func decryptedShardData(with deviceKey: PreauthenticatedKey<DeviceKey>, bootstrapKey: PreauthenticatedKey<BootstrapKey>?) throws -> Data {
+        let devicePublicKey = try deviceKey.key.publicExternalRepresentation().base58String
+        let bootstrapKeyPublicKey = try bootstrapKey?.key.publicExternalRepresentation().base58String
         for shardCopy in shardCopies {
             let encryptedShardData = Data(base64Encoded: shardCopy.encryptedData)!
 

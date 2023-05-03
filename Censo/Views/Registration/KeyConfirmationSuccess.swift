@@ -17,13 +17,14 @@ struct KeyConfirmationSuccess: View {
         case idle
         case loading
         case failure(Error)
-        case success
+        case success(RegisteredDevice)
     }
 
     @State private var registrationState: RegistrationState = .idle
 
     var user: CensoApi.User
     var deviceKey: DeviceKey
+    var registrationController: DeviceRegistrationController
     var phrase: [String]
     var shardingPolicy: ShardingPolicy
     var onConflict: () -> Void
@@ -33,13 +34,31 @@ struct KeyConfirmationSuccess: View {
         Group {
             switch registrationState {
             case .idle:
-                CensoProgressView(text: "Registering your key with Censo...")
-                    .onAppear(perform: reload)
+                VStack {
+                    Spacer()
+
+                    Text("Its time to register your keys")
+                        .font(.system(size: 26).bold())
+                        .padding()
+
+                    Spacer()
+
+                    Button {
+                        reload()
+                    } label: {
+                        Text("Continue")
+                            .frame(maxWidth: .infinity)
+                    }
+                    .padding()
+
+                    Spacer()
+                        .frame(height: 20)
+                }
             case .loading:
                 CensoProgressView(text: "Registering your key with Censo...")
             case .failure(let error):
                 RetryView(error: error, action: reload)
-            case .success:
+            case .success(let registeredDevice):
                 VStack {
                     Spacer()
 
@@ -60,6 +79,7 @@ struct KeyConfirmationSuccess: View {
                     Spacer()
 
                     Button {
+                        registrationController.completeRegistration(with: registeredDevice)
                         onSuccess()
                     } label: {
                         Text("Continue")
@@ -82,36 +102,21 @@ struct KeyConfirmationSuccess: View {
 
     private func reload() {
         registrationState = .loading
+
         do {
             let rootSeed = try Mnemonic(phrase: phrase).seed
-            let signersInfo = try CensoApi.SignersInfo(
-                shardingPolicy: shardingPolicy,
-                rootSeed: rootSeed,
-                deviceKey: deviceKey
-            )
-            
-            censoApi.provider.request(.addWalletSigners(signersInfo, devicePublicKey: try deviceKey.publicExternalRepresentation().base58String)) { result in
+
+            registrationController.register(rootSeed: rootSeed, shardingPolicy: shardingPolicy, deviceKey: deviceKey) { result in
                 switch result {
+                case .success(let registeredDevice):
+                    registrationState = .success(registeredDevice)
+                case .failure(DeviceRegistrationController.RegistrationError.conflict):
+                    onConflict()
                 case .failure(let error):
                     registrationState = .failure(error)
-                    RaygunClient.sharedInstance().send(error: error, tags: ["registration-error"], customData: nil)
-                case .success(let response) where response.statusCode == 409:
-                    onConflict()
-                case .success(let response) where response.statusCode >= 400:
-                    registrationState = .failure(MoyaError.statusCode(response))
-                    RaygunClient.sharedInstance().send(error: MoyaError.statusCode(response), tags: ["registration-error"], customData: nil)
-                case .success:
-                    do {
-                        try Keychain.saveRootSeed(rootSeed, email: user.loginName, deviceKey: deviceKey)
-                        registrationState = .success
-                    } catch {
-                        registrationState = .failure(error)
-                    }
                 }
             }
         } catch {
-            RaygunClient.sharedInstance().send(error: error, tags: ["registration-error"], customData: nil)
-
             registrationState = .failure(error)
         }
     }
@@ -152,11 +157,11 @@ extension PublicKeys {
 }
 
 #if DEBUG
-struct KeyConfirmationSuccess_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationView {
-            KeyConfirmationSuccess(user: .sample, deviceKey: .sample, phrase: [], shardingPolicy: .sample, onConflict: {}, onSuccess: {})
-        }
-    }
-}
+//struct KeyConfirmationSuccess_Previews: PreviewProvider {
+//    static var previews: some View {
+//        NavigationView {
+//            KeyConfirmationSuccess(user: .sample, deviceKey: .sample, phrase: [], shardingPolicy: .sample, onConflict: {}, onSuccess: {})
+//        }
+//    }
+//}
 #endif

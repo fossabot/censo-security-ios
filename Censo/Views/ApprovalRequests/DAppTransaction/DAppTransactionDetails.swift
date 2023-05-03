@@ -67,17 +67,17 @@ struct DAppTransactionDetails: View {
 }
 
 #if DEBUG
-struct DAppTransactionDetails_Previews: PreviewProvider {
-    static var previews: some View {
-        DAppTransactionDetails(request: .sample, transactionRequest: .sample)
-
-        let timerPublisher = Timer.TimerPublisher(interval: 1, runLoop: .current, mode: .default).autoconnect()
-
-        NavigationView {
-            ApprovalRequestDetails(registeredDevice: RegisteredDevice(email: "test@test.com", deviceKey: .sample, encryptedRootSeed: Data()), user: .sample, request: .sample, timerPublisher: timerPublisher) {
-                DAppTransactionDetails(request: .sample, transactionRequest: .sample)
-            }
-        }
-    }
-}
+//struct DAppTransactionDetails_Previews: PreviewProvider {
+//    static var previews: some View {
+//        DAppTransactionDetails(request: .sample, transactionRequest: .sample)
+//
+//        let timerPublisher = Timer.TimerPublisher(interval: 1, runLoop: .current, mode: .default).autoconnect()
+//
+//        NavigationView {
+//            ApprovalRequestDetails(registeredDevice: RegisteredDevice(email: "test@test.com", deviceKey: .sample, encryptedRootSeed: Data()), user: .sample, request: .sample, timerPublisher: timerPublisher) {
+//                DAppTransactionDetails(request: .sample, transactionRequest: .sample)
+//            }
+//        }
+//    }
+//}
 #endif

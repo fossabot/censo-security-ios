@@ -8,9 +8,9 @@
 import Foundation
 
 extension ShardingPolicy {
-    init(deviceKey: DeviceKey, bootstrapKey: BootstrapKey) throws {
-        let devicePublicKeyData = try deviceKey.publicExternalRepresentation()
-        let bootstrapPublicKeyData = try bootstrapKey.publicExternalRepresentation()
+    init(deviceKey: PreauthenticatedKey<DeviceKey>, bootstrapKey: PreauthenticatedKey<BootstrapKey>) throws {
+        let devicePublicKeyData = try deviceKey.key.publicExternalRepresentation()
+        let bootstrapPublicKeyData = try bootstrapKey.key.publicExternalRepresentation()
 
         let deviceShardingParticipant = ShardingParticipant(
             participantId: devicePublicKeyData[1..<33].toHexString(),

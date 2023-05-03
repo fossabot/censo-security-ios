@@ -13,48 +13,43 @@ struct RegistrationView: View {
 
     var user: CensoApi.User
     var shardingPolicy: ShardingPolicy
-    var deviceKey: DeviceKey
-    var keyStore: KeyStore?
+    var registeredDevice: RegisteredDevice
+    var registrationController: DeviceRegistrationController
     var onReloadUser: () -> Void
     var onReloadPublicKeys: () -> Void
 
     var body: some View {
-        switch (keyStore, user.registeredPublicKeys) {
-        case (_, _) where !user.canAddSigners:
-            WaitingForDeviceApproval(onReload: onReloadUser)
-        case (_, .none):
-            KeyGeneration(
-                user: user,
-                shardingPolicy: shardingPolicy,
-                deviceKey: deviceKey,
-                onConflict: onReloadUser,
-                onSuccess: onReloadUser
-            )
-        case (.none, .complete):
-            KeyRetrieval(user: user, registeredPublicKeys: user.publicKeys, deviceKey: deviceKey) {
-                onReloadPublicKeys()
-            }
-        case (.none, .incomplete(let publicKeys)):
-            KeyRetrieval(user: user, registeredPublicKeys: publicKeys, deviceKey: deviceKey) {
-                onReloadPublicKeys()
-            }
-        case (.some((_, let encryptedRootSeed)), .incomplete):
-            AdditionalKeyRegistration(user: user, encryptedRootSeed: encryptedRootSeed, deviceKey: deviceKey, shardingPolicy: shardingPolicy) {
-                onReloadUser()
-            }
-        case (.some((let storedPublicKeys, let encryptedRootSeed)), .complete(let remotePublicKeys)) where storedPublicKeys == remotePublicKeys:
-            ApprovalRequestsView(
-                registeredDevice: RegisteredDevice(
-                    email: user.loginName,
-                    deviceKey: deviceKey,
-                    encryptedRootSeed: encryptedRootSeed
-                ),
-                user: user
-            )
-            .navigationTitle("Approvals")
-        case (.some, .complete):
+//        switch user.registeredPublicKeys {
+////        case (_, .none):
+////            KeyGeneration(
+////                user: user,
+////                shardingPolicy: shardingPolicy,
+////                deviceKey: registeredDevice.deviceKey,
+////                registrationController: registrationController,
+////                onConflict: onReloadUser,
+////                onSuccess: onReloadUser
+////            )
+////        case (.none, .complete):
+////            KeyRetrieval(user: user, registeredPublicKeys: user.publicKeys, deviceKey: registeredDevice.deviceKey, registrationController: registrationController) {
+////                onReloadPublicKeys()
+////            }
+////        case (.none, .incomplete(let publicKeys)):
+////            KeyRetrieval(user: user, registeredPublicKeys: publicKeys, deviceKey: registeredDevice.deviceKey, registrationController: registrationController) {
+////                onReloadPublicKeys()
+////            }
+//        case .incomplete:
+//            AdditionalKeyRegistration(user: user, registeredDevice: registeredDevice, shardingPolicy: shardingPolicy) {
+//                onReloadUser()
+//            }
+//        case .complete(let remotePublicKeys) where registeredDevice.publicKeys == remotePublicKeys:
+//            ApprovalRequestsView(
+//                registeredDevice: registeredDevice,
+//                user: user
+//            )
+//            .navigationTitle("Approvals")
+//        case .complete:
             Text("Keys do not match, call support")
-        }
+//        }
     }
 }
 
@@ -87,9 +82,9 @@ extension CensoApi.User {
 }
 
 #if DEBUG
-struct RegistrationView_Previews: PreviewProvider {
-    static var previews: some View {
-        RegistrationView(user: .sample, shardingPolicy: .sample, deviceKey: .sample, keyStore: nil, onReloadUser: { }, onReloadPublicKeys: {})
-    }
-}
+//struct RegistrationView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        RegistrationView(user: .sample, shardingPolicy: .sample, deviceKey: .sample, keyStore: nil, onReloadUser: { }, onReloadPublicKeys: {})
+//    }
+//}
 #endif

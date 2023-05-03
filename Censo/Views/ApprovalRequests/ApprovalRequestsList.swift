@@ -65,11 +65,11 @@ extension View {
 }
 
 #if DEBUG
-struct ApprovalRequestsList_Previews: PreviewProvider {
-    static var previews: some View {
-        ApprovalRequestsList(registeredDevice: RegisteredDevice(email: "test@test.com", deviceKey: .sample, encryptedRootSeed: Data()), user: .sample, requests: [], onStatusChange: nil) { 
-        }
-        .background(Color.Censo.primaryBackground.ignoresSafeArea())
-    }
-}
+//struct ApprovalRequestsList_Previews: PreviewProvider {
+//    static var previews: some View {
+//        ApprovalRequestsList(registeredDevice: RegisteredDevice(email: "test@test.com", deviceKey: .sample, encryptedRootSeed: Data()), user: .sample, requests: [], onStatusChange: nil) {
+//        }
+//        .background(Color.Censo.primaryBackground.ignoresSafeArea())
+//    }
+//}
 #endif

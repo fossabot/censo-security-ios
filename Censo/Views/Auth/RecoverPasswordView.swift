@@ -87,16 +87,16 @@ struct RecoverPasswordView: View {
     private func recoverPassword() {
         isLoading = true
 
-        censoApi.provider.request(.resetPassword(username)) { result in
-            isLoading = false
-
-            switch result {
-            case .failure(let error):
-                currentAlert = .recoverPasswordError(error)
-            case .success:
-                currentAlert = .success
-            }
-        }
+//        censoApi.provider.request(.resetPassword(username)) { result in
+//            isLoading = false
+//
+//            switch result {
+//            case .failure(let error):
+//                currentAlert = .recoverPasswordError(error)
+//            case .success:
+//                currentAlert = .success
+//            }
+//        }
     }
     
     private func close() {

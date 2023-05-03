@@ -25,17 +25,17 @@ struct AddressBookUpdateDetails: View {
 
 
 #if DEBUG
-struct AddressBookUpdateDetails_Previews: PreviewProvider {
-    static var previews: some View {
-        AddressBookUpdateDetails(request: .sample, update: .sample)
-
-        let timerPublisher = Timer.TimerPublisher(interval: 1, runLoop: .current, mode: .default).autoconnect()
-
-        NavigationView {
-            ApprovalRequestDetails(registeredDevice: RegisteredDevice(email: "test@test.com", deviceKey: .sample, encryptedRootSeed: Data()), user: .sample, request: .sample, timerPublisher: timerPublisher) {
-                AddressBookUpdateDetails(request: .sample, update: .sample)
-            }
-        }
-    }
-}
+//struct AddressBookUpdateDetails_Previews: PreviewProvider {
+//    static var previews: some View {
+//        AddressBookUpdateDetails(request: .sample, update: .sample)
+//
+//        let timerPublisher = Timer.TimerPublisher(interval: 1, runLoop: .current, mode: .default).autoconnect()
+//
+//        NavigationView {
+//            ApprovalRequestDetails(registeredDevice: RegisteredDevice(email: "test@test.com", deviceKey: .sample, encryptedRootSeed: Data()), user: .sample, request: .sample, timerPublisher: timerPublisher) {
+//                AddressBookUpdateDetails(request: .sample, update: .sample)
+//            }
+//        }
+//    }
+//}
 #endif

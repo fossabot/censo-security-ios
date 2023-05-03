@@ -12,80 +12,65 @@ import raygun4apple
 struct KeyRetrieval: View {
     @Environment(\.censoApi) var censoApi
 
-    @RemoteResult private var recoveryShardsResponse: CensoApi.RecoveryShardsResponse?
+    @State private var showingErrorAlert = false
+    @State private var error: Error? = nil
+    @State private var recovering = false
 
     var user: CensoApi.User
     var registeredPublicKeys: [CensoApi.PublicKey]
     var deviceKey: DeviceKey
+    var registrationController: DeviceRegistrationController
     var onSuccess: () -> Void
 
     var body: some View {
-        Group {
-            switch $recoveryShardsResponse {
-            case .idle:
-                CensoProgressView(text: "Loading your recovery...")
-                    .onAppear(perform: reload)
-            case .loading:
-                CensoProgressView(text: "Loading your recovery...")
-            case .success(let response):
-                VStack {
-                    Spacer()
+        VStack {
+            Spacer()
 
-                    Image(systemName: "key")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(height: 150)
-                        .padding(40)
+            Image(systemName: "key")
+                .resizable()
+                .aspectRatio(contentMode: .fit)
+                .frame(height: 150)
+                .padding(40)
 
-                    Text("It's time to recover your private key")
-                        .font(.system(size: 26).bold())
-                        .multilineTextAlignment(.center)
-                        .padding(20)
+            Text("It's time to recover your private key")
+                .font(.system(size: 26).bold())
+                .multilineTextAlignment(.center)
+                .padding(20)
 
-                    Button {
-                        recover(response: response)
-                    } label: {
-                        Text("Recover")
-                            .frame(maxWidth: .infinity)
-                    }
-                    .padding([.leading, .trailing], 30)
-
-                    Spacer()
-                }
-            case .failure(let error):
-                RetryView(error: error, action: reload)
+            Button {
+                recover()
+            } label: {
+                Text("Recover")
+                    .frame(maxWidth: .infinity)
             }
+            .padding([.leading, .trailing], 30)
+            .disabled(recovering)
+
+            Spacer()
         }
         .buttonStyle(FilledButtonStyle())
         .background(CensoBackground())
         .foregroundColor(.Censo.primaryForeground)
+        .alert("Error", isPresented: $showingErrorAlert, presenting: error, actions: { _ in
+            Button("Ok", action: {})
+        }, message: { error in
+            Text("There was an error trying to recover your private key: \(error.localizedDescription)")
+        })
     }
 
-    var loader: MoyaLoader<CensoApi.RecoveryShardsResponse, CensoApi.Target> {
-        MoyaLoader(provider: censoApi.provider, target: .recoveryShards(deviceIdentifier: try! deviceKey.publicExternalRepresentation().base58String))
-    }
+    func recover() {
+        recovering = true
 
-    private func reload() {
-        _recoveryShardsResponse.reload(using: loader)
-    }
+        registrationController.recover(deviceKey: deviceKey, registeredPublicKeys: registeredPublicKeys) { result in
+            recovering = false
 
-    func recover(response: CensoApi.RecoveryShardsResponse) {
-        AuthenticatedKeys.withAuhenticatedKeys(from: user.loginName) { result in
             switch result {
-            case .success(let keys):
-                do {
-                    let recoveredRootSeed = try ShardRecovery.recoverRootSeed(recoverShardResponse: response, deviceKey: keys.deviceKey, bootstrapKey: keys.bootstrapKey)
-                    try registeredPublicKeys.validateRootSeed(recoveredRootSeed)
-                    try Keychain.saveRootSeed(recoveredRootSeed, email: user.loginName, deviceKey: deviceKey)
-
-                    onSuccess()
-                } catch {
-                    RaygunClient.sharedInstance().send(error: error, tags: ["recovery-error"], customData: nil)
-
-                    _recoveryShardsResponse.content = .failure(error)
-                }
+            case .success(let registeredDevice):
+                registrationController.completeRegistration(with: registeredDevice)
+                onSuccess()
             case .failure(let error):
-                _recoveryShardsResponse.content = .failure(error)
+                showingErrorAlert = true
+                self.error = error
             }
         }
     }
@@ -110,11 +95,11 @@ extension Array where Element == CensoApi.PublicKey {
 }
 
 #if DEBUG
-struct KeyRetrieval_Previews: PreviewProvider {
-    static var previews: some View {
-        NavigationView {
-            KeyRetrieval(user: .sample, registeredPublicKeys: [], deviceKey: .sample, onSuccess: {})
-        }
-    }
-}
+//struct KeyRetrieval_Previews: PreviewProvider {
+//    static var previews: some View {
+//        NavigationView {
+//            KeyRetrieval(user: .sample, registeredPublicKeys: [], deviceKey: .sample, onSuccess: {}, authProvider: )
+//        }
+//    }
+//}
 #endif

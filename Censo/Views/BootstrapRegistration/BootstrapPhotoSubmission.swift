@@ -22,6 +22,7 @@ struct BootstrapPhotoSubmission: View {
     var uiImage: UIImage
     var deviceKey: DeviceKey
     var bootstrapKey: BootstrapKey
+    var registrationController: DeviceRegistrationController
     var onSuccess: () -> Void
     var onRetake: () -> Void
 
@@ -62,36 +63,18 @@ struct BootstrapPhotoSubmission: View {
 
         do {
             let rootSeed = try Mnemonic(phrase: phrase).seed
-            let devicePublicKeyData = try deviceKey.publicExternalRepresentation()
-            let devicePublicKey = devicePublicKeyData.base58String
-
-            let bootstrapUserDeviceAndSigners = try CensoApi.BootstrapUserDeviceAndSigners(
-                imageData: imageData,
-                deviceKey: deviceKey,
-                bootstrapKey: bootstrapKey,
-                rootSeed: rootSeed
-            )
 
             inProgress = true
 
-            censoApi.provider.request(.boostrapDeviceAndSigners(bootstrapUserDeviceAndSigners, devicePublicKey: devicePublicKey)) { result in
+            registrationController.register(rootSeed: rootSeed, deviceKey: deviceKey, bootstrapKey: bootstrapKey, imageData: imageData) { result in
                 inProgress = false
 
                 switch result {
+                case .success(let registeredDevice):
+                    registrationController.completeRegistration(with: registeredDevice)
+                    onSuccess()
                 case .failure(let error):
                     self.error = error
-                    self.alertPresented = true
-                case .success(let response) where response.statusCode < 400:
-                    do {
-                        try Keychain.saveRootSeed(rootSeed, email: email, deviceKey: deviceKey)
-
-                        onSuccess()
-                    } catch {
-                        self.error = error
-                        self.alertPresented = true
-                    }
-                case .success(let response):
-                    self.error = MoyaError.statusCode(response)
                     self.alertPresented = true
                 }
             }
@@ -99,14 +82,13 @@ struct BootstrapPhotoSubmission: View {
             self.error = error
             self.alertPresented = true
         }
-
     }
 }
 
 extension CensoApi.BootstrapUserDeviceAndSigners {
-    init(imageData: Data, deviceKey: DeviceKey, bootstrapKey: BootstrapKey, rootSeed: [UInt8]) throws {
+    init(imageData: Data, deviceKey: PreauthenticatedKey<DeviceKey>, bootstrapKey: PreauthenticatedKey<BootstrapKey>, rootSeed: [UInt8]) throws {
         self.userDevice = CensoApi.UserDevice(
-            publicKey: try deviceKey.publicExternalRepresentation().base58String,
+            publicKey: try deviceKey.key.publicExternalRepresentation().base58String,
             deviceType: .ios,
             userImage: CensoApi.UserImage(
                 image: imageData.base64EncodedString(),
@@ -125,7 +107,7 @@ extension CensoApi.BootstrapUserDeviceAndSigners {
         )
 
         self.bootstrapDevice = CensoApi.BootstrapDevice(
-            publicKey: try bootstrapKey.publicExternalRepresentation().base58String,
+            publicKey: try bootstrapKey.key.publicExternalRepresentation().base58String,
             signature: try bootstrapKey.signature(for: signersInfo.signers.dataToSign).base64EncodedString()
         )
     }

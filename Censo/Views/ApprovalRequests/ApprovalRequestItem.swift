@@ -75,7 +75,7 @@ struct ApprovalRequestItem: View {
         case .enableDevice(let userDevice):
             ApprovalRequestRow(registeredDevice: registeredDevice, user: user, request: request, timerPublisher: timerPublisher, onApprove: {
                 if userDevice.targetShardingPolicy != nil {
-                    registeredDevice.removeBootstrapKey()
+                    try? registeredDevice.deviceKey.removeBootstrapKey()
                 }
 
                 onStatusChange?()
@@ -104,7 +104,7 @@ struct ApprovalRequestItem: View {
             }
         case .orgAdminPolicyUpdate(let orgAdminPolicyUpdate): // 1
             ApprovalRequestRow(registeredDevice: registeredDevice, user: user, request: request, timerPublisher: timerPublisher, onApprove: {
-                registeredDevice.removeBootstrapKey()
+                try? registeredDevice.deviceKey.removeBootstrapKey()
                 onStatusChange?()
             }, onDecline: onStatusChange) {
                 OrgAdminPolicyRow(requestType: request.details, update: orgAdminPolicyUpdate)

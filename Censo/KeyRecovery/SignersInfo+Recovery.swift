@@ -9,7 +9,7 @@ import Foundation
 import BigInt
 
 extension CensoApi.SignersInfo {
-    init(shardingPolicy: ShardingPolicy, rootSeed: [UInt8], deviceKey: DeviceKey) throws {
+    init(shardingPolicy: ShardingPolicy, rootSeed: [UInt8], deviceKey: PreauthenticatedKey<DeviceKey>) throws {
         let privateKeys = try PrivateKeys(rootSeed: rootSeed)
         let signers = privateKeys.publicKeys.walletSigners
 

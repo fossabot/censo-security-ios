@@ -9,37 +9,39 @@ import Foundation
 import LocalAuthentication
 
 struct BootstrapKey: SecureEnclaveKey {
+    let identifier: String
     let secKey: SecKey
 
-    fileprivate init(secKey: SecKey) {
+    fileprivate init(identifier: String, secKey: SecKey) {
         self.secKey = secKey
+        self.identifier = identifier
     }
 }
 
-extension SecureEnclaveWrapper {
-    static func bootstrapKeyIdentifier(email: String) -> String {
-        let email = email.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
-        return "bootstrapKey-\(email)"
+extension DeviceKey {
+    func bootstrapKeyIdentifier() throws -> String {
+        let identifier = try publicExternalRepresentation().base64EncodedString()
+        return "bootstrapKey-\(identifier)"
     }
 
-    static func bootstrapKey(email: String, authenticationContext: LAContext? = nil) -> BootstrapKey? {
-        guard let secKey = loadKey(name: bootstrapKeyIdentifier(email: email), authenticationContext: authenticationContext) else {
+    func bootstrapKey(authenticationContext: LAContext? = nil) throws -> BootstrapKey? {
+        guard let secKey = SecureEnclaveWrapper.loadKey(name: try bootstrapKeyIdentifier(), authenticationContext: authenticationContext) else {
             return nil
         }
 
-        return BootstrapKey(secKey: secKey)
+        return BootstrapKey(identifier: try bootstrapKeyIdentifier(), secKey: secKey)
     }
 
-    static func generateBootstrapKey(email: String, authenticationContext: LAContext? = nil) throws -> BootstrapKey {
-        if let bootstrapKey = bootstrapKey(email: email, authenticationContext: authenticationContext) {
+    func generateBootstrapKey(authenticationContext: LAContext? = nil) throws -> BootstrapKey {
+        if let bootstrapKey = try bootstrapKey(authenticationContext: authenticationContext) {
             return bootstrapKey
         } else {
-            let secKey = try makeAndStoreKey(name: bootstrapKeyIdentifier(email: email), authenticationContext: authenticationContext)
-            return BootstrapKey(secKey: secKey)
+            let secKey = try SecureEnclaveWrapper.makeAndStoreKey(name: try bootstrapKeyIdentifier(), authenticationContext: authenticationContext)
+            return BootstrapKey(identifier: try bootstrapKeyIdentifier(), secKey: secKey)
         }
     }
 
-    static func removeBootstrapKey(email: String) {
-        removeKey(name: bootstrapKeyIdentifier(email: email))
+    func removeBootstrapKey() throws {
+        SecureEnclaveWrapper.removeKey(name: try bootstrapKeyIdentifier())
     }
 }
