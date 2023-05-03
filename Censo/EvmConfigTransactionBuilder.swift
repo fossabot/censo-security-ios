@@ -207,7 +207,7 @@ public class EvmConfigTransactionBuilder {
     }
     
     private class func getContractAddressByName(name: String, contractAddresses: [ContractNameAndAddress]) -> String? {
-        return contractAddresses.first(where: { $0.name.lowercased() == name.lowercased() })?.address
+        return contractAddresses.first(where: { $0.name.lowercased() == name.lowercased() && !$0.deprecated })?.address
     }
     
     static func calculateRecoveryContractAddress(guardAddress: String, vaultAddress: String, fallbackHandlerAddress: String, setupAddress: String, orgName: String, owners: [String], threshold: Bignum) -> String {
