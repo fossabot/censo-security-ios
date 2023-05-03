@@ -9,7 +9,11 @@ import Foundation
 import CryptoKit
 
 extension CensoApi.OrgAdminRecoveredDeviceAndSigners {
+<<<<<<< HEAD
     init(imageData: Data, deviceKey: PreauthenticatedKey<DeviceKey>, rootSeed: [UInt8], shardingPolicy: ShardingPolicy, participantId: String) throws {
+=======
+    init(imageData: Data, deviceKey: DeviceKey, rootSeed: [UInt8], shardingPolicy: ShardingPolicy, participantId: String, bootstrapParticipantId: String?) throws {
+>>>>>>> 5d9548d (bootstrap user fix)
         self.userDevice = CensoApi.UserDevice(
             publicKey: try deviceKey.key.publicExternalRepresentation().base58String,
             deviceType: .ios,
@@ -23,8 +27,10 @@ extension CensoApi.OrgAdminRecoveredDeviceAndSigners {
 
         let updatedShardingPolicy = ShardingPolicy(
             policyRevisionGuid: shardingPolicy.policyRevisionGuid,
-            threshold: shardingPolicy.threshold,
-            participants: try shardingPolicy.participants.map({
+            threshold: bootstrapParticipantId != nil ? 1 : shardingPolicy.threshold,
+            participants: try shardingPolicy.participants.filter(
+                { $0.participantId != bootstrapParticipantId }
+            ).map({
                 if $0.participantId == participantId {
                     return ShardingParticipant(participantId: participantId, devicePublicKeys: [try deviceKey.key.publicExternalRepresentation().base58String])
                 } else {
