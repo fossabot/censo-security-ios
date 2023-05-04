@@ -35,6 +35,12 @@ elif [[ $ENVIRONMENT == 'develop' ]]; then
   export CONFIGURATION="Release (Develop)"
   export PROVISIONING_PROFILE="Censo Mobile Dev AppStore"
   export RAYGUN_APPLICATION_ID="283703j"
+elif [[ $ENVIRONMENT == 'local' ]]; then
+  export ICON_RIBBON="Dev"
+  export SCHEME="Censo (Develop)"
+  export CONFIGURATION="Release (Develop)"
+  export PROVISIONING_PROFILE="Censo Mobile Dev AppStore"
+  export RAYGUN_APPLICATION_ID="283703j"
 elif [[ $ENVIRONMENT == 'preprod' ]]; then
   export ICON_RIBBON="Preprod"
   export SCHEME="Censo (Preprod)"
@@ -48,7 +54,8 @@ elif [[ $ENVIRONMENT == 'demo2' ]]; then
   export PROVISIONING_PROFILE="Censo Mobile Demo 2 AppStore"
   export RAYGUN_APPLICATION_ID="283706g"
 else
-  echo "Unknown environment. Use one of 'develop', 'preprod', 'demo2' or 'production'"
+  echo "Unknown environment. Use one of 'develop', 'preprod', 'demo2', 'local' or 'production'"
+  exit 1
 fi
 
 # Read AppleID credentials
@@ -84,6 +91,8 @@ fi
 export EXPORT_OPTIONS_PLIST="Censo/ExportOptions.plist"
 ./.github/scripts/export_ipa.sh
 
-./.github/scripts/publish_testflight.sh
+if [[ $ENVIRONMENT != "local" ]]; then
+   ./.github/scripts/publish_testflight.sh
+fi
 
 git checkout Censo/Assets.xcassets/AppIcon.appiconset/.
