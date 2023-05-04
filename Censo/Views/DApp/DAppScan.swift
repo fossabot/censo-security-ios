@@ -16,8 +16,15 @@ struct DAppScan: View {
     @StateObject private var controller = CaptureController()
 
     @State private var alert: AlertType? = nil
-    @State private var requestInProgress = false
-    @State private var connectedWallt: CensoApi.ConnectedWallet? = nil
+    @State private var connectionState: ConnectionState = .idle
+
+    enum ConnectionState {
+        case idle
+        case validating
+        case connecting(topic: String)
+        case finished(CensoApi.WalletConnectSession)
+        case failed(Error)
+    }
 
     enum AlertType {
         case error(Error)
@@ -26,9 +33,24 @@ struct DAppScan: View {
     var body: some View {
         NavigationView {
             Group {
-                switch (connectedWallt, controller.state) {
-                case (.some(let connectedWallet), _):
-                    WalletConnected(connectedWallet: connectedWallet)
+                switch (connectionState, controller.state) {
+                case (.finished(let walletConnectSession), _):
+                    WalletSession(walletConnectSession: walletConnectSession) {
+                        connectionState = .idle
+                    }
+                case (.failed(let error), _):
+                    VStack {
+                        Text("Failed")
+                        Text(error.localizedDescription)
+
+                        Button {
+                            connectionState = .idle
+                        } label: {
+                            Text("Try Again")
+                        }
+                    }
+                case (.connecting(let topic), _):
+                    ConnectingWallet(connectionState: $connectionState, topic: topic)
                 case (_, .starting):
                     ProgressView {
                         Text("Starting capture device")
@@ -38,7 +60,12 @@ struct DAppScan: View {
                 case (_, .notAvailable(let error)):
                     Text("Unable to start scan: \(error.localizedDescription)")
                 case (_, .stopped):
-                    Text("Scan paused")
+                    ProgressView {
+                        Text("Starting capture device")
+                    }
+                    .onAppear {
+                        controller.restartCapture()
+                    }
                 case (_, .running(let session)):
                     ZStack {
                         CameraPreview(session: session)
@@ -49,12 +76,11 @@ struct DAppScan: View {
                                     .foregroundColor(.black)
                                     .opacity(0.7)
 
-                                if requestInProgress {
+                                switch connectionState {
+                                case .validating:
                                     ProgressView("Validating QR code")
-                                        .foregroundColor(.white)
-                                } else {
+                                default:
                                     Text("Point the camera at the DApp's QR code")
-                                        .foregroundColor(.white)
                                 }
                             }
 
@@ -110,7 +136,7 @@ struct DAppScan: View {
     }
 
     private func didReceiveNewCode(_ code: String?) {
-        guard !requestInProgress, alert == nil else {
+        guard case .idle = connectionState, alert == nil else {
             return
         }
 
@@ -118,21 +144,25 @@ struct DAppScan: View {
             return
         }
 
-        requestInProgress = true
+        guard let topic = code.components(separatedBy: "@2").first?.dropFirst(3) else {
+            return
+        }
 
-        censoApi.provider.decodableRequest(.connectDApp(code: code), completionQueue: nil) { (result: Result<CensoApi.ConnectedWallet, MoyaError>) in
+        connectionState = .validating
+
+        censoApi.provider.request(.connectDApp(code: code)) { result in
             switch result {
-            case .failure(MoyaError.statusCode(let response)):
+            case .success(let response) where response.statusCode >= 400:
                 let decoder = JSONDecoder()
                 let error = try? decoder.decode(CensoApi.WalletConnectionError.self, from: response.data)
                 alert = .error(error ?? MoyaError.statusCode(response))
+                connectionState = .idle
             case .failure(let error):
                 alert = .error(error)
-            case .success(let connectedWallet):
-                self.connectedWallt = connectedWallet
+                connectionState = .idle
+            case .success:
+                connectionState = .connecting(topic: String(topic))
             }
-
-            requestInProgress = false
         }
     }
 }
@@ -145,3 +175,5 @@ extension DAppScan.AlertType: Identifiable {
         }
     }
 }
+
+

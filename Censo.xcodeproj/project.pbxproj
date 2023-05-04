@@ -40,7 +40,7 @@
 		3D11A60327580D3F008C03B1 /* DAppScan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D11A60227580D3F008C03B1 /* DAppScan.swift */; };
 		3D11A60527580D81008C03B1 /* CameraPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D11A60427580D81008C03B1 /* CameraPreview.swift */; };
 		3D11A60727581510008C03B1 /* CameraAccessRequired.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D11A60627581510008C03B1 /* CameraAccessRequired.swift */; };
-		3D11A60B275851BA008C03B1 /* WalletConnected.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D11A60A275851BA008C03B1 /* WalletConnected.swift */; };
+		3D11A60B275851BA008C03B1 /* WalletSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D11A60A275851BA008C03B1 /* WalletSession.swift */; };
 		3D11A60D27585F72008C03B1 /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D11A60C27585F72008C03B1 /* ImageLoader.swift */; };
 		3D1436C729E4A4D000CDB6CE /* ShardRecovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1436C629E4A4D000CDB6CE /* ShardRecovery.swift */; };
 		3D1436C929EE406200CDB6CE /* VerificationTokenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1436C829EE406100CDB6CE /* VerificationTokenView.swift */; };
@@ -50,6 +50,7 @@
 		3D1AF119298C2D3C00A01E43 /* CameraNotAvailable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1AF118298C2D3C00A01E43 /* CameraNotAvailable.swift */; };
 		3D1C762227DA850A0016BB32 /* Base58.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1C762127DA850A0016BB32 /* Base58.swift */; };
 		3D1C762627DA89690016BB32 /* MoyaProvider+AsynAwait.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1C762527DA89690016BB32 /* MoyaProvider+AsynAwait.swift */; };
+		3D2A2A822A0419C60024BA88 /* ConnectingWallet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2A2A812A0419C60024BA88 /* ConnectingWallet.swift */; };
 		3D2BCA08264D7A79000A6D56 /* ChangeDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2BCA07264D7A79000A6D56 /* ChangeDetails.swift */; };
 		3D2CE49925F8423800137E05 /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2CE49625F8423800137E05 /* SignInView.swift */; };
 		3D2CE49A25F8423800137E05 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D2CE49825F8423800137E05 /* RootView.swift */; };
@@ -255,7 +256,7 @@
 		3D11A60227580D3F008C03B1 /* DAppScan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DAppScan.swift; sourceTree = "<group>"; };
 		3D11A60427580D81008C03B1 /* CameraPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraPreview.swift; sourceTree = "<group>"; };
 		3D11A60627581510008C03B1 /* CameraAccessRequired.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraAccessRequired.swift; sourceTree = "<group>"; };
-		3D11A60A275851BA008C03B1 /* WalletConnected.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletConnected.swift; sourceTree = "<group>"; };
+		3D11A60A275851BA008C03B1 /* WalletSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletSession.swift; sourceTree = "<group>"; };
 		3D11A60C27585F72008C03B1 /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
 		3D1436C629E4A4D000CDB6CE /* ShardRecovery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShardRecovery.swift; sourceTree = "<group>"; };
 		3D1436C829EE406100CDB6CE /* VerificationTokenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationTokenView.swift; sourceTree = "<group>"; };
@@ -265,6 +266,7 @@
 		3D1AF118298C2D3C00A01E43 /* CameraNotAvailable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraNotAvailable.swift; sourceTree = "<group>"; };
 		3D1C762127DA850A0016BB32 /* Base58.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Base58.swift; sourceTree = "<group>"; };
 		3D1C762527DA89690016BB32 /* MoyaProvider+AsynAwait.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "MoyaProvider+AsynAwait.swift"; sourceTree = "<group>"; };
+		3D2A2A812A0419C60024BA88 /* ConnectingWallet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectingWallet.swift; sourceTree = "<group>"; };
 		3D2BCA07264D7A79000A6D56 /* ChangeDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeDetails.swift; sourceTree = "<group>"; };
 		3D2CE49625F8423800137E05 /* SignInView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
 		3D2CE49825F8423800137E05 /* RootView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
@@ -527,7 +529,8 @@
 			children = (
 				3D11A60227580D3F008C03B1 /* DAppScan.swift */,
 				3D11A60627581510008C03B1 /* CameraAccessRequired.swift */,
-				3D11A60A275851BA008C03B1 /* WalletConnected.swift */,
+				3D11A60A275851BA008C03B1 /* WalletSession.swift */,
+				3D2A2A812A0419C60024BA88 /* ConnectingWallet.swift */,
 			);
 			path = DApp;
 			sourceTree = "<group>";
@@ -1244,7 +1247,7 @@
 				3D7FFFEF27FA0F88003B3F48 /* DAppTransactionDetails.swift in Sources */,
 				3DB995FD27EB79A4005655F0 /* WalletCreationDetails.swift in Sources */,
 				3D11520728216FBD007CD43D /* WalletTransferPolicyRow.swift in Sources */,
-				3D11A60B275851BA008C03B1 /* WalletConnected.swift in Sources */,
+				3D11A60B275851BA008C03B1 /* WalletSession.swift in Sources */,
 				3D11A60027580CD2008C03B1 /* CaptureController.swift in Sources */,
 				3D10290D29E070C800EC5A6C /* BootstrapKey.swift in Sources */,
 				3D1028EE29DDD10300EC5A6C /* ShardingPolicy+Bootstrap.swift in Sources */,
@@ -1306,6 +1309,7 @@
 				3D1028EF29DDD10300EC5A6C /* BigInt+Recovery.swift in Sources */,
 				3D10290529E06D2400EC5A6C /* DevicePhotoSubmission.swift in Sources */,
 				3D1C762627DA89690016BB32 /* MoyaProvider+AsynAwait.swift in Sources */,
+				3D2A2A822A0419C60024BA88 /* ConnectingWallet.swift in Sources */,
 				40A9AF0425DF32B9004320EF /* FactList.swift in Sources */,
 				3DF5F69C29F75908005B3D85 /* DeviceRegistrationController.swift in Sources */,
 				3D1028E829DDD0CC00EC5A6C /* SeedRecovery.swift in Sources */,

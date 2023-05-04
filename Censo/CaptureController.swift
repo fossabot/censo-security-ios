@@ -9,7 +9,7 @@ import Foundation
 import AVFoundation
 
 class CaptureController: NSObject, ObservableObject {
-    @Published fileprivate(set) var state: CaptureState = .starting
+    @Published fileprivate(set) var state: CaptureState = .stopped
     @Published fileprivate(set) var code: String?
 
     private let session = AVCaptureSession()
@@ -28,52 +28,61 @@ class CaptureController: NSObject, ObservableObject {
         case deviceUnableToCaptureCode
     }
 
-    override init() {
-        super.init()
-
+    func restartCapture() {
         guard let device = captureDevice else {
             state = .notAvailable(CaptureDeviceError.noCaptureDevice)
             return
         }
 
-        do {
-            let videoInput = try AVCaptureDeviceInput(device: device)
-            let metadataOutput = AVCaptureMetadataOutput()
-            let videoOutput = AVCaptureVideoDataOutput()
+        videoQueue.async { [weak self] in
+            do {
+                let session = AVCaptureSession()
+                let videoInput = try AVCaptureDeviceInput(device: device)
+                let metadataOutput = AVCaptureMetadataOutput()
+                let videoOutput = AVCaptureVideoDataOutput()
 
-            guard session.canAddInput(videoInput),
-                  session.canAddOutput(metadataOutput),
-                  session.canAddOutput(videoOutput) else {
-                state = .notAvailable(CaptureDeviceError.deviceUnableToCaptureCode)
-                return
+                guard session.canAddInput(videoInput),
+                      session.canAddOutput(metadataOutput),
+                      session.canAddOutput(videoOutput) else {
+                    DispatchQueue.main.async {
+                        self?.state = .notAvailable(CaptureDeviceError.deviceUnableToCaptureCode)
+                    }
+                    return
+                }
+
+                session.addInput(videoInput)
+                session.addOutput(metadataOutput)
+                session.addOutput(videoOutput)
+
+                metadataOutput.metadataObjectTypes = [.qr]
+                metadataOutput.setMetadataObjectsDelegate(self, queue: self?.videoQueue)
+
+                session.startRunning()
+
+                DispatchQueue.main.async {
+                    self?.state = .running(session)
+                }
+            } catch {
+                DispatchQueue.main.async {
+                    self?.state = .notAvailable(error)
+                }
             }
-
-            session.addInput(videoInput)
-            session.addOutput(metadataOutput)
-            session.addOutput(videoOutput)
-
-            metadataOutput.metadataObjectTypes = [.qr]
-            metadataOutput.setMetadataObjectsDelegate(self, queue: videoQueue)
-
-            session.startRunning()
-            state = .running(session)
-        } catch {
-            state = .notAvailable(error)
         }
     }
 
-    deinit {
-        session.stopRunning()
-    }
-
-    func restartCapture() {
-        session.startRunning()
-        state = .running(session)
-    }
-
     func stopCapture() {
-        session.stopRunning()
-        state = .stopped
+        switch state {
+        case .running(let session):
+            videoQueue.async { [weak self] in
+                session.stopRunning()
+
+                DispatchQueue.main.async {
+                    self?.state = .stopped
+                }
+            }
+        default:
+            break
+        }
     }
 }
 

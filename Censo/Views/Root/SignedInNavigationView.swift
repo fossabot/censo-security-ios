@@ -16,7 +16,6 @@ struct SignedInNavigationView<Content>: View where Content : View {
 
     enum Sheet {
         case profile
-        case dapp
     }
 
     @EnvironmentObject private var viewRouter: ViewRouter
@@ -32,18 +31,18 @@ struct SignedInNavigationView<Content>: View where Content : View {
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background(Color.Censo.primaryBackground.ignoresSafeArea())
                 .navigationBarTitleDisplayMode(.inline)
-                .navigationBarItems(leading:
-                                        Button(action: { activeSheet = .profile }, label: {
-                                            Image(systemName: "person")
-                                                .foregroundColor(.Censo.primaryForeground)
-                                        })
-                )
+                .toolbar {
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        Button(action: { activeSheet = .profile }, label: {
+                            Image(systemName: "person")
+                                .foregroundColor(.Censo.primaryForeground)
+                        })
+                    }
+                }
                 .sheet(item: $activeSheet) { sheet in
                     switch sheet {
                     case .profile:
                         Profile(user: user, onSignOut: onSignOut)
-                    case .dapp:
-                        DAppScan()
                     }
                 }
                 .onReceive(viewRouter.$showSupport) { showSupport in
@@ -67,8 +66,6 @@ extension SignedInNavigationView.Sheet: Identifiable {
         switch self {
         case .profile:
             return 0
-        case .dapp:
-            return 1
         }
     }
 }

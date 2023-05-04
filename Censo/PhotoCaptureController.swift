@@ -15,7 +15,6 @@ class PhotoCaptureController: NSObject, ObservableObject {
 
     private let captureDevice = AVCaptureDevice.default(AVCaptureDevice.DeviceType.builtInWideAngleCamera, for: .video, position: .front)
     private let videoQueue = DispatchQueue(label: "video-capture-queue")
-    private var _capturePhoto: (() -> Void)?
 
     enum CaptureState {
         case starting

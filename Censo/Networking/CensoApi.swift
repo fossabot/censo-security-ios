@@ -28,8 +28,10 @@ struct CensoApi {
 
         case registerPushToken(String, deviceIdentifier: String)
         case unregisterPushToken(deviceIdentifier: String)
+
         case connectDApp(code: String)
-        
+        case checkDAppConnection(topic: String)
+
         case shards(policyRevisionId: String, userId: String?, deviceIdentifier: String)
         case recoveryShards(deviceIdentifier: String)
     }
@@ -241,6 +243,23 @@ extension CensoApi {
         var shards: [Shard]?
         var recoveryShards: [RecoveryShard]?
     }
+
+    struct WalletConnectSession: Codable {
+        var topic: String
+        var name: String
+        var url: String
+        var description: String
+        var icons: [String]
+        var status: WalletconnectSessionStatus
+        var wallets: [String]
+    }
+
+    enum WalletconnectSessionStatus: String, Codable {
+        case rejected = "Rejected"
+        case active = "Active"
+        case expired = "Expired"
+        case deleted = "Deleted"
+    }
 }
 
 struct AuthProviderPlugin: Moya.PluginType {
@@ -317,6 +336,8 @@ extension CensoApi.Target: Moya.TargetType {
             return "v1/notification-tokens/\(deviceIdentifier)/ios"
         case .connectDApp:
             return "v1/wallet-connect"
+        case .checkDAppConnection(let topic):
+            return "v1/wallet-connect/\(topic)"
         case .registerApprovalDisposition(let request, _):
             return "v2/approval-requests/\(request.requestID)/dispositions"
         case .minVersion:
@@ -336,7 +357,8 @@ extension CensoApi.Target: Moya.TargetType {
              .approvalRequests,
              .minVersion,
              .shards,
-             .recoveryShards:
+             .recoveryShards,
+             .checkDAppConnection:
             return .get
         case .connectDApp,
              .addWalletSigners,
@@ -359,7 +381,8 @@ extension CensoApi.Target: Moya.TargetType {
         case .verifyUser,
              .approvalRequests,
              .minVersion,
-             .recoveryShards:
+             .recoveryShards,
+             .checkDAppConnection:
             return .requestPlain
         case .emailVerification(let email):
             return .requestJSONEncodable([

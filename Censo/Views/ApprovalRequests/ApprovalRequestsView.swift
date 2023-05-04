@@ -13,6 +13,7 @@ struct ApprovalRequestsView: View {
     @Environment(\.censoApi) var censoApi
 
     @State private var didShowApprovalRequests = false
+    @State private var showingDAppScan = false
 
     @RemoteResult private var approvalRequests: [GracefullyDecoded<ApprovalRequest>]?
 
@@ -46,6 +47,16 @@ struct ApprovalRequestsView: View {
         .preferredColorScheme(.light)
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color.Censo.primaryBackground.ignoresSafeArea())
+        .toolbar {
+            ToolbarItem(placement: .navigationBarTrailing) {
+                Button(action: { showingDAppScan = true }, label: {
+                    Text("Connect dApp")
+                })
+            }
+        }
+        .sheet(isPresented: $showingDAppScan) {
+            DAppScan()
+        }
     }
 
     private var loader: MoyaLoader<[GracefullyDecoded<ApprovalRequest>], CensoApi.Target> {
