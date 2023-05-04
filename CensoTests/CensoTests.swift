@@ -45,11 +45,13 @@ class CensoTests: XCTestCase {
                  .ethereumWalletSettingsUpdate(let request as EvmSignable),
                  .ethereumTransferPolicyUpdate(let request as EvmSignable),
                  .ethereumWalletWhitelistUpdate(let request as EvmSignable),
+                 .ethereumDAppRequest(let request as EvmSignable),
                  .polygonWithdrawalRequest(let request as EvmSignable),
                  .polygonWalletNameUpdate(let request as EvmSignable),
                  .polygonWalletSettingsUpdate(let request as EvmSignable),
                  .polygonTransferPolicyUpdate(let request as EvmSignable),
-                 .polygonWalletWhitelistUpdate(let request as EvmSignable):
+                 .polygonWalletWhitelistUpdate(let request as EvmSignable),
+                 .polygonDAppRequest(let request as EvmSignable):
                 
                 XCTAssertEqual(
                     try request.signableData().toHexString(),

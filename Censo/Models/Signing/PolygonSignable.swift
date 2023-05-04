@@ -39,6 +39,17 @@ extension PolygonWalletWhitelistUpdate: EvmSignable {
 }
 
 
+extension PolygonDAppRequest: EvmSignable {
+    func signableData() throws -> Data {
+        switch (dappParams) {
+        case .ethSendTransaction(let ethSendTransaction):
+            return try EvmDAppTransactionBuilder.ethSendSafeHash(walletAddress: wallet.address, ethSendTransaction: ethSendTransaction, evmTransaction: signingData.transaction)
+        default:
+            return Data()
+        }
+    }
+}
+
 extension PolygonTransferPolicyUpdate: EvmSignable {
     func signableData() throws -> Data {
         let startingPolicy = try Policy(

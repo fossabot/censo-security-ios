@@ -17,13 +17,14 @@ extension String {
         case .hexadecimal:
             let hexStr = self.dropFirst(self.hasPrefix("0x") ? 2 : 0)
 
-            var newData = Data(capacity: hexStr.count/2)
+            let paddedStr = hexStr.count.isMultiple(of: 2) ? hexStr : "0" + hexStr
+            var newData = Data(capacity: paddedStr.count/2)
 
             var indexIsEven = true
-            for i in hexStr.indices {
+            for i in paddedStr.indices {
                 if indexIsEven {
-                    let byteRange = i...hexStr.index(after: i)
-                    guard let byte = UInt8(hexStr[byteRange], radix: 16) else { return nil }
+                    let byteRange = i...paddedStr.index(after: i)
+                    guard let byte = UInt8(paddedStr[byteRange], radix: 16) else { return nil }
                     newData.append(byte)
                 }
                 indexIsEven.toggle()

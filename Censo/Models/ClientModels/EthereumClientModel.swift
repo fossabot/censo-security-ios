@@ -148,27 +148,13 @@ struct EthereumWalletWhitelistUpdate: Codable, Equatable  {
     var feeSymbolInfo: EvmSymbolInfo
 }
 
-struct EthereumDAppTransactionRequest: Codable, Equatable  {
-    struct SymbolAndAmountInfo: Codable, Equatable {
-        struct SymbolInfo: Codable, Equatable {
-            let symbol: String
-            let symbolDescription: String
-        }
-
-        let symbolInfo: SymbolInfo
-        let amount: String
-        let usdEquivalent: String?
-    }
-
+struct EthereumDAppRequest: Codable, Equatable {
     var wallet: WalletInfo
+    var fee: Amount
+    var feeSymbolInfo: EvmSymbolInfo
     var dappInfo: DAppInfo
-    var balanceChanges: [SymbolAndAmountInfo]
+    var dappParams: DAppParams
     var signingData: EthereumSigningData
-}
-
-struct DAppInfo: Codable, Equatable {
-    let address: String
-    let name: String
 }
 
 #if DEBUG

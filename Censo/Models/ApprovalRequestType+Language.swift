@@ -50,8 +50,10 @@ extension ApprovalRequestType {
             return "Add Address"
         case .addressBookUpdate:
             return "Remove Address"
-        case .ethereumDAppTransactionRequest:
-            return "Execute dApp Transaction"
+        case .ethereumDAppRequest:
+            return "dApp Transaction"
+        case .polygonDAppRequest:
+            return "dApp Transaction"
         case .loginApproval:
             return "Log In"
         case .passwordReset:
@@ -136,6 +138,10 @@ extension ApprovalRequestType {
             } else {
                 return nil
             }
+        case .ethereumDAppRequest(let request):
+            return request.dappInfo.name
+        case .polygonDAppRequest(let request):
+            return request.dappInfo.name
         default:
             return nil
         }

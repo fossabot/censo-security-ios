@@ -28,6 +28,32 @@ struct ApprovalRequestItem: View {
             } detail: {
                 WithdrawalDetails(request: request, withdrawal: withdrawal)
             }
+        case .ethereumDAppRequest(let ethereumDAppRequest):
+            switch ethereumDAppRequest.dappParams {
+            case .ethSendTransaction(let ethSendTransaction):
+                ApprovalRequestRow(registeredDevice: registeredDevice, user: user, request: request, timerPublisher: timerPublisher, onApprove: onStatusChange, onDecline: onStatusChange) {
+                    DAppTransactionRow(requestType: request.details)
+                } detail: {
+                    DAppTransactionDetails(
+                        request: request, ethSendTransaction: ethSendTransaction, wallet: ethereumDAppRequest.wallet, dAppInfo: ethereumDAppRequest.dappInfo
+                    )
+                }
+            default:
+                UnknownRequestRow(request: request, timerPublisher: timerPublisher)
+            }
+        case .polygonDAppRequest(let polygonDAppRequest):
+            switch polygonDAppRequest.dappParams {
+            case .ethSendTransaction(let ethSendTransaction):
+                ApprovalRequestRow(registeredDevice: registeredDevice, user: user, request: request, timerPublisher: timerPublisher, onApprove: onStatusChange, onDecline: onStatusChange) {
+                    DAppTransactionRow(requestType: request.details)
+                } detail: {
+                    DAppTransactionDetails(
+                        request: request, ethSendTransaction: ethSendTransaction, wallet: polygonDAppRequest.wallet, dAppInfo: polygonDAppRequest.dappInfo
+                    )
+                }
+            default:
+                UnknownRequestRow(request: request, timerPublisher: timerPublisher)
+            }
         case .bitcoinWalletCreation(let walletCreation as WalletCreation),
              .ethereumWalletCreation(let walletCreation as WalletCreation),
              .polygonWalletCreation(let walletCreation as WalletCreation):
@@ -35,12 +61,6 @@ struct ApprovalRequestItem: View {
                 WalletCreationRow(requestType: request.details, walletCreation: walletCreation)
             } detail: {
                 WalletCreationDetails(request: request, walletCreation: walletCreation)
-            }
-        case .ethereumDAppTransactionRequest(let dAppTransactionRequest):
-            ApprovalRequestRow(registeredDevice: registeredDevice, user: user, request: request, timerPublisher: timerPublisher, onApprove: onStatusChange, onDecline: onStatusChange) {
-                DAppTransactionRow(requestType: request.details, transactionRequest: dAppTransactionRequest)
-            } detail: {
-                DAppTransactionDetails(request: request, transactionRequest: dAppTransactionRequest)
             }
         case .ethereumWalletNameUpdate(let nameUpdate as NameUpdate),
              .polygonWalletNameUpdate(let nameUpdate as NameUpdate),

@@ -43,9 +43,14 @@ extension EthereumWalletWhitelistUpdate: EvmSignable {
 }
 
 
-extension EthereumDAppTransactionRequest: EvmSignable {
+extension EthereumDAppRequest: EvmSignable {
     func signableData() throws -> Data {
-        Data()
+        switch (dappParams) {
+        case .ethSendTransaction(let ethSendTransaction):
+            return try EvmDAppTransactionBuilder.ethSendSafeHash(walletAddress: wallet.address, ethSendTransaction: ethSendTransaction, evmTransaction: signingData.transaction)
+        default:
+            return Data()
+        }
     }
 }
 

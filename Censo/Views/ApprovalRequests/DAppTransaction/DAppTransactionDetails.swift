@@ -10,12 +10,14 @@ import SwiftUI
 
 struct DAppTransactionDetails: View {
     var request: ApprovalRequest
-    var transactionRequest: EthereumDAppTransactionRequest
+    var ethSendTransaction: EthSendTransaction
+    var wallet: WalletInfo
+    var dAppInfo: DAppInfo
 
     var body: some View {
         VStack(alignment: .center, spacing: 10) {
-            ForEach(0..<transactionRequest.balanceChanges.count, id: \.self) { i in
-                let balanceChange = transactionRequest.balanceChanges[i]
+            ForEach(0..<ethSendTransaction.simulatedChanges.count, id: \.self) { i in
+                let balanceChange = ethSendTransaction.simulatedChanges[i]
 
                 VStack {
                     Text(balanceChange.symbolInfo.symbol)
@@ -27,11 +29,11 @@ struct DAppTransactionDetails: View {
                         .foregroundColor(Color.white)
                         .padding(EdgeInsets(top: 15, leading: 20, bottom: 0, trailing: 20))
 
-                    Text(balanceChange.amount)
+                    Text(balanceChange.amount.value)
                         .font(Font.subheadline)
-                        .foregroundColor(balanceChange.isNegative ? Color.red : Color.green)
+                        .foregroundColor(balanceChange.amount.isNegative ? Color.red : Color.green)
 
-                    if let usdEquivalent = balanceChange.formattedUSDEquivalent {
+                    if let usdEquivalent = balanceChange.amount.formattedUSDEquivalent {
                         Text(usdEquivalent)
                             .font(.caption)
                             .foregroundColor(Color.white.opacity(0.5))
@@ -39,17 +41,17 @@ struct DAppTransactionDetails: View {
                     }
 
                     HStack(spacing: 0) {
-                        AccountDetail(name: transactionRequest.dappInfo.name)
+                        AccountDetail(name: dAppInfo.name)
                             .padding(10)
                             .frame(maxWidth: .infinity, maxHeight: 40)
                             .roundedCell(background: .Censo.thirdBackground)
 
-                        Text(balanceChange.isNegative ? "←" : "→")
+                        Text(balanceChange.amount.isNegative ? "←" : "→")
                             .font(.body)
                             .foregroundColor(Color.white)
                             .frame(width: 20, height: 20)
 
-                        AccountDetail(name: transactionRequest.wallet.name)
+                        AccountDetail(name: wallet.name)
                             .padding(10)
                             .frame(maxWidth: .infinity, maxHeight: 40)
                             .roundedCell(background: .Censo.thirdBackground)
@@ -69,15 +71,27 @@ struct DAppTransactionDetails: View {
 #if DEBUG
 //struct DAppTransactionDetails_Previews: PreviewProvider {
 //    static var previews: some View {
-//        DAppTransactionDetails(request: .sample, transactionRequest: .sample)
+//        DAppTransactionDetails(request: .sample, ethSendTransaction: .sample, wallet: .sample, dAppInfo: .sample)
 //
 //        let timerPublisher = Timer.TimerPublisher(interval: 1, runLoop: .current, mode: .default).autoconnect()
 //
 //        NavigationView {
 //            ApprovalRequestDetails(registeredDevice: RegisteredDevice(email: "test@test.com", deviceKey: .sample, encryptedRootSeed: Data()), user: .sample, request: .sample, timerPublisher: timerPublisher) {
-//                DAppTransactionDetails(request: .sample, transactionRequest: .sample)
+//                DAppTransactionDetails(request: .sample, ethSendTransaction: .sample, wallet: .sample, dAppInfo: .sample)
 //            }
 //        }
+//    }
+//}
+//
+//extension EthSendTransaction {
+//    static var sample: Self {
+//        EthSendTransaction(simulatedChanges: [
+//            EvmSimulatedChange(
+//                amount: Amount(value: "1.23", nativeValue: "1.23000", usdEquivalent: "2.34"),
+//                symbolInfo: EvmSymbolInfo(symbol: "PEPE", description: "Pepe Token", tokenInfo: nil, imageUrl: nil, nftMetadata: nil))
+//        ],
+//        transaction: EvmTransactionParams(from: "0x01010101", to: "0x02020202", value: "0x", data: "0x")
+//        )
 //    }
 //}
 #endif

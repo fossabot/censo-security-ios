@@ -10,7 +10,6 @@ import SwiftUI
 
 struct DAppTransactionRow: View {
     var requestType: ApprovalRequestType
-    var transactionRequest: EthereumDAppTransactionRequest
 
     var body: some View {
         VStack(spacing: 8) {
@@ -20,111 +19,55 @@ struct DAppTransactionRow: View {
                 .allowsTightening(true)
                 .minimumScaleFactor(0.25)
                 .padding(EdgeInsets(top: 16, leading: 20, bottom: 0, trailing: 20))
-
-            ForEach(0..<transactionRequest.balanceChanges.count, id: \.self) { i in
-                let balanceChange = transactionRequest.balanceChanges[i]
-
-                VStack {
-                    Text(balanceChange.symbolInfo.symbol)
-                        .font(.title2)
-                        .bold()
-                        .lineLimit(1)
-                        .allowsTightening(true)
-                        .minimumScaleFactor(0.25)
-                        .padding(EdgeInsets(top: 15, leading: 20, bottom: 0, trailing: 20))
-
-                    Text(balanceChange.amount)
-                        .font(Font.subheadline)
-                        .foregroundColor(balanceChange.isNegative ? Color.red : Color.green)
-
-                    if let usdEquivalent = balanceChange.formattedUSDEquivalent {
-                        Text(usdEquivalent)
-                            .font(.caption)
-                            .foregroundColor(Color.white.opacity(0.5))
-                            .padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20))
-                    }
-
-                    HStack(spacing: 0) {
-                        AccountDetail(name: transactionRequest.dappInfo.name)
-                            .padding(10)
-                            .frame(maxWidth: .infinity, maxHeight: 40)
-                            .roundedCell()
-
-                        Text(balanceChange.isNegative ? "←" : "→")
-                            .font(.body)
-                            .frame(width: 20, height: 20)
-
-                        AccountDetail(name: transactionRequest.wallet.name)
-                            .padding(10)
-                            .frame(maxWidth: .infinity, maxHeight: 40)
-                            .roundedCell()
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding(EdgeInsets(top: 5, leading: 14, bottom: 5, trailing: 14))
-                }
-            }
-            .padding([.bottom], 15)
+            
+            Text(requestType.subHeader!)
+                .font(.title3)
+                .foregroundColor(Color.Censo.primaryForeground.opacity(0.7))
+                .padding(EdgeInsets(top: 2, leading: 20, bottom: 20, trailing: 20))
         }
     }
 }
 
-extension EthereumDAppTransactionRequest.SymbolAndAmountInfo {
-    var formattedUSDEquivalent: String? {
-        guard let amount = usdEquivalent, let decimalValue = Decimal(string: amount) else {
-            return nil
-        }
-
-        return "$\(NumberFormatter.usdFormatter.string(from: NSDecimalNumber(decimal: decimalValue)) ?? "0")"
-    }
-
-    var formattedAmount: String {
-        var split = amount.split(separator: ".").map { String($0) }
-
-        guard let wholePart = Int(split.removeFirst()) else {
-            return amount
-        }
-
-        let wholePartString = NumberFormatter.separatorFormatter.string(from: NSNumber(integerLiteral: wholePart)) ?? "0"
-
-        split.insert(wholePartString, at: 0)
-
-        return split.joined(separator: ".")
-    }
-
-    var isNegative: Bool {
-        amount.first == "-"
-    }
-}
 
 #if DEBUG
 struct DapTransactionRow_Previews: PreviewProvider {
     static var previews: some View {
-        DAppTransactionRow(requestType: .ethereumDAppTransactionRequest(.sample), transactionRequest: EthereumDAppTransactionRequest.sample)
+        DAppTransactionRow(requestType: .ethereumDAppRequest(.sample))
             .preferredColorScheme(.light)
     }
 }
 
-extension EthereumDAppTransactionRequest {
+extension EthereumDAppRequest {
     static var sample: Self {
-        EthereumDAppTransactionRequest(wallet: .sample, dappInfo: .sample, balanceChanges: [.sample, .sample], signingData: .sample)
-    }
-}
-
-extension EthereumDAppTransactionRequest.SymbolAndAmountInfo {
-    static var sample: Self {
-        EthereumDAppTransactionRequest.SymbolAndAmountInfo(symbolInfo: .sample, amount: "12.3", usdEquivalent: "1.23")
-    }
-}
-
-extension EthereumDAppTransactionRequest.SymbolAndAmountInfo.SymbolInfo {
-    static var sample: Self {
-        EthereumDAppTransactionRequest.SymbolAndAmountInfo.SymbolInfo(symbol: "SOL", symbolDescription: "Solana")
+        EthereumDAppRequest(
+            wallet: .sample,
+            fee: Amount(value: "0.0012", nativeValue: "0.001234", usdEquivalent: "2.34"),
+            feeSymbolInfo: EvmSymbolInfo(symbol: "ETH", description: "Ethereum", tokenInfo: nil, imageUrl: nil, nftMetadata: nil),
+            dappInfo: .sample,
+            dappParams: .sample,
+            signingData: .sample
+        )
     }
 }
 
 extension DAppInfo {
     static var sample: Self {
-        DAppInfo(address: "dgfdg3tregdfg", name: "Sample DApp")
+        DAppInfo(name: "Sample DApp", url: "dapp.url", description: "Sample Description", icons: [])
+    }
+}
+
+extension DAppParams {
+    static var sample: Self {
+        DAppParams.ethSendTransaction(
+            EthSendTransaction(
+                simulatedChanges: [
+                    EvmSimulatedChange(
+                        amount: Amount(value: "1.23", nativeValue: "1.23000", usdEquivalent: "2.34"),
+                        symbolInfo: EvmSymbolInfo(symbol: "PEPE", description: "Pepe Token", tokenInfo: nil, imageUrl: nil, nftMetadata: nil))
+                ],
+                transaction: EvmTransactionParams(from: "0x01010101", to: "0x02020202", value: "0x", data: "0x")
+            )
+        )
     }
 }
 
