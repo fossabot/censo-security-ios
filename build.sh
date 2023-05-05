@@ -3,10 +3,12 @@
 set -eo pipefail
 
 ENVIRONMENT="production"
+PUBLISH=false
 
 while [[ $# -gt 0 ]]
 do
 key="$1"
+
 
 case $key in
     -e|--environment)
@@ -14,10 +16,15 @@ case $key in
     shift # past argument
     shift # past value
     ;;
+    -p|--publish)
+    PUBLISH=true
+    shift # past argument
+    ;;
     *)    # unknown option
     shift # past argument
     ;;
 esac
+
 done
 
 # Setup environment
@@ -48,7 +55,8 @@ elif [[ $ENVIRONMENT == 'demo2' ]]; then
   export PROVISIONING_PROFILE="Censo Mobile Demo 2 AppStore"
   export RAYGUN_APPLICATION_ID="283706g"
 else
-  echo "Unknown environment. Use one of 'develop', 'preprod', 'demo2' or 'production'"
+  echo "Unknown environment. Use one of 'develop', 'preprod', 'demo2',or 'production'"
+  exit 1
 fi
 
 # Read AppleID credentials
@@ -84,6 +92,8 @@ fi
 export EXPORT_OPTIONS_PLIST="Censo/ExportOptions.plist"
 ./.github/scripts/export_ipa.sh
 
-./.github/scripts/publish_testflight.sh
+if [[ $PUBLISH == true ]]; then
+   ./.github/scripts/publish_testflight.sh
+fi
 
 git checkout Censo/Assets.xcassets/AppIcon.appiconset/.
