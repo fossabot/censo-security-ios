@@ -143,6 +143,15 @@ struct PolygonWalletWhitelistUpdate: Codable, Equatable  {
     var feeSymbolInfo: EvmSymbolInfo
 }
 
+struct PolygonDAppRequest: Codable, Equatable {
+    var wallet: WalletInfo
+    var fee: Amount
+    var feeSymbolInfo: EvmSymbolInfo
+    var dappInfo: DAppInfo
+    var dappParams: DAppParams
+    var signingData: PolygonSigningData
+}
+
 #if DEBUG
 
 extension PolygonSigningData {

@@ -203,6 +203,7 @@
 		BD072F78292E6DF100B36C5A /* String+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD072F77292E6DF100B36C5A /* String+Hex.swift */; };
 		BD072F7B292E7DF800B36C5A /* EvmTransferTransactionBuilderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD072F7A292E7DF800B36C5A /* EvmTransferTransactionBuilderTests.swift */; };
 		BD072F7D292E7E9E00B36C5A /* EvmTransferTransactionBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD072F7C292E7E9E00B36C5A /* EvmTransferTransactionBuilder.swift */; };
+		BDA9AF222A0429F100376FC2 /* EvmDAppTransactionBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDA9AF212A0429F100376FC2 /* EvmDAppTransactionBuilder.swift */; };
 		BDFBBC2E29D5FA7D0054286C /* EnableRecoveryPolicyRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDFBBC2D29D5FA7D0054286C /* EnableRecoveryPolicyRow.swift */; };
 		BDFBBC3029D5FDF90054286C /* EnableRecoveryPolicyDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDFBBC2F29D5FDF90054286C /* EnableRecoveryPolicyDetails.swift */; };
 		BDFBBC3329D60AB60054286C /* raygun4apple in Frameworks */ = {isa = PBXBuildFile; productRef = BDFBBC3229D60AB60054286C /* raygun4apple */; };
@@ -420,6 +421,7 @@
 		BD072F77292E6DF100B36C5A /* String+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Hex.swift"; sourceTree = "<group>"; };
 		BD072F7A292E7DF800B36C5A /* EvmTransferTransactionBuilderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvmTransferTransactionBuilderTests.swift; sourceTree = "<group>"; };
 		BD072F7C292E7E9E00B36C5A /* EvmTransferTransactionBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvmTransferTransactionBuilder.swift; sourceTree = "<group>"; };
+		BDA9AF212A0429F100376FC2 /* EvmDAppTransactionBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvmDAppTransactionBuilder.swift; sourceTree = "<group>"; };
 		BDFBBC2D29D5FA7D0054286C /* EnableRecoveryPolicyRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnableRecoveryPolicyRow.swift; sourceTree = "<group>"; };
 		BDFBBC2F29D5FDF90054286C /* EnableRecoveryPolicyDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnableRecoveryPolicyDetails.swift; sourceTree = "<group>"; };
 		E42F565C29D3289500C6922B /* SuspendUserRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuspendUserRow.swift; sourceTree = "<group>"; };
@@ -970,6 +972,7 @@
 				BD072F7C292E7E9E00B36C5A /* EvmTransferTransactionBuilder.swift */,
 				6C8CE736298AC8A700834978 /* EvmWhitelistHelper.swift */,
 				6C8CE73C298B5FC600834978 /* EvmPolicyHelper.swift */,
+				BDA9AF212A0429F100376FC2 /* EvmDAppTransactionBuilder.swift */,
 			);
 			name = evm;
 			sourceTree = "<group>";
@@ -1257,6 +1260,7 @@
 				3DBF9DC526E0020300D7683E /* ApprovalRequestItem.swift in Sources */,
 				3D115204282169E1007CD43D /* VaultConfigPolicyDetails.swift in Sources */,
 				3D1436C729E4A4D000CDB6CE /* ShardRecovery.swift in Sources */,
+				BDA9AF222A0429F100376FC2 /* EvmDAppTransactionBuilder.swift in Sources */,
 				3DB995F627EB71EE005655F0 /* SignerUpdateRow.swift in Sources */,
 				3DE1610D297087AE00F48930 /* ApprovalRequest.swift in Sources */,
 				3DED50D229103D1B00904DBA /* Keychain+Storage.swift in Sources */,

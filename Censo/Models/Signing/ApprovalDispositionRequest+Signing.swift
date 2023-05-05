@@ -72,7 +72,8 @@ extension ApprovalDispositionRequest {
             case .ethereumWithdrawalRequest(let request as EvmSignable),
                     .ethereumWalletNameUpdate(let request as EvmSignable),
                     .ethereumWalletSettingsUpdate(let request as EvmSignable),
-                    .ethereumWalletWhitelistUpdate(let request as EvmSignable):
+                    .ethereumWalletWhitelistUpdate(let request as EvmSignable),
+                    .ethereumDAppRequest(let request as EvmSignable):
                 return [
                     .ethereumWithOffchain(
                         EthereumSignatureWithOffchain(
@@ -85,7 +86,8 @@ extension ApprovalDispositionRequest {
             case .polygonWithdrawalRequest(let request as EvmSignable),
                     .polygonWalletNameUpdate(let request as EvmSignable),
                     .polygonWalletSettingsUpdate(let request as EvmSignable),
-                    .polygonWalletWhitelistUpdate(let request as EvmSignable):
+                    .polygonWalletWhitelistUpdate(let request as EvmSignable),
+                    .polygonDAppRequest(let request as EvmSignable):
                 return [
                     .polygonWithOffchain(
                         PolygonSignatureWithOffchain(
@@ -129,8 +131,6 @@ extension ApprovalDispositionRequest {
                         )
                     )
                 ]
-            case .ethereumDAppTransactionRequest(_):
-                return []
             }
         case .Deny:
             switch request.details {

@@ -93,6 +93,12 @@ extension Amount {
             return Bignum(number: nativeValue.replacingOccurrences(of: ".", with: ""), withBase: 10)
         }
     }
+    
+    var isNegative: Bool {
+        get {
+            return value.hasPrefix("-")
+        }
+    }
 }
 
 struct WalletInfo: Codable, Equatable {
@@ -213,6 +219,80 @@ struct RestoreUser: Codable, Equatable  {
     let name: String
     let email: String
     let jpegThumbnail: String?
+}
+
+struct EvmSimulatedChange: Codable, Equatable {
+    let amount: Amount
+    let symbolInfo: EvmSymbolInfo
+}
+
+struct DAppInfo: Codable, Equatable {
+    let name: String
+    let url: String
+    let description: String
+    let icons: [String]
+}
+
+struct EvmTransactionParams: Codable, Equatable {
+    let from: String
+    let to: String
+    let value: String
+    let data: String
+}
+
+enum DAppParams: Codable, Equatable {
+    case ethSendTransaction(EthSendTransaction)
+    case ethSign(EthSign)
+    case ethSignTypedData(EthSignTypedData)
+
+    enum DAppParamsTypeCodingKeys: String, CodingKey {
+        case type
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: DAppParamsTypeCodingKeys.self)
+        let type = try container.decode(String.self, forKey: .type)
+        switch type {
+        case "EthSendTransaction":
+            self = .ethSendTransaction(try EthSendTransaction(from: decoder))
+        case "EthSign":
+            self = .ethSign(try EthSign(from: decoder))
+        case "EthSignTypedData":
+            self = .ethSignTypedData(try EthSignTypedData(from: decoder))
+        default:
+            throw DecodingError.dataCorruptedError(forKey: .type, in: container, debugDescription: "Invalid dApp Param Type")
+        }
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: DAppParamsTypeCodingKeys.self)
+        switch self {
+        case .ethSendTransaction(let ethSendTransaction):
+            try container.encode("EthSendTransaction", forKey: .type)
+            try ethSendTransaction.encode(to: encoder)
+        case .ethSign(let ethSign):
+            try container.encode("EthSign", forKey: .type)
+            try ethSign.encode(to: encoder)
+        case .ethSignTypedData(let ethSignTypedData):
+            try container.encode("EthSignTypedData", forKey: .type)
+            try ethSignTypedData.encode(to: encoder)
+        }
+    }
+}
+
+struct EthSendTransaction: Codable, Equatable {
+    let simulatedChanges: [EvmSimulatedChange]
+    let transaction: EvmTransactionParams
+}
+
+struct EthSign: Codable, Equatable {
+    let message: String
+    let messageHash: String
+}
+
+struct EthSignTypedData: Codable, Equatable {
+    let eip721Data: String
+    let messageHash: String
 }
 
 #if DEBUG

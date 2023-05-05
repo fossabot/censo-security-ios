@@ -62,7 +62,8 @@ enum ApprovalRequestType: Codable, Equatable {
     case enableDevice(EnableDevice)
     case disableDevice(DisableDevice)
 
-    case ethereumDAppTransactionRequest(EthereumDAppTransactionRequest)
+    case ethereumDAppRequest(EthereumDAppRequest)
+    case polygonDAppRequest(PolygonDAppRequest)
 
     enum ApprovalTypeCodingKeys: String, CodingKey {
         case type
@@ -134,6 +135,10 @@ enum ApprovalRequestType: Codable, Equatable {
             self = .restoreUser(try RestoreUser(from: decoder))
         case "EnableRecoveryContract":
             self = .enableRecoveryContract(try EnableRecoveryContract(from: decoder))
+        case "EthereumDAppRequest":
+            self = .ethereumDAppRequest(try EthereumDAppRequest(from: decoder))
+        case "PolygonDAppRequest":
+            self = .polygonDAppRequest(try PolygonDAppRequest(from: decoder))
         default:
             throw DecodingError.dataCorruptedError(forKey: .type, in: container, debugDescription: "Invalid Approval Type")
         }
@@ -223,9 +228,6 @@ enum ApprovalRequestType: Codable, Equatable {
         case .disableDevice(let disableDevice):
             try container.encode("DisableDevice", forKey: .type)
             try disableDevice.encode(to: encoder)
-        case .ethereumDAppTransactionRequest(let dAppTransactionRequest):
-            try container.encode("EthereumDAppTransactionRequest", forKey: .type)
-            try dAppTransactionRequest.encode(to: encoder)
         case .suspendUser(let suspendUser):
             try container.encode("SuspendUser", forKey: .type)
             try suspendUser.encode(to: encoder)
@@ -235,6 +237,13 @@ enum ApprovalRequestType: Codable, Equatable {
         case .enableRecoveryContract(let enableRecoveryContract):
             try container.encode("EnableRecoveryContract", forKey: .type)
             try enableRecoveryContract.encode(to: encoder)
+        case .ethereumDAppRequest(let ethereumDAppRequest):
+            try container.encode("EthereumDAppRequest", forKey: .type)
+            try ethereumDAppRequest.encode(to: encoder)
+        case .polygonDAppRequest(let polygonDAppRequest):
+            try container.encode("PolygonDAppRequest", forKey: .type)
+            try polygonDAppRequest.encode(to: encoder)
         }
     }
 }
+
