@@ -3,10 +3,12 @@
 set -eo pipefail
 
 ENVIRONMENT="production"
+PUBLISH=false
 
 while [[ $# -gt 0 ]]
 do
 key="$1"
+
 
 case $key in
     -e|--environment)
@@ -14,10 +16,15 @@ case $key in
     shift # past argument
     shift # past value
     ;;
+    -p|--publish)
+    PUBLISH=true
+    shift # past argument
+    ;;
     *)    # unknown option
     shift # past argument
     ;;
 esac
+
 done
 
 # Setup environment
@@ -30,12 +37,6 @@ if [[ $ENVIRONMENT == 'production' ]]; then
   export PROVISIONING_PROFILE="Censo Mobile Production AppStore"
   export RAYGUN_APPLICATION_ID="282j3o2"
 elif [[ $ENVIRONMENT == 'develop' ]]; then
-  export ICON_RIBBON="Dev"
-  export SCHEME="Censo (Develop)"
-  export CONFIGURATION="Release (Develop)"
-  export PROVISIONING_PROFILE="Censo Mobile Dev AppStore"
-  export RAYGUN_APPLICATION_ID="283703j"
-elif [[ $ENVIRONMENT == 'local' ]]; then
   export ICON_RIBBON="Dev"
   export SCHEME="Censo (Develop)"
   export CONFIGURATION="Release (Develop)"
@@ -54,7 +55,7 @@ elif [[ $ENVIRONMENT == 'demo2' ]]; then
   export PROVISIONING_PROFILE="Censo Mobile Demo 2 AppStore"
   export RAYGUN_APPLICATION_ID="283706g"
 else
-  echo "Unknown environment. Use one of 'develop', 'preprod', 'demo2', 'local' or 'production'"
+  echo "Unknown environment. Use one of 'develop', 'preprod', 'demo2',or 'production'"
   exit 1
 fi
 
@@ -91,7 +92,7 @@ fi
 export EXPORT_OPTIONS_PLIST="Censo/ExportOptions.plist"
 ./.github/scripts/export_ipa.sh
 
-if [[ $ENVIRONMENT != "local" ]]; then
+if [[ $PUBLISH == true ]]; then
    ./.github/scripts/publish_testflight.sh
 fi
 
