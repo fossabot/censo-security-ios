@@ -97,6 +97,12 @@ struct VerificationTokenView: View {
                     message: Text("An error occured trying to send your verification code"),
                     dismissButton: .cancel(Text("Try Again"))
                 )
+            case .signInError(let error as MoyaError):
+                return Alert(
+                    title: Text("Sign In Error"),
+                    message: Text(error.message),
+                    dismissButton: .cancel(Text("OK"))
+                )
             case .signInError:
                 return Alert.withDismissButton(title: Text("Verication Error"), message: Text("Please check your verification code"))
             }

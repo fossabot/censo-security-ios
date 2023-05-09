@@ -9,6 +9,7 @@ import Foundation
 import CryptoKit
 import UIKit
 import Moya
+import Combine
 
 struct CensoApi {
     
@@ -42,15 +43,29 @@ struct CensoApi {
     
     /// The provider for the Moya Target definition for this API.
     let provider: MoyaProvider<Target>
+
+    let statusPublisher: PassthroughSubject<Status, Never>
+
+    enum Status {
+        case inMaintenance
+    }
     
     init(
         authProvider: AuthProvider? = nil,
         stubClosure: @escaping MoyaProvider<Target>.StubClosure = CensoApi.defaultStubBehaviorClosure()
     ) {
+        let statusPublisher = PassthroughSubject<Status, Never>()
+        self.statusPublisher = statusPublisher
+
         self.provider = MoyaProvider<Target>(
             stubClosure: stubClosure,
             plugins: [
-                AuthProviderPlugin(authProvider: authProvider)
+                AuthProviderPlugin(authProvider: authProvider),
+                StatusWatcherPlugin(onReceive: { statusCode in
+                    if statusCode == 418 {
+                        statusPublisher.send(.inMaintenance)
+                    }
+                })
             ]
         )
     }
@@ -275,39 +290,6 @@ extension CensoApi {
     }
 }
 
-struct AuthProviderPlugin: Moya.PluginType {
-
-    weak var authProvider: AuthProvider?
-
-    func prepare(_ request: URLRequest, target: Moya.TargetType) -> URLRequest {
-        var request = request
-
-        switch target {
-        case CensoApi.Target.minVersion,
-             CensoApi.Target.login:
-            break
-        default:
-            if let authProvider = authProvider, authProvider.isAuthenticated, let token = authProvider.bearerToken {
-                request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-            } else {
-                debugPrint("Unauthenticated request: \(request)")
-            }
-        }
-
-        return request
-    }
-    
-    func process(_ result: Result<Moya.Response, MoyaError>, target: Moya.TargetType) -> Result<Moya.Response, MoyaError> {
-        switch (result, target) {
-        case (.success(let response), _) where response.statusCode == 401:
-            debugPrint("401 unauthorized:", String(data: response.data, encoding: .utf8)!)
-            defer { authProvider?.invalidate() }
-            return result
-        default:
-            return result
-        }
-    }
-}
 
 // MARK: - Moya Target
 

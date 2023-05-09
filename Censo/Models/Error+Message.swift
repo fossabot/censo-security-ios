@@ -13,6 +13,8 @@ extension Error {
 
     var message: String {
         switch self as Error {
+        case MoyaError.statusCode(let response) where response.statusCode == 418:
+            return "Censo is currently under maintenance, please try again in a few minutes."
         case MoyaError.underlying(AFError.sessionTaskFailed(let error as NSError), _) where error.code == -1001:
             return "Your request timed out. Please retry"
         case MoyaError.underlying(AFError.sessionTaskFailed(let error as NSError), _) where error.code == -1009:

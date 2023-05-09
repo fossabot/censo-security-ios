@@ -42,6 +42,10 @@
 		3D11A60727581510008C03B1 /* CameraAccessRequired.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D11A60627581510008C03B1 /* CameraAccessRequired.swift */; };
 		3D11A60B275851BA008C03B1 /* WalletSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D11A60A275851BA008C03B1 /* WalletSession.swift */; };
 		3D11A60D27585F72008C03B1 /* ImageLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D11A60C27585F72008C03B1 /* ImageLoader.swift */; };
+		3D13B3A52A0ADDAF00C2EE06 /* AuthProviderPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D13B3A42A0ADDAF00C2EE06 /* AuthProviderPlugin.swift */; };
+		3D13B3A72A0ADE1400C2EE06 /* StatusWatcherPlugin.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D13B3A62A0ADE1400C2EE06 /* StatusWatcherPlugin.swift */; };
+		3D13B3A92A0AF8DB00C2EE06 /* Maintenance.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D13B3A82A0AF8DB00C2EE06 /* Maintenance.swift */; };
+		3D13B3AB2A0AF95600C2EE06 /* ApprovedRegisteredView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D13B3AA2A0AF95600C2EE06 /* ApprovedRegisteredView.swift */; };
 		3D1436C729E4A4D000CDB6CE /* ShardRecovery.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1436C629E4A4D000CDB6CE /* ShardRecovery.swift */; };
 		3D1436C929EE406200CDB6CE /* VerificationTokenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1436C829EE406100CDB6CE /* VerificationTokenView.swift */; };
 		3D1AD40728DC007D0085ACAA /* ForegroundBiometryLock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3D1AD40628DC007D0085ACAA /* ForegroundBiometryLock.swift */; };
@@ -263,6 +267,10 @@
 		3D11A60627581510008C03B1 /* CameraAccessRequired.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraAccessRequired.swift; sourceTree = "<group>"; };
 		3D11A60A275851BA008C03B1 /* WalletSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WalletSession.swift; sourceTree = "<group>"; };
 		3D11A60C27585F72008C03B1 /* ImageLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageLoader.swift; sourceTree = "<group>"; };
+		3D13B3A42A0ADDAF00C2EE06 /* AuthProviderPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthProviderPlugin.swift; sourceTree = "<group>"; };
+		3D13B3A62A0ADE1400C2EE06 /* StatusWatcherPlugin.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusWatcherPlugin.swift; sourceTree = "<group>"; };
+		3D13B3A82A0AF8DB00C2EE06 /* Maintenance.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Maintenance.swift; sourceTree = "<group>"; };
+		3D13B3AA2A0AF95600C2EE06 /* ApprovedRegisteredView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApprovedRegisteredView.swift; sourceTree = "<group>"; };
 		3D1436C629E4A4D000CDB6CE /* ShardRecovery.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShardRecovery.swift; sourceTree = "<group>"; };
 		3D1436C829EE406100CDB6CE /* VerificationTokenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerificationTokenView.swift; sourceTree = "<group>"; };
 		3D1AD40628DC007D0085ACAA /* ForegroundBiometryLock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ForegroundBiometryLock.swift; sourceTree = "<group>"; };
@@ -546,6 +554,15 @@
 			path = DApp;
 			sourceTree = "<group>";
 		};
+		3D13B3A32A0ADD9A00C2EE06 /* MoyaPlugins */ = {
+			isa = PBXGroup;
+			children = (
+				3D13B3A42A0ADDAF00C2EE06 /* AuthProviderPlugin.swift */,
+				3D13B3A62A0ADE1400C2EE06 /* StatusWatcherPlugin.swift */,
+			);
+			path = MoyaPlugins;
+			sourceTree = "<group>";
+		};
 		3D1AF10F298C2CA000A01E43 /* DeviceRegistration */ = {
 			isa = PBXGroup;
 			children = (
@@ -596,6 +613,8 @@
 			children = (
 				3D2CE49825F8423800137E05 /* RootView.swift */,
 				3DAFFD2D25F8951100B408AD /* MainView.swift */,
+				3D13B3AA2A0AF95600C2EE06 /* ApprovedRegisteredView.swift */,
+				3D13B3A82A0AF8DB00C2EE06 /* Maintenance.swift */,
 				3D61A0FA2655B4FF00AD1EE7 /* SignedInNavigationView.swift */,
 				3DA133A426B1AEB300BB4AF4 /* Profile.swift */,
 				3D633E152748656500BACCCE /* BiometryCheck.swift */,
@@ -824,6 +843,7 @@
 				3D311D53260A3A1A007A0B98 /* Auth */,
 				3DD9568125EF561F003F9ECF /* Moya+CensoClient.swift */,
 				4006422E259A422400A8D8D3 /* CensoApi.swift */,
+				3D13B3A32A0ADD9A00C2EE06 /* MoyaPlugins */,
 				3D1C762527DA89690016BB32 /* MoyaProvider+AsynAwait.swift */,
 			);
 			path = Networking;
@@ -1222,6 +1242,7 @@
 				3D3D6D4F261B957800FEEE0B /* RetryView.swift in Sources */,
 				6C7627C729AE695100FE1CC2 /* EnableOrDisableDeviceRow.swift in Sources */,
 				3DB7F9C026D6C2CD00A49B4E /* UnknownRequestRow.swift in Sources */,
+				3D13B3AB2A0AF95600C2EE06 /* ApprovedRegisteredView.swift in Sources */,
 				40CB67F925C3195D00DB15D6 /* Mock.swift in Sources */,
 				3DAF53BC262E1421000DD558 /* Countdown.swift in Sources */,
 				3D10290429E06D2400EC5A6C /* DeviceKeyGeneration.swift in Sources */,
@@ -1236,6 +1257,7 @@
 				3D10290A29E06D3100EC5A6C /* BootstrapKeyGeneration.swift in Sources */,
 				3DC205C429882EA200BD8BB0 /* EthereumClientModel.swift in Sources */,
 				6CBA96D228E63CF8000A3727 /* Secp256k1PrivateKey.swift in Sources */,
+				3D13B3A72A0ADE1400C2EE06 /* StatusWatcherPlugin.swift in Sources */,
 				6C72A2EB29CE367F00678912 /* VaultUserRolesUpdateDetails.swift in Sources */,
 				3D11520928216FCC007CD43D /* WalletTransferPolicyDetails.swift in Sources */,
 				6C74FA0428526282005C8DE1 /* Bip44.swift in Sources */,
@@ -1281,6 +1303,7 @@
 				3D1436C729E4A4D000CDB6CE /* ShardRecovery.swift in Sources */,
 				BDA9AF222A0429F100376FC2 /* EvmDAppTransactionBuilder.swift in Sources */,
 				3DB995F627EB71EE005655F0 /* SignerUpdateRow.swift in Sources */,
+				3D13B3A92A0AF8DB00C2EE06 /* Maintenance.swift in Sources */,
 				3DE1610D297087AE00F48930 /* ApprovalRequest.swift in Sources */,
 				3DED50D229103D1B00904DBA /* Keychain+Storage.swift in Sources */,
 				6C8CE73D298B5FC600834978 /* EvmPolicyHelper.swift in Sources */,
@@ -1300,6 +1323,7 @@
 				3D3D6CEC2616432000FEEE0B /* RecoverPasswordView.swift in Sources */,
 				6C0E3EF227EE5E29002FEE7C /* NaclLowLevel.swift in Sources */,
 				6CBA96D428E63D72000A3727 /* Secp256k1PublicKey.swift in Sources */,
+				3D13B3A52A0ADDAF00C2EE06 /* AuthProviderPlugin.swift in Sources */,
 				3DE53CCD28AADEB300B4F014 /* CensoAuthProvider.swift in Sources */,
 				3D3D6D54261B95B100FEEE0B /* ApprovalRequestsView.swift in Sources */,
 				3DE53C7828996B8C00B4F014 /* Error+Message.swift in Sources */,

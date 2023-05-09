@@ -95,6 +95,12 @@ struct SignInView: View {
         )
         .alert(item: $currentAlert) { item in
             switch item {
+            case .signInError(let error as MoyaError):
+                return Alert(
+                    title: Text("Sign In Error"),
+                    message: Text(error.message),
+                    dismissButton: .cancel(Text("OK"))
+                )
             case .signInError:
                 return Alert(
                     title: Text("Sign In Error"),
