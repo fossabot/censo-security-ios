@@ -34,21 +34,21 @@ struct WalletWhitelistDetails: View {
 }
 
 #if DEBUG
-//struct WalletWhitelistDetails_Previews: PreviewProvider {
-//    static var previews: some View {
-//        WalletWhitelistDetails(request: .sample,
-//                               update: EthereumWalletWhitelistUpdate.sample,
-//                               user: .sample)
-//
-//        let timerPublisher = Timer.TimerPublisher(interval: 1, runLoop: .current, mode: .default).autoconnect()
-//
-//        NavigationView {
-//            ApprovalRequestDetails(registeredDevice: RegisteredDevice(email: "test@test.com", deviceKey: .sample, encryptedRootSeed: Data()), user: .sample, request: .sample, timerPublisher: timerPublisher) {
-//                WalletWhitelistDetails(request: .sample,
-//                                       update: EthereumWalletWhitelistUpdate.sample,
-//                                       user: .sample)
-//            }
-//        }
-//    }
-//}
+struct WalletWhitelistDetails_Previews: PreviewProvider {
+    static var previews: some View {
+        WalletWhitelistDetails(request: .sample,
+                               update: EthereumWalletWhitelistUpdate.sample,
+                               user: .sample)
+
+        let timerPublisher = Timer.TimerPublisher(interval: 1, runLoop: .current, mode: .default).autoconnect()
+
+        NavigationView {
+            ApprovalRequestDetails(registeredDevice: RegisteredDevice(email: "test@test.com", deviceKey: .sample, encryptedRootSeed: Data(), publicKeys: PublicKeys(bitcoin: "0x01", ethereum: "0x02", offchain: "0x03")), user: .sample, request: .sample, timerPublisher: timerPublisher) {
+                WalletWhitelistDetails(request: .sample,
+                                       update: EthereumWalletWhitelistUpdate.sample,
+                                       user: .sample)
+            }
+        }
+    }
+}
 #endif
