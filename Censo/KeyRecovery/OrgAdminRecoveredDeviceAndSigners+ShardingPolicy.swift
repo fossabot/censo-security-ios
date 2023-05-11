@@ -9,11 +9,7 @@ import Foundation
 import CryptoKit
 
 extension CensoApi.OrgAdminRecoveredDeviceAndSigners {
-<<<<<<< HEAD
-    init(imageData: Data, deviceKey: PreauthenticatedKey<DeviceKey>, rootSeed: [UInt8], shardingPolicy: ShardingPolicy, participantId: String) throws {
-=======
-    init(imageData: Data, deviceKey: DeviceKey, rootSeed: [UInt8], shardingPolicy: ShardingPolicy, participantId: String, bootstrapParticipantId: String?) throws {
->>>>>>> 5d9548d (bootstrap user fix)
+    init(imageData: Data, deviceKey: PreauthenticatedKey<DeviceKey>, rootSeed: [UInt8], shardingPolicy: ShardingPolicy, participantId: String, bootstrapParticipantId: String?) throws {
         self.userDevice = CensoApi.UserDevice(
             publicKey: try deviceKey.key.publicExternalRepresentation().base58String,
             deviceType: .ios,
