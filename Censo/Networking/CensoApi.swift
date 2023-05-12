@@ -173,11 +173,22 @@ extension CensoApi {
         let signature: String
     }
     
-    struct UserDevice: Codable {
+    struct UserDevice: Encodable {
         let publicKey: String
         let deviceType: DeviceType
         let userImage: UserImage
         let replacingDeviceIdentifier: String?
+        let model: String
+        let name: String
+
+        init(publicKey: String, deviceType: DeviceType, userImage: UserImage, replacingDeviceIdentifier: String?) {
+            self.publicKey = publicKey
+            self.deviceType = deviceType
+            self.userImage = userImage
+            self.replacingDeviceIdentifier = replacingDeviceIdentifier
+            self.model = UIDevice.current.model
+            self.name = UIDevice.current.name
+        }
     }
     
     struct ShardCopy: Codable {
@@ -235,13 +246,13 @@ extension CensoApi {
         let signature: String
     }
     
-    struct BootstrapUserDeviceAndSigners: Codable {
+    struct BootstrapUserDeviceAndSigners: Encodable {
         let userDevice: UserDevice
         let bootstrapDevice: BootstrapDevice
         let signersInfo: SignersInfo
     }
     
-    struct OrgAdminRecoveredDeviceAndSigners: Codable {
+    struct OrgAdminRecoveredDeviceAndSigners: Encodable {
         let userDevice: UserDevice
         let signersInfo: SignersInfo
     }
