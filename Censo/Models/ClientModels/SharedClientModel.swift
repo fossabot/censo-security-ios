@@ -291,13 +291,35 @@ struct EthSign: Codable, Equatable {
 }
 
 struct EthSignTypedData: Codable, Equatable {
-    let eip721Data: String
+    let eip712Data: String
     let messageHash: String
 }
+
 
 struct PublicKey: Codable, Equatable {
     let key: String
     let chain: Chain
+}
+
+extension EthSign {
+    func displayMessage() -> String {
+        if let decoded = String(bytes: message.data(using: .hexadecimal)!, encoding: .utf8) {
+            let alphaCount = decoded.filter { $0.isLetter || $0.isNumber || $0.isWhitespace || $0.isSymbol }.count
+            if (Float(alphaCount) / Float(decoded.count) >= 0.66) {
+                return decoded
+            } else {
+                return message
+            }
+        } else {
+            return message
+        }
+    }
+}
+
+extension EthSignTypedData {
+    func structuredData() -> EIP712TypedData? {
+        return try? JSONDecoder().decode(EIP712TypedData.self, from: eip712Data.data(using: .utf8)!)
+    }
 }
 
 #if DEBUG

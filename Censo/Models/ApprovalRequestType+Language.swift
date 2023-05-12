@@ -50,10 +50,16 @@ extension ApprovalRequestType {
             return "Add Address"
         case .addressBookUpdate:
             return "Remove Address"
-        case .ethereumDAppRequest:
-            return "dApp Transaction"
-        case .polygonDAppRequest:
-            return "dApp Transaction"
+        case .ethereumDAppRequest(let dAppRequest as DAppRequest),
+             .polygonDAppRequest(let dAppRequest as DAppRequest):
+            switch dAppRequest.dappParams {
+                case .ethSendTransaction:
+                    return "dApp Transaction"
+                case .ethSign:
+                    return "dApp Sign Message"
+                case .ethSignTypedData:
+                    return "dApp Sign Data"
+            }
         case .loginApproval:
             return "Log In"
         case .passwordReset:
@@ -138,10 +144,9 @@ extension ApprovalRequestType {
             } else {
                 return nil
             }
-        case .ethereumDAppRequest(let request):
-            return request.dappInfo.name
-        case .polygonDAppRequest(let request):
-            return request.dappInfo.name
+        case .ethereumDAppRequest(let dAppRequest as DAppRequest),
+             .polygonDAppRequest(let dAppRequest as DAppRequest):
+            return dAppRequest.dappInfo.name
         default:
             return nil
         }

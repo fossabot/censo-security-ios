@@ -28,27 +28,23 @@ struct ApprovalRequestItem: View {
             } detail: {
                 WithdrawalDetails(request: request, withdrawal: withdrawal)
             }
-        case .ethereumDAppRequest(let ethereumDAppRequest):
-            switch ethereumDAppRequest.dappParams {
+        case .ethereumDAppRequest(let dAppRequest as DAppRequest),
+             .polygonDAppRequest(let dAppRequest as DAppRequest):
+            switch dAppRequest.dappParams {
             case .ethSendTransaction(let ethSendTransaction):
                 ApprovalRequestRow(registeredDevice: registeredDevice, user: user, request: request, timerPublisher: timerPublisher, onApprove: onStatusChange, onDecline: onStatusChange) {
                     DAppTransactionRow(requestType: request.details)
                 } detail: {
                     DAppTransactionDetails(
-                        request: request, ethSendTransaction: ethSendTransaction, wallet: ethereumDAppRequest.wallet, dAppInfo: ethereumDAppRequest.dappInfo
+                        request: dAppRequest, ethSendTransaction: ethSendTransaction, wallet: dAppRequest.wallet, dAppInfo: dAppRequest.dappInfo
                     )
                 }
-            default:
-                UnknownRequestRow(request: request, timerPublisher: timerPublisher)
-            }
-        case .polygonDAppRequest(let polygonDAppRequest):
-            switch polygonDAppRequest.dappParams {
-            case .ethSendTransaction(let ethSendTransaction):
+            case .ethSign(let ethSign):
                 ApprovalRequestRow(registeredDevice: registeredDevice, user: user, request: request, timerPublisher: timerPublisher, onApprove: onStatusChange, onDecline: onStatusChange) {
-                    DAppTransactionRow(requestType: request.details)
+                    DAppSignRow(requestType: request.details)
                 } detail: {
-                    DAppTransactionDetails(
-                        request: request, ethSendTransaction: ethSendTransaction, wallet: polygonDAppRequest.wallet, dAppInfo: polygonDAppRequest.dappInfo
+                    DAppSignDetails(
+                        request: dAppRequest, ethSign: ethSign, wallet: dAppRequest.wallet, dAppInfo: dAppRequest.dappInfo
                     )
                 }
             default:
@@ -391,3 +387,14 @@ protocol UserDevice {
 
 extension EnableDevice: UserDevice { }
 extension DisableDevice: UserDevice { }
+
+protocol DAppRequest {
+    var wallet: WalletInfo { get }
+    var fee: Amount { get }
+    var feeSymbolInfo: EvmSymbolInfo { get }
+    var dappParams: DAppParams { get }
+    var dappInfo: DAppInfo { get }
+}
+
+extension EthereumDAppRequest: DAppRequest { }
+extension PolygonDAppRequest: DAppRequest { }

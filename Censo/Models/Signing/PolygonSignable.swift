@@ -44,6 +44,10 @@ extension PolygonDAppRequest: EvmSignable {
         switch (dappParams) {
         case .ethSendTransaction(let ethSendTransaction):
             return try EvmDAppTransactionBuilder.ethSendSafeHash(walletAddress: wallet.address, ethSendTransaction: ethSendTransaction, evmTransaction: signingData.transaction)
+        case .ethSign(let ethSign):
+            return try EvmDAppTransactionBuilder.ethSignSafeHash(walletAddress: wallet.address, ethSign: ethSign, evmTransaction: signingData.transaction)
+        case .ethSignTypedData(let ethSignTypedData):
+            return try EvmDAppTransactionBuilder.ethSignTypedDataSafeHash(walletAddress: wallet.address, ethSignTypedData: ethSignTypedData, evmTransaction: signingData.transaction)
         default:
             return Data()
         }
