@@ -170,6 +170,17 @@ struct AdminRecoveryTxs: Codable, Equatable  {
     var txs: [RecoverySafeTx]
 }
 
+struct RecoveryPolicy: Codable, Equatable  {
+    var threshold: Int
+    var addresses: [String]
+}
+
+struct OrgAdminRecoveryRequestEnvelope: Codable, Equatable  {
+    var request: OrgAdminRecoveryRequest
+    var recoveryPolicy: RecoveryPolicy
+    var signaturesReceivedFrom: [String]
+}
+
 struct OrgAdminRecoveryRequest: Codable, Equatable  {
     var deviceKey: String
     var chainKeys: [PublicKey]

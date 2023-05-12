@@ -208,6 +208,7 @@
 		6CCDBD5828EF8BBD00BBB5B6 /* AdditionalKeyRegistration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CCDBD5728EF8BBD00BBB5B6 /* AdditionalKeyRegistration.swift */; };
 		6CD5B4A228A453DB00CD1A62 /* PasswordResetRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CD5B4A128A453DB00CD1A62 /* PasswordResetRow.swift */; };
 		6CD5B4A428A455E900CD1A62 /* PasswordResetDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CD5B4A328A455E900CD1A62 /* PasswordResetDetails.swift */; };
+		6CF0A86F2A0EBA8F0092C961 /* OrgRecoveryTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CF0A86E2A0EBA8F0092C961 /* OrgRecoveryTests.swift */; };
 		6CF52A13299426D7004EC3F3 /* PolgygonClientModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CF52A12299426D7004EC3F3 /* PolgygonClientModel.swift */; };
 		6CF52A1529942879004EC3F3 /* PolygonSignable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6CF52A1429942879004EC3F3 /* PolygonSignable.swift */; };
 		BD072F78292E6DF100B36C5A /* String+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD072F77292E6DF100B36C5A /* String+Hex.swift */; };
@@ -441,6 +442,7 @@
 		6CCDBD5928EFC4BE00BBB5B6 /* KeychainTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainTests.swift; sourceTree = "<group>"; };
 		6CD5B4A128A453DB00CD1A62 /* PasswordResetRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordResetRow.swift; sourceTree = "<group>"; };
 		6CD5B4A328A455E900CD1A62 /* PasswordResetDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PasswordResetDetails.swift; sourceTree = "<group>"; };
+		6CF0A86E2A0EBA8F0092C961 /* OrgRecoveryTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrgRecoveryTests.swift; sourceTree = "<group>"; };
 		6CF52A12299426D7004EC3F3 /* PolgygonClientModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolgygonClientModel.swift; sourceTree = "<group>"; };
 		6CF52A1429942879004EC3F3 /* PolygonSignable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolygonSignable.swift; sourceTree = "<group>"; };
 		BD072F77292E6DF100B36C5A /* String+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Hex.swift"; sourceTree = "<group>"; };
@@ -922,6 +924,7 @@
 		40328E202593ED9D00F2EE41 /* CensoTests */ = {
 			isa = PBXGroup;
 			children = (
+				6CF0A86E2A0EBA8F0092C961 /* OrgRecoveryTests.swift */,
 				3D10290029E06C3500EC5A6C /* SeedRecoveryTests.swift */,
 				6C8CE73B298B5EF000834978 /* evm */,
 				40328E212593ED9D00F2EE41 /* CensoTests.swift */,
@@ -1448,6 +1451,7 @@
 				6C8CE735298ABCBA00834978 /* EvmConfigTransactionBuilderTests.swift in Sources */,
 				40328E222593ED9D00F2EE41 /* CensoTests.swift in Sources */,
 				6C1E8C99285118F900F7C337 /* BipTests.swift in Sources */,
+				6CF0A86F2A0EBA8F0092C961 /* OrgRecoveryTests.swift in Sources */,
 				6C8CE73F298BFB8C00834978 /* EvmPolicyHelperTests.swift in Sources */,
 				6C8BA242298CC08700D24E00 /* EvmWhitelistHelperTests.swift in Sources */,
 				3D10290129E06C3600EC5A6C /* SeedRecoveryTests.swift in Sources */,
