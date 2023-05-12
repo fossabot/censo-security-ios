@@ -144,24 +144,14 @@ struct DAppScan: View {
             return
         }
 
-        guard let topic = code.components(separatedBy: "@2").first?.dropFirst(3) else {
-            return
-        }
-
         connectionState = .validating
-
-        censoApi.provider.request(.connectDApp(code: code)) { result in
+        censoApi.provider.decodableRequest(.connectDApp(code: code)) { (result: Result<CensoApi.WalletConnectPairing, MoyaError>) in
             switch result {
-            case .success(let response) where response.statusCode >= 400:
-                let decoder = JSONDecoder()
-                let error = try? decoder.decode(CensoApi.WalletConnectionError.self, from: response.data)
-                alert = .error(error ?? MoyaError.statusCode(response))
-                connectionState = .idle
             case .failure(let error):
                 alert = .error(error)
                 connectionState = .idle
-            case .success:
-                connectionState = .connecting(topic: String(topic))
+            case .success(let pairingResponse):
+                connectionState = .connecting(topic: pairingResponse.topic)
             }
         }
     }

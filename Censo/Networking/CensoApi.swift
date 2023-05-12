@@ -283,6 +283,10 @@ extension CensoApi {
         var recoveryShards: [RecoveryShard]?
     }
 
+    struct WalletConnectPairing: Codable {
+        var topic: String
+    }
+
     struct WalletConnectSession: Codable {
         var topic: String
         var name: String
