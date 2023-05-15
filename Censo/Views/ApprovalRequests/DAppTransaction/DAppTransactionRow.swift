@@ -60,11 +60,16 @@ extension DAppParams {
     static var sample: Self {
         DAppParams.ethSendTransaction(
             EthSendTransaction(
-                simulatedChanges: [
-                    EvmSimulatedChange(
-                        amount: Amount(value: "1.23", nativeValue: "1.23000", usdEquivalent: "2.34"),
-                        symbolInfo: EvmSymbolInfo(symbol: "PEPE", description: "Pepe Token", tokenInfo: nil, imageUrl: nil, nftMetadata: nil))
-                ],
+                simulationResult: .success(
+                    EvmSimulationResultSuccess(
+                        balanceChanges: [
+                            EvmSimulatedChange(
+                                amount: Amount(value: "1.23", nativeValue: "1.23000", usdEquivalent: "2.34"),
+                                symbolInfo: EvmSymbolInfo(symbol: "PEPE", description: "Pepe Token", tokenInfo: nil, imageUrl: nil, nftMetadata: nil)
+                            )
+                        ]
+                    )
+                ),
                 transaction: EvmTransactionParams(from: "0x01010101", to: "0x02020202", value: "0x", data: "0x")
             )
         )

@@ -221,6 +221,48 @@ struct RestoreUser: Codable, Equatable  {
     let jpegThumbnail: String?
 }
 
+enum EvmSimulationResult: Codable, Equatable {
+    case success(EvmSimulationResultSuccess)
+    case failure(EvmSimulationResultFailure)
+
+    enum EvmSimulationResultTypeCodingKeys: String, CodingKey {
+        case type
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: EvmSimulationResultTypeCodingKeys.self)
+        let type = try container.decode(String.self, forKey: .type)
+        switch type {
+        case "Success":
+            self = .success(try EvmSimulationResultSuccess(from: decoder))
+        case "Failure":
+            self = .failure(try EvmSimulationResultFailure(from: decoder))
+        default:
+            throw DecodingError.dataCorruptedError(forKey: .type, in: container, debugDescription: "Invalid EvmSimulationResult Type")
+        }
+    }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: EvmSimulationResultTypeCodingKeys.self)
+        switch self {
+        case .success(let success):
+            try container.encode("Success", forKey: .type)
+            try success.encode(to: encoder)
+        case .failure(let failure):
+            try container.encode("Failure", forKey: .type)
+            try failure.encode(to: encoder)
+        }
+    }
+}
+
+struct EvmSimulationResultSuccess: Codable, Equatable {
+    let balanceChanges: [EvmSimulatedChange]
+}
+
+struct EvmSimulationResultFailure: Codable, Equatable {
+    let reason: String
+}
+
 struct EvmSimulatedChange: Codable, Equatable {
     let amount: Amount
     let symbolInfo: EvmSymbolInfo
@@ -281,7 +323,7 @@ enum DAppParams: Codable, Equatable {
 }
 
 struct EthSendTransaction: Codable, Equatable {
-    let simulatedChanges: [EvmSimulatedChange]
+    let simulationResult: EvmSimulationResult?
     let transaction: EvmTransactionParams
 }
 
