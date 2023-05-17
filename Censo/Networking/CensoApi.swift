@@ -463,7 +463,10 @@ extension CensoApi.Target: Moya.TargetType {
             return [
                 "Content-Type": "application/json",
                 "X-IsApi": "true",
-                "X-Censo-Device-Identifier": devicePublicKey
+                "X-Censo-Device-Identifier": devicePublicKey,
+                "X-Censo-OS-Version": UIDevice.current.systemVersion,
+                "X-Censo-Device-Type": UIDevice.current.systemName,
+                "X-Censo-App-Version": Bundle.main.shortVersionString
             ]
         case .addWalletSigners(_, let devicePublicKey),
              .boostrapDeviceAndSigners(_, let devicePublicKey),
@@ -479,12 +482,18 @@ extension CensoApi.Target: Moya.TargetType {
             return [
                 "Content-Type": "application/json",
                 "X-IsApi": "true",
-                "X-Censo-Device-Identifier": devicePublicKey
+                "X-Censo-Device-Identifier": devicePublicKey,
+                "X-Censo-OS-Version": UIDevice.current.systemVersion,
+                "X-Censo-Device-Type": UIDevice.current.systemName,
+                "X-Censo-App-Version": Bundle.main.shortVersionString
             ]
         default:
             return [
                 "Content-Type": "application/json",
-                "X-IsApi": "true"
+                "X-IsApi": "true",
+                "X-Censo-OS-Version": UIDevice.current.systemVersion,
+                "X-Censo-Device-Type": UIDevice.current.systemName,
+                "X-Censo-App-Version": Bundle.main.shortVersionString
             ]
         }
     }
@@ -493,5 +502,11 @@ extension CensoApi.Target: Moya.TargetType {
 extension CensoApi.User: CustomStringConvertible {
     var description: String {
         return "\(fullName) <\(loginName)>"
+    }
+}
+
+extension Bundle {
+    var shortVersionString: String {
+        infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
     }
 }
