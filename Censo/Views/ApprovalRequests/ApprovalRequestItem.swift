@@ -47,8 +47,14 @@ struct ApprovalRequestItem: View {
                         request: dAppRequest, ethSign: ethSign, wallet: dAppRequest.wallet, dAppInfo: dAppRequest.dappInfo
                     )
                 }
-            default:
-                UnknownRequestRow(request: request, timerPublisher: timerPublisher)
+            case .ethSignTypedData(let ethSignTypedData):
+                ApprovalRequestRow(registeredDevice: registeredDevice, user: user, request: request, timerPublisher: timerPublisher, onApprove: onStatusChange, onDecline: onStatusChange) {
+                    DAppSignTypedDataRow(requestType: request.details)
+                } detail: {
+                    DAppSignTypedDataDetails(
+                        request: dAppRequest, ethSignTypedData: ethSignTypedData, wallet: dAppRequest.wallet, dAppInfo: dAppRequest.dappInfo
+                    )
+                }
             }
         case .bitcoinWalletCreation(let walletCreation as WalletCreation),
              .ethereumWalletCreation(let walletCreation as WalletCreation),
