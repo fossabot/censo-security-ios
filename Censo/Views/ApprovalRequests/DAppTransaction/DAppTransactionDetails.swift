@@ -59,7 +59,19 @@ struct SimulationBalanceChangesView: View {
     
     var body: some View {
         VStack(alignment: .center, spacing: 10) {
-            ForEach(0...balanceChanges.count - 1, id: \.self) { i in
+            if (balanceChanges.count == 0) {
+                VStack {
+                    Text("No balances changed in simulation")
+                        .font(.title2)
+                        .bold()
+                        .lineLimit(1)
+                        .allowsTightening(true)
+                        .minimumScaleFactor(0.25)
+                        .foregroundColor(Color.black)
+                        .padding(EdgeInsets(top: 15, leading: 20, bottom: 0, trailing: 20))
+                }
+            }
+            ForEach(0..<balanceChanges.count, id: \.self) { i in
                 let balanceChange = balanceChanges[i]
                 
                 VStack {
@@ -111,6 +123,7 @@ struct SimulationBalanceChangesView: View {
 #if DEBUG
 struct DAppTransactionDetails_Previews: PreviewProvider {
     static var previews: some View {
+        DAppTransactionDetails(request: EthereumDAppRequest.sample, ethSendTransaction: .sampleSimSuccessNoChanges, wallet: .sample, dAppInfo: .sample)
         DAppTransactionDetails(request: EthereumDAppRequest.sample, ethSendTransaction: .sampleNoSimResults, wallet: .sample, dAppInfo: .sample)
         DAppTransactionDetails(request: EthereumDAppRequest.sample, ethSendTransaction: .sampleSimSuccess, wallet: .sample, dAppInfo: .sample)
         DAppTransactionDetails(request: EthereumDAppRequest.sample, ethSendTransaction: .sampleSimFailure, wallet: .sample, dAppInfo: .sample)
@@ -149,6 +162,14 @@ extension EthSendTransaction {
                 )
             ),
             transaction: EvmTransactionParams(from: "0x01010101", to: "0x02020202", value: "0x", data: "0x")
+        )
+    }
+    
+    static var sampleSimSuccessNoChanges: Self {
+        EthSendTransaction(
+            simulationResult: .success(
+                EvmSimulationResultSuccess(balanceChanges: [])),
+            transaction: EvmTransactionParams(from: "0x54b6d88c500c9859314b7e3a4e05767160503b77", to: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", value: "0x0", data: "0x095ea7b3000000000000000000000000000000000022d473030f116ddee9f6b43ac78ba3ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff")
         )
     }
     
