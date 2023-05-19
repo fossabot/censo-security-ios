@@ -95,7 +95,7 @@ struct SignInView: View {
         )
         .alert(item: $currentAlert) { item in
             switch item {
-            case .signInError(let error as MoyaError):
+            case .signInError(let error as MoyaError) where error.response?.statusCode != 401:
                 return Alert(
                     title: Text("Sign In Error"),
                     message: Text(error.message),
