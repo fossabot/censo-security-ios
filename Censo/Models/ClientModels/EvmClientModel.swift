@@ -84,6 +84,11 @@ struct EvmSymbolInfo: Codable, Equatable {
     let nftMetadata: NftMetadata?
 }
 
+struct WalletNameWhitelistUpdate: Codable, Equatable  {
+    let walletAddress: String
+    let currentOnChainWhitelist: [String]
+}
+
 #if DEBUG
 
 extension EvmTokenInfo {

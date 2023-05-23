@@ -21,7 +21,19 @@ extension PolygonWithdrawalRequest: EvmSignable {
 
 extension PolygonWalletNameUpdate: EvmSignable {
     func signableData() throws -> Data {
-        Data()
+        return try EvmConfigTransactionBuilder.getWalletNameUpdateExecutionFromModuleDataSafeHash(
+            walletAddress: wallet.address,
+            newName: newName,
+            whitelistUpdates: whitelistUpdates.map({
+                RenameWhitelistUpdate(
+                    targetWalletAddress: $0.walletAddress,
+                    renameInstructions: try EvmWhitelistHelper(
+                        addresses: $0.currentOnChainWhitelist,
+                        targetDests: []
+                    ).changesForRenameEntry(evmAddress: wallet.address, newName: newName).map { $0.data(using: .hexadecimal)! }
+                )
+            }),
+            evmTransaction: signingData.transaction)
     }
 }
 

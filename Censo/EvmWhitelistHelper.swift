@@ -115,6 +115,18 @@ struct EvmWhitelistHelper {
         return try removedAddresses() + addedAddresses()
     }
     
+    func changesForRenameEntry(evmAddress: String, newName: String) throws -> [String] {
+        var txData = Data(capacity: 32)
+        EvmTransactionUtil.appendPadded(destination: &txData, source: Bignum(1).data.suffix(12), padTo: 12)
+        try EvmTransactionUtil.appendPadded(destination: &txData, source: prevAddress(evmAddress.lowercased()).data(using: .hexadecimal)!, padTo: 20)
+        return [
+            txData.toHexString(),
+            EvmDestination(name: newName, address: evmAddress).nameHashAndAddress.toHexString()
+        ]
+    }
+    
+    
+    
     private func prevAddress(_ address: String) throws -> String {
         var prev: String? = nil
         for addr in currentAddresses {

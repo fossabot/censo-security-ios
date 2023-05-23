@@ -8,7 +8,7 @@
 import Foundation
 
 
-enum PolicyUpdateData: Equatable {
+enum ContractUpdateData: Equatable {
     case multisend(Data)
     case single(Data)
     
@@ -31,6 +31,11 @@ enum PolicyUpdateData: Equatable {
     }
 }
 
+struct RenameWhitelistUpdate {
+    let targetWalletAddress: String
+    let renameInstructions: [Data]
+}
+
 public class EvmConfigTransactionBuilder {
     static let multiSendCallOnlyAddress = "0x40A2aCCbd92BCA938b02010E17A5b8929b49130D"
     static let gnosisSafeAddress = "0xd9Db270c1B5E3Bd161E8c8503c55cEABeE709552"
@@ -41,6 +46,60 @@ public class EvmConfigTransactionBuilder {
     static let censoRecoveryGuard = "CensoRecoveryGuard"
     static let censoRecoveryFallbackHandler = "CensoRecoveryFallbackHandler"
     static let censoSetup = "CensoSetup"
+    
+    static func getWalletNameUpdateExecutionFromModuleDataSafeHash(walletAddress: String, newName: String, whitelistUpdates: [RenameWhitelistUpdate], evmTransaction: EvmTransaction) throws -> Data  {
+        guard let vaultAddress = evmTransaction.vaultAddress else {
+            throw EvmConfigError.missingVault
+        }
+        let updateData = try getWalletNameUpdateExecutionFromModuleData(walletAddress: walletAddress, newName: newName, whitelistUpdates: whitelistUpdates)
+        return EvmTransactionUtil.computeSafeTransactionHash(
+            chainId: evmTransaction.chainId,
+            safeAddress: vaultAddress,
+            to: {
+                switch updateData {
+                case .multisend:
+                    return EvmConfigTransactionBuilder.multiSendCallOnlyAddress
+                case .single:
+                    return walletAddress
+                    
+                }
+            }(),
+            value: Bignum(0),
+            data: updateData.data,
+            operation: {
+                switch updateData {
+                case .multisend:
+                    return .delegatecall
+                case .single:
+                    return .call
+                    
+                }
+            }(),
+            nonce: evmTransaction.safeNonce
+        )
+    }
+
+    static func  getWalletNameUpdateExecutionFromModuleData(walletAddress: String, newName: String, whitelistUpdates: [RenameWhitelistUpdate]) throws -> ContractUpdateData {
+        let updateNameData = getNameUpdateExecutionFromModuleData(safeAddress: walletAddress, newName: newName)
+        if (whitelistUpdates.isEmpty) {
+            return .single(updateNameData)
+        } else {
+            return .multisend(multiSendTx(
+                    encodeTransaction(
+                        address: EvmTransactionUtil.normalizeAddress(walletAddress),
+                        data: updateNameData
+                    ) + whitelistUpdates.map({
+                        encodeTransaction(
+                            address: EvmTransactionUtil.normalizeAddress($0.targetWalletAddress),
+                            data: getUpdateWhitelistExecutionFromModuleData(walletAddress: $0.targetWalletAddress, addsOrRemoves: $0.renameInstructions)
+                        )
+                    }).reduce(Data(), { x, y in x + y })
+                )
+            )
+        }
+    }
+    
+    
     // setting guard
     static func getSetGuardExecutionFromModuleDataSafeHash(walletAddress: String, guardAddress: String, evmTransaction: EvmTransaction) throws -> Data {
         guard let vaultAddress = evmTransaction.vaultAddress else {
@@ -113,7 +172,7 @@ public class EvmConfigTransactionBuilder {
         )
     }
     
-    static func getPolicyUpdateData(safeAddress: String, txs: [SafeTx]) -> PolicyUpdateData {
+    static func getPolicyUpdateData(safeAddress: String, txs: [SafeTx]) -> ContractUpdateData {
         let encodedTxs = getPolicyChangeDataList(txs: txs)
         switch encodedTxs.count {
         case 0:

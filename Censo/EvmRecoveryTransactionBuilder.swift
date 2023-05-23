@@ -43,7 +43,7 @@ public class EvmRecoveryTransactionBuilder {
         )
     }
 
-    private class func getRecoveryUpdateData(orgVaultAddress: String, old: String, new: String, changes: [RecoverySafeTx]) -> PolicyUpdateData {
+    private class func getRecoveryUpdateData(orgVaultAddress: String, old: String, new: String, changes: [RecoverySafeTx]) -> ContractUpdateData {
         let encodedFunctionCalls = getRecoveryFunctionCalls(orgVaultAddress: orgVaultAddress, old: old, new: new, changes: changes)
         switch encodedFunctionCalls.count {
         case 0:

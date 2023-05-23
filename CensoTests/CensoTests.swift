@@ -80,6 +80,7 @@ class CensoTests: XCTestCase {
             case .ethereumWalletCreation,
                  .bitcoinWalletCreation,
                  .polygonWalletCreation,
+                 .bitcoinWalletNameUpdate,
                  .addressBookUpdate,
                  .enableDevice,
                  .disableDevice,

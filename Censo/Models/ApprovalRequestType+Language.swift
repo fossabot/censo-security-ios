@@ -110,6 +110,7 @@ extension ApprovalRequestType {
             return update.wallet.name.toWalletName()
         case .ethereumWalletNameUpdate(let update as NameUpdate),
              .polygonWalletNameUpdate(let update as NameUpdate),
+             .bitcoinWalletNameUpdate(let update as NameUpdate),
              .vaultNameUpdate(let update as NameUpdate),
              .orgNameUpdate(let update as NameUpdate):
             return "\(update.oldDisplayName) → \(update.newDisplayName)"

@@ -55,6 +55,7 @@ struct PolygonWithdrawalRequest: Codable, Equatable  {
 struct PolygonWalletNameUpdate: Codable, Equatable  {
     var wallet: WalletInfo
     var newName: String
+    var whitelistUpdates: [WalletNameWhitelistUpdate]
     var fee: Amount
     var feeSymbolInfo: EvmSymbolInfo
     var signingData: PolygonSigningData
