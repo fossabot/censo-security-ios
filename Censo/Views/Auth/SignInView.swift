@@ -205,6 +205,7 @@ extension DeviceKey {
                 } catch (let error as NSError) where error._domain == "CryptoTokenKit" && error._code == -3 {
                     // key no longer valid
                     do {
+                        try Keychain.saveOldDevicePublicKey(try publicExternalRepresentation(), identifier: identifier)
                         try SecureEnclaveWrapper.removeDeviceKey(self)
                         completion(.failure(DeviceKeyError.keyInvalidatedByBiometryChange))
                     } catch {

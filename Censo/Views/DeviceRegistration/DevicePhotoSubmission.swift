@@ -64,6 +64,8 @@ struct DevicePhotoSubmission: View {
                 self.alertPresented = true
             } else {
                 do {
+                    let oldDeviceIdentifier = try Keychain.oldDevicePublicKey(identifier: deviceKey.identifier)
+
                     let preauthenticatedDeviceKey = try deviceKey.preauthenticatedKey(context: context)
                     let userDevice = CensoApi.UserDevice(
                         publicKey: try deviceKey.publicExternalRepresentation().base58String,
@@ -73,7 +75,7 @@ struct DevicePhotoSubmission: View {
                             type: .jpeg,
                             signature: try preauthenticatedDeviceKey.signature(for: Data(SHA256.hash(data: imageData))).base64EncodedString()
                         ),
-                        replacingDeviceIdentifier: nil
+                        replacingDeviceIdentifier: oldDeviceIdentifier?.base58String
                     )
 
                     inProgress = true
@@ -86,6 +88,7 @@ struct DevicePhotoSubmission: View {
                             self.error = error
                             self.alertPresented = true
                         case .success(let response) where response.statusCode < 400:
+                            Keychain.removeOldDevicePublicKey(identifier: deviceKey.identifier)
                             onSuccess()
                         case .success(let response):
                             self.error = MoyaError.statusCode(response)
