@@ -67,7 +67,8 @@ extension DAppParams {
                                 amount: Amount(value: "1.23", nativeValue: "1.23000", usdEquivalent: "2.34"),
                                 symbolInfo: EvmSymbolInfo(symbol: "PEPE", description: "Pepe Token", tokenInfo: nil, imageUrl: nil, nftMetadata: nil)
                             )
-                        ]
+                        ],
+                        tokenAllowances: []
                     )
                 ),
                 transaction: EvmTransactionParams(from: "0x01010101", to: "0x02020202", value: "0x", data: "0x")

@@ -257,6 +257,7 @@ enum EvmSimulationResult: Codable, Equatable {
 
 struct EvmSimulationResultSuccess: Codable, Equatable {
     let balanceChanges: [EvmSimulatedChange]
+    let tokenAllowances: [EvmTokenAllowance]
 }
 
 struct EvmSimulationResultFailure: Codable, Equatable {
@@ -266,6 +267,32 @@ struct EvmSimulationResultFailure: Codable, Equatable {
 struct EvmSimulatedChange: Codable, Equatable {
     let amount: Amount
     let symbolInfo: EvmSymbolInfo
+}
+
+enum TokenAllowanceType: String, Codable {
+    case Limited = "LIMITED"
+    case Unlimited = "UNLIMITED"
+    case Revoke = "REVOKE"
+}
+
+struct EvmTokenAllowance: Codable, Equatable {
+    let symbolInfo: EvmSymbolInfo
+    let allowedAddress: String
+    let allowedAmount: Amount
+    let allowanceType: TokenAllowanceType
+}
+
+extension EvmTokenAllowance {
+    func allowanceDisplay() -> String {
+        switch allowanceType {
+        case .Limited:
+            return allowedAmount.value
+        case .Unlimited:
+            return "Unlimited"
+        case .Revoke:
+            return "Revoked"
+        }
+    }
 }
 
 struct DAppInfo: Codable, Equatable {
