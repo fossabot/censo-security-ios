@@ -18,7 +18,7 @@ struct DAppTransactionDetails: View {
         VStack(alignment: .center, spacing: 10) {
             switch ethSendTransaction.simulationResult {
             case .success(let success):
-                SimulationBalanceChangesView(wallet: wallet, dAppInfo: dAppInfo, balanceChanges: success.balanceChanges)
+                SimulationBalanceChangesView(wallet: wallet, dAppInfo: dAppInfo, balanceChanges: success.balanceChanges, tokenAllowances: success.tokenAllowances)
             case .failure(let failure):
                 VStack {
                     Text("Simulation failed: \(failure.reason)")
@@ -56,6 +56,7 @@ struct SimulationBalanceChangesView: View {
     var wallet: WalletInfo
     var dAppInfo: DAppInfo
     var balanceChanges: [EvmSimulatedChange]
+    var tokenAllowances: [EvmTokenAllowance]
     
     var body: some View {
         VStack(alignment: .center, spacing: 10) {
@@ -116,6 +117,18 @@ struct SimulationBalanceChangesView: View {
                 }
             }
             .padding([.bottom], 20)
+            
+            if (tokenAllowances.count > 0) {
+                FactsSection(title: "Expected token allowances") {
+                    for tokenAllowance in tokenAllowances {
+                        Fact(
+                            tokenAllowance.symbolInfo.symbol,
+                            tokenAllowance.allowanceDisplay()
+                        )
+                    }
+                }
+                .padding([.top])
+            }
         }
     }
 }
@@ -158,7 +171,8 @@ extension EthSendTransaction {
                             amount: Amount(value: "1.23", nativeValue: "1.23000", usdEquivalent: "2.34"),
                             symbolInfo: EvmSymbolInfo(symbol: "PEPE", description: "Pepe Token", tokenInfo: nil, imageUrl: nil, nftMetadata: nil)
                         )
-                    ]
+                    ],
+                    tokenAllowances: []
                 )
             ),
             transaction: EvmTransactionParams(from: "0x01010101", to: "0x02020202", value: "0x", data: "0x")
@@ -168,7 +182,7 @@ extension EthSendTransaction {
     static var sampleSimSuccessNoChanges: Self {
         EthSendTransaction(
             simulationResult: .success(
-                EvmSimulationResultSuccess(balanceChanges: [])),
+                EvmSimulationResultSuccess(balanceChanges: [], tokenAllowances: [EvmTokenAllowance(symbolInfo: EvmSymbolInfo(symbol: "USDC", description: "USD Coin", tokenInfo: nil, imageUrl: nil, nftMetadata: nil), allowedAddress: "allowed-address", allowedAmount: Amount(value: "12345678910111213141516.000000", nativeValue: "12345678910111213141516.000000", usdEquivalent: "12345678910111213141516.00"), allowanceType: TokenAllowanceType.Limited)])),
             transaction: EvmTransactionParams(from: "0x54b6d88c500c9859314b7e3a4e05767160503b77", to: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", value: "0x0", data: "0x095ea7b3000000000000000000000000000000000022d473030f116ddee9f6b43ac78ba3ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff")
         )
     }
