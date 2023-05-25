@@ -8,8 +8,6 @@
 import SwiftUI
 
 struct NotificationCheck<Content>: View where Content : View {
-    @State private var notificationStatus: UNAuthorizationStatus = .denied
-
     @AppStorage private var userPromptedForPush: Bool
 
     var content: () -> Content
@@ -20,59 +18,51 @@ struct NotificationCheck<Content>: View where Content : View {
     }
 
     var body: some View {
-        Group {
-            if !userPromptedForPush {
-                VStack {
-                    Spacer()
+        if !userPromptedForPush {
+            VStack {
+                Spacer()
 
-                    Text("Censo would like to send you push notifications")
-                        .padding()
-                        .multilineTextAlignment(.center)
-
-                    Spacer()
-
-                    Button {
-                        registerForRemoteNotifications()
-                    } label: {
-                        Text("Enable Notifications")
-                    }
-                    .buttonStyle(FilledButtonStyle())
-
-                    Button {
-                        self.userPromptedForPush = true
-                    } label: {
-                        Text("Skip")
-                            .bold()
-                            .foregroundColor(.Censo.red)
-                    }
+                Text("Censo would like to send you push notifications")
                     .padding()
+                    .multilineTextAlignment(.center)
 
-                    Spacer()
+                Spacer()
+
+                Button {
+                    registerForRemoteNotifications()
+                } label: {
+                    Text("Enable Notifications")
                 }
-            } else {
-                content()
-                    .onFirstTimeAppear {
-                        if notificationStatus == .authorized {
-                            UIApplication.shared.registerForRemoteNotifications()
+                .buttonStyle(FilledButtonStyle())
+
+                Button {
+                    self.userPromptedForPush = true
+                } label: {
+                    Text("Skip")
+                        .bold()
+                        .foregroundColor(.Censo.red)
+                }
+                .padding()
+
+                Spacer()
+            }
+        } else {
+            content()
+                .onFirstTimeAppear {
+                    UNUserNotificationCenter.current().getNotificationSettings { settings in
+                        DispatchQueue.main.async {
+                            if settings.authorizationStatus == .authorized {
+                                UIApplication.shared.registerForRemoteNotifications()
+                            }
                         }
                     }
-            }
-        }
-        .onFirstTimeAppear {
-            fetchNotificationStatus()
-        }
-    }
-
-    private func fetchNotificationStatus() {
-        UNUserNotificationCenter.current().getNotificationSettings { settings in
-            self.notificationStatus = settings.authorizationStatus
+                }
         }
     }
 
     private func registerForRemoteNotifications() {
         UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge]) { (_, _) in
             DispatchQueue.main.async {
-                fetchNotificationStatus()
                 userPromptedForPush = true
             }
         }
