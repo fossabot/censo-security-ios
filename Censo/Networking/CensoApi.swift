@@ -30,8 +30,9 @@ struct CensoApi {
         case registerPushToken(String, deviceIdentifier: String)
         case unregisterPushToken(deviceIdentifier: String)
 
-        case connectDApp(code: String)
-        case checkDAppConnection(topic: String)
+        case availableDAppVaults(devicePublicKey: String)
+        case connectDApp(code: String, walletAddresses: [String], devicePublicKey: String)
+        case checkDAppConnection(topic: String, devicePublicKey: String)
 
         case shards(policyRevisionId: String, userId: String?, deviceIdentifier: String)
         case recoveryShards(deviceIdentifier: String)
@@ -303,6 +304,21 @@ extension CensoApi {
         case expired = "Expired"
         case deleted = "Deleted"
     }
+
+    struct AvailableDAppVault: Codable {
+        var vaultName: String
+        var wallets: [AvailableDAppWallet]
+    }
+
+    struct AvailableDAppWallet: Codable {
+        var walletName: String
+        var walletAddress: String
+        var chains: [Chain]
+    }
+
+    struct AvailableDAppVaultsResponse: Codable {
+        var vaults: [AvailableDAppVault]
+    }
 }
 
 
@@ -346,7 +362,7 @@ extension CensoApi.Target: Moya.TargetType {
             return "v1/notification-tokens/\(deviceIdentifier)/ios"
         case .connectDApp:
             return "v1/wallet-connect"
-        case .checkDAppConnection(let topic):
+        case .checkDAppConnection(let topic, _):
             return "v1/wallet-connect/\(topic)"
         case .registerApprovalDisposition(let request, _):
             return "v2/approval-requests/\(request.requestID)/dispositions"
@@ -364,6 +380,8 @@ extension CensoApi.Target: Moya.TargetType {
             return "v1/my-org-admin-recovery-request"
         case .registerOrgAdminRecoverySignatures:
             return "v1/org-admin-recovery-signatures"
+        case .availableDAppVaults:
+            return "v1/available-dapp-wallets"
         }
     }
     
@@ -375,6 +393,7 @@ extension CensoApi.Target: Moya.TargetType {
              .shards,
              .recoveryShards,
              .checkDAppConnection,
+             .availableDAppVaults,
              .myOrgAdminRecoveryRequest:
             return .get
         case .connectDApp,
@@ -402,6 +421,7 @@ extension CensoApi.Target: Moya.TargetType {
              .minVersion,
              .recoveryShards,
              .checkDAppConnection,
+             .availableDAppVaults,
              .myOrgAdminRecoveryRequest:
             return .requestPlain
         case .emailVerification(let email):
@@ -439,7 +459,7 @@ extension CensoApi.Target: Moya.TargetType {
             return .requestJSONEncodable(orgAdminRecoveredDeviceAndSigners)
         case .registerOrgAdminRecoverySignatures(let orgAdminRecoverySignaturesRequest, _):
             return .requestJSONEncodable(orgAdminRecoverySignaturesRequest)
-        case .connectDApp(let code):
+        case .connectDApp(let code, _, _):
             return .requestJSONEncodable([
                 "uri": code
             ])
@@ -478,7 +498,10 @@ extension CensoApi.Target: Moya.TargetType {
              .approvalRequests(let devicePublicKey),
              .orgAdminRecoveredDeviceAndSigners(_, let devicePublicKey),
              .registerOrgAdminRecoverySignatures(_, let devicePublicKey),
-             .myOrgAdminRecoveryRequest(let devicePublicKey):
+             .myOrgAdminRecoveryRequest(let devicePublicKey),
+             .availableDAppVaults(let devicePublicKey),
+             .checkDAppConnection(_, let devicePublicKey),
+             .connectDApp(_, _, let devicePublicKey):
             return [
                 "Content-Type": "application/json",
                 "X-IsApi": "true",

@@ -17,10 +17,12 @@ struct ConnectingWallet: View {
     @Binding var connectionState: DAppScan.ConnectionState
 
     var topic: String
+    var wallet: CensoApi.AvailableDAppWallet
+    var deviceKey: DeviceKey
 
     var body: some View {
         ProgressView {
-            Text("Connecting to dApp")
+            Text("Connecting \(wallet.walletName) to dApp")
         }
         .onReceive(timer) { _ in
             checkConnection()
@@ -35,11 +37,11 @@ struct ConnectingWallet: View {
 
         attempts += 1
 
-        censoApi.provider.decodableRequest(.checkDAppConnection(topic: topic)) { (result: Result<[CensoApi.WalletConnectSession], MoyaError>) in
+        censoApi.provider.decodableRequest(.checkDAppConnection(topic: topic, devicePublicKey: try! deviceKey.publicExternalRepresentation().base58String)) { (result: Result<[CensoApi.WalletConnectSession], MoyaError>) in
             switch result {
             case .success(let connectSessions):
                 if let activeSession = connectSessions.first(where: { $0.status == .active }) {
-                    connectionState = .finished(activeSession)
+                    connectionState = .finished(activeSession, wallet: wallet)
                 }
             case .failure(let error):
                 connectionState = .failed(error)

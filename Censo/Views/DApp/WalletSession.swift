@@ -11,6 +11,7 @@ struct WalletSession: View {
     @Environment(\.dismiss) var dismiss
 
     var walletConnectSession: CensoApi.WalletConnectSession
+    var wallet: CensoApi.AvailableDAppWallet
     var onTryAgain: () -> Void
 
     var body: some View {
@@ -38,7 +39,7 @@ struct WalletSession: View {
                 Spacer()
                     .frame(height: 50)
 
-                Text("Successfully connected to \(walletConnectSession.name)")
+                Text("Successfully \(wallet.walletName) connected to \(walletConnectSession.name)")
                     .multilineTextAlignment(.center)
                     .font(.title)
                     .padding()
@@ -70,7 +71,7 @@ struct WalletSession: View {
 #if DEBUG
 struct WalletConnected_Previews: PreviewProvider {
     static var previews: some View {
-        WalletSession(walletConnectSession: .sample, onTryAgain: { })
+        WalletSession(walletConnectSession: .sample, wallet: .sample, onTryAgain: { })
     }
 }
 

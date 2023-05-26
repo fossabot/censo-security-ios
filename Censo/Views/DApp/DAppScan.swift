@@ -15,27 +15,24 @@ struct DAppScan: View {
 
     @StateObject private var controller = CaptureController()
 
-    @State private var alert: AlertType? = nil
     @State private var connectionState: ConnectionState = .idle
 
     enum ConnectionState {
         case idle
-        case validating
-        case connecting(topic: String)
-        case finished(CensoApi.WalletConnectSession)
+        case validating(code: String)
+        case connecting(topic: String, wallet: CensoApi.AvailableDAppWallet)
+        case finished(CensoApi.WalletConnectSession, wallet: CensoApi.AvailableDAppWallet)
         case failed(Error)
     }
 
-    enum AlertType {
-        case error(Error)
-    }
+    var deviceKey: DeviceKey
 
     var body: some View {
         NavigationView {
             Group {
                 switch (connectionState, controller.state) {
-                case (.finished(let walletConnectSession), _):
-                    WalletSession(walletConnectSession: walletConnectSession) {
+                case (.finished(let walletConnectSession, let wallet), _):
+                    WalletSession(walletConnectSession: walletConnectSession, wallet: wallet) {
                         connectionState = .idle
                     }
                 case (.failed(let error), _):
@@ -49,8 +46,8 @@ struct DAppScan: View {
                             Text("Try Again")
                         }
                     }
-                case (.connecting(let topic), _):
-                    ConnectingWallet(connectionState: $connectionState, topic: topic)
+                case (.connecting(let topic, let wallet), _):
+                    ConnectingWallet(connectionState: $connectionState, topic: topic, wallet: wallet, deviceKey: deviceKey)
                 case (_, .starting):
                     ProgressView {
                         Text("Starting capture device")
@@ -77,8 +74,12 @@ struct DAppScan: View {
                                     .opacity(0.7)
 
                                 switch connectionState {
-                                case .validating:
-                                    ProgressView("Validating QR code")
+                                case .validating(let code):
+                                    NavigationLink(isActive: .constant(true)) {
+                                        AvailableDAppWallets(code: code, deviceKey: deviceKey, connectionState: $connectionState)
+                                    } label: {
+                                        EmptyView()
+                                    }
                                 default:
                                     Text("Point the camera at the DApp's QR code")
                                 }
@@ -97,6 +98,8 @@ struct DAppScan: View {
                                     .foregroundColor(.black)
                                     .opacity(0.7)
                             }
+
+
                         }
                     }
                     .ignoresSafeArea(.all, edges: [.bottom])
@@ -115,28 +118,12 @@ struct DAppScan: View {
                     }
                 }
             }
-            .alert(item: $alert) { alert in
-                switch alert {
-                case .error(let connectionError as CensoApi.WalletConnectionError):
-                    return Alert(
-                        title: Text("Error"),
-                        message: Text(connectionError.errors.first?.message ?? "Could not connect wallet"),
-                        dismissButton: .cancel(Text("Ok"))
-                    )
-                case .error:
-                    return Alert(
-                        title: Text("Error"),
-                        message: Text("Something went wrong"),
-                        dismissButton: .cancel(Text("Ok"))
-                    )
-                }
-            }
         }
         .navigationViewStyle(StackNavigationViewStyle())
     }
 
     private func didReceiveNewCode(_ code: String?) {
-        guard case .idle = connectionState, alert == nil else {
+        guard case .idle = connectionState else {
             return
         }
 
@@ -144,26 +131,17 @@ struct DAppScan: View {
             return
         }
 
-        connectionState = .validating
-        censoApi.provider.decodableRequest(.connectDApp(code: code)) { (result: Result<CensoApi.WalletConnectPairing, MoyaError>) in
-            switch result {
-            case .failure(let error):
-                alert = .error(error)
-                connectionState = .idle
-            case .success(let pairingResponse):
-                connectionState = .connecting(topic: pairingResponse.topic)
-            }
-        }
+        connectionState = .validating(code: code)
     }
 }
 
-extension DAppScan.AlertType: Identifiable {
-    var id: String {
+extension DAppScan.ConnectionState {
+    var isValidating: Bool {
         switch self {
-        case .error(let error):
-            return error.localizedDescription
+        case .validating:
+            return true
+        default:
+            return false
         }
     }
 }
-
-

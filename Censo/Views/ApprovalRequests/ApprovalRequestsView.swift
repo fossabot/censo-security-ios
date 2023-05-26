@@ -55,7 +55,7 @@ struct ApprovalRequestsView: View {
             }
         }
         .sheet(isPresented: $showingDAppScan) {
-            DAppScan()
+            DAppScan(deviceKey: registeredDevice.deviceKey)
         }
     }
 

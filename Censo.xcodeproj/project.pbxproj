@@ -149,6 +149,7 @@
 		3DE53CCB28AAC0E500B4F014 /* JWTDecode in Frameworks */ = {isa = PBXBuildFile; productRef = 3DE53CCA28AAC0E500B4F014 /* JWTDecode */; };
 		3DE53CCD28AADEB300B4F014 /* CensoAuthProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE53CCC28AADEB300B4F014 /* CensoAuthProvider.swift */; };
 		3DE66E80299C2E9B00E64808 /* Moya in Frameworks */ = {isa = PBXBuildFile; productRef = 3DE66E7F299C2E9B00E64808 /* Moya */; };
+		3DE7ACD12A210C6A00B0F3D2 /* AvailableDAppWallets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DE7ACD02A210C6A00B0F3D2 /* AvailableDAppWallets.swift */; };
 		3DEC0C8F2641B4DB00309A0F /* FactsSection.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DEC0C8E2641B4DB00309A0F /* FactsSection.swift */; };
 		3DED50D229103D1B00904DBA /* Keychain+Storage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DED50D129103D1B00904DBA /* Keychain+Storage.swift */; };
 		3DF5F69C29F75908005B3D85 /* DeviceRegistrationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3DF5F69B29F75908005B3D85 /* DeviceRegistrationController.swift */; };
@@ -378,6 +379,7 @@
 		3DE53C8B28A2B45D00B4F014 /* VersionCheck.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VersionCheck.swift; sourceTree = "<group>"; };
 		3DE53C8D28A2BF9500B4F014 /* UpdateApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdateApp.swift; sourceTree = "<group>"; };
 		3DE53CCC28AADEB300B4F014 /* CensoAuthProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CensoAuthProvider.swift; sourceTree = "<group>"; };
+		3DE7ACD02A210C6A00B0F3D2 /* AvailableDAppWallets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AvailableDAppWallets.swift; sourceTree = "<group>"; };
 		3DEC0C8E2641B4DB00309A0F /* FactsSection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FactsSection.swift; sourceTree = "<group>"; };
 		3DED50D129103D1B00904DBA /* Keychain+Storage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Keychain+Storage.swift"; sourceTree = "<group>"; };
 		3DF5F69B29F75908005B3D85 /* DeviceRegistrationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceRegistrationController.swift; sourceTree = "<group>"; };
@@ -564,6 +566,7 @@
 				3D11A60627581510008C03B1 /* CameraAccessRequired.swift */,
 				3D11A60A275851BA008C03B1 /* WalletSession.swift */,
 				3D2A2A812A0419C60024BA88 /* ConnectingWallet.swift */,
+				3DE7ACD02A210C6A00B0F3D2 /* AvailableDAppWallets.swift */,
 			);
 			path = DApp;
 			sourceTree = "<group>";
@@ -1338,6 +1341,7 @@
 				3D13B3A92A0AF8DB00C2EE06 /* Maintenance.swift in Sources */,
 				3DE1610D297087AE00F48930 /* ApprovalRequest.swift in Sources */,
 				3DED50D229103D1B00904DBA /* Keychain+Storage.swift in Sources */,
+				3DE7ACD12A210C6A00B0F3D2 /* AvailableDAppWallets.swift in Sources */,
 				6C8CE73D298B5FC600834978 /* EvmPolicyHelper.swift in Sources */,
 				E42F565F29D3297900C6922B /* UserDetails.swift in Sources */,
 				3DAA26F0262F5147000F453D /* PrimaryButtonStyle.swift in Sources */,
