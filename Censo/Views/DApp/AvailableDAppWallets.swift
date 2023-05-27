@@ -26,7 +26,7 @@ struct AvailableDAppWallets: View {
                     .onAppear(perform: reload)
             case .loading:
                 ProgressView("Fetching available wallets...")
-            case .success(let respone):
+            case .success(let response):
                 AvailableDAppWalletList(response: response, code: code, deviceKey: deviceKey, connectionState: _connectionState)
             case .failure(let error):
                 RetryView(error: error, action: reload)
