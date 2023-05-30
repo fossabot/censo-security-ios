@@ -154,8 +154,10 @@ struct AvailableDAppWalletList: View {
 
     private func connect(to wallet: CensoApi.AvailableDAppWallet) {
         selectedWalletAddress = wallet.walletAddress
+        
+        let request = CensoApi.WalletConnectPairingRequest(uri: code, walletAddresses: [wallet.walletAddress])
 
-        censoApi.provider.decodableRequest(.connectDApp(code: code, walletAddresses: [wallet.walletAddress], devicePublicKey: try! deviceKey.publicExternalRepresentation().base58String)) { (result: Result<CensoApi.WalletConnectPairing, MoyaError>) in
+        censoApi.provider.decodableRequest(.connectDApp(request, devicePublicKey: try! deviceKey.publicExternalRepresentation().base58String)) { (result: Result<CensoApi.WalletConnectPairing, MoyaError>) in
             switch result {
             case .failure(let error):
                 alert = .error(error)
