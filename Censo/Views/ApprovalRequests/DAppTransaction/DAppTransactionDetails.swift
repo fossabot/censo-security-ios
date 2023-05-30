@@ -60,75 +60,99 @@ struct SimulationBalanceChangesView: View {
     
     var body: some View {
         VStack(alignment: .center, spacing: 10) {
-            if (balanceChanges.count == 0) {
-                VStack {
-                    Text("No balances changed in simulation")
-                        .font(.title2)
-                        .bold()
-                        .lineLimit(1)
-                        .allowsTightening(true)
-                        .minimumScaleFactor(0.25)
-                        .foregroundColor(Color.black)
-                        .padding(EdgeInsets(top: 15, leading: 20, bottom: 0, trailing: 20))
-                }
-            }
             ForEach(0..<balanceChanges.count, id: \.self) { i in
                 let balanceChange = balanceChanges[i]
                 
-                VStack {
-                    Text(balanceChange.symbolInfo.symbol)
-                        .font(.title2)
-                        .bold()
-                        .lineLimit(1)
-                        .allowsTightening(true)
-                        .minimumScaleFactor(0.25)
-                        .foregroundColor(Color.black)
-                        .padding(EdgeInsets(top: 15, leading: 20, bottom: 0, trailing: 20))
-                    
-                    Text(balanceChange.amount.value)
-                        .font(Font.subheadline)
-                        .foregroundColor(balanceChange.amount.isNegative ? Color.red : Color.green)
-                    
-                    if let usdEquivalent = balanceChange.amount.formattedUSDEquivalent {
-                        Text(usdEquivalent)
-                            .font(.caption)
-                            .foregroundColor(Color.black.opacity(0.5))
-                            .padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20))
-                    }
-                    
-                    HStack(spacing: 0) {
-                        AccountDetail(name: dAppInfo.name)
-                            .padding(10)
-                            .frame(maxWidth: .infinity, maxHeight: 40)
-                            .roundedCell(background: .Censo.primaryBackground)
-                        
-                        Text(balanceChange.amount.isNegative ? "←" : "→")
-                            .font(.body)
-                            .foregroundColor(Color.black)
-                            .frame(width: 20, height: 20)
-                        
-                        AccountDetail(name: wallet.name)
-                            .padding(10)
-                            .frame(maxWidth: .infinity, maxHeight: 40)
-                            .roundedCell(background: .Censo.primaryBackground)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding(EdgeInsets(top: 5, leading: 14, bottom: 5, trailing: 14))
-                }
+                DAppRequestChangeDetail(
+                    title: "\(balanceChange.amount.isNegative ? "Send" : "Receive") \(balanceChange.symbolInfo.symbol)",
+                    amount: balanceChange.amount.absoluteValue,
+                    usdAmount: balanceChange.amount.formattedUSDEquivalent,
+                    walletName: wallet.name,
+                    dAppName: dAppInfo.name,
+                    directionIsForward: balanceChange.amount.isNegative
+                )
             }
             .padding([.bottom], 20)
-            
-            if (tokenAllowances.count > 0) {
-                FactsSection(title: "Expected token allowances") {
-                    for tokenAllowance in tokenAllowances {
-                        Fact(
-                            tokenAllowance.symbolInfo.symbol,
-                            tokenAllowance.allowanceDisplay()
-                        )
-                    }
-                }
-                .padding([.top])
+
+            ForEach(0..<tokenAllowances.count, id: \.self) { i in
+                let tokenAllowance = tokenAllowances[i]
+
+                DAppRequestChangeDetail(
+                    title: "\(tokenAllowance.allowanceType == .Revoke ? "Revoke" : "Allow") use of \(tokenAllowance.symbolInfo.symbol)",
+                    amount: tokenAllowance.displayAmount,
+                    usdAmount: tokenAllowance.allowanceType == .Limited ? tokenAllowance.allowedAmount.formattedUSDEquivalent : nil,
+                    walletName: wallet.name,
+                    dAppName: dAppInfo.name,
+                    directionIsForward: true
+                )
             }
+
+        }
+    }
+
+    struct DAppRequestChangeDetail: View {
+        var title: String
+        var amount: String?
+        var usdAmount: String?
+        var walletName: String
+        var dAppName: String
+        var directionIsForward: Bool
+
+        var body: some View {
+            VStack {
+                Text(title)
+                    .font(.title2)
+                    .bold()
+                    .lineLimit(1)
+                    .allowsTightening(true)
+                    .minimumScaleFactor(0.25)
+                    .foregroundColor(Color.black)
+                    .padding(EdgeInsets(top: 15, leading: 20, bottom: 0, trailing: 20))
+
+                if let amount = amount {
+                    Text(amount)
+                        .font(Font.subheadline)
+                }
+
+                if let usdEquivalent = usdAmount {
+                    Text("\(usdEquivalent) USD Equivalent")
+                        .font(.caption)
+                        .foregroundColor(Color.black.opacity(0.5))
+                        .padding(EdgeInsets(top: 0, leading: 20, bottom: 0, trailing: 20))
+                }
+
+                HStack(spacing: 0) {
+                    AccountDetail(name: walletName)
+                        .padding(10)
+                        .frame(maxWidth: .infinity, maxHeight: 40)
+                        .roundedCell(background: .Censo.primaryBackground)
+
+                    Text(directionIsForward ? "→" : "←")
+                        .font(.body)
+                        .foregroundColor(Color.black)
+                        .frame(width: 20, height: 20)
+
+                    AccountDetail(name: dAppName)
+                        .padding(10)
+                        .frame(maxWidth: .infinity, maxHeight: 40)
+                        .roundedCell(background: .Censo.primaryBackground)
+                }
+                .frame(maxWidth: .infinity)
+                .padding(EdgeInsets(top: 5, leading: 14, bottom: 5, trailing: 14))
+            }
+        }
+    }
+}
+
+extension EvmTokenAllowance {
+    var displayAmount: String? {
+        switch self.allowanceType {
+        case .Limited:
+            return allowedAmount.value
+        case .Unlimited:
+            return "Unlimited"
+        case .Revoke:
+            return nil
         }
     }
 }
@@ -170,9 +194,12 @@ extension EthSendTransaction {
                         EvmSimulatedChange(
                             amount: Amount(value: "1.23", nativeValue: "1.23000", usdEquivalent: "2.34"),
                             symbolInfo: EvmSymbolInfo(symbol: "PEPE", description: "Pepe Token", tokenInfo: nil, imageUrl: nil, nftMetadata: nil)
-                        )
+                        ),
+                        EvmSimulatedChange(amount: Amount(value: "-1.23", nativeValue: "-1.23000", usdEquivalent: "2.34"), symbolInfo: .sample)
                     ],
-                    tokenAllowances: []
+                    tokenAllowances: [
+                        .init(symbolInfo: .sample, allowedAddress: "gfdgdf7g767g", allowedAmount: .sample, allowanceType: .Unlimited)
+                    ]
                 )
             ),
             transaction: EvmTransactionParams(from: "0x01010101", to: "0x02020202", value: "0x", data: "0x")

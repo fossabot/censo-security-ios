@@ -57,36 +57,38 @@ struct ApprovalRequestRow<Row, Detail>: View where Row : View, Detail: View {
             Divider()
 
             HStack(spacing: 0) {
-                Button {
-                    switch request.details {
-                    case .loginApproval:
-                        approve()
-                    default:
-                        alert = .confirmation
+                if request.canApproveFromList {
+                    Button {
+                        switch request.details {
+                        case .loginApproval:
+                            approve()
+                        default:
+                            alert = .confirmation
+                        }
+                    } label: {
+                        Text(request.approveButtonCaption)
+                            .bold()
+                            .loadingIndicator(when: isLoading)
+                            .foregroundColor(Color.Censo.green)
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            .progressViewStyle(CircularProgressViewStyle(tint: Color.Censo.green))
                     }
-                } label: {
-                    Text(request.approveButtonCaption)
-                        .bold()
-                        .loadingIndicator(when: isLoading)
-                        .foregroundColor(Color.Censo.green)
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .progressViewStyle(CircularProgressViewStyle(tint: Color.Censo.green))
-                }
-                .alert(item: $alert) { alertType in
-                    switch alertType {
-                    case .confirmation:
-                        return Alert(
-                            title: Text("Are you sure?"),
-                            message: Text("You are about to approve the following request:\n \(request.details.header)"),
-                            primaryButton: Alert.Button.default(Text("Confirm"), action: approve),
-                            secondaryButton: Alert.Button.cancel(Text("Cancel"))
-                        )
-                    case .error(let error):
-                        return Alert.withDismissButton(title: Text("Error"), message: Text(error.message))
+                    .alert(item: $alert) { alertType in
+                        switch alertType {
+                        case .confirmation:
+                            return Alert(
+                                title: Text("Are you sure?"),
+                                message: Text("You are about to approve the following request:\n \(request.details.header)"),
+                                primaryButton: Alert.Button.default(Text("Confirm"), action: approve),
+                                secondaryButton: Alert.Button.cancel(Text("Cancel"))
+                            )
+                        case .error(let error):
+                            return Alert.withDismissButton(title: Text("Error"), message: Text(error.message))
+                        }
                     }
-                }
 
-                Divider()
+                    Divider()
+                }
 
                 Button {
                     navigated = true
@@ -197,20 +199,42 @@ extension ApprovalRequest {
             return "Approve"
         }
     }
+
+    var canApproveFromList: Bool {
+        switch details {
+        case .polygonDAppRequest,
+             .ethereumDAppRequest:
+            return false
+        default:
+            return true
+        }
+    }
 }
 
 #if DEBUG
-//struct ApprovalRequestRow_Previews: PreviewProvider {
-//    static var previews: some View {
-//        let timerPublisher = Timer.TimerPublisher(interval: 1, runLoop: .current, mode: .default).autoconnect()
-//
-//        ApprovalRequestRow(registeredDevice: .init(email: "test@test.com", deviceKey: .sample, encryptedRootSeed: Data()), user: .sample, request: .sample, timerPublisher: timerPublisher) {
-//            WithdrawalRow(requestType: .ethereumWithdrawalRequest(.sample), withdrawal: EthereumWithdrawalRequest.sample)
-//        } detail: {
-//            WithdrawalDetails(request: .sample, withdrawal: EthereumWithdrawalRequest.sample)
-//        }
-//    }
-//}
+struct ApprovalRequestRow_Previews: PreviewProvider {
+    static var previews: some View {
+        let timerPublisher = Timer.TimerPublisher(interval: 1, runLoop: .current, mode: .default).autoconnect()
+
+        ApprovalRequestRow(registeredDevice: .sample, user: .sample, request: .sample, timerPublisher: timerPublisher) {
+            WithdrawalRow(requestType: .ethereumWithdrawalRequest(.sample), withdrawal: EthereumWithdrawalRequest.sample)
+        } detail: {
+            WithdrawalDetails(request: .sample, withdrawal: EthereumWithdrawalRequest.sample)
+        }
+    }
+}
+
+extension RegisteredDevice {
+    static var sample: Self {
+        RegisteredDevice(email: "test@test.com", deviceKey: .sample, encryptedRootSeed: Data(), publicKeys: .sample)
+    }
+}
+
+extension PublicKeys {
+    static var sample: Self {
+        PublicKeys(bitcoin: "bitcoinPublicKey", ethereum: "ethereumPublicKey", offchain: "offchainPublicKey")
+    }
+}
 
 extension EthereumWithdrawalRequest {
     static var sample: Self {

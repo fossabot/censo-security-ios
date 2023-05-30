@@ -99,6 +99,14 @@ extension Amount {
             return value.hasPrefix("-")
         }
     }
+
+    var absoluteValue: String {
+        if isNegative {
+            return String(value.dropFirst(1))
+        } else {
+            return value
+        }
+    }
 }
 
 struct WalletInfo: Codable, Equatable {
