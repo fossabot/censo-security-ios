@@ -64,7 +64,7 @@ struct SimulationBalanceChangesView: View {
                 let balanceChange = balanceChanges[i]
                 
                 DAppRequestChangeDetail(
-                    title: "\(balanceChange.amount.isNegative ? "Send" : "Receive") \(balanceChange.symbolInfo.symbol)",
+                    title: "\(balanceChange.amount.isNegative ? "Send" : "Receive") \(balanceChange.symbolInfo.displayName)",
                     amount: balanceChange.amount.absoluteValue,
                     usdAmount: balanceChange.amount.formattedUSDEquivalent,
                     walletName: wallet.name,
@@ -78,7 +78,7 @@ struct SimulationBalanceChangesView: View {
                 let tokenAllowance = tokenAllowances[i]
 
                 DAppRequestChangeDetail(
-                    title: "\(tokenAllowance.allowanceType == .Revoke ? "Revoke" : "Allow") use of \(tokenAllowance.symbolInfo.symbol)",
+                    title: "\(tokenAllowance.allowanceType == .Revoke ? "Revoke" : "Allow") use of \(tokenAllowance.symbolInfo.displayName)",
                     amount: tokenAllowance.displayAmount,
                     usdAmount: tokenAllowance.allowanceType == .Limited ? tokenAllowance.allowedAmount.formattedUSDEquivalent : nil,
                     walletName: wallet.name,
@@ -154,6 +154,12 @@ extension EvmTokenAllowance {
         case .Revoke:
             return nil
         }
+    }
+}
+
+extension EvmSymbolInfo {
+    var displayName: String {
+        symbol.split(separator: ":").first.flatMap { String($0) } ?? symbol
     }
 }
 
