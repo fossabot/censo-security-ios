@@ -39,7 +39,7 @@ struct WalletSession: View {
                 Spacer()
                     .frame(height: 50)
 
-                Text("Successfully \(wallet.walletName) connected to \(walletConnectSession.name)")
+                Text("\(wallet.walletName) successfully connected to \(walletConnectSession.name)")
                     .multilineTextAlignment(.center)
                     .font(.title)
                     .padding()
