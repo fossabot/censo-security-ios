@@ -66,7 +66,7 @@ struct SimulationBalanceChangesView: View {
                 DAppRequestChangeDetail(
                     title: "\(balanceChange.amount.isNegative ? "Send" : "Receive") \(balanceChange.symbolInfo.displayName)",
                     amount: balanceChange.amount.absoluteValue,
-                    usdAmount: balanceChange.amount.formattedUSDEquivalent,
+                    usdAmount: balanceChange.amount.formattedUSDEquivalentAbs,
                     walletName: wallet.name,
                     dAppName: dAppInfo.name,
                     directionIsForward: balanceChange.amount.isNegative
@@ -201,7 +201,7 @@ extension EthSendTransaction {
                             amount: Amount(value: "1.23", nativeValue: "1.23000", usdEquivalent: "2.34"),
                             symbolInfo: EvmSymbolInfo(symbol: "PEPE", description: "Pepe Token", tokenInfo: nil, imageUrl: nil, nftMetadata: nil)
                         ),
-                        EvmSimulatedChange(amount: Amount(value: "-1.23", nativeValue: "-1.23000", usdEquivalent: "2.34"), symbolInfo: .sample)
+                        EvmSimulatedChange(amount: Amount(value: "-1.23", nativeValue: "-1.23000", usdEquivalent: "-2.34"), symbolInfo: .sample)
                     ],
                     tokenAllowances: [
                         .init(symbolInfo: .sample, allowedAddress: "gfdgdf7g767g", allowedAmount: .sample, allowanceType: .Unlimited)

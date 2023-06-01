@@ -62,12 +62,12 @@ struct WithdrawalRow: View {
     }
 }
 
-func formatUSDEquivalent(usdEquivalent: String?) -> String? {
+func formatUSDEquivalent(usdEquivalent: String?, absoluteValue: Bool = false) -> String? {
     guard let amount = usdEquivalent, let decimalValue = Decimal(string: amount) else {
         return nil
     }
     
-    return NumberFormatter.usdFormatter.string(from: NSDecimalNumber(decimal: decimalValue))
+    return NumberFormatter.usdFormatter.string(from: NSDecimalNumber(decimal: absoluteValue && decimalValue < 0 ? -decimalValue : decimalValue))
 }
 
 func formatAmount(amount: String) -> String {
@@ -89,6 +89,10 @@ extension Amount {
         return formatUSDEquivalent(usdEquivalent: usdEquivalent)
     }
 
+    var formattedUSDEquivalentAbs: String? {
+        return formatUSDEquivalent(usdEquivalent: usdEquivalent, absoluteValue: true)
+    }
+    
     var formattedAmount: String {
         return formatAmount(amount: value)
     }
