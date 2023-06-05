@@ -265,7 +265,7 @@ enum EvmSimulationResult: Codable, Equatable {
 
 struct EvmSimulationResultSuccess: Codable, Equatable {
     let balanceChanges: [EvmSimulatedChange]
-    let tokenAllowances: [EvmTokenAllowance]
+    let tokenAllowancesV2: [EvmTokenAllowance]
 }
 
 struct EvmSimulationResultFailure: Codable, Equatable {
@@ -277,30 +277,61 @@ struct EvmSimulatedChange: Codable, Equatable {
     let symbolInfo: EvmSymbolInfo
 }
 
-enum TokenAllowanceType: String, Codable {
-    case Limited = "LIMITED"
-    case Unlimited = "UNLIMITED"
-    case Revoke = "REVOKE"
-}
+enum EvmTokenAllowance: Codable, Equatable {
+    case singleTokenApproved(EvmTokenAllowanceSingleTokenApproved)
+    case singleTokenRevoked(EvmTokenAllowanceSingleTokenRevoked)
+    case allTokens(EvmTokenAllowanceAllTokens)
 
-struct EvmTokenAllowance: Codable, Equatable {
-    let symbolInfo: EvmSymbolInfo
-    let allowedAddress: String
-    let allowedAmount: Amount
-    let allowanceType: TokenAllowanceType
-}
+    enum EvmTokenAllowanceTypeCodingKeys: String, CodingKey {
+        case type
+    }
 
-extension EvmTokenAllowance {
-    func allowanceDisplay() -> String {
-        switch allowanceType {
-        case .Limited:
-            return allowedAmount.value
-        case .Unlimited:
-            return "Unlimited"
-        case .Revoke:
-            return "Revoked"
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: EvmTokenAllowanceTypeCodingKeys.self)
+        let type = try container.decode(String.self, forKey: .type)
+        switch type {
+        case "SingleTokenApproved":
+            self = .singleTokenApproved(try EvmTokenAllowanceSingleTokenApproved(from: decoder))
+        case "SingleTokenRevoked":
+            self = .singleTokenRevoked(try EvmTokenAllowanceSingleTokenRevoked(from: decoder))
+        case "AllTokens":
+            self = .allTokens(try EvmTokenAllowanceAllTokens(from: decoder))
+        default:
+            throw DecodingError.dataCorruptedError(forKey: .type, in: container, debugDescription: "Invalid EvmTokenAllowance Type")
         }
     }
+
+    func encode(to encoder: Encoder) throws {
+        var container = encoder.container(keyedBy: EvmTokenAllowanceTypeCodingKeys.self)
+        switch self {
+        case .singleTokenApproved(let success):
+            try container.encode("SingleTokenApproved", forKey: .type)
+            try success.encode(to: encoder)
+        case .singleTokenRevoked(let failure):
+            try container.encode("SingleTokenRevoked", forKey: .type)
+            try failure.encode(to: encoder)
+        case .allTokens(let failure):
+            try container.encode("AllTokens", forKey: .type)
+            try failure.encode(to: encoder)
+        }
+    }
+}
+
+struct EvmTokenAllowanceSingleTokenApproved: Codable, Equatable {
+    let symbolInfo: EvmSymbolInfo
+    let spender: String
+    let amount: Amount
+    let unlimited: Bool
+}
+
+struct EvmTokenAllowanceSingleTokenRevoked: Codable, Equatable {
+    let symbolInfo: EvmSymbolInfo
+    let spender: String
+}
+
+struct EvmTokenAllowanceAllTokens: Codable, Equatable {
+    let `operator`: String
+    let approved: Bool
 }
 
 struct DAppInfo: Codable, Equatable {

@@ -18,7 +18,7 @@ struct DAppTransactionDetails: View {
         VStack(alignment: .center, spacing: 10) {
             switch ethSendTransaction.simulationResult {
             case .success(let success):
-                SimulationBalanceChangesView(wallet: wallet, dAppInfo: dAppInfo, balanceChanges: success.balanceChanges, tokenAllowances: success.tokenAllowances)
+                SimulationBalanceChangesView(wallet: wallet, dAppInfo: dAppInfo, balanceChanges: success.balanceChanges, tokenAllowances: success.tokenAllowancesV2)
             case .failure(let failure):
                 VStack {
                     Text("Simulation failed: \(failure.reason)")
@@ -77,14 +77,35 @@ struct SimulationBalanceChangesView: View {
             ForEach(0..<tokenAllowances.count, id: \.self) { i in
                 let tokenAllowance = tokenAllowances[i]
 
+                switch tokenAllowance {
+                case .singleTokenApproved(let singleTokenApproved):
                 DAppRequestChangeDetail(
-                    title: "\(tokenAllowance.allowanceType == .Revoke ? "Revoke" : "Allow") use of \(tokenAllowance.symbolInfo.displayName)",
-                    amount: tokenAllowance.displayAmount,
-                    usdAmount: tokenAllowance.allowanceType == .Limited ? tokenAllowance.allowedAmount.formattedUSDEquivalent : nil,
+                    title: "Allow use of \(singleTokenApproved.symbolInfo.displayName)",
+                    amount: singleTokenApproved.unlimited ? "Unlimited" : singleTokenApproved.amount.value,
+                    usdAmount: singleTokenApproved.unlimited ? nil : singleTokenApproved.amount.formattedUSDEquivalent,
                     walletName: wallet.name,
                     dAppName: dAppInfo.name,
                     directionIsForward: true
                 )
+                case .singleTokenRevoked(let singleTokenApproved):
+                DAppRequestChangeDetail(
+                    title: "Revoke use of \(singleTokenApproved.symbolInfo.displayName)",
+                    amount: nil,
+                    usdAmount: nil,
+                    walletName: wallet.name,
+                    dAppName: dAppInfo.name,
+                    directionIsForward: true
+                )
+                case .allTokens(let allTokens):
+                DAppRequestChangeDetail(
+                    title: "\(allTokens.approved ? "Allow" : "Revoke") use of all tokens",
+                    amount: nil,
+                    usdAmount: nil,
+                    walletName: wallet.name,
+                    dAppName: dAppInfo.name,
+                    directionIsForward: true
+                )
+                }
             }
 
         }
@@ -144,19 +165,6 @@ struct SimulationBalanceChangesView: View {
     }
 }
 
-extension EvmTokenAllowance {
-    var displayAmount: String? {
-        switch self.allowanceType {
-        case .Limited:
-            return allowedAmount.value
-        case .Unlimited:
-            return "Unlimited"
-        case .Revoke:
-            return nil
-        }
-    }
-}
-
 extension EvmSymbolInfo {
     var displayName: String {
         symbol.split(separator: ":").first.flatMap { String($0) } ?? symbol
@@ -203,8 +211,13 @@ extension EthSendTransaction {
                         ),
                         EvmSimulatedChange(amount: Amount(value: "-1.23", nativeValue: "-1.23000", usdEquivalent: "-2.34"), symbolInfo: .sample)
                     ],
-                    tokenAllowances: [
-                        .init(symbolInfo: .sample, allowedAddress: "gfdgdf7g767g", allowedAmount: .sample, allowanceType: .Unlimited)
+                    tokenAllowancesV2: [
+                        .singleTokenApproved(EvmTokenAllowanceSingleTokenApproved(
+                            symbolInfo: EvmSymbolInfo(symbol: "USDC", description: "USD Coin", tokenInfo: nil, imageUrl: nil, nftMetadata: nil),
+                            spender: "gfdgdf7g767g",
+                            amount: .sample,
+                            unlimited: true
+                        ))
                     ]
                 )
             ),
@@ -215,7 +228,36 @@ extension EthSendTransaction {
     static var sampleSimSuccessNoChanges: Self {
         EthSendTransaction(
             simulationResult: .success(
-                EvmSimulationResultSuccess(balanceChanges: [], tokenAllowances: [EvmTokenAllowance(symbolInfo: EvmSymbolInfo(symbol: "USDC", description: "USD Coin", tokenInfo: nil, imageUrl: nil, nftMetadata: nil), allowedAddress: "allowed-address", allowedAmount: Amount(value: "12345678910111213141516.000000", nativeValue: "12345678910111213141516.000000", usdEquivalent: "12345678910111213141516.00"), allowanceType: TokenAllowanceType.Limited)])),
+                EvmSimulationResultSuccess(
+                    balanceChanges: [],
+                    tokenAllowancesV2: [
+                        .singleTokenApproved(EvmTokenAllowanceSingleTokenApproved(
+                            symbolInfo: EvmSymbolInfo(symbol: "USDC", description: "USD Coin", tokenInfo: nil, imageUrl: nil, nftMetadata: nil),
+                            spender: "gfdgdf7g767g",
+                            amount: Amount(value: "12345678910111213141516.000000", nativeValue: "12345678910111213141516.000000", usdEquivalent: "12345678910111213141516.00"),
+                            unlimited: false
+                        )),
+                        .singleTokenApproved(EvmTokenAllowanceSingleTokenApproved(
+                            symbolInfo: EvmSymbolInfo(symbol: "USDC", description: "USD Coin", tokenInfo: nil, imageUrl: nil, nftMetadata: nil),
+                            spender: "gfdgdf7g767g",
+                            amount: Amount(value: "12345678910111213141516.000000", nativeValue: "12345678910111213141516.000000", usdEquivalent: "12345678910111213141516.00"),
+                            unlimited: true
+                        )),
+                        .singleTokenRevoked(EvmTokenAllowanceSingleTokenRevoked(
+                            symbolInfo: EvmSymbolInfo(symbol: "USDC", description: "USD Coin", tokenInfo: nil, imageUrl: nil, nftMetadata: nil),
+                            spender: "gfdgdf7g767g"
+                        )),
+                        .allTokens(EvmTokenAllowanceAllTokens(
+                            operator: "gfdgdf7g767g",
+                            approved: true
+                        )),
+                        .allTokens(EvmTokenAllowanceAllTokens(
+                            operator: "gfdgdf7g767g",
+                            approved: false
+                        ))
+                    ]
+                )
+            ),
             transaction: EvmTransactionParams(from: "0x54b6d88c500c9859314b7e3a4e05767160503b77", to: "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48", value: "0x0", data: "0x095ea7b3000000000000000000000000000000000022d473030f116ddee9f6b43ac78ba3ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff")
         )
     }

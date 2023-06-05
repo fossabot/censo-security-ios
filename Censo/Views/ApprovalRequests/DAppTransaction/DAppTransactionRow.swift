@@ -68,7 +68,7 @@ extension DAppParams {
                                 symbolInfo: EvmSymbolInfo(symbol: "PEPE", description: "Pepe Token", tokenInfo: nil, imageUrl: nil, nftMetadata: nil)
                             )
                         ],
-                        tokenAllowances: []
+                        tokenAllowancesV2: []
                     )
                 ),
                 transaction: EvmTransactionParams(from: "0x01010101", to: "0x02020202", value: "0x", data: "0x")
