@@ -107,12 +107,28 @@ struct SignInView: View {
                     message: Text("An error occured trying to sign you in"),
                     primaryButton: .cancel(Text("Try Again")),
                     secondaryButton: .default(Text("Sign in with Email Verification")) {
-                        showingVerification = true
+                        signInWithEmail()
                     }
                 )
             }
         }
+    }
 
+    private func signInWithEmail() {
+        isAuthenticating = true
+
+        censoApi.provider.request(.emailVerification(username)) { result in
+            isAuthenticating = false
+
+            switch result {
+            case .failure(let error):
+                showSignInError(error)
+            case .success(let response) where response.statusCode < 400:
+                showingVerification = true
+            case .success(let response):
+                showSignInError(MoyaError.statusCode(response))
+            }
+        }
     }
 
     private func signIn() {
@@ -160,20 +176,7 @@ struct SignInView: View {
                 }
             }
         } else {
-            isAuthenticating = true
-
-            censoApi.provider.request(.emailVerification(username)) { result in
-                isAuthenticating = false
-
-                switch result {
-                case .failure(let error):
-                    showSignInError(error)
-                case .success(let response) where response.statusCode < 400:
-                    showingVerification = true
-                case .success(let response):
-                    showSignInError(MoyaError.statusCode(response))
-                }
-            }
+            signInWithEmail()
         }
     }
 
