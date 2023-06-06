@@ -16,7 +16,18 @@ struct EIP712Entry: Codable, Equatable, Hashable {
     let name: String
     let type: String
     let value: JSON
+    func isArray() -> Bool {
+        return type.hasSuffix("[]")
+    }
+    func baseType() -> String {
+        if (isArray()) {
+            return String(type.dropLast(2))
+        } else {
+            return type
+        }
+    }
 }
+
 
 struct EIP712TypedData: Codable {
     let types: [String: [EIP712Type]]
