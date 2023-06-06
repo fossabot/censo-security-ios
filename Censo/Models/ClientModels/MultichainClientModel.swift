@@ -106,6 +106,7 @@ struct EnableRecoveryContract: Codable, Equatable {
     var orgName: String
     var signingData: [SigningData]
     var chainFees: [ChainFee]
+    var recoveryContractAddresses: [Chain:String]
 }
 
 
