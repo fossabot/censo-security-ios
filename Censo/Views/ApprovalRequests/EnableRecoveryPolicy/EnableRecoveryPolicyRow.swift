@@ -37,7 +37,7 @@ struct EnableRecoveryPolicyRow_Previews: PreviewProvider {
 
 extension EnableRecoveryContract {
     static var sample: Self {
-        EnableRecoveryContract(recoveryThreshold: 2, recoveryAddresses: ["0x0101010101010101010101010101010101010101", "0x0101010101010101010101010101010101010102", "0x0101010101010101010101010101010101010103"], orgName: "orgName", signingData: [], chainFees: [])
+        EnableRecoveryContract(recoveryThreshold: 2, recoveryAddresses: ["0x0101010101010101010101010101010101010101", "0x0101010101010101010101010101010101010102", "0x0101010101010101010101010101010101010103"], orgName: "orgName", signingData: [], chainFees: [], recoveryContractAddresses: [:])
     }
 }
 
