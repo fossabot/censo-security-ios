@@ -118,7 +118,7 @@ extension OrgAdminPolicyUpdate: MultichainSignable {
     
 }
 
-extension EnableRecoveryContract: MultichainSignable {
+extension RecoveryContractPolicyUpdate: MultichainSignable {
     func signableData() throws -> [(Chain, Data)] {
         return try signingData.map {
             switch $0 {
@@ -131,7 +131,23 @@ extension EnableRecoveryContract: MultichainSignable {
     }
     
     private func getSafeHash(chain: Chain, evmTransaction: EvmTransaction) throws -> Data {
-        return try EvmConfigTransactionBuilder.getEnableRecoveryContractSafeHash(evmTransaction: evmTransaction, orgName: orgName, owners: recoveryAddresses, threshold: Bignum(recoveryThreshold))
+        guard let currentOnChainPolicy = currentOnChainPolicies.first(where: {$0.chain == chain} ) else {
+            throw EvmConfigError.missingChain
+        }
+        let startingPolicy = try Policy(
+            owners: currentOnChainPolicy.owners,
+            threshold: currentOnChainPolicy.threshold
+        )
+        return try EvmConfigTransactionBuilder.getPolicyUpdateExecutionFromModuleDataSafeHash(
+            verifyingContract: evmTransaction.orgVaultAddress,
+            safeAddress: recoveryContractAddress,
+            txs: startingPolicy.safeTransactions(
+                try Policy(
+                    owners: recoveryAddresses,
+                    threshold: recoveryThreshold
+                )
+            ).0,
+            evmTransaction: evmTransaction
+        )
     }
-
 }

@@ -170,11 +170,11 @@ struct ApprovalRequestItem: View {
             } detail: {
                 UserDetails(request: request, user: restoreUser as UserInfo)
             }
-        case .enableRecoveryContract(let enableRecoveryContract):
+        case .recoveryContractPolicyUpdate(let recoveryContractPolicyUpdate):
             ApprovalRequestRow(registeredDevice: registeredDevice, user: user, request: request, timerPublisher: timerPublisher, onApprove: onStatusChange, onDecline: onStatusChange) {
-                EnableRecoveryPolicyRow(requestType: request.details, enableRecoveryContract: enableRecoveryContract)
+                RecoveryContractPolicyUpdateRow(requestType: request.details, recoveryContractPolicyUpdate: recoveryContractPolicyUpdate)
             } detail: {
-                EnableRecoveryPolicyDetails(request: request, enableRecoveryContract: enableRecoveryContract)
+                RecoveryContractPolicyUpdateDetails(request: request, recoveryContractPolicyUpdate: recoveryContractPolicyUpdate)
             }
         default:
             UnknownRequestRow(request: request, timerPublisher: timerPublisher)

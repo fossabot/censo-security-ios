@@ -222,8 +222,8 @@
 		BD6D4F1C2A0C192D000E6E92 /* GenericJSON in Frameworks */ = {isa = PBXBuildFile; productRef = BD6D4F1B2A0C192D000E6E92 /* GenericJSON */; };
 		BD93944A2A154FD900E6DC41 /* DAppSignTypedDataRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = BD9394492A154FD900E6DC41 /* DAppSignTypedDataRow.swift */; };
 		BDA9AF222A0429F100376FC2 /* EvmDAppTransactionBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDA9AF212A0429F100376FC2 /* EvmDAppTransactionBuilder.swift */; };
-		BDFBBC2E29D5FA7D0054286C /* EnableRecoveryPolicyRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDFBBC2D29D5FA7D0054286C /* EnableRecoveryPolicyRow.swift */; };
-		BDFBBC3029D5FDF90054286C /* EnableRecoveryPolicyDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDFBBC2F29D5FDF90054286C /* EnableRecoveryPolicyDetails.swift */; };
+		BDFBBC2E29D5FA7D0054286C /* RecoveryContractPolicyUpdateRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDFBBC2D29D5FA7D0054286C /* RecoveryContractPolicyUpdateRow.swift */; };
+		BDFBBC3029D5FDF90054286C /* RecoveryContractPolicyUpdateDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = BDFBBC2F29D5FDF90054286C /* RecoveryContractPolicyUpdateDetails.swift */; };
 		BDFBBC3329D60AB60054286C /* raygun4apple in Frameworks */ = {isa = PBXBuildFile; productRef = BDFBBC3229D60AB60054286C /* raygun4apple */; };
 		E42F565D29D3289500C6922B /* SuspendUserRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = E42F565C29D3289500C6922B /* SuspendUserRow.swift */; };
 		E42F565F29D3297900C6922B /* UserDetails.swift in Sources */ = {isa = PBXBuildFile; fileRef = E42F565E29D3297900C6922B /* UserDetails.swift */; };
@@ -457,8 +457,8 @@
 		BD6D4F182A0BF732000E6E92 /* DAppSignTypedDataDetails.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DAppSignTypedDataDetails.swift; sourceTree = "<group>"; };
 		BD9394492A154FD900E6DC41 /* DAppSignTypedDataRow.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DAppSignTypedDataRow.swift; sourceTree = "<group>"; };
 		BDA9AF212A0429F100376FC2 /* EvmDAppTransactionBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EvmDAppTransactionBuilder.swift; sourceTree = "<group>"; };
-		BDFBBC2D29D5FA7D0054286C /* EnableRecoveryPolicyRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnableRecoveryPolicyRow.swift; sourceTree = "<group>"; };
-		BDFBBC2F29D5FDF90054286C /* EnableRecoveryPolicyDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnableRecoveryPolicyDetails.swift; sourceTree = "<group>"; };
+		BDFBBC2D29D5FA7D0054286C /* RecoveryContractPolicyUpdateRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoveryContractPolicyUpdateRow.swift; sourceTree = "<group>"; };
+		BDFBBC2F29D5FDF90054286C /* RecoveryContractPolicyUpdateDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecoveryContractPolicyUpdateDetails.swift; sourceTree = "<group>"; };
 		E42F565C29D3289500C6922B /* SuspendUserRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuspendUserRow.swift; sourceTree = "<group>"; };
 		E42F565E29D3297900C6922B /* UserDetails.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDetails.swift; sourceTree = "<group>"; };
 		E42F566029D32B8B00C6922B /* RestoreUserRow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RestoreUserRow.swift; sourceTree = "<group>"; };
@@ -709,7 +709,7 @@
 		3D3D6D52261B959300FEEE0B /* ApprovalRequests */ = {
 			isa = PBXGroup;
 			children = (
-				BDFBBC2C29D5FA3F0054286C /* EnableRecoveryPolicy */,
+				BDFBBC2C29D5FA3F0054286C /* RecoveryContractPolicyUpdate */,
 				E44C2B2729D43D88000D9E5C /* UserDetails */,
 				E42F565B29D3287800C6922B /* RestoreUser */,
 				E42F565A29D3286D00C6922B /* SuspendUser */,
@@ -1093,13 +1093,13 @@
 			name = Packages;
 			sourceTree = "<group>";
 		};
-		BDFBBC2C29D5FA3F0054286C /* EnableRecoveryPolicy */ = {
+		BDFBBC2C29D5FA3F0054286C /* RecoveryContractPolicyUpdate */ = {
 			isa = PBXGroup;
 			children = (
-				BDFBBC2D29D5FA7D0054286C /* EnableRecoveryPolicyRow.swift */,
-				BDFBBC2F29D5FDF90054286C /* EnableRecoveryPolicyDetails.swift */,
+				BDFBBC2D29D5FA7D0054286C /* RecoveryContractPolicyUpdateRow.swift */,
+				BDFBBC2F29D5FDF90054286C /* RecoveryContractPolicyUpdateDetails.swift */,
 			);
-			path = EnableRecoveryPolicy;
+			path = RecoveryContractPolicyUpdate;
 			sourceTree = "<group>";
 		};
 		E42F565A29D3286D00C6922B /* SuspendUser */ = {
@@ -1254,7 +1254,7 @@
 			files = (
 				3D1028F029DDD10300EC5A6C /* ShardingParticipant+PublicKey.swift in Sources */,
 				3D10291229E0712F00EC5A6C /* ApprovalDispositionPayload+Device.swift in Sources */,
-				BDFBBC2E29D5FA7D0054286C /* EnableRecoveryPolicyRow.swift in Sources */,
+				BDFBBC2E29D5FA7D0054286C /* RecoveryContractPolicyUpdateRow.swift in Sources */,
 				3D2BCA08264D7A79000A6D56 /* ChangeDetails.swift in Sources */,
 				3DBC44E5280F18830016E1AB /* LoginDetails.swift in Sources */,
 				3D11521628217FB5007CD43D /* WalletSettingsRow.swift in Sources */,
@@ -1331,7 +1331,7 @@
 				BD6D4F0B2A097D79000E6E92 /* EIP712Data.swift in Sources */,
 				BD072F7D292E7E9E00B36C5A /* EvmTransferTransactionBuilder.swift in Sources */,
 				3D10291429E0714E00EC5A6C /* WaitingForDeviceApproval.swift in Sources */,
-				BDFBBC3029D5FDF90054286C /* EnableRecoveryPolicyDetails.swift in Sources */,
+				BDFBBC3029D5FDF90054286C /* RecoveryContractPolicyUpdateDetails.swift in Sources */,
 				3DC2F3FF25F896C40061BB3A /* RemoteResult.swift in Sources */,
 				3DBF9DC526E0020300D7683E /* ApprovalRequestItem.swift in Sources */,
 				3D115204282169E1007CD43D /* VaultConfigPolicyDetails.swift in Sources */,

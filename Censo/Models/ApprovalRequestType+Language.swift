@@ -95,8 +95,8 @@ extension ApprovalRequestType {
             return "Suspend User"
         case .restoreUser:
             return "Restore User"
-        case .enableRecoveryContract:
-            return "Enable Recovery Policy"
+        case .recoveryContractPolicyUpdate(let request):
+            return "\(request.isEnabled ? "Update" : "Enable") Recovery Policy"
         }
     }
     

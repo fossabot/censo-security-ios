@@ -261,19 +261,6 @@ public class EvmConfigTransactionBuilder {
         )
     }
     
-    static func getEnableRecoveryContractSafeHash(evmTransaction: EvmTransaction, orgName: String, owners: [String], threshold: Bignum) throws -> Data {
-        guard let guardAddress = getContractAddressByName(name: censoRecoveryGuard, contractAddresses: evmTransaction.contractAddresses) else {
-            throw EvmConfigError.missingContractAddresses
-        }
-        guard let fallbackHandlerAddress = getContractAddressByName(name: censoRecoveryFallbackHandler, contractAddresses: evmTransaction.contractAddresses) else {
-            throw EvmConfigError.missingContractAddresses
-        }
-        guard let setupAddress = getContractAddressByName(name: censoSetup, contractAddresses: evmTransaction.contractAddresses) else {
-            throw EvmConfigError.missingContractAddresses
-        }
-        return EvmTransactionUtil.computeSafeTransactionHash(chainId: evmTransaction.chainId, safeAddress: evmTransaction.orgVaultAddress!, to: evmTransaction.orgVaultAddress!, value: Bignum(0), data: enableModuleTx(moduleAddress: calculateRecoveryContractAddress(guardAddress: guardAddress, vaultAddress: evmTransaction.orgVaultAddress!, fallbackHandlerAddress: fallbackHandlerAddress, setupAddress: setupAddress, orgName: orgName, owners: owners, threshold: threshold)), nonce: evmTransaction.safeNonce)
-    }
-    
     private class func getContractAddressByName(name: String, contractAddresses: [ContractNameAndAddress]) -> String? {
         return contractAddresses.first(where: { $0.name.lowercased() == name.lowercased() && !$0.deprecated })?.address
     }

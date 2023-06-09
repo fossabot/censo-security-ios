@@ -8,25 +8,25 @@
 import Foundation
 import SwiftUI
 
-struct EnableRecoveryPolicyDetails: View {
+struct RecoveryContractPolicyUpdateDetails: View {
     var request: ApprovalRequest
-    var enableRecoveryContract: EnableRecoveryContract
+    var recoveryContractPolicyUpdate: RecoveryContractPolicyUpdate
 
     var body: some View {
         VStack(alignment: .center, spacing: 10) {
             FactList {
-                Fact("Recovery Threshold", enableRecoveryContract.recoveryThreshold.formatted())
+                Fact("Recovery Threshold", recoveryContractPolicyUpdate.recoveryThreshold.formatted())
             }
 
             FactsSection(title: "Recovery Addresses") {
-                for (index, recoveryAddress) in enableRecoveryContract.recoveryAddresses.enumerated() {
+                for (index, recoveryAddress) in recoveryContractPolicyUpdate.recoveryAddresses.enumerated() {
                     Fact("Recovery Address #\(index + 1)", recoveryAddress)
                 }
             }
 
-            if enableRecoveryContract.chainFees.count > 0 {
+            if recoveryContractPolicyUpdate.chainFees.count > 0 {
                 FactsSection(title: "Fees") {
-                    for chainFee in enableRecoveryContract.chainFees {
+                    for chainFee in recoveryContractPolicyUpdate.chainFees {
                         if let feeInUsd = chainFee.fee.formattedUSDEquivalent {
                             Fact("\(chainFee.chain.rawValue.capitalized) Fee Estimate", "\(feeInUsd) USD")
                         }
@@ -38,9 +38,9 @@ struct EnableRecoveryPolicyDetails: View {
 }
 
 #if DEBUG
-struct EnableRecoveryPolicyDetails_Previews: PreviewProvider {
+struct RecoveryContractPolicyUpdateDetails_Previews: PreviewProvider {
     static var previews: some View {
-        EnableRecoveryPolicyDetails(request: .sample, enableRecoveryContract: .sample)
+        RecoveryContractPolicyUpdateDetails(request: .sample, recoveryContractPolicyUpdate: .sample)
     }
 }
 #endif

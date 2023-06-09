@@ -38,7 +38,7 @@ extension ApprovalDispositionRequest {
             case .vaultPolicyUpdate(let signableRequest as MultichainSignable),
                     .vaultNameUpdate(let signableRequest as MultichainSignable),
                     .orgAdminPolicyUpdate(let signableRequest as MultichainSignable),
-                    .enableRecoveryContract(let signableRequest as MultichainSignable):
+                    .recoveryContractPolicyUpdate(let signableRequest as MultichainSignable):
                 var signatures: [SignatureInfo] = [
                     .offchain(try getApprovalRequestDetailsSignature(privateKeys: privateKeys))
                 ]
